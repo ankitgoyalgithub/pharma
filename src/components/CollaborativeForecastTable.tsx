@@ -327,7 +327,7 @@ export const CollaborativeForecastTable: React.FC = () => {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-muted/50 border-b sticky top-0 z-10">
+              <thead className="bg-muted/50 border-b sticky top-16 z-10">
                 <tr className="text-xs">
                   <th className="w-10 p-3">
                     <input
