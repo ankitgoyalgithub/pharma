@@ -835,7 +835,7 @@ const ReplenishmentPlanning: React.FC = () => {
   };
 
   const renderScenarioToolbar = () => (
-    <div className="sticky top-0 z-10 bg-background border-b mb-4">
+    <div className="sticky top-16 z-10 bg-background border-b mb-4">
       <div className="flex flex-wrap items-center gap-6 p-3">
         <div className="text-sm font-medium">Scenario Plan</div>
         <div className="flex items-center gap-2">

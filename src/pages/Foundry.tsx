@@ -1220,7 +1220,7 @@ export default function Foundry() {
           ) : (
             <div className="w-full overflow-auto">
               <table className="w-full text-sm">
-                <thead className="bg-muted sticky top-0">
+                <thead className="bg-muted sticky top-16">
                   <tr>
                     {Object.keys(previewRows[0] || {}).map((k) => (
                       <th key={k} className="text-left px-3 py-2 font-medium">
@@ -1676,7 +1676,7 @@ export default function Foundry() {
 
               <div className="rounded-md border overflow-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-muted sticky top-0">
+                  <thead className="bg-muted sticky top-16">
                     <tr>
                       <th className="text-left px-3 py-2 font-medium w-[18%]">Source Column</th>
                       <th className="text-left px-3 py-2 font-medium w-[22%]">New Name</th>
@@ -1803,7 +1803,7 @@ export default function Foundry() {
                   <h4 className="text-sm font-medium mb-2">Sample Rows</h4>
                   <div className="rounded-md border overflow-auto">
                     <table className="w-full text-sm">
-                      <thead className="bg-muted sticky top-0">
+                      <thead className="bg-muted sticky top-16">
                         <tr>
                           {Object.keys(previewRows[0] || {}).map((k) => (
                             <th key={k} className="text-left px-3 py-2 font-medium">

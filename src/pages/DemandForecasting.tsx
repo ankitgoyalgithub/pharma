@@ -1523,7 +1523,7 @@ const DemandForecasting = () => {
                   </div>
                   <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
                     <table className="w-full text-xs">
-                      <thead className="bg-muted/20 sticky top-0">
+                      <thead className="bg-muted/20 sticky top-16">
                         <tr>
                           <th className="text-left p-2 font-medium">SKU</th>
                           <th className="text-left p-2 font-medium">Product</th>

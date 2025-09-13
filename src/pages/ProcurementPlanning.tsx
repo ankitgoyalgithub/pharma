@@ -173,7 +173,7 @@ function ProcurementWorkbookTable({ rows }: { rows: ProcLine[] }) {
       <div className="border rounded-lg overflow-hidden">
         <div className="max-w-full overflow-x-auto" style={{ maxHeight: 360, overflowY: "auto" }}>
           <table className="min-w-[1400px] w-full text-xs">
-            <thead className="sticky top-0 z-10 bg-muted/60 backdrop-blur">
+            <thead className="sticky top-16 z-10 bg-muted/60 backdrop-blur">
               <tr className="border-b">
                 <th className="px-3 py-2 text-left">Item</th>
                 <th className="px-3 py-2 text-left">Description</th>
@@ -249,7 +249,7 @@ function SuppliersTable({ rows }: { rows: Supplier[] }) {
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto" style={{ maxHeight: 280, overflowY: "auto" }}>
           <table className="min-w-[1000px] w-full text-xs">
-            <thead className="sticky top-0 z-10 bg-muted/60 backdrop-blur">
+            <thead className="sticky top-16 z-10 bg-muted/60 backdrop-blur">
               <tr className="border-b">
                 <th className="px-3 py-2 text-left">Supplier</th>
                 <th className="px-3 py-2 text-left">Country</th>
