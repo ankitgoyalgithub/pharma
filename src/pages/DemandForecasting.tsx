@@ -1809,7 +1809,7 @@ const DemandForecasting = () => {
           <div className="grid gap-3 pb-4">
             <div>
             <ForecastCard
-              title="FORECAST ACCURACY"
+              title="Forecast Snapshot"
               value="94.2%"
               subtitle="Backtested Accuracy 
                         $48.2M, 125K+ units
@@ -1841,9 +1841,10 @@ const DemandForecasting = () => {
 
             <div>
             <ForecastCard
-              title="WORKBOOK"
-              value="Data Table"
-              subtitle="Interactive forecast data"
+              title="Collaborate"
+              value="Planner Input"
+              subtitle="Provide your inputs & comments
+                        Share with your team"
               icon={Award}
               isActive={selectedScenario === null && activeTab === "workbook"}
               onClick={() => {
@@ -1855,9 +1856,10 @@ const DemandForecasting = () => {
 
             <div>
             <ForecastCard
-              title="IMPACT ANALYSIS"
-              value="4 Charts"
-              subtitle="Driver contributions & sensitivity"
+              title="Impact Analysis"
+              value="10K"
+              subtitle="Units sold due to promotion
+                        High price sensitivity"
               icon={BarChart3}
               isActive={selectedScenario === null && activeTab === "impact"}
               onClick={() => {
