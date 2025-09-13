@@ -1796,9 +1796,9 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex h-[calc(100vh-140px)]">
+    <div className="flex h">
       {/* Left Sidebar with Clickable Cards */}
-      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-1 flex flex-col h-[calc(100vh-140px)] max-h-screen">
+      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-1 flex flex-col h max-h-screen">
         <div className="flex-none">
           <h2 className="text-xl font-bold text-foreground mb-2">Forecast Results</h2>
           <p className="text-sm text-muted-foreground">Click cards to explore insights</p>
@@ -2676,7 +2676,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Right Sidebar */}
-      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} bg-card border-l p-1 flex flex-col h-[calc(100vh-140px)] max-h-screen transition-all duration-200`}>
+      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} bg-card border-l p-1 flex flex-col h max-h-screen transition-all duration-200`}>
         {rightSidebarCollapsed ? (
           /* Collapsed Sidebar - Icons Only */
           <div className="flex flex-col items-center gap-4 pt-4">
