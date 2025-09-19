@@ -144,61 +144,71 @@ const WorkflowRun = () => {
   
   const { workflowData, workflowName, isEditing } = location.state || {};
 
-  // Mock workflow data based on workflow type
+  // Use actual workflow data or generate based on workflow type
   const generateWorkflowData = (workflow) => {
+    // If we have actual workflow structure from builder, use it
+    if (workflow?.blocks && workflow?.connections) {
+      return {
+        blocks: workflow.blocks.map(block => ({
+          id: block.canvasId || block.id,
+          name: block.name,
+          type: getBlockType(block.id),
+          color: block.color || 'bg-blue-500',
+          x: block.x || 100,
+          y: block.y || 80
+        })),
+        connections: workflow.connections.map(conn => ({
+          id: conn.id,
+          from: conn.from,
+          to: conn.to
+        }))
+      };
+    }
+
+    // Fallback to predefined structures that match WorkflowBuilder
     if (workflow?.name === 'Supply Chain Optimization') {
       return {
         blocks: [
-          { id: 'data-input', name: 'Data Input', type: 'data', color: 'bg-blue-500', x: 50, y: 80 },
-          { id: 'demand-forecast', name: 'Demand Forecast', type: 'analysis', color: 'bg-purple-500', x: 280, y: 40 },
-          { id: 'inventory-opt', name: 'Inventory Optimization', type: 'calculation', color: 'bg-green-500', x: 280, y: 140 },
-          { id: 'supply-planning', name: 'Supply Planning', type: 'processing', color: 'bg-orange-500', x: 520, y: 40 },
-          { id: 'cost-analysis', name: 'Cost Analysis', type: 'calculation', color: 'bg-red-500', x: 520, y: 140 },
-          { id: 'report-gen', name: 'Report Generation', type: 'output', color: 'bg-teal-500', x: 750, y: 80 }
+          { id: 'demand-forecast-1', name: 'Demand Forecasting', type: 'analysis', color: 'bg-blue-500', x: 100, y: 100 },
+          { id: 'inventory-1', name: 'Inventory Optimization', type: 'calculation', color: 'bg-cyan-500', x: 350, y: 50 },
+          { id: 'production-1', name: 'Production Planning', type: 'processing', color: 'bg-purple-500', x: 350, y: 150 },
+          { id: 'dashboard-1', name: 'Send to Dashboard', type: 'output', color: 'bg-green-500', x: 600, y: 100 }
         ],
         connections: [
-          { id: 'e1', from: 'data-input', to: 'demand-forecast' },
-          { id: 'e2', from: 'data-input', to: 'inventory-opt' },
-          { id: 'e3', from: 'demand-forecast', to: 'supply-planning' },
-          { id: 'e4', from: 'inventory-opt', to: 'cost-analysis' },
-          { id: 'e5', from: 'supply-planning', to: 'report-gen' },
-          { id: 'e6', from: 'cost-analysis', to: 'report-gen' }
+          { id: 'c1', from: 'demand-forecast-1', to: 'inventory-1' },
+          { id: 'c2', from: 'demand-forecast-1', to: 'production-1' },
+          { id: 'c3', from: 'inventory-1', to: 'dashboard-1' },
+          { id: 'c4', from: 'production-1', to: 'dashboard-1' }
         ]
       };
     } else if (workflow?.name === 'Financial Planning Pipeline') {
       return {
         blocks: [
-          { id: 'historical-data', name: 'Historical Data', type: 'data', color: 'bg-blue-500', x: 50, y: 80 },
-          { id: 'capex-planning', name: 'Capex Planning', type: 'calculation', color: 'bg-green-500', x: 300, y: 40 },
-          { id: 'opex-planning', name: 'Opex Planning', type: 'calculation', color: 'bg-orange-500', x: 300, y: 140 },
-          { id: 'budget-consolidation', name: 'Budget Consolidation', type: 'processing', color: 'bg-purple-500', x: 550, y: 90 },
-          { id: 'financial-report', name: 'Financial Report', type: 'output', color: 'bg-teal-500', x: 800, y: 90 }
+          { id: 'csv-upload-1', name: 'Upload CSV', type: 'data', color: 'bg-blue-500', x: 100, y: 100 },
+          { id: 'capex-1', name: 'Capex Planning', type: 'calculation', color: 'bg-red-500', x: 350, y: 50 },
+          { id: 'opex-1', name: 'Opex Planning', type: 'calculation', color: 'bg-yellow-500', x: 350, y: 150 },
+          { id: 'api-push-1', name: 'Push to API', type: 'output', color: 'bg-green-500', x: 600, y: 100 }
         ],
         connections: [
-          { id: 'e1', from: 'historical-data', to: 'capex-planning' },
-          { id: 'e2', from: 'historical-data', to: 'opex-planning' },
-          { id: 'e3', from: 'capex-planning', to: 'budget-consolidation' },
-          { id: 'e4', from: 'opex-planning', to: 'budget-consolidation' },
-          { id: 'e5', from: 'budget-consolidation', to: 'financial-report' }
+          { id: 'c1', from: 'csv-upload-1', to: 'capex-1' },
+          { id: 'c2', from: 'csv-upload-1', to: 'opex-1' },
+          { id: 'c3', from: 'capex-1', to: 'api-push-1' },
+          { id: 'c4', from: 'opex-1', to: 'api-push-1' }
         ]
       };
     } else if (workflow?.name === 'Production Scheduling') {
       return {
         blocks: [
-          { id: 'production-data', name: 'Production Data', type: 'data', color: 'bg-blue-500', x: 50, y: 80 },
-          { id: 'demand-analysis', name: 'Demand Analysis', type: 'analysis', color: 'bg-purple-500', x: 280, y: 30 },
-          { id: 'resource-planning', name: 'Resource Planning', type: 'processing', color: 'bg-orange-500', x: 280, y: 130 },
-          { id: 'capacity-check', name: 'Capacity Check', type: 'filter', color: 'bg-yellow-500', x: 520, y: 30 },
-          { id: 'schedule-optimization', name: 'Schedule Optimization', type: 'calculation', color: 'bg-red-500', x: 520, y: 130 },
-          { id: 'schedule-output', name: 'Schedule Output', type: 'output', color: 'bg-teal-500', x: 760, y: 80 }
+          { id: 's3-connect-1', name: 'Connect to S3', type: 'data', color: 'bg-blue-500', x: 100, y: 100 },
+          { id: 'scheduling-1', name: 'Production Scheduling', type: 'processing', color: 'bg-orange-500', x: 350, y: 50 },
+          { id: 'explainability-agent-1', name: 'Explainability Agent', type: 'analysis', color: 'bg-violet-500', x: 350, y: 150 },
+          { id: 'save-warehouse-1', name: 'Save to Warehouse', type: 'output', color: 'bg-green-500', x: 600, y: 100 }
         ],
         connections: [
-          { id: 'e1', from: 'production-data', to: 'demand-analysis' },
-          { id: 'e2', from: 'production-data', to: 'resource-planning' },
-          { id: 'e3', from: 'demand-analysis', to: 'capacity-check' },
-          { id: 'e4', from: 'resource-planning', to: 'schedule-optimization' },
-          { id: 'e5', from: 'capacity-check', to: 'schedule-output' },
-          { id: 'e6', from: 'schedule-optimization', to: 'schedule-output' }
+          { id: 'c1', from: 's3-connect-1', to: 'scheduling-1' },
+          { id: 'c2', from: 'scheduling-1', to: 'explainability-agent-1' },
+          { id: 'c3', from: 'scheduling-1', to: 'save-warehouse-1' },
+          { id: 'c4', from: 'explainability-agent-1', to: 'save-warehouse-1' }
         ]
       };
     }
@@ -215,6 +225,37 @@ const WorkflowRun = () => {
         { id: 'e2', from: 'process', to: 'output' }
       ]
     };
+  };
+
+  // Helper function to determine block type from block id
+  const getBlockType = (blockId) => {
+    const typeMap = {
+      'csv-upload': 'data',
+      's3-connect': 'data',
+      'azure-blob': 'data',
+      'postgresql': 'data',
+      'mysql': 'data',
+      'demand-forecast': 'analysis',
+      'explainability-agent': 'analysis',
+      'ocr-agent': 'analysis',
+      'forecast-agent': 'analysis',
+      'production': 'processing',
+      'scheduling': 'processing',
+      'replenishment': 'processing',
+      'capex': 'calculation',
+      'opex': 'calculation',
+      'budget': 'calculation',
+      'inventory': 'calculation',
+      'dashboard': 'output',
+      'api-push': 'output',
+      'save-warehouse': 'output',
+      'email-export': 'output',
+      'file-export': 'output'
+    };
+    
+    // Extract base id (remove numbers and hyphens at the end)
+    const baseId = blockId.replace(/-\d+$/, '');
+    return typeMap[baseId] || 'processing';
   };
 
   const workflowStructure = useMemo(() => {
@@ -446,6 +487,18 @@ const WorkflowRun = () => {
               <Button variant="outline" size="sm" onClick={pauseWorkflow}>
                 <Pause className="h-4 w-4 mr-2" />
                 Pause
+              </Button>
+            )}
+            
+            {status === 'completed' && (
+              <Button 
+                variant="default" 
+                size="sm" 
+                onClick={() => navigate('/dashboard')}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <BarChart3 className="h-4 w-4 mr-2" />
+                View Dashboard
               </Button>
             )}
             
