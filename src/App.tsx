@@ -22,6 +22,7 @@ import Workflows from "./pages/Workflows";
 import WorkflowBuilder from "./pages/WorkflowBuilder";
 import WorkflowMonitor from "./pages/WorkflowMonitor";
 import WorkflowRun from "./pages/WorkflowRun";
+import PipelineDashboard from "./pages/PipelineDashboard";
 import Build from "./pages/Build";
 import UserManagement from "./pages/UserManagement";
 import Settings from "./pages/Settings";
@@ -70,6 +71,7 @@ const App = () => (
             <Route path="workflow-builder" element={<WorkflowBuilder />} />
             <Route path="workflow-monitor" element={<WorkflowMonitor />} />
             <Route path="workflow-run" element={<WorkflowRun />} />
+            <Route path="pipeline-dashboard" element={<PipelineDashboard />} />
             <Route path="build" element={<Build />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="settings" element={<Settings />} />

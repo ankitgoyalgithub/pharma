@@ -286,13 +286,30 @@ const WorkflowRun = () => {
       type: 'smoothstep',
       markerEnd: {
         type: MarkerType.ArrowClosed,
+        width: 20,
+        height: 20,
+        color: isRunning ? '#10b981' : '#3b82f6',
       },
       style: { 
-        stroke: '#94a3b8', 
-        strokeWidth: 2,
-        animation: isRunning ? 'flow 2s ease-in-out infinite' : 'none'
+        stroke: isRunning ? '#10b981' : '#3b82f6', 
+        strokeWidth: 3,
+        filter: isRunning ? 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.5))' : 'drop-shadow(0 0 4px rgba(59, 130, 246, 0.3))',
       },
       animated: isRunning,
+      label: isRunning ? '⚡' : '',
+      labelStyle: { 
+        fill: isRunning ? '#10b981' : '#3b82f6',
+        fontWeight: 600,
+        fontSize: 14,
+      },
+      labelBgPadding: [8, 4] as [number, number],
+      labelBgBorderRadius: 4,
+      labelBgStyle: {
+        fill: 'hsl(var(--background))',
+        stroke: isRunning ? '#10b981' : '#3b82f6',
+        strokeWidth: 1,
+        fillOpacity: 0.9,
+      },
     }));
   }, [workflowStructure.connections, isRunning]);
 
@@ -419,9 +436,28 @@ const WorkflowRun = () => {
         ...edge,
         animated: isRunning,
         style: {
-          ...edge.style,
-          stroke: isRunning ? '#10b981' : '#94a3b8'
-        }
+          stroke: isRunning ? '#10b981' : '#3b82f6',
+          strokeWidth: 3,
+          filter: isRunning ? 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.5))' : 'drop-shadow(0 0 4px rgba(59, 130, 246, 0.3))',
+        },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          width: 20,
+          height: 20,
+          color: isRunning ? '#10b981' : '#3b82f6',
+        },
+        label: isRunning ? '⚡' : '',
+        labelStyle: { 
+          fill: isRunning ? '#10b981' : '#3b82f6',
+          fontWeight: 600,
+          fontSize: 14,
+        },
+        labelBgStyle: {
+          fill: 'hsl(var(--background))',
+          stroke: isRunning ? '#10b981' : '#3b82f6',
+          strokeWidth: 1,
+          fillOpacity: 0.9,
+        },
       }))
     );
   }, [isRunning, setEdges]);
@@ -494,11 +530,18 @@ const WorkflowRun = () => {
               <Button 
                 variant="default" 
                 size="sm" 
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/pipeline-dashboard', { 
+                  state: { 
+                    workflowName: workflowName || 'Workflow',
+                    workflowData: workflowData,
+                    completedBlocks: workflowStructure.blocks,
+                    executionTime: Date.now(),
+                  } 
+                })}
                 className="bg-green-600 hover:bg-green-700"
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
-                View Dashboard
+                View Pipeline Dashboard
               </Button>
             )}
             
@@ -556,7 +599,7 @@ const WorkflowRun = () => {
             </CardHeader>
             <CardContent className="p-2">
               <div 
-                className="h-[250px] w-full bg-background border border-border rounded-lg overflow-hidden"
+                className="h-[400px] w-full bg-background border border-border rounded-lg overflow-hidden"
                 style={{ background: 'hsl(var(--background))', width: '100%' }}
               >
                 <ReactFlow
@@ -570,6 +613,9 @@ const WorkflowRun = () => {
                   nodesDraggable={false}
                   nodesConnectable={false}
                   elementsSelectable={true}
+                  minZoom={0.5}
+                  maxZoom={1.5}
+                  defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
                 >
                   <Background />
                   <Controls showInteractive={false} />
