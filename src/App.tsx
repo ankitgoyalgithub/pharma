@@ -34,6 +34,7 @@ import RawMaterialPlanning from "./pages/RawMaterialPlanning";
 import FirstMidMileOptimization from "./pages/FirstMidMileOptimization";
 import CapexPlanning from "./pages/CapexPlanning";
 import ProjectPrioritization from "./pages/ProjectPrioritization";
+import PipelineDashboard from "./pages/PipelineDashboard";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,7 @@ const App = () => (
             <Route path="workflow-builder" element={<WorkflowBuilder />} />
             <Route path="workflow-monitor" element={<WorkflowMonitor />} />
             <Route path="workflow-run" element={<WorkflowRun />} />
+            <Route path="pipeline-dashboard" element={<PipelineDashboard />} />
             <Route path="build" element={<Build />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="settings" element={<Settings />} />
