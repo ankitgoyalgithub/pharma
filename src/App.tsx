@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { StepperProvider } from "./contexts/StepperContext";
-import Studies from "./pages/Studies";
+import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 
 import DemandForecasting from "./pages/DemandForecasting";
@@ -34,7 +34,6 @@ import RawMaterialPlanning from "./pages/RawMaterialPlanning";
 import FirstMidMileOptimization from "./pages/FirstMidMileOptimization";
 import CapexPlanning from "./pages/CapexPlanning";
 import ProjectPrioritization from "./pages/ProjectPrioritization";
-import PipelineDashboard from "./pages/PipelineDashboard";
 
 const queryClient = new QueryClient();
 
@@ -49,7 +48,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Analytics />} />
-            <Route path="study" element={<Studies />} />
+            <Route path="study" element={<Dashboard />} />
             
             <Route path="foundry" element={<Foundry />} />
             <Route path="jobs" element={<Jobs />} />
@@ -71,7 +70,6 @@ const App = () => (
             <Route path="workflow-builder" element={<WorkflowBuilder />} />
             <Route path="workflow-monitor" element={<WorkflowMonitor />} />
             <Route path="workflow-run" element={<WorkflowRun />} />
-            <Route path="pipeline-dashboard" element={<PipelineDashboard />} />
             <Route path="build" element={<Build />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="settings" element={<Settings />} />

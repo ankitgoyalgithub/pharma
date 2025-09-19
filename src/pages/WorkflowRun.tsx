@@ -286,14 +286,13 @@ const WorkflowRun = () => {
       type: 'smoothstep',
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        color: 'hsl(var(--primary))',
       },
-      style: {
-        stroke: 'hsl(var(--primary))',
-        strokeWidth: 3,
-        opacity: 0.9,
+      style: { 
+        stroke: '#94a3b8', 
+        strokeWidth: 2,
+        animation: isRunning ? 'flow 2s ease-in-out infinite' : 'none'
       },
-      animated: true,
+      animated: isRunning,
     }));
   }, [workflowStructure.connections, isRunning]);
 
@@ -419,6 +418,10 @@ const WorkflowRun = () => {
       currentEdges.map(edge => ({
         ...edge,
         animated: isRunning,
+        style: {
+          ...edge.style,
+          stroke: isRunning ? '#10b981' : '#94a3b8'
+        }
       }))
     );
   }, [isRunning, setEdges]);
@@ -491,8 +494,8 @@ const WorkflowRun = () => {
               <Button 
                 variant="default" 
                 size="sm" 
-                onClick={() => navigate('/pipeline-dashboard')}
-                className="bg-primary hover:bg-primary/90"
+                onClick={() => navigate('/dashboard')}
+                className="bg-green-600 hover:bg-green-700"
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 View Dashboard
@@ -553,7 +556,7 @@ const WorkflowRun = () => {
             </CardHeader>
             <CardContent className="p-2">
               <div 
-                className="h-[320px] w-full bg-background border border-border rounded-lg overflow-hidden"
+                className="h-[250px] w-full bg-background border border-border rounded-lg overflow-hidden"
                 style={{ background: 'hsl(var(--background))', width: '100%' }}
               >
                 <ReactFlow
@@ -567,11 +570,6 @@ const WorkflowRun = () => {
                   nodesDraggable={false}
                   nodesConnectable={false}
                   elementsSelectable={true}
-                  defaultEdgeOptions={{
-                    type: 'smoothstep',
-                    markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--primary))' },
-                    style: { stroke: 'hsl(var(--primary))', strokeWidth: 3, opacity: 0.9 }
-                  }}
                 >
                   <Background />
                   <Controls showInteractive={false} />

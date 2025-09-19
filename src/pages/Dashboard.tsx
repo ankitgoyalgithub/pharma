@@ -1,454 +1,486 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ModuleTile } from "@/components/ModuleTile";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Line, Doughnut, Bar } from "react-chartjs-2";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   TrendingUp, 
-  BarChart3, 
-  Award, 
   Package, 
-  DollarSign,
+  Factory, 
+  Calendar, 
+  Boxes, 
+  DollarSign, 
+  Building2, 
+  FileSpreadsheet, 
+  Database,
+  BarChart3,
+  Search,
+  Sparkles,
+  ShoppingCart,
+  Truck,
+  Target,
   Users,
-  Factory,
   Clock,
-  AlertTriangle,
-  CheckCircle,
-  Copy,
-  AlertCircle,
-  Download,
-  Share,
   Eye,
-  Calendar
+  Copy
 } from "lucide-react";
-import { ForecastCard } from "@/components/ForecastCard";
 
-const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("overview");
+// Sample past studies data
+const pastStudies = [
+  {
+    id: 1,
+    title: "Q3 Demand Forecasting Analysis",
+    description: "Machine learning demand prediction for electronics division",
+    module: "Demand Forecasting",
+    createdDate: "2024-01-15",
+    status: "Completed",
+    accuracy: "87%"
+  },
+  {
+    id: 2,
+    title: "Supply Chain Optimization Study",
+    description: "End-to-end supply chain analysis for cost reduction",
+    module: "Production Planning", 
+    createdDate: "2024-01-10",
+    status: "Completed",
+    accuracy: "92%"
+  },
+  {
+    id: 3,
+    title: "CAPEX Budget Planning FY25",
+    description: "Strategic capital expenditure planning and allocation",
+    module: "CAPEX Planning",
+    createdDate: "2024-01-08",
+    status: "In Progress",
+    accuracy: "N/A"
+  },
+  {
+    id: 4,
+    title: "Inventory Optimization - Warehouse Network",
+    description: "Multi-location inventory level optimization",
+    module: "Inventory Optimisation",
+    createdDate: "2024-01-05",
+    status: "Completed",
+    accuracy: "85%"
+  }
+];
 
-  // Sample analytics data
-  const overallMetrics = [
-    { title: "Total Revenue", value: "$48.2M", change: "+12.5%", trend: "up", icon: DollarSign },
-    { title: "Active Studies", value: "24", change: "+8", trend: "up", icon: BarChart3 },
-    { title: "Forecast Accuracy", value: "94.2%", change: "+2.1%", trend: "up", icon: TrendingUp },
-    { title: "Processing Time", value: "2.3s", change: "-0.8s", trend: "up", icon: Clock }
-  ];
+// Supply Chain modules (8)
+const supplyChainModules = [
+  {
+    title: "Demand Forecasting",
+    description: "Predict future demand using advanced ML models",
+    icon: <TrendingUp className="w-6 h-6" />,
+    category: "Operations" as const,
+    recentlyUsed: true,
+    route: "/demand-forecasting"
+  },
+  {
+    title: "Inventory Optimisation", 
+    description: "Optimize stock levels across all locations",
+    icon: <Package className="w-6 h-6" />,
+    category: "Operations" as const,
+    recentlyUsed: true,
+    route: "/inventory-optimization"
+  },
+  {
+    title: "Replenishment Planning", 
+    description: "Optimize replenishment across warehouses and nodes",
+    icon: <Package className="w-6 h-6" />,
+    category: "Operations" as const,
+    recentlyUsed: true,
+    route: "/replenishment-planning"
+  },
+  {
+    title: "Production Planning",
+    description: "Convert demand to feasible production volumes", 
+    icon: <Factory className="w-6 h-6" />,
+    category: "Operations" as const,
+    recentlyUsed: true,
+    route: "/production-planning"
+  },
+  {
+    title: "Detailed Production Scheduling",
+    description: "Step-by-step production scheduling with data validation and optimization",
+    icon: <Calendar className="w-6 h-6" />,
+    category: "Operations" as const,
+    route: "/detailed-production-scheduling"
+  },
+  {
+    title: "Raw Material Planning", 
+    description: "Reverse BOM planning for material needs",
+    icon: <Boxes className="w-6 h-6" />,
+    category: "Operations" as const,
+    route: "/raw-material-planning"
+  },
+  {
+    title: "Procurement Planning",
+    description: "Optimize procurement strategies and supplier management",
+    icon: <ShoppingCart className="w-6 h-6" />,
+    category: "Operations" as const,
+    route: "/procurement-planning"
+  },
+  {
+    title: "First Mile & Mid Mile Optimisation",
+    description: "Optimize transportation and logistics networks",
+    icon: <Truck className="w-6 h-6" />,
+    category: "Operations" as const,
+    route: "/logistics-optimization"
+  }
+];
 
-  const qualityMetrics = [
-    { title: "Completeness", value: "97.4%", color: "success", icon: CheckCircle },
-    { title: "Missing Values", value: "1", color: "warning", icon: AlertTriangle },
-    { title: "Duplicates", value: "2", color: "accent", icon: Copy },
-    { title: "Outliers", value: "4", color: "destructive", icon: AlertCircle }
-  ];
+// Finance modules (9)
+const financeModules = [
+  {
+    title: "OPEX Planning",
+    description: "Project and optimize operational expenditure",
+    icon: <DollarSign className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/opex-planning"
+  },
+  {
+    title: "CAPEX Planning", 
+    description: "Capital budgeting for strategic investments",
+    icon: <Building2 className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/capex-planning"
+  },
+  {
+    title: "Financial Planning",
+    description: "Integrated financial forecasting and planning",
+    icon: <FileSpreadsheet className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/financial-planning"
+  },
+  {
+    title: "Budget Management",
+    description: "Track and manage organizational budgets",
+    icon: <BarChart3 className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/budget-management"
+  },
+  {
+    title: "Cost Analysis",
+    description: "Analyze and optimize cost structures",
+    icon: <TrendingUp className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/cost-analysis"
+  },
+  {
+    title: "Revenue Planning",
+    description: "Strategic revenue forecasting and planning",
+    icon: <DollarSign className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/revenue-planning"
+  },
+  {
+    title: "Risk Management",
+    description: "Financial risk assessment and mitigation",
+    icon: <Users className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/risk-management"
+  },
+  {
+    title: "Investment Analysis",
+    description: "Evaluate investment opportunities and ROI",
+    icon: <Building2 className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/investment-analysis"
+  },
+  {
+    title: "Cash Flow Management",
+    description: "Monitor and optimize cash flow patterns",
+    icon: <TrendingUp className="w-6 h-6" />,
+    category: "Finance" as const,
+    route: "/cash-flow"
+  }
+];
 
-  const moduleUsage = [
-    { name: "Demand Forecasting", value: 35, color: "hsl(var(--primary))" },
-    { name: "Production Planning", value: 25, color: "hsl(var(--secondary))" },
-    { name: "Inventory Optimization", value: 20, color: "hsl(var(--accent))" },
-    { name: "Financial Planning", value: 12, color: "hsl(var(--success))" },
-    { name: "Others", value: 8, color: "hsl(var(--muted-foreground))" }
-  ];
+// Pricing modules (2)
+const pricingModules = [
+  {
+    title: "Dynamic Pricing",
+    description: "AI-powered dynamic pricing optimization",
+    icon: <Target className="w-6 h-6" />,
+    category: "Revenue" as const,
+    route: "/dynamic-pricing"
+  },
+  {
+    title: "Price Optimization",
+    description: "Strategic pricing analysis and optimization",
+    icon: <BarChart3 className="w-6 h-6" />,
+    category: "Revenue" as const,
+    route: "/price-optimization"
+  }
+];
 
-  const performanceData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Forecast Accuracy',
-        data: [89, 91, 88, 93, 92, 94],
-        borderColor: 'hsl(var(--primary))',
-        backgroundColor: 'hsl(var(--primary) / 0.1)',
-        borderWidth: 3,
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: 'Data Quality Score',
-        data: [95, 94, 96, 97, 96, 97],
-        borderColor: 'hsl(var(--success))',
-        backgroundColor: 'hsl(var(--success) / 0.1)',
-        borderWidth: 2,
-        fill: false,
-        tension: 0.4,
-      }
-    ]
-  };
+// ESG modules (6)
+const esgModules = [
+  {
+    title: "Carbon Footprint Tracking",
+    description: "Monitor and reduce carbon emissions across operations",
+    icon: <Sparkles className="w-6 h-6" />,
+    category: "Data" as const,
+    route: "/carbon-tracking"
+  },
+  {
+    title: "Sustainability Metrics",
+    description: "Track environmental sustainability indicators",
+    icon: <Database className="w-6 h-6" />,
+    category: "Data" as const,
+    route: "/sustainability-metrics"
+  },
+  {
+    title: "ESG Reporting",
+    description: "Generate comprehensive ESG compliance reports",
+    icon: <FileSpreadsheet className="w-6 h-6" />,
+    category: "Data" as const,
+    route: "/esg-reporting"
+  },
+  {
+    title: "Waste Management",
+    description: "Optimize waste reduction and recycling programs",
+    icon: <Package className="w-6 h-6" />,
+    category: "Operations" as const,
+    route: "/waste-management"
+  },
+  {
+    title: "Energy Optimization",
+    description: "Reduce energy consumption and costs",
+    icon: <Sparkles className="w-6 h-6" />,
+    category: "Operations" as const,
+    route: "/energy-optimization"
+  },
+  {
+    title: "Social Impact Analysis",
+    description: "Measure and improve social impact initiatives",
+    icon: <Users className="w-6 h-6" />,
+    category: "Data" as const,
+    route: "/social-impact"
+  }
+];
 
-  const usageData = {
-    labels: moduleUsage.map(m => m.name),
-    datasets: [{
-      data: moduleUsage.map(m => m.value),
-      backgroundColor: moduleUsage.map(m => m.color),
-      borderWidth: 0,
-    }]
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: { duration: 0 },
-    plugins: {
-      legend: { 
-        position: 'top' as const,
-        labels: { usePointStyle: true, font: { size: 12 } }
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: false,
-        grid: { color: 'hsl(var(--border))' },
-        ticks: { font: { size: 11 } }
-      },
-      x: {
-        grid: { color: 'hsl(var(--border))' },
-        ticks: { font: { size: 11 } }
-      }
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const handleModuleClick = (route?: string) => {
+    if (route) {
+      navigate(route);
     }
   };
 
+  const handleRequestNewStudy = () => {
+    // Placeholder for request new study functionality
+    console.log("Request new study clicked");
+  };
+
+  const allModules = [...supplyChainModules, ...financeModules, ...pricingModules, ...esgModules];
+  
+  const filteredModules = (modules: typeof allModules) => {
+    if (!searchQuery) return modules;
+    return modules.filter(module => 
+      module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      module.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
   return (
-    <div className="flex h-screen bg-gradient-subtle">
-      {/* Left Sidebar with Clickable Cards */}
-      <div className="w-[25%] bg-card border-r p-4 flex flex-col max-h-screen">
-        <div className="flex-none mb-4">
-          <h2 className="text-xl font-bold text-foreground mb-2">Pipeline Dashboard</h2>
-          <p className="text-sm text-muted-foreground">Click cards to explore insights</p>
+    <div className="min-h-screen bg-background/50">
+      <div className="p-6 space-y-6">
+        {/* Modern Header Section */}
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Select your Study</h1>
+          <p className="text-muted-foreground text-base max-w-4xl leading-relaxed">
+            All studies are powered by AI Insight Engine. Just add your data - our models handle the rest. No coding or configuration required ⚡
+          </p>
         </div>
 
-        {/* Clickable Metric Cards */}
-        <ScrollArea className="flex-1">
-          <div className="grid gap-3 pb-4">
-            <ForecastCard
-              title="Overview"
-              value="94.2%"
-              subtitle="System performance and key metrics across all studies"
-              icon={TrendingUp}
-              isActive={activeTab === "overview"}
-              onClick={() => setActiveTab("overview")}
-            />
-            
-            <ForecastCard
-              title="Data Quality"
-              value="97.4%"
-              subtitle="Data completeness, accuracy, and processing metrics"
-              icon={CheckCircle}
-              isActive={activeTab === "quality"}
-              onClick={() => setActiveTab("quality")}
-            />
-            
-            <ForecastCard
-              title="Module Usage"
-              value="24"
-              subtitle="Active studies and module utilization statistics"
-              icon={BarChart3}
-              isActive={activeTab === "usage"}
-              onClick={() => setActiveTab("usage")}
-            />
-            
-            <ForecastCard
-              title="Performance"
-              value="2.3s"
-              subtitle="Processing times and system efficiency metrics"
-              icon={Award}
-              isActive={activeTab === "performance"}
-              onClick={() => setActiveTab("performance")}
-            />
-
-            <ForecastCard
-              title="Recent Studies"
-              value="8"
-              subtitle="Latest completed studies and their results"
-              icon={Clock}
-              isActive={activeTab === "recent"}
-              onClick={() => setActiveTab("recent")}
-            />
-          </div>
-        </ScrollArea>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 p-6 overflow-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {activeTab === "overview" && "System Overview"}
-              {activeTab === "quality" && "Data Quality Dashboard"}
-              {activeTab === "usage" && "Module Usage Analytics"}
-              {activeTab === "performance" && "Performance Metrics"}
-              {activeTab === "recent" && "Recent Studies"}
-            </h1>
-            <p className="text-muted-foreground">
-              {activeTab === "overview" && "Comprehensive system insights and analytics"}
-              {activeTab === "quality" && "Data quality metrics and validation results"}
-              {activeTab === "usage" && "Module utilization and study distribution"}
-              {activeTab === "performance" && "System performance and efficiency metrics"}
-              {activeTab === "recent" && "Latest completed studies and outcomes"}
-            </p>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
-            <Button>
-              <Share className="w-4 h-4 mr-2" />
-              Share
-            </Button>
-          </div>
-        </div>
-
-        {/* Content based on active tab */}
-        {activeTab === "overview" && (
-          <div className="space-y-6">
-            {/* Overall Metrics */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {overallMetrics.map((metric, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <metric.icon className="w-5 h-5 text-primary" />
-                      <Badge variant="secondary" className={
-                        metric.trend === "up" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
-                      }>
-                        {metric.change}
-                      </Badge>
-                    </div>
-                    <div className="text-2xl font-bold text-foreground">{metric.value}</div>
-                    <div className="text-sm text-muted-foreground">{metric.title}</div>
-                  </CardContent>
-                </Card>
-              ))}
+        {/* Modern Tabs and Search */}
+        <div className="flex items-center justify-between">
+          <Tabs defaultValue="supply-chain" className="w-full">
+            <div className="flex items-center justify-between mb-6">
+              <TabsList className="inline-flex h-12 items-center justify-center rounded-xl bg-muted/50 p-1 text-muted-foreground border overflow-hidden">
+                <TabsTrigger 
+                  value="supply-chain" 
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                >
+                  Supply Chain ({supplyChainModules.length})
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="finance" 
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                >
+                  Finance ({financeModules.length})
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="pricing" 
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                >
+                  Pricing ({pricingModules.length})
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="esg" 
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                >
+                  ESG ({esgModules.length})
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="past-studies" 
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                >
+                  Past Studies ({pastStudies.length})
+                </TabsTrigger>
+              </TabsList>
+              
+              <div className="relative w-80">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search All Studies"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 bg-card border-border shadow-sm"
+                />
+              </div>
             </div>
 
-            {/* Charts Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Trends</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px]">
-                    <Line data={performanceData} options={chartOptions} />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Module Usage Distribution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px]">
-                    <Doughnut 
-                      data={usageData} 
-                      options={{
-                        ...chartOptions,
-                        plugins: {
-                          ...chartOptions.plugins,
-                          legend: { position: 'bottom' as const }
-                        }
-                      }} 
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "quality" && (
-          <div className="space-y-6">
-            {/* Data Quality Summary */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-success/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="w-4 h-4 text-success" />
-                    <div className="text-xs text-muted-foreground">Completeness</div>
-                  </div>
-                  <div className="text-2xl font-bold text-success">97.4%</div>
-                </CardContent>
-              </Card>
-              
-              <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-warning/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="w-4 h-4 text-warning" />
-                    <div className="text-xs text-muted-foreground">Missing Values</div>
-                  </div>
-                  <div className="text-2xl font-bold text-warning">1</div>
-                </CardContent>
-              </Card>
-              
-              <Card className="relative overflow-hidden bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-accent/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Copy className="w-4 h-4 text-accent" />
-                    <div className="text-xs text-muted-foreground">Duplicates</div>
-                  </div>
-                  <div className="text-2xl font-bold text-accent">2</div>
-                </CardContent>
-              </Card>
-              
-              <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-destructive/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="w-4 h-4 text-destructive" />
-                    <div className="text-xs text-muted-foreground">Outliers</div>
-                  </div>
-                  <div className="text-2xl font-bold text-destructive">4</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quality Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Data Quality Timeline</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[400px]">
-                  <Bar 
-                    data={{
-                      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                      datasets: [
-                        {
-                          label: 'Completeness %',
-                          data: [95, 96, 97, 98, 97, 97],
-                          backgroundColor: 'hsl(var(--success) / 0.6)',
-                        },
-                        {
-                          label: 'Accuracy %',
-                          data: [92, 94, 95, 96, 95, 94],
-                          backgroundColor: 'hsl(var(--primary) / 0.6)',
-                        }
-                      ]
-                    }}
-                    options={chartOptions}
+            {/* Modern Tab Contents */}
+            <TabsContent value="supply-chain" className="mt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {filteredModules(supplyChainModules).map((module, index) => (
+                  <ModuleTile
+                    key={module.title}
+                    {...module}
+                    onClick={() => handleModuleClick(module.route)}
+                    className="animate-scale-in"
+                    style={{ animationDelay: `${index * 50}ms` }}
                   />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+                ))}
+              </div>
+            </TabsContent>
 
-        {activeTab === "usage" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Module Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {moduleUsage.map((module, index) => (
-                      <div key={index} className="flex justify-between items-center">
-                        <span className="text-sm">{module.name}</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
-                            <div 
-                              className="h-full rounded-full" 
-                              style={{ 
-                                width: `${module.value}%`, 
-                                backgroundColor: module.color 
-                              }}
-                            />
+            <TabsContent value="finance" className="mt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {filteredModules(financeModules).map((module, index) => (
+                  <ModuleTile
+                    key={module.title}
+                    {...module}
+                    onClick={() => handleModuleClick(module.route)}
+                    className="animate-scale-in"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="pricing" className="mt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {filteredModules(pricingModules).map((module, index) => (
+                  <ModuleTile
+                    key={module.title}
+                    {...module}
+                    onClick={() => handleModuleClick(module.route)}
+                    className="animate-scale-in"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="esg" className="mt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {filteredModules(esgModules).map((module, index) => (
+                  <ModuleTile
+                    key={module.title}
+                    {...module}
+                    onClick={() => handleModuleClick(module.route)}
+                    className="animate-scale-in"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="past-studies" className="mt-0">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                {pastStudies.map((study, index) => (
+                  <Card key={study.id} className="hover:shadow-md transition-all duration-200 bg-card border-border animate-scale-in" style={{ animationDelay: `${index * 50}ms` }}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <CardTitle className="text-lg font-semibold text-foreground mb-1">
+                            {study.title}
+                          </CardTitle>
+                          <p className="text-sm text-muted-foreground">
+                            {study.description}
+                          </p>
+                        </div>
+                        <Badge 
+                          variant={study.status === "Completed" ? "default" : "secondary"}
+                          className="ml-2"
+                        >
+                          {study.status}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="space-y-3">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Database className="w-4 h-4 mr-2" />
+                          <span>{study.module}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span>{new Date(study.createdDate).toLocaleDateString()}</span>
+                        </div>
+                        {study.status === "Completed" && (
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <BarChart3 className="w-4 h-4 mr-2" />
+                            <span>Accuracy: {study.accuracy}</span>
                           </div>
-                          <span className="text-sm font-medium w-8">{module.value}%</span>
+                        )}
+                        <div className="flex gap-2 pt-2">
+                          <Button size="sm" variant="outline" className="flex-1">
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Results
+                          </Button>
+                          <Button size="sm" variant="outline" className="flex-1">
+                            <Copy className="w-4 h-4 mr-2" />
+                            Clone Study
+                          </Button>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Study Status</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-success/10 rounded-lg">
-                      <span className="text-sm">Completed</span>
-                      <Badge variant="secondary" className="bg-success/20 text-success">18</Badge>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-warning/10 rounded-lg">
-                      <span className="text-sm">In Progress</span>
-                      <Badge variant="secondary" className="bg-warning/20 text-warning">4</Badge>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-destructive/10 rounded-lg">
-                      <span className="text-sm">Failed</span>
-                      <Badge variant="secondary" className="bg-destructive/20 text-destructive">2</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+        {/* Modern Request New Study Section */}
+        <div className="pt-6 border-t border-border/50">
+          <div className="flex items-center justify-between p-6 bg-card rounded-xl border shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-primary/10 rounded-xl">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-foreground font-semibold">Don't see your use case?</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Feeling unstructured? We've got you. Throw in any supply chain chaos, wild idea, or vague problem—no need to fit into a box.
+                </p>
+              </div>
             </div>
+            <Button onClick={handleRequestNewStudy} className="bg-primary hover:bg-primary/90 shadow-sm">
+              Request a New Study
+            </Button>
           </div>
-        )}
-
-        {activeTab === "performance" && (
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>System Performance Metrics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[400px]">
-                  <Line data={performanceData} options={chartOptions} />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {activeTab === "recent" && (
-          <div className="space-y-4">
-            {[
-              { title: "Q4 Demand Forecasting Analysis", module: "Demand Forecasting", accuracy: "94.2%", date: "2024-01-15" },
-              { title: "Production Optimization Study", module: "Production Planning", accuracy: "92.1%", date: "2024-01-12" },
-              { title: "Inventory Level Analysis", module: "Inventory Optimization", accuracy: "89.8%", date: "2024-01-10" },
-              { title: "Supply Chain Risk Assessment", module: "Risk Management", accuracy: "91.5%", date: "2024-01-08" }
-            ].map((study, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-foreground">{study.title}</h4>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <BarChart3 className="w-4 h-4" />
-                          {study.module}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {study.date}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Badge variant="secondary" className="bg-success/10 text-success">
-                        {study.accuracy}
-                      </Badge>
-                      <Button size="sm" variant="outline">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}
