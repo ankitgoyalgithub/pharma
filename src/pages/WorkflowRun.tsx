@@ -288,8 +288,9 @@ const WorkflowRun = () => {
         type: MarkerType.ArrowClosed,
       },
       style: { 
-        stroke: '#94a3b8', 
-        strokeWidth: 2,
+        stroke: 'hsl(var(--primary))', 
+        strokeWidth: 3,
+        strokeDasharray: isRunning ? '5,5' : 'none',
         animation: isRunning ? 'flow 2s ease-in-out infinite' : 'none'
       },
       animated: isRunning,
