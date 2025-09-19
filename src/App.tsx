@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { StepperProvider } from "./contexts/StepperContext";
-import Dashboard from "./pages/Dashboard";
+import Studies from "./pages/Studies";
 import Analytics from "./pages/Analytics";
 
 import DemandForecasting from "./pages/DemandForecasting";
@@ -49,7 +49,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Analytics />} />
-            <Route path="study" element={<Dashboard />} />
+            <Route path="study" element={<Studies />} />
             
             <Route path="foundry" element={<Foundry />} />
             <Route path="jobs" element={<Jobs />} />
