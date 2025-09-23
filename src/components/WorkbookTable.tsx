@@ -161,7 +161,7 @@ export const WorkbookTable: React.FC = () => {
             <table className="w-full">
               <thead className="bg-muted/50 border-b">
                 <tr className="text-xs uppercase tracking-wide">
-                  <th className="w-10 p-3">
+                  <th className="w-10 p-3 h-12">
                     <input
                       type="checkbox"
                       className="rounded border-border"
@@ -185,13 +185,13 @@ export const WorkbookTable: React.FC = () => {
                   ].map((h) => (
                     <th
                       key={h.key as string}
-                      className="text-left p-3 cursor-pointer hover:bg-muted"
+                      className="text-left p-3 h-12 cursor-pointer hover:bg-muted font-semibold"
                       onClick={() => sortBy(h.key as keyof RowItem)}
                     >
                       {h.label}
                     </th>
                   ))}
-                  <th className="w-10 p-3" />
+                  <th className="w-10 p-3 h-12" />
                 </tr>
               </thead>
               <tbody>
@@ -219,6 +219,11 @@ export const WorkbookTable: React.FC = () => {
                       <td className="p-3">{r.subcategory}</td>
                       <td className="p-3">{r.class}</td>
                       <td className="p-3">{r.location}</td>
+                      <td className="p-3">
+                        <Badge variant="outline" className="text-xs">
+                          {r.channel}
+                        </Badge>
+                      </td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
                           <Avatar className="h-6 w-6">
