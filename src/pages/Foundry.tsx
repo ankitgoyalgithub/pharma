@@ -99,281 +99,17 @@ ChartJS.register(
   ChartTitleJS
 );
 
-// Image imports (adjust paths if needed)
-import csvIcon from "@/assets/csv.png";
-import hdfsIcon from "@/assets/hdfs.svg";
-import s3Icon from "@/assets/s3.svg";
-import snowflakeIcon from "@/assets/snowflake.svg";
-import gdriveIcon from "@/assets/gdrive.png";
+// Remove these image imports - now in shared sourceIcons file
 
-type SourceType =
-  | "csv"
-  | "hdfs"
-  | "s3"
-  | "snowflake"
-  | "gdrive"
-  | "oracle"
-  | "salesforce"
-  | "sap"
-  | "upload_csv";
-
-type EntityType = "master" | "timeseries" | "featurestore";
-
-interface EntityModule {
-  title: string;
-  description: string;
-  origin: "csv" | "third-party";
-  route: string;
-  recordCount: number;
-  lastSync: string; // ISO string
-  sourceType: SourceType;
-}
-
-const sourceTypeIcon: Record<SourceType, string> = {
-  csv: csvIcon,
-  hdfs: hdfsIcon,
-  s3: s3Icon,
-  snowflake: snowflakeIcon,
-  gdrive: gdriveIcon,
-  oracle: hdfsIcon, // placeholder
-  salesforce: gdriveIcon, // placeholder
-  sap: hdfsIcon, // placeholder
-  upload_csv: csvIcon,
-};
-
-const masterEntities: EntityModule[] = [
-  {
-    title: "Product Master",
-    description: "Catalog of all products with attributes",
-    origin: "third-party",
-    route: "/entity-preview/product",
-    recordCount: 3582,
-    lastSync: "2025-07-21T15:20:00Z",
-    sourceType: "snowflake",
-  },
-  {
-    title: "Location Master",
-    description: "List of all locations and warehouses",
-    origin: "csv",
-    route: "/entity-preview/location",
-    recordCount: 213,
-    lastSync: "2025-07-18T09:45:00Z",
-    sourceType: "csv",
-  },
-  {
-    title: "Customer Master",
-    description: "Customer information and demographics",
-    origin: "third-party",
-    route: "/entity-preview/customer",
-    recordCount: 15420,
-    lastSync: "2025-07-20T14:30:00Z",
-    sourceType: "salesforce",
-  },
-  {
-    title: "Supplier Master",
-    description: "Vendor and supplier details",
-    origin: "csv",
-    route: "/entity-preview/supplier",
-    recordCount: 847,
-    lastSync: "2025-07-19T11:15:00Z",
-    sourceType: "csv",
-  },
-  {
-    title: "Employee Master",
-    description: "Employee directory and organizational data",
-    origin: "third-party",
-    route: "/entity-preview/employee",
-    recordCount: 2156,
-    lastSync: "2025-07-21T08:45:00Z",
-    sourceType: "sap",
-  },
-  {
-    title: "Category Master",
-    description: "Product categories and hierarchy",
-    origin: "csv",
-    route: "/entity-preview/category",
-    recordCount: 89,
-    lastSync: "2025-07-20T16:00:00Z",
-    sourceType: "csv",
-  },
-  {
-    title: "Currency Master",
-    description: "Currency codes and exchange rates",
-    origin: "third-party",
-    route: "/entity-preview/currency",
-    recordCount: 156,
-    lastSync: "2025-07-21T06:00:00Z",
-    sourceType: "oracle",
-  },
-  {
-    title: "Brand Master",
-    description: "Brand information and attributes",
-    origin: "csv",
-    route: "/entity-preview/brand",
-    recordCount: 342,
-    lastSync: "2025-07-20T12:30:00Z",
-    sourceType: "gdrive",
-  },
-  {
-    title: "Unit Master",
-    description: "Units of measurement definitions",
-    origin: "csv",
-    route: "/entity-preview/unit",
-    recordCount: 78,
-    lastSync: "2025-07-19T15:20:00Z",
-    sourceType: "csv",
-  },
-  {
-    title: "Contract Master",
-    description: "Active contracts and agreements",
-    origin: "third-party",
-    route: "/entity-preview/contract",
-    recordCount: 1234,
-    lastSync: "2025-07-21T10:15:00Z",
-    sourceType: "snowflake",
-  },
-];
-
-const timeseriesEntities: EntityModule[] = [
-  {
-    title: "Sales History",
-    description: "Daily sales by product and region",
-    origin: "csv",
-    route: "/entity-preview/sales-history",
-    recordCount: 14236,
-    lastSync: "2025-07-19T18:15:00Z",
-    sourceType: "hdfs",
-  },
-  {
-    title: "Copper Prices",
-    description: "Time-indexed prices of key raw materials",
-    origin: "third-party",
-    route: "/entity-preview/copper-prices",
-    recordCount: 846,
-    lastSync: "2025-07-20T22:00:00Z",
-    sourceType: "gdrive",
-  },
-  {
-    title: "Inventory Levels",
-    description: "Historical inventory data by location",
-    origin: "csv",
-    route: "/entity-preview/inventory-levels",
-    recordCount: 28456,
-    lastSync: "2025-07-21T16:30:00Z",
-    sourceType: "snowflake",
-  },
-  {
-    title: "Production Data",
-    description: "Manufacturing output and efficiency metrics",
-    origin: "third-party",
-    route: "/entity-preview/production-data",
-    recordCount: 9872,
-    lastSync: "2025-07-20T20:15:00Z",
-    sourceType: "sap",
-  },
-  {
-    title: "Customer Transactions",
-    description: "Customer purchase history and patterns",
-    origin: "csv",
-    route: "/entity-preview/customer-transactions",
-    recordCount: 156789,
-    lastSync: "2025-07-21T12:45:00Z",
-    sourceType: "hdfs",
-  },
-  {
-    title: "Market Prices",
-    description: "Commodity and material market prices",
-    origin: "third-party",
-    route: "/entity-preview/market-prices",
-    recordCount: 3456,
-    lastSync: "2025-07-21T09:30:00Z",
-    sourceType: "oracle",
-  },
-  {
-    title: "Quality Metrics",
-    description: "Product quality scores over time",
-    origin: "csv",
-    route: "/entity-preview/quality-metrics",
-    recordCount: 12678,
-    lastSync: "2025-07-20T14:20:00Z",
-    sourceType: "csv",
-  },
-  {
-    title: "Shipment Tracking",
-    description: "Logistics and delivery timeline data",
-    origin: "third-party",
-    route: "/entity-preview/shipment-tracking",
-    recordCount: 45123,
-    lastSync: "2025-07-21T11:00:00Z",
-    sourceType: "gdrive",
-  },
-  {
-    title: "Energy Consumption",
-    description: "Facility energy usage patterns",
-    origin: "csv",
-    route: "/entity-preview/energy-consumption",
-    recordCount: 8765,
-    lastSync: "2025-07-20T18:45:00Z",
-    sourceType: "csv",
-  },
-  {
-    title: "Revenue Analytics",
-    description: "Revenue trends and financial metrics",
-    origin: "third-party",
-    route: "/entity-preview/revenue-analytics",
-    recordCount: 23456,
-    lastSync: "2025-07-21T13:15:00Z",
-    sourceType: "snowflake",
-  },
-];
-
-const featureStoreEntities: EntityModule[] = [
-  {
-    title: "Holiday Calendar",
-    description: "Public holidays and seasonal events data",
-    origin: "third-party",
-    route: "/entity-preview/holiday-calendar",
-    recordCount: 2456,
-    lastSync: "2025-07-21T07:00:00Z",
-    sourceType: "oracle",
-  },
-  {
-    title: "Crude Oil Prices",
-    description: "Global crude oil pricing and trends",
-    origin: "third-party",
-    route: "/entity-preview/crude-oil-prices",
-    recordCount: 1825,
-    lastSync: "2025-07-21T06:15:00Z",
-    sourceType: "gdrive",
-  },
-  {
-    title: "NSE Index",
-    description: "National Stock Exchange market indicators",
-    origin: "third-party",
-    route: "/entity-preview/nse-index",
-    recordCount: 3650,
-    lastSync: "2025-07-21T09:45:00Z",
-    sourceType: "snowflake",
-  },
-  {
-    title: "NASDAQ Index",
-    description: "NASDAQ composite and sector indices",
-    origin: "third-party",
-    route: "/entity-preview/nasdaq-index",
-    recordCount: 4380,
-    lastSync: "2025-07-21T10:30:00Z",
-    sourceType: "oracle",
-  },
-  {
-    title: "Weather Data",
-    description: "Meteorological data and climate patterns",
-    origin: "third-party",
-    route: "/entity-preview/weather-data",
-    recordCount: 87456,
-    lastSync: "2025-07-21T08:20:00Z",
-    sourceType: "hdfs",
-  },
-];
+import { 
+  SourceType, 
+  EntityType, 
+  EntityModule, 
+  masterEntities, 
+  timeseriesEntities, 
+  featureStoreEntities,
+  sourceTypeIcon
+} from "@/data/foundry";
 
 // ---------- Create Entity Wizard Types ----------
 interface SourcePreviewRow {
@@ -1643,14 +1379,14 @@ export default function Foundry() {
               <div className="space-y-3">
                 <Label>Source</Label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                  <SourcePill value="s3" label="Amazon S3" icon={s3Icon} />
-                  <SourcePill value="oracle" label="Oracle" icon={hdfsIcon} />
-                  <SourcePill value="snowflake" label="Snowflake" icon={snowflakeIcon} />
-                  <SourcePill value="salesforce" label="Salesforce" icon={gdriveIcon} />
-                  <SourcePill value="sap" label="SAP" icon={hdfsIcon} />
-                  <SourcePill value="csv" label="CSV (Path)" icon={csvIcon} />
-                  <SourcePill value="upload_csv" label="Upload CSV" icon={csvIcon} />
-                  <SourcePill value="gdrive" label="Google Drive" icon={gdriveIcon} />
+                  <SourcePill value="s3" label="Amazon S3" icon={sourceTypeIcon.s3} />
+                  <SourcePill value="oracle" label="Oracle" icon={sourceTypeIcon.oracle} />
+                  <SourcePill value="snowflake" label="Snowflake" icon={sourceTypeIcon.snowflake} />
+                  <SourcePill value="salesforce" label="Salesforce" icon={sourceTypeIcon.salesforce} />
+                  <SourcePill value="sap" label="SAP" icon={sourceTypeIcon.sap} />
+                  <SourcePill value="csv" label="CSV (Path)" icon={sourceTypeIcon.csv} />
+                  <SourcePill value="upload_csv" label="Upload CSV" icon={sourceTypeIcon.upload_csv} />
+                  <SourcePill value="gdrive" label="Google Drive" icon={sourceTypeIcon.gdrive} />
                 </div>
               </div>
             </div>
