@@ -158,10 +158,10 @@ export const WorkbookTable: React.FC = () => {
       <Card className="border bg-card shadow-sm">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-muted/50 border-b">
-                <tr className="text-xs uppercase tracking-wide">
-                  <th className="w-10 p-3 h-12">
+                <tr className="text-xs uppercase tracking-wide h-12">
+                  <th className="w-10 p-3 align-middle">
                     <input
                       type="checkbox"
                       className="rounded border-border"
@@ -185,13 +185,13 @@ export const WorkbookTable: React.FC = () => {
                   ].map((h) => (
                     <th
                       key={h.key as string}
-                      className="text-left p-3 h-12 cursor-pointer hover:bg-muted font-semibold"
+                      className="text-left p-3 align-middle cursor-pointer hover:bg-muted font-semibold"
                       onClick={() => sortBy(h.key as keyof RowItem)}
                     >
                       {h.label}
                     </th>
                   ))}
-                  <th className="w-10 p-3 h-12" />
+                  <th className="w-10 p-3 align-middle" />
                 </tr>
               </thead>
               <tbody>
@@ -204,7 +204,7 @@ export const WorkbookTable: React.FC = () => {
                     .toUpperCase();
                   const positive = r.variancePct >= 0;
                   return (
-                    <tr key={r.id} className="border-b hover:bg-muted/30">
+                    <tr key={r.id} className="border-b hover:bg-muted/30 h-14">
                       <td className="p-3">
                         <input
                           type="checkbox"
