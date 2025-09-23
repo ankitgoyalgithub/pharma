@@ -274,7 +274,7 @@ export const AirtableStyleTable: React.FC<AirtableStyleTableProps> = ({
         <CardContent className="p-0">
           <div className="overflow-x-auto rounded-lg">
             <table className="w-full">
-              <thead className="bg-gradient-to-r from-muted/20 to-muted/10 border-b border-border/40 sticky top-16">
+              <thead className="bg-gradient-to-r from-muted/20 to-muted/10 border-b border-border/40">
                 <tr>
                   <th className="w-12 p-3">
                     <input 

@@ -226,7 +226,7 @@ export const EnhancedTable: React.FC<EnhancedTableProps> = ({
                 <TableHead 
                   key={column.key} 
                   className={cn(
-                    "text-xs font-semibold py-2 px-3",
+                    "text-xs font-semibold py-3 px-3 h-12",
                     column.sortable && "cursor-pointer hover:bg-muted/30 select-none"
                   )}
                   onClick={() => column.sortable && handleSort(column.key)}
@@ -246,7 +246,7 @@ export const EnhancedTable: React.FC<EnhancedTableProps> = ({
                 className="hover:bg-muted/10 transition-colors text-xs"
               >
                 {columns.map((column) => (
-                  <TableCell key={column.key} className="py-2 px-3 text-xs">
+                  <TableCell key={column.key} className="py-3 px-3 text-xs">
                     {column.render 
                       ? column.render(row[column.key], row)
                       : row[column.key]
