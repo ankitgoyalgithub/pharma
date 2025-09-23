@@ -326,10 +326,10 @@ export const CollaborativeForecastTable: React.FC = () => {
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-muted/50 border-b sticky top-16 z-10">
-                <tr className="text-xs">
-                  <th className="w-10 p-3">
+            <table className="w-full table-fixed">
+              <thead className="bg-muted/50 border-b">
+                <tr className="text-xs h-12">
+                  <th className="w-10 p-3 align-middle">
                     <input
                       type="checkbox"
                       className="rounded border-border"
