@@ -36,7 +36,7 @@ export const ForecastCard: React.FC<ForecastCardProps> = ({
       <div className="flex flex-col h-full min-h-0">
         {/* Header with title */}
         <div className="mb-2">
-          <h3 className="text-xs font-semibold text-foreground truncate">
+          <h3 className="text-xs font-semibold text-primary truncate">
             {title}
           </h3>
         </div>

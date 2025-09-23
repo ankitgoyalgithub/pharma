@@ -1320,12 +1320,13 @@ const DemandForecasting = () => {
         backgroundColor: hslVar("--success", 0.7),
         borderColor: hslVar("--success"),
         borderWidth: 1,
+        borderSkipped: false,
+        borderDash: [6, 4],
       },
       {
-        label: "Demand Trend Line",
+        label: "Historical Trend Line",
         data: demandSeries.labels.map((_, i) => 
-          demandSeries.histData[i] ? demandSeries.histData[i] * 1.05 : 
-          demandSeries.fcstData[i] ? demandSeries.fcstData[i] * 1.03 : null
+          demandSeries.histData[i] ? demandSeries.histData[i] * 1.05 : null
         ) as (number | null)[],
         type: 'line' as const,
         borderWidth: 2.5,
@@ -1335,6 +1336,21 @@ const DemandForecasting = () => {
         pointRadius: 3,
         pointBackgroundColor: hslVar("--warning"),
         spanGaps: false,
+      },
+      {
+        label: "Forecast Trend Line",
+        data: demandSeries.labels.map((_, i) => 
+          demandSeries.fcstData[i] ? demandSeries.fcstData[i] * 1.03 : null
+        ) as (number | null)[],
+        type: 'line' as const,
+        borderWidth: 2.5,
+        tension: 0.35,
+        borderColor: hslVar("--success"),
+        backgroundColor: "transparent",
+        pointRadius: 3,
+        pointBackgroundColor: hslVar("--success"),
+        spanGaps: false,
+        borderDash: [8, 5],
         fill: false,
       },
     ],
@@ -1806,7 +1822,7 @@ const DemandForecasting = () => {
 
         {/* Clickable Metric Cards */}
         <ScrollArea className="flex-1 mt-3">
-          <div className="grid gap-3 pb-4">
+          <div className="grid gap-3 pb-4 justify-items-center">
             <div>
             <ForecastCard
               title="Forecast Snapshot"
