@@ -1320,8 +1320,6 @@ const DemandForecasting = () => {
         backgroundColor: hslVar("--success", 0.7),
         borderColor: hslVar("--success"),
         borderWidth: 1,
-        borderSkipped: false,
-        borderDash: [6, 4],
       },
       {
         label: "Historical Trend Line",
@@ -1822,8 +1820,8 @@ const DemandForecasting = () => {
 
         {/* Clickable Metric Cards */}
         <ScrollArea className="flex-1 mt-3">
-          <div className="grid gap-3 pb-4 justify-items-center">
-            <div>
+          <div className="flex flex-col items-center gap-3 pb-4">
+            <div className="flex justify-center">
             <ForecastCard
               title="Forecast Snapshot"
               value="94.2%"
@@ -1839,7 +1837,7 @@ const DemandForecasting = () => {
             />
             </div>
 
-            <div>
+            <div className="flex justify-center">
             <ForecastCard
               title="ABC, XYZ & More"
               value="65%"
@@ -1855,7 +1853,7 @@ const DemandForecasting = () => {
             />
             </div>
 
-            <div>
+            <div className="flex justify-center">
             <ForecastCard
               title="Collaborate"
               value="Planner Input"
