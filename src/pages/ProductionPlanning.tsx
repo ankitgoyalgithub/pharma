@@ -27,6 +27,9 @@ import {
   Filter,
   Wand2,
   X,
+  Info,
+  Upload,
+  Database,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -40,6 +43,8 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { GradientSwitch } from "@/components/ui/gradient-switch";
 import { useStepper } from "@/hooks/useStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
@@ -360,11 +365,11 @@ const ProductionPlanning = () => {
   }, []);
 
   const externalDrivers = [
-    { name: "Maintenance Calendar", autoSelected: true },
-    { name: "Labor Availability", autoSelected: true },
-    { name: "Supplier Lead Times", autoSelected: true },
-    { name: "QC/Inspection Slots", autoSelected: false },
-    { name: "Setup Family Grouping", autoSelected: false },
+    { name: "Maintenance Calendar", autoSelected: true, icon: "Settings" },
+    { name: "Labor Availability", autoSelected: true, icon: "Factory" },
+    { name: "Supplier Lead Times", autoSelected: true, icon: "Timer" },
+    { name: "QC/Inspection Slots", autoSelected: false, icon: "Award" },
+    { name: "Setup Family Grouping", autoSelected: false, icon: "TrendingUp" },
   ];
 
   useEffect(() => {
@@ -379,7 +384,7 @@ const ProductionPlanning = () => {
 
   // ---------- STEP 1: Add Data ----------
   const renderStep1 = () => (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-0">
       <div>
         <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
         <p className="text-sm text-muted-foreground">Upload BOM, Routings, Work Centers, Capacity, Shifts, Maintenance, Demand/Orders, and Supplier Lead Times.</p>
@@ -387,13 +392,53 @@ const ProductionPlanning = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Upload Planning Data Files</CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base">Upload Planning Data Files</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Upload your production planning data: BOM, routings, work centers, capacity, and other relevant files. Supported formats: CSV, Excel, JSON.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            <Button 
+              variant="link" 
+              size="sm" 
+              className="p-0 h-auto text-sm text-primary underline"
+              onClick={() => {
+                // Create and download Excel template
+                const link = document.createElement('a');
+                link.href = '#'; // This would be the actual template file URL
+                link.download = 'production-planning-template.xlsx';
+                link.click();
+              }}
+            >
+              Download input template
+            </Button>
+            {" "}with pre-configured sheets (BOM, Routings, Work Centers, Capacity, Demand)
+          </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="flex-1" onClick={() => document.getElementById('file-upload')?.click()}>
+              <Upload className="h-4 w-4 mr-2" />
+              Upload Files
+            </Button>
+            <Button variant="outline" size="sm" className="flex-1">
+              <Database className="h-4 w-4 mr-2" />
+              Map from Foundry
+            </Button>
+          </div>
+          
           <Input
+            id="file-upload"
             type="file"
             multiple
             accept=".csv,.xlsx,.xls"
+            className="hidden"
             onChange={(e) => {
               const files = Array.from(e.target.files || []);
               if (files.length > 0) {
@@ -423,99 +468,232 @@ const ProductionPlanning = () => {
             }}
           />
 
-          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-            {Object.entries(uploadedFiles).map(([k, v]) => (
-              <div key={k} className="flex items-center gap-2">
-                <span className="capitalize font-medium">{k}:</span>
-                {v ? (
-                  <span className="text-green-600 flex items-center gap-1">
-                    <CheckCircle className="h-3 w-3" /> {v.name}
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground">Not uploaded</span>
-                )}
+          {Object.values(uploadedFiles).some(Boolean) && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Data Sources:</h4>
+              <div className="space-y-2">
+                <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
+                <div className="space-y-1">
+                  {Object.entries(uploadedFiles).filter(([k, v]) => v).map(([k, v]) => (
+                    <div key={k} className="flex items-center justify-between p-2 rounded border bg-card">
+                      <div className="flex items-center gap-2 text-xs">
+                        <FileText className="h-3 w-3 text-blue-600" />
+                        <span className="text-foreground">{v.name}</span>
+                        <Badge variant="secondary" className="text-xs capitalize">{k}</Badge>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        onClick={() => {
+                          setUploadedFiles(prev => ({ ...prev, [k]: null }));
+                          if (selectedPreview === k) {
+                            const remaining = Object.keys(uploadedFiles).find(key => key !== k && uploadedFiles[key]);
+                            setSelectedPreview(remaining || null);
+                          }
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
       <div>
-        <h3 className="text-base font-medium text-foreground mb-2">AI Suggested Planning Drivers</h3>
-        <div className="flex flex-wrap gap-2">
-          {externalDrivers.map(d => (
+        <div className="flex items-center gap-2 mb-4">
+          <h3 className="text-base font-medium text-foreground">AI Suggested Planning Drivers</h3>
+          <Tooltip>
+            <TooltipTrigger>
+              <Info className="w-4 h-4 text-muted-foreground" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>AI-suggested external factors that may influence production planning based on your data characteristics.</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          {externalDrivers.map((driver) => {
+            const isSelected = selectedDrivers.includes(driver.name);
+            
+            return (
             <div
-              key={d.name}
-              className={`${selectedDrivers.includes(d.name) ? "bg-primary text-white" : "bg-muted text-muted-foreground"} px-3 py-1 rounded-full border text-sm cursor-pointer flex items-center gap-2`}
-              onClick={() => toggleDriver(d.name)}
+              key={driver.name}
+              className="flex items-center justify-between p-3 rounded-lg border bg-card transition-colors hover:bg-accent/50 cursor-pointer"
             >
-              <Switch checked={selectedDrivers.includes(d.name)} /> {d.name}
+              <div 
+                className="flex items-center gap-2 flex-1"
+                onClick={() => toggleDriver(driver.name)}
+              >
+                {driver.icon === "Factory" && <Factory className="h-4 w-4 text-muted-foreground" />}
+                {driver.icon === "Timer" && <Timer className="h-4 w-4 text-muted-foreground" />}
+                {driver.icon === "Settings" && <Settings className="h-4 w-4 text-muted-foreground" />}
+                {driver.icon === "TrendingUp" && <TrendingUp className="h-4 w-4 text-muted-foreground" />}
+                {driver.icon === "Award" && <Award className="h-4 w-4 text-muted-foreground" />}
+                <span className="text-sm font-medium">{driver.name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {isSelected && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="px-2 py-1 h-6 text-xs"
+                    onClick={() => {
+                      setSelectedPreview(driver.name);
+                      setPreviewLoading(true);
+                      setTimeout(() => setPreviewLoading(false), 700);
+                    }}
+                  >
+                    Preview
+                  </Button>
+                )}
+                <GradientSwitch 
+                  checked={isSelected} 
+                />
+              </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
-      {(Object.values(uploadedFiles).some(Boolean)) && (
+      {(Object.values(uploadedFiles).some(Boolean) || selectedDrivers.length > 0) && (
         <Card className="border border-border bg-muted/30">
           <CardHeader>
             <div className="flex items-center justify-between">
               <h3 className="text-base font-medium text-foreground">Preview</h3>
-              <div className="flex gap-2">
-                {Object.keys(uploadedFiles)
-                  .filter(k => uploadedFiles[k])
-                  .map(k => (
+              <div className="flex items-center gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  {Object.keys(uploadedFiles)
+                    .filter(k => uploadedFiles[k])
+                    .map(k => (
+                      <Button
+                        key={k}
+                        size="sm"
+                        variant={selectedPreview === k ? "default" : "outline"}
+                        onClick={() => {
+                          setSelectedPreview(k);
+                          setPreviewLoading(true);
+                          setTimeout(() => setPreviewLoading(false), 500);
+                        }}
+                      >
+                        <FileText className="h-3 w-3 mr-1" />
+                        {k}
+                      </Button>
+                    ))}
+                  {selectedDrivers.map((driver, index) => (
                     <Button
-                      key={k}
+                      key={driver}
                       size="sm"
-                      variant={selectedPreview === k ? "default" : "outline"}
-                      onClick={() => { setSelectedPreview(k); setPreviewLoading(true); setTimeout(() => setPreviewLoading(false), 400); }}
+                      variant={selectedPreview === driver ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(driver);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
                     >
-                      {k}
+                      <Wand2 className="h-3 w-3 mr-1" />
+                      {driver}
                     </Button>
                   ))}
+                </div>
               </div>
             </div>
           </CardHeader>
           <CardContent className="overflow-x-auto">
             {previewLoading ? (
               <div className="flex items-center justify-center h-32">
-                <div className="h-8 w-8 rounded-full border-2 border-border border-t-transparent animate-spin" />
+                <div className="h-8 w-8 rounded-full border-2 border-border border-t-transparent animate-spin" aria-label="Loading preview" />
               </div>
-            ) : selectedPreview && uploadedFiles[selectedPreview] ? (
-              <>
-                <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-                  <FileText className="h-3 w-3" /> {uploadedFiles[selectedPreview].name}
-                </p>
-                <table className="min-w-full text-xs border border-border rounded">
-                  <thead className="bg-muted text-muted-foreground">
-                    <tr>
-                      <th className="text-left px-3 py-2">Code</th>
-                      <th className="text-left px-3 py-2">Desc</th>
-                      <th className="text-left px-3 py-2">Attr 1</th>
-                      <th className="text-left px-3 py-2">Attr 2</th>
-                      <th className="text-left px-3 py-2">Attr 3</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="hover:bg-muted/20">
-                      <td className="px-3 py-2">WCN-01</td>
-                      <td className="px-3 py-2">Cutting</td>
-                      <td className="px-3 py-2">Cap: 8h</td>
-                      <td className="px-3 py-2">Shift A</td>
-                      <td className="px-3 py-2">Setup: 30m</td>
-                    </tr>
-                    <tr className="hover:bg-muted/20">
-                      <td className="px-3 py-2">WCN-02</td>
-                      <td className="px-3 py-2">Assembly</td>
-                      <td className="px-3 py-2">Cap: 10h</td>
-                      <td className="px-3 py-2">Shift B</td>
-                      <td className="px-3 py-2">Setup: 20m</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </>
             ) : (
-              <p className="text-sm text-muted-foreground">Select a file to preview.</p>
+              <>
+                {selectedPreview ? (
+                  <>
+                    <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
+                      {selectedDrivers.includes(selectedPreview) ? (
+                        <Wand2 className="h-3 w-3" />
+                      ) : (
+                        <FileText className="h-3 w-3" />
+                      )}
+                      {selectedPreview}
+                    </p>
+                    {selectedDrivers.includes(selectedPreview) ? (
+                      // External driver preview
+                      <div className="space-y-3">
+                        <div className="text-xs text-muted-foreground">
+                          External planning factor data preview:
+                        </div>
+                        <table className="min-w-full text-xs border border-border rounded">
+                          <thead className="bg-muted text-muted-foreground">
+                            <tr>
+                              <th className="text-left px-3 py-2">Date</th>
+                              <th className="text-left px-3 py-2">Factor</th>
+                              <th className="text-left px-3 py-2">Value</th>
+                              <th className="text-left px-3 py-2">Impact</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="hover:bg-muted/20">
+                              <td className="px-3 py-2">2024-08-01</td>
+                              <td className="px-3 py-2">{selectedPreview}</td>
+                              <td className="px-3 py-2">85%</td>
+                              <td className="px-3 py-2">+12%</td>
+                            </tr>
+                            <tr className="hover:bg-muted/20">
+                              <td className="px-3 py-2">2024-08-15</td>
+                              <td className="px-3 py-2">{selectedPreview}</td>
+                              <td className="px-3 py-2">92%</td>
+                              <td className="px-3 py-2">+18%</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      // File preview
+                      <table className="min-w-full text-xs border border-border rounded">
+                        <thead className="bg-muted text-muted-foreground">
+                          <tr>
+                            <th className="text-left px-3 py-2">Code</th>
+                            <th className="text-left px-3 py-2">Description</th>
+                            <th className="text-left px-3 py-2">Attribute 1</th>
+                            <th className="text-left px-3 py-2">Attribute 2</th>
+                            <th className="text-left px-3 py-2">Attribute 3</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="hover:bg-muted/20">
+                            <td className="px-3 py-2">WCN-01</td>
+                            <td className="px-3 py-2">Cutting Station</td>
+                            <td className="px-3 py-2">Capacity: 8h</td>
+                            <td className="px-3 py-2">Shift A</td>
+                            <td className="px-3 py-2">Setup: 30min</td>
+                          </tr>
+                          <tr className="hover:bg-muted/20">
+                            <td className="px-3 py-2">WCN-02</td>
+                            <td className="px-3 py-2">Assembly Line</td>
+                            <td className="px-3 py-2">Capacity: 10h</td>
+                            <td className="px-3 py-2">Shift B</td>
+                            <td className="px-3 py-2">Setup: 20min</td>
+                          </tr>
+                          <tr className="hover:bg-muted/20">
+                            <td className="px-3 py-2">WCN-03</td>
+                            <td className="px-3 py-2">Quality Control</td>
+                            <td className="px-3 py-2">Capacity: 6h</td>
+                            <td className="px-3 py-2">Shift A</td>
+                            <td className="px-3 py-2">Setup: 10min</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Select a file or driver to preview.</p>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
