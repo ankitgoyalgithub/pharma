@@ -54,6 +54,8 @@ import { GradientSwitch } from "@/components/ui/gradient-switch";
 import { useStepper } from "@/hooks/useStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
+import { masterEntities } from "@/data/foundry/masterEntities";
+import { timeseriesEntities } from "@/data/foundry/timeseriesEntities";
 
 // --- Chart.js for utilization / summary charts ---
 import {
@@ -1518,106 +1520,201 @@ const ProductionPlanning = () => {
   // Foundry modal dialog
   const foundryModal = (
     <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Map from Foundry</DialogTitle>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="pb-6">
+          <DialogTitle className="flex items-center gap-3 text-xl">
+            <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
+              <Database className="w-5 h-5 text-white" />
+            </div>
+            Map from Foundry
+          </DialogTitle>
+          <p className="text-muted-foreground text-sm mt-2">
+            Select data objects from your Foundry data catalog to import into the planning workflow
+          </p>
         </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="data-type">Data Type</Label>
+        
+        <div className="space-y-6">
+          {/* Data Type Selection */}
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold text-foreground">Data Type</Label>
             <Select value={selectedDataType} onValueChange={(value: 'master' | 'timeseries' | '') => setSelectedDataType(value)}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12">
                 <SelectValue placeholder="Select data type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="master">Master Data</SelectItem>
-                <SelectItem value="timeseries">Time Series Data</SelectItem>
+                <SelectItem value="master" className="py-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                      <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <div className="font-medium">Master Data</div>
+                      <div className="text-xs text-muted-foreground">Static reference data and entities</div>
+                    </div>
+                  </div>
+                </SelectItem>
+                <SelectItem value="timeseries" className="py-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                      <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div>
+                      <div className="font-medium">Time Series Data</div>
+                      <div className="text-xs text-muted-foreground">Historical and temporal datasets</div>
+                    </div>
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
           
+          {/* Object Selection */}
           {selectedDataType && (
-            <div>
-              <Label htmlFor="object">Object</Label>
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold text-foreground">Available Objects</Label>
               <Select value={selectedObject} onValueChange={setSelectedObject}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select object" />
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder="Select object to import" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-80">
                   {selectedDataType === 'master' ? (
-                    <>
-                      <SelectItem value="Product_Master">Product Master</SelectItem>
-                      <SelectItem value="Location_Master">Location Master</SelectItem>
-                      <SelectItem value="Work_Center_Master">Work Center Master</SelectItem>
-                      <SelectItem value="BOM_Master">BOM Master</SelectItem>
-                      <SelectItem value="Routing_Master">Routing Master</SelectItem>
-                    </>
+                    masterEntities.map((entity) => (
+                      <SelectItem key={entity.title} value={entity.title} className="py-3">
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="w-8 h-8 rounded bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                            <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium truncate">{entity.title}</div>
+                            <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge variant="secondary" className="text-xs px-2 py-0">
+                                {entity.recordCount.toLocaleString()} records
+                              </Badge>
+                              <Badge variant="outline" className="text-xs px-2 py-0">
+                                {entity.sourceType}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    ))
                   ) : (
-                    <>
-                      <SelectItem value="Production_Orders">Production Orders</SelectItem>
-                      <SelectItem value="Capacity_Data">Capacity Data</SelectItem>
-                      <SelectItem value="Maintenance_Schedule">Maintenance Schedule</SelectItem>
-                      <SelectItem value="Demand_History">Demand History</SelectItem>
-                    </>
+                    timeseriesEntities.map((entity) => (
+                      <SelectItem key={entity.title} value={entity.title} className="py-3">
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="w-8 h-8 rounded bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium truncate">{entity.title}</div>
+                            <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge variant="secondary" className="text-xs px-2 py-0">
+                                {entity.recordCount.toLocaleString()} records
+                              </Badge>
+                              <Badge variant="outline" className="text-xs px-2 py-0">
+                                {entity.sourceType}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    ))
                   )}
                 </SelectContent>
               </Select>
             </div>
           )}
           
+          {/* Date Range Selection for Time Series */}
           {selectedDataType === 'timeseries' && (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="from-date">From Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {fromDate ? format(fromDate, "PPP") : "Pick a date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={fromDate}
-                      onSelect={setFromDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold text-foreground">Date Range</Label>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">From Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-normal h-12">
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {fromDate ? format(fromDate, "PPP") : "Select start date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={fromDate}
+                        onSelect={setFromDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">To Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-normal h-12">
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {toDate ? format(toDate, "PPP") : "Select end date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={toDate}
+                        onSelect={setToDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
-              <div>
-                <Label htmlFor="to-date">To Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {toDate ? format(toDate, "PPP") : "Pick a date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={toDate}
-                      onSelect={setToDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+            </div>
+          )}
+          
+          {/* Selected Object Preview */}
+          {selectedObject && (
+            <div className="p-4 border rounded-lg bg-muted/50">
+              <div className="flex items-start gap-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  selectedDataType === 'master' 
+                    ? 'bg-blue-100 dark:bg-blue-900/20' 
+                    : 'bg-green-100 dark:bg-green-900/20'
+                }`}>
+                  {selectedDataType === 'master' ? (
+                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  ) : (
+                    <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Selected: {selectedObject}</h4>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {selectedDataType === 'master' ? 'Master data object' : 'Time series data object'}
+                    {selectedDataType === 'timeseries' && fromDate && toDate && 
+                      ` • ${format(fromDate, "MMM d, yyyy")} to ${format(toDate, "MMM d, yyyy")}`
+                    }
+                  </p>
+                </div>
               </div>
             </div>
           )}
         </div>
-        <div className="flex gap-2 pt-4">
-          <Button variant="outline" className="flex-1" onClick={() => setIsFoundryModalOpen(false)}>
+        
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-6 border-t">
+          <Button variant="outline" className="flex-1 h-12" onClick={() => setIsFoundryModalOpen(false)}>
             Cancel
           </Button>
           <Button 
-            className="flex-1" 
+            className="flex-1 h-12" 
             onClick={handleFoundrySubmit}
-            disabled={!selectedObject}
+            disabled={!selectedObject || (selectedDataType === 'timeseries' && (!fromDate || !toDate))}
           >
-            Map Object
+            <Database className="w-4 h-4 mr-2" />
+            Import from Foundry
           </Button>
         </div>
       </DialogContent>
