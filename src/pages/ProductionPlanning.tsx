@@ -44,6 +44,12 @@ import {
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Label } from "@/components/ui/label";
 import { GradientSwitch } from "@/components/ui/gradient-switch";
 import { useStepper } from "@/hooks/useStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
@@ -264,6 +270,14 @@ const ProductionPlanning = () => {
   const [selectedPreview, setSelectedPreview] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [selectedDrivers, setSelectedDrivers] = useState([]);
+  
+  // Foundry mapping modal states
+  const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
+  const [selectedDataType, setSelectedDataType] = useState<'master' | 'timeseries' | ''>('');
+  const [selectedObject, setSelectedObject] = useState<string>('');
+  const [fromDate, setFromDate] = useState<Date | undefined>();
+  const [toDate, setToDate] = useState<Date | undefined>();
+  const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'transactional', fromDate?: Date, toDate?: Date}>>([]);
 
   const [activeTab, setActiveTab] = useState("overview"); // overview | workcenters | orders | timeline | workbook
   const [horizon, setHorizon] = useState("4 Weeks");
@@ -382,6 +396,30 @@ const ProductionPlanning = () => {
     setSelectedDrivers(prev => prev.includes(driver) ? prev.filter(d => d !== driver) : [...prev, driver]);
   };
 
+  const handleFoundrySubmit = () => {
+    if (!selectedObject) return;
+    
+    const newObject = {
+      name: selectedObject,
+      type: selectedDataType === 'timeseries' ? 'transactional' as const : 'master' as const,
+      ...(selectedDataType === 'timeseries' && { fromDate, toDate })
+    };
+    
+    setFoundryObjects(prev => [...prev, newObject]);
+    
+    // Reset form
+    setSelectedDataType('');
+    setSelectedObject('');
+    setFromDate(undefined);
+    setToDate(undefined);
+    setIsFoundryModalOpen(false);
+    
+    // Set preview to new object
+    setSelectedPreview(selectedObject);
+    setPreviewLoading(true);
+    setTimeout(() => setPreviewLoading(false), 700);
+  };
+
   // ---------- STEP 1: Add Data ----------
   const renderStep1 = () => (
     <div className="space-y-6 p-0">
@@ -427,7 +465,7 @@ const ProductionPlanning = () => {
               <Upload className="h-4 w-4 mr-2" />
               Upload Files
             </Button>
-            <Button variant="outline" size="sm" className="flex-1">
+            <Button variant="outline" size="sm" className="flex-1" onClick={() => setIsFoundryModalOpen(true)}>
               <Database className="h-4 w-4 mr-2" />
               Map from Foundry
             </Button>
@@ -568,24 +606,39 @@ const ProductionPlanning = () => {
               <h3 className="text-base font-medium text-foreground">Preview</h3>
               <div className="flex items-center gap-2">
                 <div className="flex gap-2 flex-wrap">
-                  {Object.keys(uploadedFiles)
-                    .filter(k => uploadedFiles[k])
-                    .map(k => (
-                      <Button
-                        key={k}
-                        size="sm"
-                        variant={selectedPreview === k ? "default" : "outline"}
-                        onClick={() => {
-                          setSelectedPreview(k);
-                          setPreviewLoading(true);
-                          setTimeout(() => setPreviewLoading(false), 500);
-                        }}
-                      >
-                        <FileText className="h-3 w-3 mr-1" />
-                        {k}
-                      </Button>
-                    ))}
-                  {selectedDrivers.map((driver, index) => (
+                   {Object.keys(uploadedFiles)
+                     .filter(k => uploadedFiles[k])
+                     .map(k => (
+                       <Button
+                         key={k}
+                         size="sm"
+                         variant={selectedPreview === k ? "default" : "outline"}
+                         onClick={() => {
+                           setSelectedPreview(k);
+                           setPreviewLoading(true);
+                           setTimeout(() => setPreviewLoading(false), 500);
+                         }}
+                       >
+                         <FileText className="h-3 w-3 mr-1" />
+                         {k}
+                       </Button>
+                     ))}
+                   {foundryObjects.map((obj, index) => (
+                     <Button
+                       key={obj.name}
+                       size="sm"
+                       variant={selectedPreview === obj.name ? "default" : "outline"}
+                       onClick={() => {
+                         setSelectedPreview(obj.name);
+                         setPreviewLoading(true);
+                         setTimeout(() => setPreviewLoading(false), 500);
+                       }}
+                     >
+                       <Database className="h-3 w-3 mr-1" />
+                       {obj.name.split('_')[0]}
+                     </Button>
+                   ))}
+                   {selectedDrivers.map((driver, index) => (
                     <Button
                       key={driver}
                       size="sm"
@@ -1462,6 +1515,115 @@ const ProductionPlanning = () => {
     </div>
   );
 
+  // Foundry modal dialog
+  const foundryModal = (
+    <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Map from Foundry</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="data-type">Data Type</Label>
+            <Select value={selectedDataType} onValueChange={(value: 'master' | 'timeseries' | '') => setSelectedDataType(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select data type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="master">Master Data</SelectItem>
+                <SelectItem value="timeseries">Time Series Data</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {selectedDataType && (
+            <div>
+              <Label htmlFor="object">Object</Label>
+              <Select value={selectedObject} onValueChange={setSelectedObject}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select object" />
+                </SelectTrigger>
+                <SelectContent>
+                  {selectedDataType === 'master' ? (
+                    <>
+                      <SelectItem value="Product_Master">Product Master</SelectItem>
+                      <SelectItem value="Location_Master">Location Master</SelectItem>
+                      <SelectItem value="Work_Center_Master">Work Center Master</SelectItem>
+                      <SelectItem value="BOM_Master">BOM Master</SelectItem>
+                      <SelectItem value="Routing_Master">Routing Master</SelectItem>
+                    </>
+                  ) : (
+                    <>
+                      <SelectItem value="Production_Orders">Production Orders</SelectItem>
+                      <SelectItem value="Capacity_Data">Capacity Data</SelectItem>
+                      <SelectItem value="Maintenance_Schedule">Maintenance Schedule</SelectItem>
+                      <SelectItem value="Demand_History">Demand History</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          
+          {selectedDataType === 'timeseries' && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="from-date">From Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {fromDate ? format(fromDate, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={fromDate}
+                      onSelect={setFromDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div>
+                <Label htmlFor="to-date">To Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {toDate ? format(toDate, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={toDate}
+                      onSelect={setToDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex gap-2 pt-4">
+          <Button variant="outline" className="flex-1" onClick={() => setIsFoundryModalOpen(false)}>
+            Cancel
+          </Button>
+          <Button 
+            className="flex-1" 
+            onClick={handleFoundrySubmit}
+            disabled={!selectedObject}
+          >
+            Map Object
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <div className="p-8">
@@ -1470,6 +1632,7 @@ const ProductionPlanning = () => {
         {currentStep === 3 && renderStep3()}
         {currentStep === 4 && renderStep4()}
       </div>
+      {foundryModal}
     </div>
   );
 };
