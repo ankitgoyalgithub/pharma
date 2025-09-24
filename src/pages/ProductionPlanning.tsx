@@ -1573,8 +1573,17 @@ const ProductionPlanning = () => {
             <div className="space-y-3">
               <Label className="text-sm font-semibold text-foreground">Available Objects</Label>
               <Select value={selectedObject} onValueChange={setSelectedObject}>
-                <SelectTrigger className="h-12">
-                  <SelectValue placeholder="Select object to import" />
+                <SelectTrigger className="h-12 w-full">
+                  <SelectValue 
+                    placeholder="Select object to import"
+                    className="truncate w-full text-left"
+                  >
+                    {selectedObject && (
+                      <div className="truncate w-full text-left font-medium">
+                        {selectedObject}
+                      </div>
+                    )}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
                   {selectedDataType === 'master' ? (
