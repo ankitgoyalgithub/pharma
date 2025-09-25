@@ -38,6 +38,8 @@ import WorkbookTable from "@/components/WorkbookTable";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
+import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
+import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 
 // ---- Chart.js imports ----
 import {
@@ -170,6 +172,8 @@ const InventoryOptimization: React.FC = () => {
   // Add Data states
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'timeseries', fromDate?: Date, toDate?: Date}>>([]);
+  const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+  const [driversLoading, setDriversLoading] = useState(false);
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
 
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
@@ -224,6 +228,33 @@ const InventoryOptimization: React.FC = () => {
     setSelectedPreview(newObject.name);
     setPreviewLoading(true);
     setTimeout(() => setPreviewLoading(false), 600);
+  };
+
+  // Auto-select drivers when data sources are added
+  const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
+  const externalDrivers = getExternalDrivers("inventory-optimization", hasData);
+
+  // Auto-select drivers when data sources are added
+  const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
+  const externalDrivers = getExternalDrivers("inventory-optimization", hasData);
+
+  const toggleDriver = (driver: string) => {
+    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
+  };
+
+  useEffect(() => {
+    if (hasData && selectedDrivers.length === 0) {
+      setDriversLoading(true);
+      setTimeout(() => {
+        const driversToSelect = externalDrivers.filter(d => d.autoSelected).map(d => d.name);
+        setSelectedDrivers(driversToSelect);
+        setDriversLoading(false);
+      }, 500);
+    }
+  }, [uploadedFiles.length, foundryObjects.length]);
+
+  const toggleDriver = (driver: string) => {
+    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
   };
 
   // ---------- Charts: Step 2 (Data Gaps) ----------
@@ -486,7 +517,21 @@ const InventoryOptimization: React.FC = () => {
         </CardContent>
       </Card>
 
-      {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
+      <ExternalDriversSection
+        title="AI Suggested External Drivers"
+        description="AI-suggested external factors that may influence inventory patterns based on your data characteristics."
+        drivers={externalDrivers}
+        selectedDrivers={selectedDrivers}
+        driversLoading={driversLoading}
+        onToggleDriver={toggleDriver}
+        onPreviewDriver={(driverName) => {
+          setSelectedPreview(driverName);
+          setPreviewLoading(true);
+          setTimeout(() => setPreviewLoading(false), 700);
+        }}
+      />
+
+      {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
         <Card className="border border-border bg-muted/30">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -507,6 +552,21 @@ const InventoryOptimization: React.FC = () => {
                       <Database className="h-3 w-3 mr-1" />{obj.name.split("_")[0]}
                     </Button>
                   ))}
+                  {selectedDrivers.map((driver, index) => (
+                    <Button
+                      key={driver}
+                      size="sm"
+                      variant={selectedPreview === driver ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(driver);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
+                    >
+                      <Zap className="h-3 w-3 mr-1" />
+                      {driver}
+                    </Button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -521,37 +581,86 @@ const InventoryOptimization: React.FC = () => {
                 {selectedPreview ? (
                   <>
                     <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-                      <FileText className="h-3 w-3" />
+                      {selectedDrivers.includes(selectedPreview) ? (
+                        <Zap className="h-3 w-3" />
+                      ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                        <Database className="h-3 w-3" />
+                      ) : (
+                        <FileText className="h-3 w-3" />
+                      )}
                       {selectedPreview}
                     </p>
-                    <table className="min-w-full text-xs border border-border rounded">
-                      <thead className="bg-muted text-muted-foreground">
-                        <tr>
-                          <th className="text-left px-3 py-2">SKU</th>
-                          <th className="text-left px-3 py-2">Location</th>
-                          <th className="text-left px-3 py-2">On-hand</th>
-                          <th className="text-left px-3 py-2">On-order</th>
-                          <th className="text-left px-3 py-2">Backorder</th>
-                          <th className="text-left px-3 py-2">Lead Time (d)</th>
-                          <th className="text-left px-3 py-2">μ Demand</th>
-                          <th className="text-left px-3 py-2">σ Demand</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {workbookData.map((row, idx) => (
-                          <tr key={idx} className="hover:bg-muted/20">
-                            <td className="px-3 py-2">{row.sku}</td>
-                            <td className="px-3 py-2">{row.location}</td>
-                            <td className="px-3 py-2"><Input value={row.onHand.toString()} className="w-20" /></td>
-                            <td className="px-3 py-2"><Input value={row.onOrder.toString()} className="w-20" /></td>
-                            <td className="px-3 py-2"><Input value={row.backorder.toString()} className="w-20" /></td>
-                            <td className="px-3 py-2"><Input value={row.leadTime.toString()} className="w-20" /></td>
-                            <td className="px-3 py-2"><Input value={row.demandMean.toString()} className="w-20" /></td>
-                            <td className="px-3 py-2"><Input value={row.demandStd.toString()} className="w-20" /></td>
+                    {selectedDrivers.includes(selectedPreview) ? (
+                      // External driver preview
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <h4 className="text-sm font-medium mb-2">Sample Data Points</h4>
+                            <table className="min-w-full text-xs border border-border rounded">
+                              <thead className="bg-muted text-muted-foreground">
+                                <tr>
+                                  <th className="text-left px-3 py-2">Date</th>
+                                  <th className="text-left px-3 py-2">Value</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr className="hover:bg-muted/20">
+                                  <td className="px-3 py-2">2024-01-01</td>
+                                  <td className="px-3 py-2">85.2</td>
+                                </tr>
+                                <tr className="hover:bg-muted/20">
+                                  <td className="px-3 py-2">2024-01-15</td>
+                                  <td className="px-3 py-2">87.1</td>
+                                </tr>
+                                <tr className="hover:bg-muted/20">
+                                  <td className="px-3 py-2">2024-02-01</td>
+                                  <td className="px-3 py-2">83.9</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium mb-2">Impact Analysis</h4>
+                            <div className="text-xs space-y-1">
+                              <p><span className="font-medium">Correlation:</span> 0.74 (Strong)</p>
+                              <p><span className="font-medium">Forecast Lift:</span> +12.3%</p>
+                              <p><span className="font-medium">Data Quality:</span> High</p>
+                              <p><span className="font-medium">Coverage:</span> 98.2%</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // File or foundry object preview
+                      <table className="min-w-full text-xs border border-border rounded">
+                        <thead className="bg-muted text-muted-foreground">
+                          <tr>
+                            <th className="text-left px-3 py-2">SKU</th>
+                            <th className="text-left px-3 py-2">Location</th>
+                            <th className="text-left px-3 py-2">On-hand</th>
+                            <th className="text-left px-3 py-2">On-order</th>
+                            <th className="text-left px-3 py-2">Backorder</th>
+                            <th className="text-left px-3 py-2">Lead Time (d)</th>
+                            <th className="text-left px-3 py-2">μ Demand</th>
+                            <th className="text-left px-3 py-2">σ Demand</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {workbookData.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-muted/20">
+                              <td className="px-3 py-2">{row.sku}</td>
+                              <td className="px-3 py-2">{row.location}</td>
+                              <td className="px-3 py-2"><Input value={row.onHand.toString()} className="w-20" /></td>
+                              <td className="px-3 py-2"><Input value={row.onOrder.toString()} className="w-20" /></td>
+                              <td className="px-3 py-2"><Input value={row.backorder.toString()} className="w-20" /></td>
+                              <td className="px-3 py-2"><Input value={row.leadTime.toString()} className="w-20" /></td>
+                              <td className="px-3 py-2"><Input value={row.demandMean.toString()} className="w-20" /></td>
+                              <td className="px-3 py-2"><Input value={row.demandStd.toString()} className="w-20" /></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
                   </>
                 ) : (
                   <p className="text-sm text-muted-foreground">Select a file to preview.</p>

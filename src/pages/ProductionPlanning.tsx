@@ -55,6 +55,8 @@ import { useStepper } from "@/hooks/useStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
+import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
+import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 
 // --- Chart.js for utilization / summary charts ---
 import {

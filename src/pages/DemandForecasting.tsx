@@ -98,6 +98,7 @@ import { externalDriversPreviewData, getDriverPreviewData } from "@/data/demandF
 import { sampleAiResponses } from "@/data/demandForecasting/aiResponses";
 import { masterObjects, timeseriesObjects } from "@/data/demandForecasting/foundryObjects";
 import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
+import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 
 ChartJS.register(
   CategoryScale,
@@ -333,7 +334,7 @@ const DemandForecasting = () => {
   // ---- Step 1 ----
   const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
   
-  const externalDrivers = getExternalDrivers(hasData);
+  const externalDrivers = getExternalDrivers("demand-forecasting", hasData);
 
   const renderStep1 = () => (
     <div className="space-y-6 p-0">
@@ -477,75 +478,19 @@ const DemandForecasting = () => {
         </CardContent>
       </Card>
 
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-base font-medium text-foreground">AI Suggested External Drivers</h3>
-          <Tooltip>
-            <TooltipTrigger>
-              <Info className="w-4 h-4 text-muted-foreground" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>AI-suggested external factors that may influence demand patterns based on your data characteristics.</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {externalDrivers.map((driver) => {
-            const isSelected = selectedDrivers.includes(driver.name);
-            const isAutoSelected = driver.autoSelected;
-            const isLoadingThis = driversLoading && isAutoSelected;
-            const isDisabled = driversLoading && !isAutoSelected && !isSelected;
-            
-            return (
-            <div
-              key={driver.name}
-              className={`flex items-center justify-between p-3 rounded-lg border bg-card transition-colors ${
-                isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/50 cursor-pointer'
-              }`}
-            >
-              <div 
-                className="flex items-center gap-2 flex-1"
-                onClick={() => !isDisabled && !isLoadingThis && toggleDriver(driver.name)}
-              >
-                {driver.icon === "Calendar" && <CalendarIcon className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "DollarSign" && <DollarSign className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "CloudRain" && <CloudRain className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "TrendingUp" && <TrendingUp className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "BarChart3" && <BarChart3 className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "Users" && <Users className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "MessageCircle" && <MessageCircle className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "Award" && <Award className="h-4 w-4 text-muted-foreground" />}
-                <span className="text-sm font-medium">{driver.name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {isSelected && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="px-2 py-1 h-6 text-xs"
-                    onClick={() => {
-                      setSelectedPreview(driver.name);
-                      setPreviewLoading(true);
-                      setTimeout(() => setPreviewLoading(false), 700);
-                    }}
-                  >
-                    Preview
-                  </Button>
-                )}
-                {isLoadingThis ? (
-                  <div className="animate-spin h-4 w-4 border-2 border-primary/20 border-t-primary rounded-full" />
-                ) : (
-                  <GradientSwitch 
-                    checked={isSelected} 
-                    disabled={isDisabled}
-                  />
-                )}
-              </div>
-            </div>
-            );
-          })}
-        </div>
-      </div>
+      <ExternalDriversSection
+        title="AI Suggested External Drivers"
+        description="AI-suggested external factors that may influence demand patterns based on your data characteristics."
+        drivers={externalDrivers}
+        selectedDrivers={selectedDrivers}
+        driversLoading={driversLoading}
+        onToggleDriver={toggleDriver}
+        onPreviewDriver={(driverName) => {
+          setSelectedPreview(driverName);
+          setPreviewLoading(true);
+          setTimeout(() => setPreviewLoading(false), 700);
+        }}
+      />
 
       {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
         <Card className="border border-border bg-muted/30">
