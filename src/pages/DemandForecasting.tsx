@@ -66,6 +66,7 @@ import CollaborativeForecastTable from "@/components/CollaborativeForecastTable"
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { ScenarioCreation } from "@/components/ScenarioCreation";
+import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
 
 // ---- Chart.js imports (replaces Recharts) ----
 import {
@@ -178,36 +179,28 @@ const DemandForecasting = () => {
   
   // Foundry mapping modal states
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
-  const [selectedDataType, setSelectedDataType] = useState<'master' | 'timeseries' | ''>('');
-  const [selectedObject, setSelectedObject] = useState<string>('');
-  const [fromDate, setFromDate] = useState<Date>();
-  const [toDate, setToDate] = useState<Date>();
 
   // Step 3 state - moved to top level
   const [overrideForecast, setOverrideForecast] = useState(false);
   const [scenarioValue, setScenarioValue] = useState([95, 125, 110, 135, 145]);
 
 
-  const handleFoundrySubmit = () => {
-    if (!selectedObject) return;
-    
+  const handleFoundrySubmit = (data: {
+    selectedObject: string;
+    selectedDataType: 'master' | 'timeseries';
+    fromDate?: Date;
+    toDate?: Date;
+  }) => {
     const newObject = {
-      name: selectedObject,
-      type: selectedDataType === 'timeseries' ? 'transactional' as const : 'master' as const,
-      ...(selectedDataType === 'timeseries' && { fromDate, toDate })
+      name: data.selectedObject,
+      type: data.selectedDataType === 'timeseries' ? 'transactional' as const : 'master' as const,
+      ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
     };
     
     setFoundryObjects(prev => [...prev, newObject]);
     
-    // Reset form
-    setSelectedDataType('');
-    setSelectedObject('');
-    setFromDate(undefined);
-    setToDate(undefined);
-    setIsFoundryModalOpen(false);
-    
     // Set preview to new object
-    setSelectedPreview(selectedObject);
+    setSelectedPreview(data.selectedObject);
     setPreviewLoading(true);
     setTimeout(() => setPreviewLoading(false), 700);
   };
@@ -393,102 +386,6 @@ const DemandForecasting = () => {
                   Map from Foundry
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Map Data from Foundry</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Data Type</label>
-                    <Select value={selectedDataType} onValueChange={(value: 'master' | 'timeseries') => {
-                      setSelectedDataType(value);
-                      setSelectedObject(''); // Reset object selection
-                    }}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select data type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="master">Master</SelectItem>
-                        <SelectItem value="timeseries">Timeseries</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {selectedDataType && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Object</label>
-                      <Select value={selectedObject} onValueChange={setSelectedObject}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select object" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {(selectedDataType === 'master' ? masterObjects : timeseriesObjects).map((obj) => (
-                            <SelectItem key={obj} value={obj}>{obj}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
-                  {selectedDataType === 'timeseries' && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">From Date</label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start text-left font-normal">
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {fromDate ? format(fromDate, "PPP") : "Pick a date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={fromDate}
-                              onSelect={setFromDate}
-                              initialFocus
-                              className="p-3 pointer-events-auto"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">To Date</label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start text-left font-normal">
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {toDate ? format(toDate, "PPP") : "Pick a date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={toDate}
-                              onSelect={setToDate}
-                              initialFocus
-                              className="p-3 pointer-events-auto"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex justify-end gap-2 pt-4">
-                    <Button variant="outline" onClick={() => setIsFoundryModalOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button 
-                      onClick={handleFoundrySubmit}
-                      disabled={!selectedObject || (selectedDataType === 'timeseries' && (!fromDate || !toDate))}
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
             </Dialog>
           </div>
           
@@ -825,6 +722,12 @@ const DemandForecasting = () => {
           Continue to Data Gaps →
         </Button>
       </div>
+
+      <MapFromFoundryDialog
+        isOpen={isFoundryModalOpen}
+        onClose={() => setIsFoundryModalOpen(false)}
+        onSubmit={handleFoundrySubmit}
+      />
     </div>
   );
 

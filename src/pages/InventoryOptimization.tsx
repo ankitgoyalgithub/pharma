@@ -37,6 +37,7 @@ import { ModernStepper } from "@/components/ModernStepper";
 import WorkbookTable from "@/components/WorkbookTable";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
+import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
 
 // ---- Chart.js imports ----
 import {
@@ -169,10 +170,6 @@ const InventoryOptimization: React.FC = () => {
   // Add Data states
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'timeseries', fromDate?: Date, toDate?: Date}>>([]);
-  const [selectedDataType, setSelectedDataType] = useState<'master' | 'timeseries' | ''>('');
-  const [selectedObject, setSelectedObject] = useState<string>('');
-  const [fromDate, setFromDate] = useState<Date>();
-  const [toDate, setToDate] = useState<Date>();
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
 
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
@@ -211,19 +208,18 @@ const InventoryOptimization: React.FC = () => {
     }, 900);
   };
 
-  const handleFoundrySubmit = () => {
-    if (!selectedObject) return;
+  const handleFoundrySubmit = (data: {
+    selectedObject: string;
+    selectedDataType: 'master' | 'timeseries';
+    fromDate?: Date;
+    toDate?: Date;
+  }) => {
     const newObject = {
-      name: selectedObject,
-      type: selectedDataType === 'timeseries' ? 'timeseries' as const : 'master' as const,
-      ...(selectedDataType === 'timeseries' && { fromDate, toDate })
+      name: data.selectedObject,
+      type: data.selectedDataType === 'timeseries' ? 'timeseries' as const : 'master' as const,
+      ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
     };
     setFoundryObjects(prev => [...prev, newObject]);
-    setSelectedDataType('');
-    setSelectedObject('');
-    setFromDate(undefined);
-    setToDate(undefined);
-    setIsFoundryModalOpen(false);
 
     setSelectedPreview(newObject.name);
     setPreviewLoading(true);
@@ -413,78 +409,6 @@ const InventoryOptimization: React.FC = () => {
                   Map from Foundry
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Map Data from Foundry</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Data Type</label>
-                    <Select value={selectedDataType} onValueChange={(v: 'master' | 'timeseries') => { setSelectedDataType(v); setSelectedObject(''); }}>
-                      <SelectTrigger><SelectValue placeholder="Select data type" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="master">Master</SelectItem>
-                        <SelectItem value="timeseries">Timeseries</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {selectedDataType && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Object</label>
-                      <Select value={selectedObject} onValueChange={setSelectedObject}>
-                        <SelectTrigger><SelectValue placeholder="Select object" /></SelectTrigger>
-                        <SelectContent>
-                          {(selectedDataType === 'master' ?
-                            ['Product_Master','Location_Master','Supplier_Master'] :
-                            ['Sales_Historical','Inventory_Positions','LeadTime_History','Purchase_Orders']
-                          ).map(obj => (<SelectItem key={obj} value={obj}>{obj}</SelectItem>))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
-                  {selectedDataType === 'timeseries' && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">From Date</label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start text-left font-normal">
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {fromDate ? format(fromDate, "PPP") : "Pick a date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar mode="single" selected={fromDate} onSelect={setFromDate} initialFocus className="p-3 pointer-events-auto" />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">To Date</label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start text-left font-normal">
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {toDate ? format(toDate, "PPP") : "Pick a date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar mode="single" selected={toDate} onSelect={setToDate} initialFocus className="p-3 pointer-events-auto" />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex justify-end gap-2 pt-4">
-                    <Button variant="outline" onClick={() => setIsFoundryModalOpen(false)}>Cancel</Button>
-                    <Button onClick={handleFoundrySubmit} disabled={!selectedObject || (selectedDataType === 'timeseries' && (!fromDate || !toDate))}>
-                      Submit
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
             </Dialog>
           </div>
 
