@@ -54,8 +54,7 @@ import { GradientSwitch } from "@/components/ui/gradient-switch";
 import { useStepper } from "@/hooks/useStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
-import { masterEntities } from "@/data/foundry/masterEntities";
-import { timeseriesEntities } from "@/data/foundry/timeseriesEntities";
+import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
 
 // --- Chart.js for utilization / summary charts ---
 import {
@@ -275,11 +274,7 @@ const ProductionPlanning = () => {
   
   // Foundry mapping modal states
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
-  const [selectedDataType, setSelectedDataType] = useState<'master' | 'timeseries' | ''>('');
-  const [selectedObject, setSelectedObject] = useState<string>('');
-  const [fromDate, setFromDate] = useState<Date | undefined>();
-  const [toDate, setToDate] = useState<Date | undefined>();
-  const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'transactional', fromDate?: Date, toDate?: Date}>>([]);
+  const [foundryObjects, setFoundryObjects] = useState<Array<{id: string, name: string, type: 'master' | 'timeseries', status: string, dateRange?: string}>>([]);
 
   const [activeTab, setActiveTab] = useState("overview"); // overview | workcenters | orders | timeline | workbook
   const [horizon, setHorizon] = useState("4 Weeks");
@@ -398,26 +393,28 @@ const ProductionPlanning = () => {
     setSelectedDrivers(prev => prev.includes(driver) ? prev.filter(d => d !== driver) : [...prev, driver]);
   };
 
-  const handleFoundrySubmit = () => {
-    if (!selectedObject) return;
-    
-    const newObject = {
-      name: selectedObject,
-      type: selectedDataType === 'timeseries' ? 'transactional' as const : 'master' as const,
-      ...(selectedDataType === 'timeseries' && { fromDate, toDate })
+  const handleFoundrySubmit = (data: {
+    selectedObject: string;
+    selectedDataType: 'master' | 'timeseries';
+    fromDate?: Date;
+    toDate?: Date;
+  }) => {
+    // Create a new foundry object
+    const newFoundryObject = {
+      id: `foundry_${Date.now()}`,
+      name: data.selectedObject,
+      type: data.selectedDataType,
+      status: 'imported' as const,
+      dateRange: data.selectedDataType === 'timeseries' && data.fromDate && data.toDate 
+        ? `${format(data.fromDate, "MMM d, yyyy")} - ${format(data.toDate, "MMM d, yyyy")}` 
+        : undefined
     };
-    
-    setFoundryObjects(prev => [...prev, newObject]);
-    
-    // Reset form
-    setSelectedDataType('');
-    setSelectedObject('');
-    setFromDate(undefined);
-    setToDate(undefined);
-    setIsFoundryModalOpen(false);
+
+    // Add to foundry objects list
+    setFoundryObjects(prev => [...prev, newFoundryObject]);
     
     // Set preview to new object
-    setSelectedPreview(selectedObject);
+    setSelectedPreview(data.selectedObject);
     setPreviewLoading(true);
     setTimeout(() => setPreviewLoading(false), 700);
   };
@@ -1517,218 +1514,6 @@ const ProductionPlanning = () => {
     </div>
   );
 
-  // Foundry modal dialog
-  const foundryModal = (
-    <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="pb-6">
-          <DialogTitle className="flex items-center gap-3 text-xl">
-            <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Database className="w-5 h-5 text-white" />
-            </div>
-            Map from Foundry
-          </DialogTitle>
-          <p className="text-muted-foreground text-sm mt-2">
-            Select data objects from your Foundry data catalog to import into the planning workflow
-          </p>
-        </DialogHeader>
-        
-        <div className="space-y-6">
-          {/* Data Type Selection */}
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold text-foreground">Data Type</Label>
-            <Select value={selectedDataType} onValueChange={(value: 'master' | 'timeseries' | '') => setSelectedDataType(value)}>
-              <SelectTrigger className="h-12">
-                <SelectValue placeholder="Select data type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="master" className="py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                      <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <div className="font-medium">Master Data</div>
-                      <div className="text-xs text-muted-foreground">Static reference data and entities</div>
-                    </div>
-                  </div>
-                </SelectItem>
-                <SelectItem value="timeseries" className="py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                      <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <div className="font-medium">Time Series Data</div>
-                      <div className="text-xs text-muted-foreground">Historical and temporal datasets</div>
-                    </div>
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {/* Object Selection */}
-          {selectedDataType && (
-            <div className="space-y-3">
-              <Label className="text-sm font-semibold text-foreground">Available Objects</Label>
-              <Select value={selectedObject} onValueChange={setSelectedObject}>
-                <SelectTrigger className="h-12 w-full">
-                  <SelectValue 
-                    placeholder="Select object to import"
-                    className="truncate w-full text-left"
-                  >
-                    {selectedObject && (
-                      <div className="truncate w-full text-left font-medium">
-                        {selectedObject}
-                      </div>
-                    )}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {selectedDataType === 'master' ? (
-                    masterEntities.map((entity) => (
-                      <SelectItem key={entity.title} value={entity.title} className="py-3">
-                        <div className="flex items-center gap-3 w-full">
-                          <div className="w-8 h-8 rounded bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                            <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium truncate">{entity.title}</div>
-                            <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="secondary" className="text-xs px-2 py-0">
-                                {entity.recordCount.toLocaleString()} records
-                              </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0">
-                                {entity.sourceType}
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    ))
-                  ) : (
-                    timeseriesEntities.map((entity) => (
-                      <SelectItem key={entity.title} value={entity.title} className="py-3">
-                        <div className="flex items-center gap-3 w-full">
-                          <div className="w-8 h-8 rounded bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium truncate">{entity.title}</div>
-                            <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="secondary" className="text-xs px-2 py-0">
-                                {entity.recordCount.toLocaleString()} records
-                              </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0">
-                                {entity.sourceType}
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-          
-          {/* Date Range Selection for Time Series */}
-          {selectedDataType === 'timeseries' && (
-            <div className="space-y-3">
-              <Label className="text-sm font-semibold text-foreground">Date Range</Label>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">From Date</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left font-normal h-12">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {fromDate ? format(fromDate, "PPP") : "Select start date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={fromDate}
-                        onSelect={setFromDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">To Date</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left font-normal h-12">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {toDate ? format(toDate, "PPP") : "Select end date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={toDate}
-                        onSelect={setToDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Selected Object Preview */}
-          {selectedObject && (
-            <div className="p-4 border rounded-lg bg-muted/50">
-              <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  selectedDataType === 'master' 
-                    ? 'bg-blue-100 dark:bg-blue-900/20' 
-                    : 'bg-green-100 dark:bg-green-900/20'
-                }`}>
-                  {selectedDataType === 'master' ? (
-                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  ) : (
-                    <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-sm">Selected: {selectedObject}</h4>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {selectedDataType === 'master' ? 'Master data object' : 'Time series data object'}
-                    {selectedDataType === 'timeseries' && fromDate && toDate && 
-                      ` • ${format(fromDate, "MMM d, yyyy")} to ${format(toDate, "MMM d, yyyy")}`
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Action Buttons */}
-        <div className="flex gap-3 pt-6 border-t">
-          <Button variant="outline" className="flex-1 h-12" onClick={() => setIsFoundryModalOpen(false)}>
-            Cancel
-          </Button>
-          <Button 
-            className="flex-1 h-12" 
-            onClick={handleFoundrySubmit}
-            disabled={!selectedObject || (selectedDataType === 'timeseries' && (!fromDate || !toDate))}
-          >
-            <Database className="w-4 h-4 mr-2" />
-            Import from Foundry
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
@@ -1738,7 +1523,12 @@ const ProductionPlanning = () => {
         {currentStep === 3 && renderStep3()}
         {currentStep === 4 && renderStep4()}
       </div>
-      {foundryModal}
+      
+      <MapFromFoundryDialog
+        isOpen={isFoundryModalOpen}
+        onClose={() => setIsFoundryModalOpen(false)}
+        onSubmit={handleFoundrySubmit}
+      />
     </div>
   );
 };
