@@ -26,7 +26,13 @@ import {
   Percent,
   Share,
   Settings,
+  X,
+  Info,
 } from "lucide-react";
+import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
+import { ExternalDriversSection } from "@/components/ExternalDriversSection";
+import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { format } from "date-fns";
 
 // ---- Chart.js imports ----
@@ -245,12 +251,10 @@ const ReplenishmentPlanning: React.FC = () => {
   const [foundryObjects, setFoundryObjects] = useState<Array<{name: string; type: 'master' | 'timeseries', fromDate?: Date, toDate?: Date}>>([]);
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+  const [driversLoading, setDriversLoading] = useState(false);
 
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
-  const [selectedDataType, setSelectedDataType] = useState<"master" | "timeseries" | "">("");
-  const [selectedObject, setSelectedObject] = useState<string>("");
-  const [fromDate, setFromDate] = useState<Date>();
-  const [toDate, setToDate] = useState<Date>();
 
   // what-if controls (used in Review + Results)
   const [safetyMult, setSafetyMult] = useState(1.0);
@@ -272,19 +276,42 @@ const ReplenishmentPlanning: React.FC = () => {
     { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
   ];
 
+  // External drivers logic
+  const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
+  const externalDrivers = getExternalDrivers("replenishment-planning", hasData);
+
+  const toggleDriver = (driver: string) => {
+    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
+  };
+
+  useEffect(() => {
+    if (hasData && selectedDrivers.length === 0) {
+      setDriversLoading(true);
+      setTimeout(() => {
+        const driversToSelect = externalDrivers.filter(d => d.autoSelected).map(d => d.name);
+        setSelectedDrivers(driversToSelect);
+        setDriversLoading(false);
+      }, 500);
+    }
+  }, [uploadedFiles.length, foundryObjects.length]);
+
   // ---------- STEP 1: Add Data ----------
-  const handleFoundrySubmit = () => {
-    if (!selectedObject || !selectedDataType) return;
-    setFoundryObjects(prev => [...prev, { name: selectedObject, type: selectedDataType as any, fromDate, toDate }]);
-    setSelectedPreview(selectedObject);
+  const handleFoundrySubmit = (data: {
+    selectedObject: string;
+    selectedDataType: 'master' | 'timeseries';
+    fromDate?: Date;
+    toDate?: Date;
+  }) => {
+    const newObject = {
+      name: data.selectedObject,
+      type: data.selectedDataType === 'timeseries' ? 'timeseries' as const : 'master' as const,
+      ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
+    };
+    setFoundryObjects(prev => [...prev, newObject]);
+
+    setSelectedPreview(newObject.name);
     setPreviewLoading(true);
-    setTimeout(() => setPreviewLoading(false), 700);
-    // reset
-    setSelectedObject("");
-    setSelectedDataType("");
-    setFromDate(undefined);
-    setToDate(undefined);
-    setIsFoundryModalOpen(false);
+    setTimeout(() => setPreviewLoading(false), 600);
   };
 
   const renderPreviewPanel = () => (
@@ -351,10 +378,33 @@ const ReplenishmentPlanning: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Upload / Map Inputs</CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base">Upload Data Files</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Upload inventory data, forecast files, and replenishment policies. Supported formats: CSV, Excel, JSON.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            <Button variant="link" size="sm" className="p-0 h-auto text-sm text-primary underline"
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.download = 'replenishment-planning-template.xlsx';
+                link.click();
+              }}
+            >
+              Download input template
+            </Button>
+            {" "}with sheets (Inventory, Demand, Suppliers, Lead Times, Policies)
+          </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex gap-2">
             <Button variant="outline" size="sm" className="flex-1" onClick={() => document.getElementById("rep-file-upload-adv")?.click()}>
               <Upload className="h-4 w-4 mr-2" />
               Upload Files
@@ -367,18 +417,78 @@ const ReplenishmentPlanning: React.FC = () => {
                   Map from Foundry
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Map Data from Foundry</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Data Type</label>
-                    <Select value={selectedDataType} onValueChange={(v: any) => { setSelectedDataType(v); setSelectedObject(""); }}>
-                      <SelectTrigger><SelectValue placeholder="Select data type" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="master">Master</SelectItem>
-                        <SelectItem value="timeseries">Timeseries</SelectItem>
+            </Dialog>
+          </div>
+
+          <Input id="rep-file-upload-adv" type="file" multiple accept=".csv,.xlsx,.xls" className="hidden"
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              if (files.length > 0) {
+                setUploadedFiles(prev => [...prev, ...files]);
+                setSelectedPreview(files[0].name);
+                setPreviewLoading(true);
+                setTimeout(() => setPreviewLoading(false), 700);
+              }
+            }}
+          />
+
+          {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Data Sources:</h4>
+              {uploadedFiles.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
+                  <div className="space-y-1">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs">
+                          <FileText className="h-3 w-3 text-violet-700" />
+                          <span className="text-foreground">{file.name}</span>
+                        </div>
+                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
+                          onClick={() => {
+                            setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === file.name) {
+                              setSelectedPreview(null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {foundryObjects.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Foundry Objects</h5>
+                  <div className="space-y-1">
+                    {foundryObjects.map((obj, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs">
+                          <Database className="h-3 w-3 text-blue-700" />
+                          <span className="text-foreground">{obj.name}</span>
+                          <Badge variant="outline" className="text-xs">{obj.type}</Badge>
+                        </div>
+                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
+                          onClick={() => {
+                            setFoundryObjects(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === obj.name) {
+                              setSelectedPreview(null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
                       </SelectContent>
                     </Select>
                   </div>

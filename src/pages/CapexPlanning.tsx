@@ -19,8 +19,12 @@ import {
   PieChart, BarChart3, Zap, Filter,
   Search, ArrowUpDown, ArrowUp, ArrowDown,
   MessageCircle, Share, Award, Info, X,
-  Package, Users, Settings, MoreHorizontal
+  Package, Users, Settings, MoreHorizontal,
+  Database
 } from "lucide-react";
+import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
+import { ExternalDriversSection } from "@/components/ExternalDriversSection";
+import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Filler, Tooltip as ChartTooltip, Legend as ChartLegend } from "chart.js";
 import { Line, Bar, Pie } from "react-chartjs-2";
 import { buildChartOptions, hslVar, chartPalette } from "@/lib/chartTheme";
@@ -35,6 +39,15 @@ const CapexPlanning = () => {
   const [activeTab, setActiveTab] = useState<"overview" | "projects" | "analysis" | "workbook">("overview");
   const [aiMessages, setAiMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
   const [aiPrompt, setAiPrompt] = useState('');
+
+  // Add Data states
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'timeseries', fromDate?: Date, toDate?: Date}>>([]);
+  const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+  const [driversLoading, setDriversLoading] = useState(false);
+  const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
 
   // Stepper configuration
   const stepperSteps = [
@@ -156,92 +169,212 @@ const CapexPlanning = () => {
     setAiPrompt('');
   };
 
+  // External drivers logic
+  const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
+  const externalDrivers = getExternalDrivers("capex-planning", hasData);
+
+  const toggleDriver = (driver: string) => {
+    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
+  };
+
+  useEffect(() => {
+    if (hasData && selectedDrivers.length === 0) {
+      setDriversLoading(true);
+      setTimeout(() => {
+        const driversToSelect = externalDrivers.filter(d => d.autoSelected).map(d => d.name);
+        setSelectedDrivers(driversToSelect);
+        setDriversLoading(false);
+      }, 500);
+    }
+  }, [uploadedFiles.length, foundryObjects.length]);
+
+  const handleFoundrySubmit = (data: {
+    selectedObject: string;
+    selectedDataType: 'master' | 'timeseries';
+    fromDate?: Date;
+    toDate?: Date;
+  }) => {
+    const newObject = {
+      name: data.selectedObject,
+      type: data.selectedDataType === 'timeseries' ? 'timeseries' as const : 'master' as const,
+      ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
+    };
+    setFoundryObjects(prev => [...prev, newObject]);
+
+    setSelectedPreview(newObject.name);
+    setPreviewLoading(true);
+    setTimeout(() => setPreviewLoading(false), 600);
+  };
+
   const renderStep1 = () => (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground mb-2">Upload Capital Investment Data</h1>
-        <p className="text-muted-foreground">Upload your capital expenditure projects and budget data to begin analysis</p>
+        <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
+        <p className="text-sm text-muted-foreground">Upload your capital expenditure projects and budget data to begin analysis</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="shadow-card border-0">
-          <CardContent className="p-6">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
-                <Download className="w-8 h-8 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Download Template</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Must include Project Name, Asset Type, Plant, Budget, Timeline, Expected ROI
-                </p>
-                <Button variant="outline" className="w-full">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download CAPEX Template (CSV)
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-0">
-          <CardContent className="p-6">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
-                <Upload className="w-8 h-8 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Upload Project Data</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Upload your completed CAPEX project data file for analysis
-                </p>
-                <div className="w-full border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer">
-                  <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground mb-1">Click to upload or drag and drop</p>
-                  <p className="text-xs text-muted-foreground">CSV, Excel files (max 10MB)</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="shadow-card border-0">
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5" />
-            Sample Template Fields
-          </CardTitle>
+          <CardTitle className="text-base">Upload Data Files</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            <Button variant="link" size="sm" className="p-0 h-auto text-sm text-primary underline"
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.download = 'capex-planning-template.xlsx';
+                link.click();
+              }}
+            >
+              Download input template
+            </Button>
+            {" "}with sheets (Projects, Asset Types, Budget, Timeline, ROI)
+          </p>
         </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-4 font-medium text-muted-foreground">Project</th>
-                  <th className="text-left py-3 px-4 font-medium text-muted-foreground">Asset Type</th>
-                  <th className="text-left py-3 px-4 font-medium text-muted-foreground">Plant</th>
-                  <th className="text-left py-3 px-4 font-medium text-muted-foreground">Budget</th>
-                  <th className="text-left py-3 px-4 font-medium text-muted-foreground">Timeline</th>
-                  <th className="text-left py-3 px-4 font-medium text-muted-foreground">Expected ROI</th>
-                </tr>
-              </thead>
-              <tbody>
-                {templateData.map((item, index) => (
-                  <tr key={index} className="border-b border-border/50">
-                    <td className="py-3 px-4 font-medium">{item.project}</td>
-                    <td className="py-3 px-4">{item.asset_type}</td>
-                    <td className="py-3 px-4">{item.plant}</td>
-                    <td className="py-3 px-4 text-success font-medium">{item.budget}</td>
-                    <td className="py-3 px-4">{item.timeline}</td>
-                    <td className="py-3 px-4 text-primary font-medium">{item.roi}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <CardContent className="space-y-4">
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="flex-1" onClick={() => document.getElementById('capex-file-upload')?.click()}>
+              <Upload className="h-4 w-4 mr-2" />
+              Upload Files
+            </Button>
+            <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="flex-1">
+                  <Database className="h-4 w-4 mr-2" />
+                  Map from Foundry
+                </Button>
+              </DialogTrigger>
+            </Dialog>
           </div>
+
+          <Input id="capex-file-upload" type="file" multiple accept=".csv,.xlsx,.xls" className="hidden"
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              if (files.length > 0) {
+                setUploadedFiles(prev => [...prev, ...files]);
+                setSelectedPreview(files[0].name);
+                setPreviewLoading(true);
+                setTimeout(() => setPreviewLoading(false), 700);
+              }
+            }}
+          />
+
+          {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Data Sources:</h4>
+              {uploadedFiles.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
+                  <div className="space-y-1">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs">
+                          <FileText className="h-3 w-3 text-violet-700" />
+                          <span className="text-foreground">{file.name}</span>
+                        </div>
+                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
+                          onClick={() => {
+                            setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === file.name) {
+                              setSelectedPreview(null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {foundryObjects.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Foundry Objects</h5>
+                  <div className="space-y-1">
+                    {foundryObjects.map((obj, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs">
+                          <Database className="h-3 w-3 text-blue-700" />
+                          <span className="text-foreground">{obj.name}</span>
+                          <Badge variant="outline" className="text-xs">{obj.type}</Badge>
+                        </div>
+                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
+                          onClick={() => {
+                            setFoundryObjects(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === obj.name) {
+                              setSelectedPreview(null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {hasData && (
+        <ExternalDriversSection
+          drivers={externalDrivers}
+          selectedDrivers={selectedDrivers}
+          driversLoading={driversLoading}
+          onToggleDriver={toggleDriver}
+        />
+      )}
+
+      {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Data Preview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {previewLoading ? (
+              <div className="animate-pulse space-y-3">
+                <div className="h-4 bg-muted rounded w-1/3" />
+                <div className="h-32 bg-muted rounded" />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Project</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Asset Type</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Plant</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Budget</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Timeline</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Expected ROI</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {templateData.map((item, index) => (
+                      <tr key={index} className="border-b border-border/50">
+                        <td className="py-3 px-4 font-medium">{item.project}</td>
+                        <td className="py-3 px-4">{item.asset_type}</td>
+                        <td className="py-3 px-4">{item.plant}</td>
+                        <td className="py-3 px-4 text-success font-medium">{item.budget}</td>
+                        <td className="py-3 px-4">{item.timeline}</td>
+                        <td className="py-3 px-4 text-primary font-medium">{item.roi}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      <MapFromFoundryDialog
+        isOpen={isFoundryModalOpen}
+        onOpenChange={setIsFoundryModalOpen}
+        onSubmit={handleFoundrySubmit}
+      />
 
       <div className="flex justify-end">
         <Button onClick={() => setCurrentStep(2)} className="px-8">
