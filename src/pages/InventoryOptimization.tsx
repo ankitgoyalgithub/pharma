@@ -25,6 +25,7 @@ import {
   Boxes,
   ShieldCheck,
   Wallet,
+  Zap,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -234,10 +235,6 @@ const InventoryOptimization: React.FC = () => {
   const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
   const externalDrivers = getExternalDrivers("inventory-optimization", hasData);
 
-  // Auto-select drivers when data sources are added
-  const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
-  const externalDrivers = getExternalDrivers("inventory-optimization", hasData);
-
   const toggleDriver = (driver: string) => {
     setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
   };
@@ -252,10 +249,6 @@ const InventoryOptimization: React.FC = () => {
       }, 500);
     }
   }, [uploadedFiles.length, foundryObjects.length]);
-
-  const toggleDriver = (driver: string) => {
-    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
-  };
 
   // ---------- Charts: Step 2 (Data Gaps) ----------
   const gapData = [
