@@ -417,78 +417,20 @@ const ReplenishmentPlanning: React.FC = () => {
                   Map from Foundry
                 </Button>
               </DialogTrigger>
-            </Dialog>
-          </div>
-
-          <Input id="rep-file-upload-adv" type="file" multiple accept=".csv,.xlsx,.xls" className="hidden"
-            onChange={(e) => {
-              const files = Array.from(e.target.files || []);
-              if (files.length > 0) {
-                setUploadedFiles(prev => [...prev, ...files]);
-                setSelectedPreview(files[0].name);
-                setPreviewLoading(true);
-                setTimeout(() => setPreviewLoading(false), 700);
-              }
-            }}
-          />
-
-          {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">Data Sources:</h4>
-              {uploadedFiles.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
-                  <div className="space-y-1">
-                    {uploadedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
-                        <div className="flex items-center gap-2 text-xs">
-                          <FileText className="h-3 w-3 text-violet-700" />
-                          <span className="text-foreground">{file.name}</span>
-                        </div>
-                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
-                          onClick={() => {
-                            setUploadedFiles(prev => prev.filter((_, i) => i !== index));
-                            if (selectedPreview === file.name) {
-                              setSelectedPreview(null);
-                            }
-                          }}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {foundryObjects.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-xs font-medium text-muted-foreground">Foundry Objects</h5>
-                  <div className="space-y-1">
-                    {foundryObjects.map((obj, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
-                        <div className="flex items-center gap-2 text-xs">
-                          <Database className="h-3 w-3 text-blue-700" />
-                          <span className="text-foreground">{obj.name}</span>
-                          <Badge variant="outline" className="text-xs">{obj.type}</Badge>
-                        </div>
-                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
-                          onClick={() => {
-                            setFoundryObjects(prev => prev.filter((_, i) => i !== index));
-                            if (selectedPreview === obj.name) {
-                              setSelectedPreview(null);
-                            }
-                          }}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Map from Foundry</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Data Type</label>
+                    <Select value={selectedDataType} onValueChange={setSelectedDataType}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select data type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="master">Master</SelectItem>
+                        <SelectItem value="timeseries">Time Series</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -547,92 +489,6 @@ const ReplenishmentPlanning: React.FC = () => {
                 </div>
               </DialogContent>
             </Dialog>
-          </div>
-
-          <Input
-            id="rep-file-upload-adv"
-            type="file"
-            multiple
-            accept=".csv,.xlsx,.xls"
-            className="hidden"
-            onChange={(e) => {
-              const files = Array.from(e.target.files || []);
-              if (files.length > 0) {
-                setUploadedFiles((prev) => [...prev, ...files]);
-                setSelectedPreview(files[0].name);
-                setPreviewLoading(true);
-                setTimeout(() => setPreviewLoading(false), 700);
-              }
-            }}
-          />
-
-          {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">Data Sources:</h4>
-              
-              {uploadedFiles.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
-                  <div className="space-y-1">
-                    {uploadedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
-                        <div className="flex items-center gap-2 text-xs">
-                          <FileText className="h-3 w-3 text-blue-600" />
-                          <span className="text-foreground">{file.name}</span>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={() => {
-                            setSelectedPreview(file.name);
-                            setPreviewLoading(true);
-                            setTimeout(() => setPreviewLoading(false), 600);
-                          }}
-                        >
-                          <span className="sr-only">Preview</span>
-                          👁️
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {foundryObjects.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-xs font-medium text-muted-foreground">Foundry Objects</h5>
-                  <div className="space-y-1">
-                    {foundryObjects.map((obj, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
-                        <div className="flex items-center gap-2 text-xs">
-                          <Database className="h-3 w-3 text-green-600" />
-                          <span className="text-foreground">{obj.name} <span className="text-muted-foreground">({obj.type})</span></span>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={() => {
-                            setSelectedPreview(obj.name);
-                            setPreviewLoading(true);
-                            setTimeout(() => setPreviewLoading(false), 600);
-                          }}
-                        >
-                          <span className="sr-only">Preview</span>
-                          👁️
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {renderPreviewPanel()}
-        </CardContent>
-      </Card>
 
       <div className="flex justify-between pt-4">
         <Button size="sm" variant="outline" onClick={() => window.history.back()}>← Back</Button>
