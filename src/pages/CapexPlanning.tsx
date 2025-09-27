@@ -372,7 +372,7 @@ const CapexPlanning = () => {
 
       <MapFromFoundryDialog
         isOpen={isFoundryModalOpen}
-        onOpenChange={setIsFoundryModalOpen}
+        onClose={() => setIsFoundryModalOpen(false)}
         onSubmit={handleFoundrySubmit}
       />
 

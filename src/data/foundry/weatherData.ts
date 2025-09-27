@@ -1,0 +1,122 @@
+export const weatherData = [
+  {
+    date: "2024-07-01",
+    location: "New York, NY",
+    temperature: 78,
+    humidity: 65,
+    precipitation: 0.0,
+    windSpeed: 8,
+    weatherCondition: "Sunny",
+    visibility: 10,
+    pressure: 30.15,
+    uvIndex: 7
+  },
+  {
+    date: "2024-07-01",
+    location: "Chicago, IL", 
+    temperature: 75,
+    humidity: 70,
+    precipitation: 0.12,
+    windSpeed: 12,
+    weatherCondition: "Partly Cloudy",
+    visibility: 9,
+    pressure: 30.08,
+    uvIndex: 6
+  },
+  {
+    date: "2024-07-01",
+    location: "Los Angeles, CA",
+    temperature: 82,
+    humidity: 55,
+    precipitation: 0.0,
+    windSpeed: 6,
+    weatherCondition: "Clear",
+    visibility: 10,
+    pressure: 30.12,
+    uvIndex: 9
+  },
+  {
+    date: "2024-07-02",
+    location: "Dallas, TX",
+    temperature: 88,
+    humidity: 60,
+    precipitation: 0.0,
+    windSpeed: 10,
+    weatherCondition: "Hot", 
+    visibility: 10,
+    pressure: 30.05,
+    uvIndex: 8
+  },
+  {
+    date: "2024-07-02",
+    location: "Miami, FL",
+    temperature: 85,
+    humidity: 80,
+    precipitation: 0.25,
+    windSpeed: 15,
+    weatherCondition: "Thunderstorms",
+    visibility: 7,
+    pressure: 29.98,
+    uvIndex: 5
+  },
+  {
+    date: "2024-07-03",
+    location: "New York, NY",
+    temperature: 80,
+    humidity: 68,
+    precipitation: 0.05,
+    windSpeed: 9,
+    weatherCondition: "Partly Cloudy",
+    visibility: 9,
+    pressure: 30.18,
+    uvIndex: 7
+  },
+  {
+    date: "2024-07-03",
+    location: "Chicago, IL",
+    temperature: 77,
+    humidity: 65, 
+    precipitation: 0.0,
+    windSpeed: 8,
+    weatherCondition: "Sunny",
+    visibility: 10,
+    pressure: 30.11,
+    uvIndex: 8
+  },
+  {
+    date: "2024-07-04",
+    location: "Los Angeles, CA",
+    temperature: 79,
+    humidity: 58,
+    precipitation: 0.0,
+    windSpeed: 7,
+    weatherCondition: "Clear",
+    visibility: 10,
+    pressure: 30.16,
+    uvIndex: 9
+  },
+  {
+    date: "2024-07-04",
+    location: "Dallas, TX",
+    temperature: 90,
+    humidity: 55,
+    precipitation: 0.0,
+    windSpeed: 11,
+    weatherCondition: "Hot",
+    visibility: 10,
+    pressure: 30.02,
+    uvIndex: 10
+  },
+  {
+    date: "2024-07-05",
+    location: "Miami, FL",
+    temperature: 84,
+    humidity: 75, 
+    precipitation: 0.18,
+    windSpeed: 13,
+    weatherCondition: "Showers",
+    visibility: 8,
+    pressure: 30.01,
+    uvIndex: 6
+  }
+];
