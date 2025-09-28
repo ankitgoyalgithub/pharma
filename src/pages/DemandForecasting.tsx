@@ -46,6 +46,7 @@ import {
   Wand2,
   Info,
   Trash2,
+  Shield,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -206,7 +207,7 @@ const DemandForecasting = () => {
     setPreviewLoading(true);
     setTimeout(() => setPreviewLoading(false), 700);
   };
-  const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "quality">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
   // Demand Analysis controls
   const [granularity, setGranularity] = useState<"weekly" | "monthly" | "quarterly">("weekly");
@@ -1788,6 +1789,20 @@ const DemandForecasting = () => {
             />
             </div>
 
+            <div className="flex justify-center">
+            <ForecastCard
+              title="Data Quality Review"
+              value="97.4%"
+              subtitle="Completeness score, 1 missing value imputed, 2 duplicates resolved. AI-enhanced data integrity verified."
+              icon={Shield}
+              isActive={selectedScenario === null && activeTab === "quality"}
+              onClick={() => {
+                setSelectedScenario(null);
+                setActiveTab("quality");
+              }}
+            />
+            </div>
+
             {/* Dynamic Scenarios */}
             {scenarios.map((scenario) => (
               <div key={scenario.id} className="relative group">
@@ -1826,12 +1841,14 @@ const DemandForecasting = () => {
               {activeTab === "insights" && "Insights Dashboard"}
               {activeTab === "workbook" && "Forecast Workbook"}
               {activeTab === "impact" && "Impact Analysis"}
+              {activeTab === "quality" && "Data Quality Review"}
             </h1>
             <p className="text-muted-foreground">
               {activeTab === "overview" && "Comprehensive forecast insights and analytics"}
               {activeTab === "insights" && "Demand analysis, revenue projections, and classification insights"}
               {activeTab === "workbook" && "Interactive data table with collaboration features"}
               {activeTab === "impact" && "Driver contributions, sensitivity analysis, and event impact assessment"}
+              {activeTab === "quality" && "Data integrity assessment, completeness metrics, and AI-enhanced quality insights"}
             </p>
           </div>
           <div className="flex items-center space-x-3">
