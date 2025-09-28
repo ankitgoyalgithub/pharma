@@ -20,6 +20,7 @@ interface ExternalDriversSectionProps {
   driversLoading?: boolean;
   onToggleDriver: (driverName: string) => void;
   onPreviewDriver?: (driverName: string) => void;
+  showManualControls?: boolean;
 }
 
 const getIconComponent = (iconName: string) => {
@@ -34,25 +35,41 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
   selectedDrivers,
   driversLoading = false,
   onToggleDriver,
-  onPreviewDriver
+  onPreviewDriver,
+  showManualControls = false
 }) => {
+  const [aiSuggestionsEnabled, setAiSuggestionsEnabled] = React.useState(true);
+  
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-base font-medium text-foreground">{title}</h3>
-        <Tooltip>
-          <TooltipTrigger>
-            <Info className="w-4 h-4 text-muted-foreground" />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{description}</p>
-          </TooltipContent>
-        </Tooltip>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-medium text-foreground">{title}</h3>
+          <Tooltip>
+            <TooltipTrigger>
+              <Info className="w-4 h-4 text-muted-foreground" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{description}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        
+        {showManualControls && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">AI Suggestions</span>
+            <GradientSwitch 
+              checked={aiSuggestionsEnabled}
+              onCheckedChange={setAiSuggestionsEnabled}
+            />
+          </div>
+        )}
       </div>
+      
       <div className="grid grid-cols-3 gap-4">
         {drivers.map((driver) => {
           const isSelected = selectedDrivers.includes(driver.name);
-          const isAutoSelected = driver.autoSelected;
+          const isAutoSelected = driver.autoSelected && aiSuggestionsEnabled;
           const isLoadingThis = driversLoading && isAutoSelected;
           const isDisabled = driversLoading && !isAutoSelected && !isSelected;
           const IconComponent = getIconComponent(driver.icon);
@@ -62,14 +79,19 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
               key={driver.name}
               className={`flex items-center justify-between p-3 rounded-lg border bg-card transition-colors ${
                 isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/50 cursor-pointer'
-              }`}
+              } ${isAutoSelected && aiSuggestionsEnabled ? 'border-primary/50 bg-primary/5' : ''}`}
             >
               <div 
                 className="flex items-center gap-2 flex-1"
                 onClick={() => !isDisabled && !isLoadingThis && onToggleDriver(driver.name)}
               >
                 <IconComponent className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">{driver.name}</span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">{driver.name}</span>
+                  {isAutoSelected && aiSuggestionsEnabled && (
+                    <span className="text-xs text-primary">AI Suggested</span>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 {isSelected && onPreviewDriver && (

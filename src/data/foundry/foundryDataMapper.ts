@@ -9,6 +9,7 @@ import { inventoryLevelsData } from "./inventoryLevelsData";
 import { holidayCalendarData } from "./holidayCalendarData";
 import { crudeOilPricesData } from "./crudeOilPricesData";
 import { weatherData } from "./weatherData";
+import { externalDriversData } from "../demandForecasting/externalDriversData";
 
 export const foundryDataMapper = {
   // Master Data
@@ -47,7 +48,12 @@ export const foundryDataMapper = {
   "NASDAQ_Index": [
     { date: "2024-07-01", index: "NASDAQ", value: 18200, change: 85.2 },
     { date: "2024-07-02", index: "NASDAQ", value: 18150, change: -50.0 }
-  ]
+  ],
+  
+  // External Drivers Data (matching Foundry format)
+  ...Object.fromEntries(
+    Object.entries(externalDriversData).map(([key, value]) => [key, value])
+  )
 };
 
 export const getFoundryObjectData = (objectName: string) => {

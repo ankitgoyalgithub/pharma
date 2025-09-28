@@ -97,7 +97,7 @@ import { historicalForecastData } from "@/data/demandForecasting/historicalForec
 import { pieData } from "@/data/demandForecasting/pieData";
 import { skuData } from "@/data/demandForecasting/skuData";
 import { gapData } from "@/data/demandForecasting/gapData";
-import { externalDriversPreviewData, getDriverPreviewData } from "@/data/demandForecasting/externalDriversData";
+import { getExternalDriverData } from "@/data/demandForecasting/externalDriversData";
 import { sampleAiResponses } from "@/data/demandForecasting/aiResponses";
 import { masterObjects, timeseriesObjects } from "@/data/demandForecasting/foundryObjects";
 import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
@@ -603,8 +603,8 @@ const DemandForecasting = () => {
       </Card>
 
       <ExternalDriversSection
-        title="AI Suggested External Drivers"
-        description="AI-suggested external factors that may influence demand patterns based on your data characteristics."
+        title="External Drivers"
+        description="External factors that may influence demand patterns. Toggle AI suggestions on/off and manually select additional drivers."
         drivers={externalDrivers}
         selectedDrivers={selectedDrivers}
         driversLoading={driversLoading}
@@ -614,6 +614,7 @@ const DemandForecasting = () => {
           setPreviewLoading(true);
           setTimeout(() => setPreviewLoading(false), 700);
         }}
+        showManualControls={true}
       />
 
       {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
@@ -691,54 +692,55 @@ const DemandForecasting = () => {
                       )}
                       {selectedPreview}
                     </p>
-                    {selectedDrivers.includes(selectedPreview) ? (
-                      // External driver preview
+                     {selectedDrivers.includes(selectedPreview) ? (
+                      // External driver preview - showing Foundry format data
                       <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <h4 className="text-sm font-medium mb-2">Sample Data Points</h4>
-                            <table className="min-w-full text-xs border border-border rounded">
-                              <thead className="bg-muted text-muted-foreground">
-                                <tr>
-                                  <th className="text-left px-3 py-2">Date</th>
-                                  <th className="text-left px-3 py-2">Value</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {(() => {
-                                  const driverData = getDriverPreviewData(selectedPreview || "");
-                                  return driverData ? driverData.data.map((row, idx) => (
-                                    <tr key={idx} className="hover:bg-muted/20">
-                                      <td className="px-3 py-2">{row.date}</td>
-                                      <td className="px-3 py-2">{row.value}</td>
+                        {(() => {
+                          const driverData = getExternalDriverData(selectedPreview || "");
+                          if (!driverData || driverData.length === 0) {
+                            return <p className="text-sm text-muted-foreground">No data available for this driver.</p>;
+                          }
+                          
+                          // Get column headers from first data object
+                          const columns = Object.keys(driverData[0]);
+                          
+                          return (
+                            <div className="grid grid-cols-1 gap-4">
+                              <div>
+                                <h4 className="text-sm font-medium mb-2">Sample Data Points</h4>
+                                <table className="min-w-full text-xs border border-border rounded">
+                                  <thead className="bg-muted text-muted-foreground">
+                                    <tr>
+                                      {columns.map((col) => (
+                                        <th key={col} className="text-left px-3 py-2 capitalize">
+                                          {col.replace(/_/g, ' ')}
+                                        </th>
+                                      ))}
                                     </tr>
-                                  )) : [];
-                                })()}
-                              </tbody>
-                            </table>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium mb-2">Data Source Info</h4>
-                            <div className="text-xs text-muted-foreground space-y-2">
-                              {(() => {
-                                const driverData = getDriverPreviewData(selectedPreview || "");
-                                return driverData ? (
-                                  <>
-                                    <div><strong>Source:</strong> {driverData.source}</div>
-                                    <div><strong>Update Frequency:</strong> {driverData.updateFrequency}</div>
-                                  </>
-                                ) : (
-                                  <>
-                                    <div><strong>Source:</strong> Unknown</div>
-                                    <div><strong>Update Frequency:</strong> Unknown</div>
-                                  </>
-                                );
-                              })()}
-                              <div><strong>Historical Coverage:</strong> 5+ years</div>
-                              <div><strong>Reliability:</strong> High (99.5% uptime)</div>
+                                  </thead>
+                                  <tbody>
+                                    {driverData.slice(0, 3).map((row, idx) => (
+                                      <tr key={idx} className="hover:bg-muted/20">
+                                        {columns.map((col) => (
+                                          <td key={col} className="px-3 py-2">
+                                            {String((row as any)[col])}
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className="text-xs text-muted-foreground space-y-2">
+                                <div><strong>Data Points:</strong> {driverData.length} records</div>
+                                <div><strong>Source:</strong> Foundry Feature Store</div>
+                                <div><strong>Update Frequency:</strong> Real-time</div>
+                                <div><strong>Historical Coverage:</strong> 5+ years</div>
+                                <div><strong>Reliability:</strong> High (99.5% uptime)</div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
+                          );
+                        })()}
                       </div>
                     ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
                         (() => {
