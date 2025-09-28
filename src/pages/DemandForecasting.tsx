@@ -1410,41 +1410,72 @@ const DemandForecasting = () => {
                     </div>
                   </div>
                   <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
-                    <table className="w-full text-xs">
-                      <thead className="bg-muted/20 sticky top-0">
-                        <tr>
-                          <th className="text-left p-2 font-medium">SKU</th>
-                          <th className="text-left p-2 font-medium">Product</th>
-                          <th className="text-left p-2 font-medium">Location</th>
-                          <th className="text-left p-2 font-medium">Channel</th>
-                          <th className="text-left p-2 font-medium">Current Demand</th>
-                          <th className="text-left p-2 font-medium">Forecasted Demand</th>
-                          <th className="text-left p-2 font-medium">Variance</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {dataPreviewSample.map((row, index) => (
-                          <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
-                            <td className="p-2">{row.sku}</td>
-                            <td className="p-2">{row.product}</td>
-                            <td className="p-2">{row.location}</td>
-                            <td className="p-2">
-                              <Badge variant="outline" className="text-xs">{row.channel}</Badge>
-                            </td>
-                            <td className="p-2 font-medium">{row.currentDemand}</td>
-                            <td className="p-2 font-medium">{row.forecastedDemand}</td>
-                            <td className="p-2">
-                              <Badge 
-                                variant="secondary" 
-                                className={`text-xs ${row.variance.startsWith('+') ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}
-                              >
-                                {row.variance}
-                              </Badge>
-                            </td>
+                    {foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                      (() => {
+                        const data = getFoundryObjectData(selectedPreview as string) as any[];
+                        const columns = data.length > 0 ? Object.keys(data[0]) : [];
+                        return (
+                          <table className="w-full text-xs">
+                            <thead className="bg-muted/20 sticky top-0">
+                              <tr>
+                                {columns.map((col) => (
+                                  <th key={col} className="text-left p-2 font-medium capitalize">
+                                    {col.replace(/_/g, ' ')}
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {data.slice(0, 10).map((row, index) => (
+                                <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
+                                  {columns.map((col) => (
+                                    <td key={col} className="p-2">
+                                      {typeof row[col] === 'object' ? JSON.stringify(row[col]) : String(row[col] || '')}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        );
+                      })()
+                    ) : (
+                      <table className="w-full text-xs">
+                        <thead className="bg-muted/20 sticky top-0">
+                          <tr>
+                            <th className="text-left p-2 font-medium">SKU</th>
+                            <th className="text-left p-2 font-medium">Product</th>
+                            <th className="text-left p-2 font-medium">Location</th>
+                            <th className="text-left p-2 font-medium">Channel</th>
+                            <th className="text-left p-2 font-medium">Current Demand</th>
+                            <th className="text-left p-2 font-medium">Forecasted Demand</th>
+                            <th className="text-left p-2 font-medium">Variance</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {dataPreviewSample.map((row, index) => (
+                            <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
+                              <td className="p-2">{row.sku}</td>
+                              <td className="p-2">{row.product}</td>
+                              <td className="p-2">{row.location}</td>
+                              <td className="p-2">
+                                <Badge variant="outline" className="text-xs">{row.channel}</Badge>
+                              </td>
+                              <td className="p-2 font-medium">{row.currentDemand}</td>
+                              <td className="p-2 font-medium">{row.forecastedDemand}</td>
+                              <td className="p-2">
+                                <Badge 
+                                  variant="secondary" 
+                                  className={`text-xs ${row.variance.startsWith('+') ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}
+                                >
+                                  {row.variance}
+                                </Badge>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
                   </div>
                 </div>
               )}
