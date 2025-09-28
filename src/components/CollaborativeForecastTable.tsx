@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare } from "lucide-react";
+import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare, Maximize, Minimize } from "lucide-react";
 import { toast } from "sonner";
 
 interface ForecastRow {
@@ -32,6 +32,13 @@ interface ForecastRow {
   label?: string;
   remarks?: string;
   approvalStatus: "pending" | "approved" | "rejected";
+  approvalDetails?: {
+    approvedBy?: string;
+    approvedAt?: string;
+    rejectedBy?: string;
+    rejectedAt?: string;
+    remarks?: string;
+  };
 }
 
 const sampleForecastData: ForecastRow[] = [
@@ -55,7 +62,12 @@ const sampleForecastData: ForecastRow[] = [
     week12: { forecast: 2390 },
     label: "Add Labels",
     remarks: "Seasonal adjustments",
-    approvalStatus: "approved"
+    approvalStatus: "approved",
+    approvalDetails: {
+      approvedBy: "Sarah Johnson",
+      approvedAt: "2024-09-27 14:30",
+      remarks: "Looks good with seasonal adjustments"
+    }
   },
   { 
     id: "2", 
@@ -77,7 +89,10 @@ const sampleForecastData: ForecastRow[] = [
     week12: { forecast: 1920 },
     label: "Add Labels",
     remarks: "Festival impact",
-    approvalStatus: "pending"
+    approvalStatus: "pending",
+    approvalDetails: {
+      remarks: "Awaiting manager approval"
+    }
   },
   { 
     id: "3", 
@@ -99,7 +114,12 @@ const sampleForecastData: ForecastRow[] = [
     week12: { forecast: 3310 },
     label: "Add Labels",
     remarks: "Supply constraints",
-    approvalStatus: "rejected"
+    approvalStatus: "rejected",
+    approvalDetails: {
+      rejectedBy: "Mike Chen",
+      rejectedAt: "2024-09-26 16:45",
+      remarks: "Supply chain analysis doesn't support this forecast"
+    }
   },
   { 
     id: "4", 
@@ -121,7 +141,12 @@ const sampleForecastData: ForecastRow[] = [
     week12: { forecast: 1710 },
     label: "Add Labels",
     remarks: "Client expansion",
-    approvalStatus: "approved"
+    approvalStatus: "approved",
+    approvalDetails: {
+      approvedBy: "Emma Davis",
+      approvedAt: "2024-09-28 10:15",
+      remarks: "Approved based on confirmed client expansion"
+    }
   },
   { 
     id: "5", 
@@ -143,7 +168,10 @@ const sampleForecastData: ForecastRow[] = [
     week12: { forecast: 2130 },
     label: "Add Labels",
     remarks: "Standard forecast",
-    approvalStatus: "pending"
+    approvalStatus: "pending",
+    approvalDetails: {
+      remarks: "Under review by regional manager"
+    }
   },
 ];
 
@@ -156,6 +184,7 @@ export const CollaborativeForecastTable: React.FC = () => {
   const [filterChannel, setFilterChannel] = useState<string>("All");
   const [sortKey, setSortKey] = useState<keyof ForecastRow | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   // Edit dialog states
   const [editDialog, setEditDialog] = useState<{
@@ -166,6 +195,12 @@ export const CollaborativeForecastTable: React.FC = () => {
     plannerInput: string;
     reason: string;
   }>({ open: false, rowId: "", week: "", currentValue: 0, plannerInput: "", reason: "" });
+
+  // Approval dialog states
+  const [approvalDialog, setApprovalDialog] = useState<{
+    open: boolean;
+    data: ForecastRow | null;
+  }>({ open: false, data: null });
 
   const toggleAll = (checked: boolean) => setSelected(checked ? filteredSorted.map((r) => r.id) : []);
   const toggleOne = (id: string, checked: boolean) => setSelected((prev) => (checked ? [...prev, id] : prev.filter((x) => x !== id)));
@@ -278,7 +313,7 @@ export const CollaborativeForecastTable: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className={`space-y-4 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : ''}`}>
       {/* Toolbar with Filters */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -337,8 +372,18 @@ export const CollaborativeForecastTable: React.FC = () => {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center justify-between text-lg">
             Collaborative Forecast Workbook
-            <div className="text-sm font-normal text-muted-foreground">
-              {selected.length > 0 && `${selected.length} rows selected`}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsFullscreen(!isFullscreen)}
+              >
+                {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+                {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+              </Button>
+              <div className="text-sm font-normal text-muted-foreground">
+                {selected.length > 0 && `${selected.length} rows selected`}
+              </div>
             </div>
           </CardTitle>
         </CardHeader>
@@ -472,7 +517,6 @@ export const CollaborativeForecastTable: React.FC = () => {
               <table className="table-fixed">
                 <thead className="bg-muted/50 border-b">
                   <tr className="text-xs h-12">
-                    <th className="text-center p-3 w-[120px]">Label</th>
                     <th className="text-center p-3 w-[120px]">Remarks</th>
                     <th className="text-center p-3 w-[120px]">Approval</th>
                   </tr>
@@ -481,15 +525,12 @@ export const CollaborativeForecastTable: React.FC = () => {
                   {filteredSorted.map((r) => (
                     <tr key={`${r.id}-approval`} className="border-b hover:bg-muted/30 h-16">
                       <td className="p-3 text-center">
-                        <span className="text-sm text-muted-foreground">{r.label}</span>
-                      </td>
-                      <td className="p-3 text-center">
                         <Button variant="link" className="text-sm p-0 h-auto">
                           View
                         </Button>
                       </td>
                       <td className="p-3">
-                        <div className="flex justify-center gap-1">
+                        <div className="flex justify-center gap-1 cursor-pointer" onClick={() => setApprovalDialog({ open: true, data: r })}>
                           {Array.from({ length: 10 }, (_, i) => (
                             <div
                               key={i}
@@ -566,6 +607,83 @@ export const CollaborativeForecastTable: React.FC = () => {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Approval Flow Dialog */}
+      <Dialog open={approvalDialog.open} onOpenChange={(open) => setApprovalDialog({ open, data: null })}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Approval Flow Details</DialogTitle>
+            <DialogDescription>
+              Detailed approval information for {approvalDialog.data?.sku}
+            </DialogDescription>
+          </DialogHeader>
+          {approvalDialog.data && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                <span className="font-medium">Status:</span>
+                <Badge 
+                  variant={
+                    approvalDialog.data.approvalStatus === "approved" 
+                      ? "default" 
+                      : approvalDialog.data.approvalStatus === "rejected" 
+                      ? "destructive" 
+                      : "secondary"
+                  }
+                >
+                  {approvalDialog.data.approvalStatus.charAt(0).toUpperCase() + approvalDialog.data.approvalStatus.slice(1)}
+                </Badge>
+              </div>
+              
+              {approvalDialog.data.approvalDetails?.approvedBy && (
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Approval Information</h4>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Approved by:</span>
+                      <span>{approvalDialog.data.approvalDetails.approvedBy}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Approved at:</span>
+                      <span>{approvalDialog.data.approvalDetails.approvedAt}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {approvalDialog.data.approvalDetails?.rejectedBy && (
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Rejection Information</h4>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Rejected by:</span>
+                      <span>{approvalDialog.data.approvalDetails.rejectedBy}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Rejected at:</span>
+                      <span>{approvalDialog.data.approvalDetails.rejectedAt}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {approvalDialog.data.approvalDetails?.remarks && (
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Remarks</h4>
+                  <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-md">
+                    {approvalDialog.data.approvalDetails.remarks}
+                  </p>
+                </div>
+              )}
+              
+              <div className="flex justify-end">
+                <Button variant="outline" onClick={() => setApprovalDialog({ open: false, data: null })}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
