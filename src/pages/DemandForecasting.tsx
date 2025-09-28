@@ -617,9 +617,8 @@ const DemandForecasting = () => {
                           </div>
                         </div>
                       </div>
-                    ) : (
-                      {(() => {
-                        if (foundryObjects.some(obj => obj.name === selectedPreview)) {
+                    ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                        (() => {
                           const data = getFoundryObjectData(selectedPreview as string) as any[];
                           const columns = data.length > 0 ? Object.keys(data[0]) : [];
                           return (
@@ -642,40 +641,39 @@ const DemandForecasting = () => {
                               </tbody>
                             </table>
                           );
-                        }
-                        return (
-                          <table className="min-w-full text-xs border border-border rounded">
-                            <thead className="bg-muted text-muted-foreground">
-                              <tr>
-                                <th className="text-left px-3 py-2">SKU</th>
-                                <th className="text-left px-3 py-2">Location</th>
-                                <th className="text-left px-3 py-2">Channel</th>
-                                <th className="text-left px-3 py-2">Week 1</th>
-                                <th className="text-left px-3 py-2">Week 2</th>
-                                <th className="text-left px-3 py-2">Week 3</th>
+                        })()
+                      ) : (
+                        <table className="min-w-full text-xs border border-border rounded">
+                          <thead className="bg-muted text-muted-foreground">
+                            <tr>
+                              <th className="text-left px-3 py-2">SKU</th>
+                              <th className="text-left px-3 py-2">Location</th>
+                              <th className="text-left px-3 py-2">Channel</th>
+                              <th className="text-left px-3 py-2">Week 1</th>
+                              <th className="text-left px-3 py-2">Week 2</th>
+                              <th className="text-left px-3 py-2">Week 3</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {workbookData.map((row, idx) => (
+                              <tr key={idx} className="hover:bg-muted/20">
+                                <td className="px-3 py-2">{row.sku}</td>
+                                <td className="px-3 py-2">{row.location}</td>
+                                <td className="px-3 py-2">{row.channel}</td>
+                                <td className="px-3 py-2">
+                                  <Input value={row.week1.toString()} className="w-16" readOnly />
+                                </td>
+                                <td className="px-3 py-2">
+                                  <Input value={row.week2.toString()} className="w-16" readOnly />
+                                </td>
+                                <td className="px-3 py-2">
+                                  <Input value={row.week3.toString()} className="w-16" readOnly />
+                                </td>
                               </tr>
-                            </thead>
-                            <tbody>
-                              {workbookData.map((row, idx) => (
-                                <tr key={idx} className="hover:bg-muted/20">
-                                  <td className="px-3 py-2">{row.sku}</td>
-                                  <td className="px-3 py-2">{row.location}</td>
-                                  <td className="px-3 py-2">{row.channel}</td>
-                                  <td className="px-3 py-2">
-                                    <Input value={row.week1.toString()} className="w-16" readOnly />
-                                  </td>
-                                  <td className="px-3 py-2">
-                                    <Input value={row.week2.toString()} className="w-16" readOnly />
-                                  </td>
-                                  <td className="px-3 py-2">
-                                    <Input value={row.week3.toString()} className="w-16" readOnly />
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        );
-                      })()}
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
 
                   </>
                 ) : (
