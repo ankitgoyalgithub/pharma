@@ -29,6 +29,9 @@ interface ForecastRow {
   week10: { forecast: number; plannerInput?: number; reason?: string };
   week11: { forecast: number; plannerInput?: number; reason?: string };
   week12: { forecast: number; plannerInput?: number; reason?: string };
+  label?: string;
+  remarks?: string;
+  approvalStatus: "pending" | "approved" | "rejected";
 }
 
 const sampleForecastData: ForecastRow[] = [
@@ -49,7 +52,10 @@ const sampleForecastData: ForecastRow[] = [
     week9: { forecast: 2540 },
     week10: { forecast: 2610 },
     week11: { forecast: 2480 },
-    week12: { forecast: 2390 }
+    week12: { forecast: 2390 },
+    label: "Add Labels",
+    remarks: "Seasonal adjustments",
+    approvalStatus: "approved"
   },
   { 
     id: "2", 
@@ -68,7 +74,10 @@ const sampleForecastData: ForecastRow[] = [
     week9: { forecast: 2020 },
     week10: { forecast: 2110 },
     week11: { forecast: 1980 },
-    week12: { forecast: 1920 }
+    week12: { forecast: 1920 },
+    label: "Add Labels",
+    remarks: "Festival impact",
+    approvalStatus: "pending"
   },
   { 
     id: "3", 
@@ -87,7 +96,10 @@ const sampleForecastData: ForecastRow[] = [
     week9: { forecast: 3460 },
     week10: { forecast: 3520 },
     week11: { forecast: 3390 },
-    week12: { forecast: 3310 }
+    week12: { forecast: 3310 },
+    label: "Add Labels",
+    remarks: "Supply constraints",
+    approvalStatus: "rejected"
   },
   { 
     id: "4", 
@@ -106,7 +118,10 @@ const sampleForecastData: ForecastRow[] = [
     week9: { forecast: 1820 },
     week10: { forecast: 1890 },
     week11: { forecast: 1760, plannerInput: 1900, reason: "New client onboarding" },
-    week12: { forecast: 1710 }
+    week12: { forecast: 1710 },
+    label: "Add Labels",
+    remarks: "Client expansion",
+    approvalStatus: "approved"
   },
   { 
     id: "5", 
@@ -125,7 +140,10 @@ const sampleForecastData: ForecastRow[] = [
     week9: { forecast: 2260 },
     week10: { forecast: 2320 },
     week11: { forecast: 2180 },
-    week12: { forecast: 2130 }
+    week12: { forecast: 2130 },
+    label: "Add Labels",
+    remarks: "Standard forecast",
+    approvalStatus: "pending"
   },
 ];
 
@@ -325,70 +343,88 @@ export const CollaborativeForecastTable: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
-              <thead className="bg-muted/50 border-b">
-                <tr className="text-xs h-12">
-                  <th className="w-10 p-3 align-middle">
-                    <input
-                      type="checkbox"
-                      className="rounded border-border"
-                      onChange={(e) => toggleAll(e.target.checked)}
-                      checked={selected.length > 0 && selected.length === filteredSorted.length}
-                      aria-label="Select all rows"
-                    />
-                  </th>
-                  <th className="text-left p-3 cursor-pointer hover:bg-muted min-w-[140px]" onClick={() => sortBy("sku")}>
-                    SKU
-                  </th>
-                  <th className="text-left p-3 cursor-pointer hover:bg-muted min-w-[120px]" onClick={() => sortBy("node")}>
-                    Node
-                  </th>
-                  <th className="text-left p-3 cursor-pointer hover:bg-muted min-w-[80px]" onClick={() => sortBy("channel")}>
-                    Channel
-                  </th>
-                  <th className="text-left p-3 cursor-pointer hover:bg-muted min-w-[140px]" onClick={() => sortBy("owner")}>
-                    Owner
-                  </th>
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <th key={`week-${i + 1}`} className="text-center p-2 min-w-[100px] border-l">
-                      <div className="text-xs font-medium">Week {i + 1}</div>
-                      <div className="text-xs text-muted-foreground">Forecast | Input</div>
+          <div className="flex">
+            {/* Fixed Left Columns */}
+            <div className="flex-shrink-0 border-r bg-background">
+              <table className="table-fixed">
+                <thead className="bg-muted/50 border-b">
+                  <tr className="text-xs h-12">
+                    <th className="w-10 p-3 align-middle">
+                      <input
+                        type="checkbox"
+                        className="rounded border-border"
+                        onChange={(e) => toggleAll(e.target.checked)}
+                        checked={selected.length > 0 && selected.length === filteredSorted.length}
+                        aria-label="Select all rows"
+                      />
                     </th>
-                  ))}
-                  <th className="w-10 p-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {filteredSorted.map((r) => {
-                  const initials = getInitials(r.owner);
-                  return (
-                    <tr key={r.id} className="border-b hover:bg-muted/30">
-                      <td className="p-3">
-                        <input
-                          type="checkbox"
-                          className="rounded border-border"
-                          checked={selected.includes(r.id)}
-                          onChange={(e) => toggleOne(r.id, e.target.checked)}
-                          aria-label={`Select row for ${r.sku}`}
-                        />
-                      </td>
-                      <td className="p-3 font-medium">{r.sku}</td>
-                      <td className="p-3">{r.node}</td>
-                      <td className="p-3">
-                        <Badge variant="outline" className="text-xs">
-                          {r.channel}
-                        </Badge>
-                      </td>
-                      <td className="p-3">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src="" alt={r.owner} />
-                            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">{r.owner}</span>
-                        </div>
-                      </td>
+                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[140px]" onClick={() => sortBy("sku")}>
+                      SKU
+                    </th>
+                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[120px]" onClick={() => sortBy("node")}>
+                      Node
+                    </th>
+                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[80px]" onClick={() => sortBy("channel")}>
+                      Channel
+                    </th>
+                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[140px]" onClick={() => sortBy("owner")}>
+                      Owner
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredSorted.map((r) => {
+                    const initials = getInitials(r.owner);
+                    return (
+                      <tr key={`${r.id}-fixed`} className="border-b hover:bg-muted/30 h-16">
+                        <td className="p-3">
+                          <input
+                            type="checkbox"
+                            className="rounded border-border"
+                            checked={selected.includes(r.id)}
+                            onChange={(e) => toggleOne(r.id, e.target.checked)}
+                            aria-label={`Select row for ${r.sku}`}
+                          />
+                        </td>
+                        <td className="p-3 font-medium">{r.sku}</td>
+                        <td className="p-3">{r.node}</td>
+                        <td className="p-3">
+                          <Badge variant="outline" className="text-xs">
+                            {r.channel}
+                          </Badge>
+                        </td>
+                        <td className="p-3">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src="" alt={r.owner} />
+                              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm">{r.owner}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Scrollable Middle Section */}
+            <div className="flex-1 overflow-x-auto">
+              <table className="table-fixed">
+                <thead className="bg-muted/50 border-b">
+                  <tr className="text-xs h-12">
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <th key={`week-${i + 1}`} className="text-center p-2 w-[100px] border-l">
+                        <div className="text-xs font-medium">Week {i + 1}</div>
+                        <div className="text-xs text-muted-foreground">Forecast | Input</div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredSorted.map((r) => (
+                    <tr key={`${r.id}-weeks`} className="border-b hover:bg-muted/30 h-16">
                       {Array.from({ length: 12 }, (_, i) => {
                         const weekKey = `week${i + 1}` as keyof ForecastRow;
                         const weekData = r[weekKey] as any;
@@ -425,27 +461,56 @@ export const CollaborativeForecastTable: React.FC = () => {
                           </td>
                         );
                       })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Fixed Right Columns */}
+            <div className="flex-shrink-0 border-l bg-background">
+              <table className="table-fixed">
+                <thead className="bg-muted/50 border-b">
+                  <tr className="text-xs h-12">
+                    <th className="text-center p-3 w-[120px]">Label</th>
+                    <th className="text-center p-3 w-[120px]">Remarks</th>
+                    <th className="text-center p-3 w-[120px]">Approval</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredSorted.map((r) => (
+                    <tr key={`${r.id}-approval`} className="border-b hover:bg-muted/30 h-16">
+                      <td className="p-3 text-center">
+                        <span className="text-sm text-muted-foreground">{r.label}</span>
+                      </td>
+                      <td className="p-3 text-center">
+                        <Button variant="link" className="text-sm p-0 h-auto">
+                          View
+                        </Button>
+                      </td>
                       <td className="p-3">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Copy Row</DropdownMenuItem>
-                            <DropdownMenuItem>Export Row</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive">Remove</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex justify-center gap-1">
+                          {Array.from({ length: 10 }, (_, i) => (
+                            <div
+                              key={i}
+                              className={`w-2 h-2 rounded-full ${
+                                r.approvalStatus === "approved" && i < 8
+                                  ? "bg-green-500"
+                                  : r.approvalStatus === "rejected" && i < 3
+                                  ? "bg-red-500"
+                                  : r.approvalStatus === "pending" && i < 5
+                                  ? "bg-yellow-500"
+                                  : "bg-muted"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </CardContent>
       </Card>

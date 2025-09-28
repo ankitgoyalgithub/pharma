@@ -13,6 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
+import pptx from "pptxgenjs";
+import { toast } from "sonner";
 import {
   FileText,
   Download,
@@ -331,6 +333,126 @@ const DemandForecasting = () => {
     // Simulate filter application with updated data
     console.log('Filters applied:', filterValues);
     // This would trigger a re-render of the center content with filtered data
+  };
+
+  // Handle completion of forecast wizard
+  const handleComplete = () => {
+    toast.success("Forecast process completed successfully!");
+    setCurrentStep(4);
+  };
+
+  // Export PPTX functionality
+  const exportToPPTX = () => {
+    const presentation = new pptx();
+    presentation.layout = "LAYOUT_WIDE";
+
+    const forecastCards = [
+      {
+        title: "Statistical Forecast",
+        content: "Advanced time series analysis with seasonal decomposition, trend detection, and AI-powered accuracy improvements achieving 89% forecast accuracy."
+      },
+      {
+        title: "AI Forecast", 
+        content: "Deep learning models incorporating external drivers, market dynamics, and historical patterns to deliver precision forecasting with explainable insights."
+      },
+      {
+        title: "Consensus Forecast",
+        content: "Collaborative intelligence combining statistical rigor, AI insights, and human expertise to create the most reliable forecast for strategic planning."
+      },
+      {
+        title: "Data Quality Review",
+        content: "Comprehensive data integrity assessment with 85% completeness, 12% missing values, 3% outliers detected, and AI-enhanced quality insights for improved forecasting accuracy."
+      }
+    ];
+
+    // Title slide
+    const titleSlide = presentation.addSlide();
+    titleSlide.background = { color: "F1F5F9" };
+    titleSlide.addText("Demand Forecasting Results", {
+      x: 1,
+      y: 2,
+      w: 8,
+      h: 1.5,
+      fontSize: 36,
+      bold: true,
+      color: "1E293B",
+      align: "center"
+    });
+    titleSlide.addText(`Generated on ${format(new Date(), "PPP")}`, {
+      x: 1,
+      y: 4,
+      w: 8,
+      h: 0.5,
+      fontSize: 18,
+      color: "64748B",
+      align: "center"
+    });
+
+    // Create slide for each forecast card
+    forecastCards.forEach((card, index) => {
+      const slide = presentation.addSlide();
+      slide.background = { color: "FFFFFF" };
+      
+      // Title
+      slide.addText(card.title, {
+        x: 0.5,
+        y: 0.5,
+        w: 9,
+        h: 1,
+        fontSize: 32,
+        bold: true,
+        color: "1E293B"
+      });
+      
+      // Content
+      slide.addText(card.content, {
+        x: 0.5,
+        y: 2,
+        w: 9,
+        h: 4,
+        fontSize: 16,
+        color: "475569",
+        valign: "top"
+      });
+
+      // Add metrics for forecast cards
+      if (index < 3) {
+        const metrics = [
+          "Accuracy: 89%",
+          "Confidence: 94%", 
+          "Coverage: 98%",
+          "Bias: ±2.1%"
+        ];
+
+        metrics.forEach((metric, idx) => {
+          slide.addText(metric, {
+            x: 0.5 + (idx * 2.25),
+            y: 6,
+            w: 2,
+            h: 0.8,
+            fontSize: 14,
+            bold: true,
+            color: "059669",
+            align: "center"
+          });
+        });
+      }
+
+      // Slide number
+      slide.addText(`${index + 2}`, {
+        x: 9,
+        y: 7.5,
+        w: 0.5,
+        h: 0.3,
+        fontSize: 12,
+        color: "94A3B8",
+        align: "right"
+      });
+    });
+
+    // Save the presentation
+    presentation.writeFile({ fileName: `Demand_Forecasting_Results_${format(new Date(), "yyyy-MM-dd")}.pptx` });
+    toast.success("PPTX export completed successfully!");
   };
 
   // ---- Step 1 ----
@@ -1855,7 +1977,7 @@ const DemandForecasting = () => {
             <Button variant="outline" onClick={() => setCurrentStep(3)}>
               ← Back
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" onClick={exportToPPTX}>
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
