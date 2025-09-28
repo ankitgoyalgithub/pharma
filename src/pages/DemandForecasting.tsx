@@ -461,7 +461,7 @@ const DemandForecasting = () => {
   const externalDrivers = getExternalDrivers("demand-forecasting", hasData);
 
   const renderStep1 = () => (
-    <div className="space-y-6 p-0">
+    <div className="space-y-6 pt-6 px-0 pb-0">
       <div>
         <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
         <p className="text-sm text-muted-foreground">Upload all your data files at once. You can also select external factors to include in the model.</p>
@@ -998,7 +998,7 @@ const DemandForecasting = () => {
   });
 
   const renderStep2 = () => (
-    <div className="space-y-6 p-0">
+    <div className="space-y-6 pt-6 px-0 pb-0">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
@@ -1430,7 +1430,7 @@ const DemandForecasting = () => {
 
   // ---- Step 3 - Review Data ----
   const renderStep3 = () => (
-    <div className="space-y-6 p-0">
+    <div className="space-y-6 pt-6 px-0 pb-0">
       <div>
         <h2 className="text-xl font-semibold text-foreground mb-1">Review Data</h2>
         <p className="text-sm text-muted-foreground">Review your processed data and configure forecast settings.</p>
