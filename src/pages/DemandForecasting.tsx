@@ -99,6 +99,7 @@ import { sampleAiResponses } from "@/data/demandForecasting/aiResponses";
 import { masterObjects, timeseriesObjects } from "@/data/demandForecasting/foundryObjects";
 import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
 import { ExternalDriversSection } from "@/components/ExternalDriversSection";
+import { getFoundryObjectData } from "@/data/foundry";
 
 ChartJS.register(
   CategoryScale,
@@ -617,38 +618,65 @@ const DemandForecasting = () => {
                         </div>
                       </div>
                     ) : (
-                      // Regular file/foundry preview
-                      <table className="min-w-full text-xs border border-border rounded">
-                        <thead className="bg-muted text-muted-foreground">
-                          <tr>
-                            <th className="text-left px-3 py-2">SKU</th>
-                            <th className="text-left px-3 py-2">Location</th>
-                            <th className="text-left px-3 py-2">Channel</th>
-                            <th className="text-left px-3 py-2">Week 1</th>
-                            <th className="text-left px-3 py-2">Week 2</th>
-                            <th className="text-left px-3 py-2">Week 3</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {workbookData.map((row, idx) => (
-                            <tr key={idx} className="hover:bg-muted/20">
-                              <td className="px-3 py-2">{row.sku}</td>
-                              <td className="px-3 py-2">{row.location}</td>
-                              <td className="px-3 py-2">{row.channel}</td>
-                              <td className="px-3 py-2">
-                                <Input value={row.week1.toString()} className="w-16" readOnly />
-                              </td>
-                              <td className="px-3 py-2">
-                                <Input value={row.week2.toString()} className="w-16" readOnly />
-                              </td>
-                              <td className="px-3 py-2">
-                                <Input value={row.week3.toString()} className="w-16" readOnly />
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    )}
+                      {(() => {
+                        if (foundryObjects.some(obj => obj.name === selectedPreview)) {
+                          const data = getFoundryObjectData(selectedPreview as string) as any[];
+                          const columns = data.length > 0 ? Object.keys(data[0]) : [];
+                          return (
+                            <table className="min-w-full text-xs border border-border rounded">
+                              <thead className="bg-muted text-muted-foreground">
+                                <tr>
+                                  {columns.map((col) => (
+                                    <th key={col} className="text-left px-3 py-2 capitalize">{col.replace(/_/g, ' ')}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {data.slice(0, 10).map((row, idx) => (
+                                  <tr key={idx} className="hover:bg-muted/20">
+                                    {columns.map((col) => (
+                                      <td key={col} className="px-3 py-2">{String((row as any)[col])}</td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          );
+                        }
+                        return (
+                          <table className="min-w-full text-xs border border-border rounded">
+                            <thead className="bg-muted text-muted-foreground">
+                              <tr>
+                                <th className="text-left px-3 py-2">SKU</th>
+                                <th className="text-left px-3 py-2">Location</th>
+                                <th className="text-left px-3 py-2">Channel</th>
+                                <th className="text-left px-3 py-2">Week 1</th>
+                                <th className="text-left px-3 py-2">Week 2</th>
+                                <th className="text-left px-3 py-2">Week 3</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {workbookData.map((row, idx) => (
+                                <tr key={idx} className="hover:bg-muted/20">
+                                  <td className="px-3 py-2">{row.sku}</td>
+                                  <td className="px-3 py-2">{row.location}</td>
+                                  <td className="px-3 py-2">{row.channel}</td>
+                                  <td className="px-3 py-2">
+                                    <Input value={row.week1.toString()} className="w-16" readOnly />
+                                  </td>
+                                  <td className="px-3 py-2">
+                                    <Input value={row.week2.toString()} className="w-16" readOnly />
+                                  </td>
+                                  <td className="px-3 py-2">
+                                    <Input value={row.week3.toString()} className="w-16" readOnly />
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        );
+                      })()}
+
                   </>
                 ) : (
                   <p className="text-sm text-muted-foreground">Select a file or driver to preview.</p>
