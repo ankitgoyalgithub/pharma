@@ -40,6 +40,31 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
 }) => {
   const [aiSuggestionsEnabled, setAiSuggestionsEnabled] = React.useState(true);
   
+  // Handle AI suggestions toggle - automatically select/deselect auto-selected drivers
+  React.useEffect(() => {
+    console.log('AI Suggestions toggled:', aiSuggestionsEnabled);
+    console.log('Current drivers:', drivers);
+    console.log('Current selected drivers:', selectedDrivers);
+    
+    if (showManualControls) {
+      const autoSelectedDrivers = drivers.filter(driver => driver.autoSelected);
+      console.log('Auto-selected drivers:', autoSelectedDrivers);
+      
+      autoSelectedDrivers.forEach(driver => {
+        const isCurrentlySelected = selectedDrivers.includes(driver.name);
+        console.log(`Driver ${driver.name}: currently selected = ${isCurrentlySelected}, should be selected = ${aiSuggestionsEnabled}`);
+        
+        if (aiSuggestionsEnabled && !isCurrentlySelected) {
+          console.log(`Auto-selecting driver: ${driver.name}`);
+          onToggleDriver(driver.name);
+        } else if (!aiSuggestionsEnabled && isCurrentlySelected) {
+          console.log(`Auto-deselecting driver: ${driver.name}`);
+          onToggleDriver(driver.name);
+        }
+      });
+    }
+  }, [aiSuggestionsEnabled, showManualControls]); // Don't include drivers/selectedDrivers to avoid infinite loops
+  
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
