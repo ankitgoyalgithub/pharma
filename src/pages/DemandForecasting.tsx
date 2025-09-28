@@ -307,6 +307,9 @@ const DemandForecasting = () => {
       console.log('New scenarios state:', newScenarios);
       return newScenarios;
     });
+    // Automatically select the newly created scenario
+    setSelectedScenario(scenario.id);
+    setActiveTab("overview");
   };
 
   const deleteScenario = (scenarioId: string) => {
@@ -1842,7 +1845,7 @@ const DemandForecasting = () => {
   const renderStep4 = () => (
     <div className="flex h-full pt-4">
       {/* Left Sidebar with Clickable Cards */}
-      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-1 flex flex-col h max-h-screen">
+      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-4 flex flex-col h max-h-screen">
         <div className="flex-none">
           <h2 className="text-xl font-bold text-foreground mb-2">Forecast Results</h2>
           <p className="text-sm text-muted-foreground">Click cards to explore insights</p>
@@ -1956,7 +1959,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 p-2 overflow-hidden pt-4">
+      <div className="flex-1 p-4 overflow-hidden pt-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -2884,7 +2887,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Right Sidebar */}
-      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} bg-card border-l p-1 flex flex-col h max-h-screen transition-all duration-200`}>
+      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} bg-card border-l p-4 flex flex-col h max-h-screen transition-all duration-200`}>
         {rightSidebarCollapsed ? (
           /* Collapsed Sidebar - Icons Only */
           <div className="flex flex-col items-center gap-4 pt-4">
