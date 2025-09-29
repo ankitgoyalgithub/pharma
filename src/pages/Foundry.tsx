@@ -194,6 +194,8 @@ export default function Foundry() {
   // ---------- Inline Data Health (no popup) ----------
   const [showHealth, setShowHealth] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState<string>("all");
+  const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d">("7d");
+  const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
 
   // Mock health KPIs - entity specific
   interface KPI {
@@ -312,21 +314,32 @@ export default function Foundry() {
 
   const nullsByColumn = getQualityMetrics(selectedEntity);
 
-  // Data volume trends
-  const volumeTrend = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-    datasets: [
-      {
-        label: "Data Volume (GB)",
-        data: [45, 52, 48, 61, 58, 67, 73],
-        backgroundColor: "rgba(16,185,129,0.2)",
-        borderColor: "rgba(16,185,129,1)",
-        borderWidth: 2,
-        fill: true,
-        tension: 0.4,
-      },
-    ],
+  // Data volume trends with time range support
+  const getVolumeTrend = (range: string) => {
+    const labels = range === "7d" ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] :
+                   range === "30d" ? ["Week 1", "Week 2", "Week 3", "Week 4"] :
+                   ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
+    const data = range === "7d" ? [45, 52, 48, 61, 58, 67, 73] :
+                 range === "30d" ? [180, 195, 210, 225] :
+                 [420, 445, 468, 492, 515, 540, 565, 590, 615];
+    
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Data Volume (GB)",
+          data,
+          backgroundColor: "rgba(16,185,129,0.2)",
+          borderColor: "rgba(16,185,129,1)",
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
   };
+
+  const volumeTrend = getVolumeTrend(timeRange);
 
   // Anomaly detection timeline
   const anomalyData = {
@@ -346,6 +359,48 @@ export default function Foundry() {
       },
     ],
   };
+
+  // Quality score trend
+  const qualityScoreTrend = {
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    datasets: [
+      {
+        label: "Overall Quality Score",
+        data: [92, 94, 91, 97],
+        backgroundColor: "rgba(59,130,246,0.2)",
+        borderColor: "rgba(59,130,246,1)",
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+      },
+      {
+        label: "Target Quality",
+        data: [95, 95, 95, 95],
+        backgroundColor: "rgba(34,197,94,0.1)",
+        borderColor: "rgba(34,197,94,1)",
+        borderWidth: 2,
+        borderDash: [5, 5],
+        fill: false,
+      },
+    ],
+  };
+
+  // Data freshness heatmap data
+  const freshnessHeatmap = [
+    { entity: "Product Master", Mon: 1.2, Tue: 1.5, Wed: 1.1, Thu: 1.8, Fri: 1.3, Sat: 2.1, Sun: 1.9 },
+    { entity: "Sales History", Mon: 4.8, Tue: 5.2, Wed: 4.5, Thu: 5.8, Fri: 4.2, Sat: 6.1, Sun: 5.5 },
+    { entity: "Location Master", Mon: 0.8, Tue: 0.9, Wed: 0.7, Thu: 1.1, Fri: 0.9, Sat: 1.3, Sun: 1.2 },
+    { entity: "Inventory Data", Mon: 2.1, Tue: 2.4, Wed: 2.0, Thu: 2.7, Fri: 2.2, Sat: 3.1, Sun: 2.8 },
+  ];
+
+  // Data quality issues
+  const qualityIssues = [
+    { id: "1", entity: "Sales History", type: "Missing Values", severity: "High", count: 847, field: "revenue", trend: "+12%" },
+    { id: "2", entity: "Product Master", type: "Duplicates", severity: "Medium", count: 23, field: "product_id", trend: "-5%" },
+    { id: "3", entity: "Location Master", type: "Outliers", severity: "Low", count: 8, field: "coordinates", trend: "0%" },
+    { id: "4", entity: "Inventory Data", type: "Stale Data", severity: "High", count: 156, field: "last_updated", trend: "+8%" },
+    { id: "5", entity: "Customer Master", type: "Format Issues", severity: "Medium", count: 42, field: "phone", trend: "-3%" },
+  ];
 
   const dtypeDistribution = {
     labels: ["string", "number", "integer", "boolean", "date", "timestamp"],
@@ -1098,6 +1153,16 @@ export default function Foundry() {
               <p className="text-muted-foreground mt-1">Comprehensive insights into data quality, freshness and stability across all entities.</p>
             </div>
             <div className="flex gap-3">
+              <Select value={timeRange} onValueChange={(v) => setTimeRange(v as any)}>
+                <SelectTrigger className="w-32">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7d">Last 7 Days</SelectItem>
+                  <SelectItem value="30d">Last 30 Days</SelectItem>
+                  <SelectItem value="90d">Last 90 Days</SelectItem>
+                </SelectContent>
+              </Select>
               <Select value={selectedEntity} onValueChange={setSelectedEntity}>
                 <SelectTrigger className="w-64">
                   <SelectValue placeholder="Select Entity" />
@@ -1110,6 +1175,10 @@ export default function Foundry() {
                   ))}
                 </SelectContent>
               </Select>
+              <Button variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export Report
+              </Button>
               <Button variant="outline" onClick={() => setShowHealth(false)}>
                 ← Back to Entities
               </Button>
@@ -1121,12 +1190,17 @@ export default function Foundry() {
           {/* KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {kpis.map((kpi) => (
-              <Card key={kpi.label} className={cn("overflow-hidden border", "bg-gradient-to-br", kpi.bg)}>
+              <Card 
+                key={kpi.label} 
+                className={cn("overflow-hidden border cursor-pointer transition-all hover:shadow-lg", "bg-gradient-to-br", kpi.bg)}
+                onClick={() => console.log(`Drill down into ${kpi.label}`)}
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-xs text-muted-foreground">{kpi.label}</div>
                       <div className={cn("text-2xl font-bold", kpi.tone)}>{kpi.value}</div>
+                      <div className="text-xs text-muted-foreground mt-1">Click for details</div>
                     </div>
                     <kpi.icon className={cn("h-6 w-6", kpi.tone)} />
                   </div>
@@ -1135,14 +1209,69 @@ export default function Foundry() {
             ))}
           </div>
 
+          {/* Quick Stats Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="border-l-4 border-l-primary">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Overall Quality Score</div>
+                    <div className="text-3xl font-bold text-primary">96.2%</div>
+                    <div className="text-xs text-success mt-1">↑ 2.1% from last week</div>
+                  </div>
+                  <CheckCircle2 className="h-10 w-10 text-primary/20" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-l-4 border-l-warning">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Active Issues</div>
+                    <div className="text-3xl font-bold text-warning">13</div>
+                    <div className="text-xs text-muted-foreground mt-1">5 need attention</div>
+                  </div>
+                  <Activity className="h-10 w-10 text-warning/20" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-l-4 border-l-success">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Data Entities</div>
+                    <div className="text-3xl font-bold text-success">24</div>
+                    <div className="text-xs text-success mt-1">All healthy</div>
+                  </div>
+                  <Database className="h-10 w-10 text-success/20" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Charts - Enhanced with more insights */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Data Ingestion Trend (7d)</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Data Ingestion Trend</CardTitle>
+                  <Badge variant="outline" className="text-xs">{timeRange}</Badge>
+                </div>
               </CardHeader>
               <CardContent className="h-[260px]">
                 <Line data={ingestionTrend} options={ingestionOptions} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Quality Score Trend</CardTitle>
+                  <Badge variant="outline" className="text-xs">Target: 95%</Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="h-[260px]">
+                <Line data={qualityScoreTrend} options={ingestionOptions} />
               </CardContent>
             </Card>
 
@@ -1181,54 +1310,186 @@ export default function Foundry() {
                 <Pie data={dtypeDistribution as any} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom" as const }}}} />
               </CardContent>
             </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Schema Changes History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-md border overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead className="bg-muted/30">
-                      <tr>
-                        <th className="text-left px-3 py-2 font-medium">Version</th>
-                        <th className="text-left px-3 py-2 font-medium">Date</th>
-                        <th className="text-left px-3 py-2 font-medium">Added</th>
-                        <th className="text-left px-3 py-2 font-medium">Removed</th>
-                        <th className="text-left px-3 py-2 font-medium">Impact</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {schemaDriftRows.map((r) => (
-                        <tr key={r.version} className="border-b border-border/30 hover:bg-muted/20">
-                          <td className="px-3 py-2 font-mono text-sm">{r.version}</td>
-                          <td className="px-3 py-2 text-muted-foreground">{r.date}</td>
-                          <td className="px-3 py-2">
-                            <Badge variant={r.added > 0 ? "default" : "secondary"} className="text-xs">
-                              {r.added}
-                            </Badge>
-                          </td>
-                          <td className="px-3 py-2">
-                            <Badge variant={r.removed > 0 ? "destructive" : "secondary"} className="text-xs">
-                              {r.removed}
-                            </Badge>
-                          </td>
-                          <td className="px-3 py-2">
-                            <Badge 
-                              variant={r.impact === "High" ? "destructive" : r.impact === "Medium" ? "secondary" : "outline"}
-                              className="text-xs"
-                            >
-                              {r.impact}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
           </div>
+
+          {/* Data Freshness Heatmap */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Data Freshness Heatmap (Hours Since Last Update)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30">
+                    <tr>
+                      <th className="text-left px-3 py-2 font-medium">Entity</th>
+                      <th className="text-center px-3 py-2 font-medium">Mon</th>
+                      <th className="text-center px-3 py-2 font-medium">Tue</th>
+                      <th className="text-center px-3 py-2 font-medium">Wed</th>
+                      <th className="text-center px-3 py-2 font-medium">Thu</th>
+                      <th className="text-center px-3 py-2 font-medium">Fri</th>
+                      <th className="text-center px-3 py-2 font-medium">Sat</th>
+                      <th className="text-center px-3 py-2 font-medium">Sun</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {freshnessHeatmap.map((row) => (
+                      <tr key={row.entity} className="border-b border-border/30 hover:bg-muted/20">
+                        <td className="px-3 py-2 font-medium">{row.entity}</td>
+                        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => {
+                          const value = row[day as keyof typeof row] as number;
+                          const bgColor = value < 2 ? "bg-success/20" : value < 4 ? "bg-warning/20" : "bg-destructive/20";
+                          const textColor = value < 2 ? "text-success" : value < 4 ? "text-warning" : "text-destructive";
+                          return (
+                            <td key={day} className={cn("px-3 py-2 text-center font-mono", bgColor, textColor)}>
+                              {value.toFixed(1)}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Data Quality Issues Table */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Data Quality Issues</CardTitle>
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filter Issues
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-md border overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30">
+                    <tr>
+                      <th className="text-left px-3 py-2 font-medium">Entity</th>
+                      <th className="text-left px-3 py-2 font-medium">Issue Type</th>
+                      <th className="text-left px-3 py-2 font-medium">Field</th>
+                      <th className="text-left px-3 py-2 font-medium">Count</th>
+                      <th className="text-left px-3 py-2 font-medium">Severity</th>
+                      <th className="text-left px-3 py-2 font-medium">Trend</th>
+                      <th className="text-left px-3 py-2 font-medium">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {qualityIssues.map((issue) => (
+                      <tr 
+                        key={issue.id} 
+                        className={cn(
+                          "border-b border-border/30 hover:bg-muted/20 cursor-pointer transition-colors",
+                          selectedIssue === issue.id && "bg-primary/5"
+                        )}
+                        onClick={() => setSelectedIssue(issue.id)}
+                      >
+                        <td className="px-3 py-2 font-medium">{issue.entity}</td>
+                        <td className="px-3 py-2">{issue.type}</td>
+                        <td className="px-3 py-2 font-mono text-xs">{issue.field}</td>
+                        <td className="px-3 py-2 font-bold">{issue.count}</td>
+                        <td className="px-3 py-2">
+                          <Badge 
+                            variant={
+                              issue.severity === "High" ? "destructive" : 
+                              issue.severity === "Medium" ? "secondary" : 
+                              "outline"
+                            }
+                            className="text-xs"
+                          >
+                            {issue.severity}
+                          </Badge>
+                        </td>
+                        <td className={cn(
+                          "px-3 py-2 font-medium",
+                          issue.trend.startsWith("+") ? "text-destructive" : issue.trend.startsWith("-") ? "text-success" : "text-muted-foreground"
+                        )}>
+                          {issue.trend}
+                        </td>
+                        <td className="px-3 py-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log("Investigate issue:", issue.id);
+                            }}
+                          >
+                            Investigate
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Schema Changes History */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Schema Changes History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-md border overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30">
+                    <tr>
+                      <th className="text-left px-3 py-2 font-medium">Version</th>
+                      <th className="text-left px-3 py-2 font-medium">Date</th>
+                      <th className="text-left px-3 py-2 font-medium">Added</th>
+                      <th className="text-left px-3 py-2 font-medium">Removed</th>
+                      <th className="text-left px-3 py-2 font-medium">Renamed</th>
+                      <th className="text-left px-3 py-2 font-medium">Broken</th>
+                      <th className="text-left px-3 py-2 font-medium">Impact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {schemaDriftRows.map((r) => (
+                      <tr key={r.version} className="border-b border-border/30 hover:bg-muted/20">
+                        <td className="px-3 py-2 font-mono text-sm">{r.version}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{r.date}</td>
+                        <td className="px-3 py-2">
+                          <Badge variant={r.added > 0 ? "default" : "secondary"} className="text-xs">
+                            {r.added}
+                          </Badge>
+                        </td>
+                        <td className="px-3 py-2">
+                          <Badge variant={r.removed > 0 ? "destructive" : "secondary"} className="text-xs">
+                            {r.removed}
+                          </Badge>
+                        </td>
+                        <td className="px-3 py-2">
+                          <Badge variant={r.renamed > 0 ? "secondary" : "outline"} className="text-xs">
+                            {r.renamed}
+                          </Badge>
+                        </td>
+                        <td className="px-3 py-2">
+                          <Badge variant={r.broken > 0 ? "destructive" : "outline"} className="text-xs">
+                            {r.broken}
+                          </Badge>
+                        </td>
+                        <td className="px-3 py-2">
+                          <Badge 
+                            variant={r.impact === "High" ? "destructive" : r.impact === "Medium" ? "secondary" : "outline"}
+                            className="text-xs"
+                          >
+                            {r.impact}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
