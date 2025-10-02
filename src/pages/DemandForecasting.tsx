@@ -2077,7 +2077,7 @@ const DemandForecasting = () => {
 
             {/* Dynamic Scenarios */}
             {scenarios.map((scenario) => (
-              <div key={scenario.id} className="relative group">
+              <div key={scenario.id} className="relative group flex justify-center">
                   <ForecastCard
                   title={scenario.name}
                   value={scenario.value}
