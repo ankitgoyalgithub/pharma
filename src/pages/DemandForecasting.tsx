@@ -50,6 +50,10 @@ import {
   Info,
   Trash2,
   Shield,
+  Sparkles,
+  Brain,
+  Activity,
+  Target,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -1980,9 +1984,8 @@ const DemandForecasting = () => {
             <ForecastCard
               title="Forecast Snapshot"
               value="94.2%"
-              subtitle="Backtested Accuracy 
-                        $48.2M, 125K+ units
-                        sales forecasted next 12 months"
+              subtitle="ML-Powered Accuracy • ₹48.2M Revenue • 125K+ Units
+                        12-Month Horizon • 5 Active SKUs • 4 Channels"
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
               onClick={() => {
@@ -2514,6 +2517,223 @@ const DemandForecasting = () => {
               />
             </div>
 
+            {/* Enhanced Forecast Snapshot - Logility & Kinexis Inspired */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              {/* AI Insights & Recommendations */}
+              <Card className="shadow-card border-0 lg:col-span-2">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <Sparkles className="w-5 h-5 text-primary" />
+                      AI-Powered Insights & Recommendations
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-primary/10 text-primary">
+                      <Brain className="w-3 h-3 mr-1" />
+                      ML Enhanced
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="p-3 rounded-lg bg-success/5 border border-success/20">
+                    <div className="flex items-start gap-2">
+                      <TrendingUp className="w-4 h-4 text-success mt-0.5" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium text-sm">High Confidence Forecast Detected</span>
+                          <Badge variant="outline" className="text-xs bg-success/10 text-success border-success/20">+12% Uplift</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          SKU001 & SKU002 showing strong correlation with marketing events. Confidence: 94%
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 rounded-lg bg-warning/5 border border-warning/20">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="w-4 h-4 text-warning mt-0.5" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium text-sm">Exception Alert: SKU003</span>
+                          <Badge variant="outline" className="text-xs bg-warning/10 text-warning border-warning/20">Review Needed</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Demand volatility increased by 23%. Consider safety stock adjustment for weeks 6-8.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-info/5 border border-info/20">
+                    <div className="flex items-start gap-2">
+                      <Zap className="w-4 h-4 text-info mt-0.5" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium text-sm">Optimization Opportunity</span>
+                          <Badge variant="outline" className="text-xs bg-info/10 text-info border-info/20">₹2.1M Potential</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Channel reallocation suggested: Shift 15% from Retail to Online for improved margins.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Forecast Value Added (FVA) */}
+              <Card className="shadow-card border-0">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base">Forecast Value Added</CardTitle>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="w-4 h-4 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">FVA measures the improvement your forecast provides over a naive baseline. Positive FVA indicates value creation.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-center p-4 bg-gradient-to-br from-success/5 to-success/10 rounded-lg border border-success/20">
+                    <div className="text-3xl font-bold text-success">+18.4%</div>
+                    <div className="text-xs text-muted-foreground mt-1">vs Naive Forecast</div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">Statistical Model</span>
+                      <div className="flex items-center gap-1">
+                        <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
+                          <div className="w-3/4 h-full bg-primary"></div>
+                        </div>
+                        <span className="font-medium">+12%</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">ML Enhancement</span>
+                      <div className="flex items-center gap-1">
+                        <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
+                          <div className="w-5/6 h-full bg-success"></div>
+                        </div>
+                        <span className="font-medium">+6.4%</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">Planner Input</span>
+                      <div className="flex items-center gap-1">
+                        <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
+                          <div className="w-1/3 h-full bg-info"></div>
+                        </div>
+                        <span className="font-medium text-destructive">-2.8%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-muted-foreground">Consensus Progress</span>
+                      <span className="font-medium">78%</span>
+                    </div>
+                    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="w-4/5 h-full bg-gradient-to-r from-primary to-success"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Forecast Accuracy Trend & Exceptions */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Card className="shadow-card border-0">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Activity className="w-5 h-5" />
+                    Accuracy Trend (Rolling 12 Weeks)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[180px] flex items-end justify-between gap-1">
+                    {Array.from({ length: 12 }, (_, i) => {
+                      const heights = [85, 87, 89, 91, 88, 92, 94, 93, 95, 94, 96, 94];
+                      const colors = heights[i] >= 90 ? 'bg-success' : heights[i] >= 85 ? 'bg-warning' : 'bg-destructive';
+                      return (
+                        <Tooltip key={i}>
+                          <TooltipTrigger asChild>
+                            <div className="flex-1 flex flex-col items-center gap-1 cursor-pointer group">
+                              <div 
+                                className={`w-full ${colors} rounded-t transition-all group-hover:opacity-80`}
+                                style={{ height: `${heights[i]}%` }}
+                              />
+                              <span className="text-[10px] text-muted-foreground">W{i+1}</span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="font-medium">Week {i+1}: {heights[i]}%</p>
+                            <p className="text-xs text-muted-foreground">Accuracy Score</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    })}
+                  </div>
+                  <div className="flex items-center justify-between mt-4 pt-3 border-t">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-success"></div>
+                      <span className="text-xs text-muted-foreground">≥90% (Excellent)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-warning"></div>
+                      <span className="text-xs text-muted-foreground">85-89% (Good)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-destructive"></div>
+                      <span className="text-xs text-muted-foreground">&lt;85% (Review)</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-card border-0">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Target className="w-5 h-5" />
+                    Top Exception Items (Requires Action)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {[
+                      { sku: 'SKU003-WGT-C', issue: 'High Variability', priority: 'high', variance: '+34%' },
+                      { sku: 'SKU001-WGT-A', issue: 'Trend Shift', priority: 'medium', variance: '+18%' },
+                      { sku: 'SKU005-WGT-E', issue: 'Outlier Detected', priority: 'medium', variance: '-12%' },
+                      { sku: 'SKU002-WGT-B', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-1.5 h-8 rounded-full ${
+                            item.priority === 'high' ? 'bg-destructive' : 
+                            item.priority === 'medium' ? 'bg-warning' : 'bg-info'
+                          }`} />
+                          <div>
+                            <div className="font-medium text-sm">{item.sku}</div>
+                            <div className="text-xs text-muted-foreground">{item.issue}</div>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className={`text-xs ${
+                          item.priority === 'high' ? 'bg-destructive/10 text-destructive border-destructive/20' :
+                          item.priority === 'medium' ? 'bg-warning/10 text-warning border-warning/20' :
+                          'bg-info/10 text-info border-info/20'
+                        }`}>
+                          {item.variance}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
             
           </>
         )}

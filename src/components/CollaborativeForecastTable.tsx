@@ -8,7 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare, Maximize, Minimize } from "lucide-react";
+import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare, Maximize, Minimize, CheckCircle2, XCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 
 interface ForecastRow {
@@ -31,7 +32,8 @@ interface ForecastRow {
   week12: { forecast: number; plannerInput?: number; reason?: string };
   label?: string;
   remarks?: string;
-  approvalStatus: "pending" | "approved" | "rejected";
+  approvalStatus: "approved" | "rejected";
+  approverRole?: string;
   approvalDetails?: {
     approvedBy?: string;
     approvedAt?: string;
@@ -39,6 +41,11 @@ interface ForecastRow {
     rejectedAt?: string;
     remarks?: string;
   };
+  allRemarks?: Array<{
+    date: string;
+    user: string;
+    comment: string;
+  }>;
 }
 
 const sampleForecastData: ForecastRow[] = [
@@ -63,11 +70,17 @@ const sampleForecastData: ForecastRow[] = [
     label: "Add Labels",
     remarks: "Seasonal adjustments",
     approvalStatus: "approved",
+    approverRole: "Regional Manager",
     approvalDetails: {
       approvedBy: "Sarah Johnson",
       approvedAt: "2024-09-27 14:30",
       remarks: "Looks good with seasonal adjustments"
-    }
+    },
+    allRemarks: [
+      { date: "2024-09-25 10:00", user: "Aman Gupta", comment: "Adjusted for seasonal peak expected in week 3" },
+      { date: "2024-09-26 14:15", user: "Sarah Johnson", comment: "Reviewed historical patterns - looks accurate" },
+      { date: "2024-09-27 14:30", user: "Sarah Johnson", comment: "Approved with seasonal adjustments" }
+    ]
   },
   { 
     id: "2", 
@@ -89,10 +102,17 @@ const sampleForecastData: ForecastRow[] = [
     week12: { forecast: 1920 },
     label: "Add Labels",
     remarks: "Festival impact",
-    approvalStatus: "pending",
+    approvalStatus: "approved",
+    approverRole: "Demand Planner",
     approvalDetails: {
-      remarks: "Awaiting manager approval"
-    }
+      approvedBy: "Priya Shah",
+      approvedAt: "2024-09-28 09:20",
+      remarks: "Festival season adjustment approved"
+    },
+    allRemarks: [
+      { date: "2024-09-27 11:00", user: "Neha Rao", comment: "Increased forecast for week 5 due to festival season" },
+      { date: "2024-09-28 09:20", user: "Priya Shah", comment: "Approved - aligned with marketing campaign" }
+    ]
   },
   { 
     id: "3", 
@@ -115,11 +135,17 @@ const sampleForecastData: ForecastRow[] = [
     label: "Add Labels",
     remarks: "Supply constraints",
     approvalStatus: "rejected",
+    approverRole: "Supply Chain Manager",
     approvalDetails: {
       rejectedBy: "Mike Chen",
       rejectedAt: "2024-09-26 16:45",
       remarks: "Supply chain analysis doesn't support this forecast"
-    }
+    },
+    allRemarks: [
+      { date: "2024-09-25 14:00", user: "Priya Shah", comment: "Adjusting week 8 due to expected supply limitations" },
+      { date: "2024-09-26 16:00", user: "Mike Chen", comment: "Supply capacity analysis shows max 3200 units possible" },
+      { date: "2024-09-26 16:45", user: "Mike Chen", comment: "Rejected - forecast exceeds supply capacity" }
+    ]
   },
   { 
     id: "4", 
@@ -142,11 +168,16 @@ const sampleForecastData: ForecastRow[] = [
     label: "Add Labels",
     remarks: "Client expansion",
     approvalStatus: "approved",
+    approverRole: "Sales Director",
     approvalDetails: {
       approvedBy: "Emma Davis",
       approvedAt: "2024-09-28 10:15",
       remarks: "Approved based on confirmed client expansion"
-    }
+    },
+    allRemarks: [
+      { date: "2024-09-27 09:00", user: "Suresh I.", comment: "New client confirmed - increasing week 11 forecast" },
+      { date: "2024-09-28 10:15", user: "Emma Davis", comment: "Client contract verified - approved" }
+    ]
   },
   { 
     id: "5", 
@@ -168,10 +199,17 @@ const sampleForecastData: ForecastRow[] = [
     week12: { forecast: 2130 },
     label: "Add Labels",
     remarks: "Standard forecast",
-    approvalStatus: "pending",
+    approvalStatus: "approved",
+    approverRole: "Regional Head",
     approvalDetails: {
-      remarks: "Under review by regional manager"
-    }
+      approvedBy: "Rajesh Kumar",
+      approvedAt: "2024-09-28 11:00",
+      remarks: "Standard forecast approved"
+    },
+    allRemarks: [
+      { date: "2024-09-27 16:00", user: "Ritika P.", comment: "Standard forecast based on historical trends" },
+      { date: "2024-09-28 11:00", user: "Rajesh Kumar", comment: "Approved - no adjustments needed" }
+    ]
   },
 ];
 
@@ -198,6 +236,12 @@ export const CollaborativeForecastTable: React.FC = () => {
 
   // Approval dialog states
   const [approvalDialog, setApprovalDialog] = useState<{
+    open: boolean;
+    data: ForecastRow | null;
+  }>({ open: false, data: null });
+
+  // Remarks dialog states
+  const [remarksDialog, setRemarksDialog] = useState<{
     open: boolean;
     data: ForecastRow | null;
   }>({ open: false, data: null });
@@ -313,8 +357,9 @@ export const CollaborativeForecastTable: React.FC = () => {
   };
 
   return (
-    <div className={`space-y-4 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : ''}`}>
-      {/* Toolbar with Filters */}
+    <TooltipProvider>
+      <div className={`space-y-4 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : ''}`}>
+        {/* Toolbar with Filters */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Select value={filterSKU} onValueChange={setFilterSKU}>
@@ -525,27 +570,35 @@ export const CollaborativeForecastTable: React.FC = () => {
                   {filteredSorted.map((r) => (
                     <tr key={`${r.id}-approval`} className="border-b hover:bg-muted/30 h-16">
                       <td className="p-3 text-center">
-                        <Button variant="link" className="text-sm p-0 h-auto">
-                          View
+                        <Button 
+                          variant="link" 
+                          className="text-sm p-0 h-auto"
+                          onClick={() => setRemarksDialog({ open: true, data: r })}
+                        >
+                          View ({r.allRemarks?.length || 0})
                         </Button>
                       </td>
                       <td className="p-3">
-                        <div className="flex justify-center gap-1 cursor-pointer" onClick={() => setApprovalDialog({ open: true, data: r })}>
-                          {Array.from({ length: 10 }, (_, i) => (
-                            <div
-                              key={i}
-                              className={`w-2 h-2 rounded-full ${
-                                r.approvalStatus === "approved" && i < 8
-                                  ? "bg-green-500"
-                                  : r.approvalStatus === "rejected" && i < 3
-                                  ? "bg-red-500"
-                                  : r.approvalStatus === "pending" && i < 5
-                                  ? "bg-yellow-500"
-                                  : "bg-muted"
-                              }`}
-                            />
-                          ))}
-                        </div>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div 
+                              className="flex justify-center cursor-pointer transition-transform hover:scale-110" 
+                              onClick={() => setApprovalDialog({ open: true, data: r })}
+                            >
+                              {r.approvalStatus === "approved" ? (
+                                <CheckCircle2 className="w-6 h-6 text-success" />
+                              ) : (
+                                <XCircle className="w-6 h-6 text-destructive" />
+                              )}
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="font-medium">{r.approverRole || "Approver"}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {r.approvalStatus === "approved" ? "Approved" : "Rejected"}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </td>
                     </tr>
                   ))}
@@ -614,9 +667,9 @@ export const CollaborativeForecastTable: React.FC = () => {
       <Dialog open={approvalDialog.open} onOpenChange={(open) => setApprovalDialog({ open, data: null })}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Approval Flow Details</DialogTitle>
+            <DialogTitle>Approval Details</DialogTitle>
             <DialogDescription>
-              Detailed approval information for {approvalDialog.data?.sku}
+              Approval information for {approvalDialog.data?.sku}
             </DialogDescription>
           </DialogHeader>
           {approvalDialog.data && (
@@ -624,16 +677,21 @@ export const CollaborativeForecastTable: React.FC = () => {
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
                 <span className="font-medium">Status:</span>
                 <Badge 
-                  variant={
-                    approvalDialog.data.approvalStatus === "approved" 
-                      ? "default" 
-                      : approvalDialog.data.approvalStatus === "rejected" 
-                      ? "destructive" 
-                      : "secondary"
-                  }
+                  variant={approvalDialog.data.approvalStatus === "approved" ? "default" : "destructive"}
+                  className="flex items-center gap-1"
                 >
+                  {approvalDialog.data.approvalStatus === "approved" ? (
+                    <CheckCircle2 className="w-3 h-3" />
+                  ) : (
+                    <XCircle className="w-3 h-3" />
+                  )}
                   {approvalDialog.data.approvalStatus.charAt(0).toUpperCase() + approvalDialog.data.approvalStatus.slice(1)}
                 </Badge>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                <span className="font-medium">Role:</span>
+                <span className="text-sm">{approvalDialog.data.approverRole || "N/A"}</span>
               </div>
               
               {approvalDialog.data.approvalDetails?.approvedBy && (
@@ -686,7 +744,45 @@ export const CollaborativeForecastTable: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Remarks Dialog */}
+      <Dialog open={remarksDialog.open} onOpenChange={(open) => setRemarksDialog({ open, data: null })}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>All Remarks</DialogTitle>
+            <DialogDescription>
+              Complete remarks history for {remarksDialog.data?.sku}
+            </DialogDescription>
+          </DialogHeader>
+          {remarksDialog.data && (
+            <div className="space-y-3 max-h-[400px] overflow-y-auto">
+              {remarksDialog.data.allRemarks && remarksDialog.data.allRemarks.length > 0 ? (
+                remarksDialog.data.allRemarks.map((remark, idx) => (
+                  <div key={idx} className="p-3 bg-muted/30 rounded-md space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">{remark.user}</span>
+                      <span className="text-xs text-muted-foreground">{remark.date}</span>
+                    </div>
+                    <p className="text-sm text-foreground">{remark.comment}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No remarks available for this SKU
+                </p>
+              )}
+              
+              <div className="flex justify-end pt-2">
+                <Button variant="outline" onClick={() => setRemarksDialog({ open: false, data: null })}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
+    </TooltipProvider>
   );
 };
 
