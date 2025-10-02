@@ -77,12 +77,12 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('r', circleRadius)
       .attr('fill', 'none')
       .attr('stroke', borderColor)
-      .attr('stroke-width', 8);
+      .attr('stroke-width', 12);
 
     // Progress arc
     const arc = d3.arc()
-      .innerRadius(circleRadius - 4)
-      .outerRadius(circleRadius + 4)
+      .innerRadius(circleRadius - 6)
+      .outerRadius(circleRadius + 6)
       .startAngle(0)
       .endAngle((progressPercent / 100) * 2 * Math.PI);
 
@@ -97,7 +97,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('y', circleY - 5)
       .attr('text-anchor', 'start')
       .attr('dominant-baseline', 'middle')
-      .attr('font-size', '36px')
+      .attr('font-size', '48px')
       .attr('font-weight', 'bold')
       .attr('fill', successColor)
       .text(`${progressPercent}%`);

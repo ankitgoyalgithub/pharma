@@ -2635,24 +2635,28 @@ const DemandForecasting = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-[180px] flex items-end justify-between gap-1">
+                  <div className="h-[180px] flex items-end justify-between gap-2 px-2">
                     {Array.from({ length: 12 }, (_, i) => {
                       const heights = [85, 87, 89, 91, 88, 92, 94, 93, 95, 94, 96, 94];
-                      const colors = heights[i] >= 90 ? 'bg-success' : heights[i] >= 85 ? 'bg-warning' : 'bg-destructive';
+                      const actualHeight = heights[i];
+                      const colors = actualHeight >= 90 ? 'bg-success shadow-sm shadow-success/50' : actualHeight >= 85 ? 'bg-warning shadow-sm shadow-warning/50' : 'bg-destructive shadow-sm shadow-destructive/50';
                       return (
                         <Tooltip key={i}>
                           <TooltipTrigger asChild>
-                            <div className="flex-1 flex flex-col items-center gap-1 cursor-pointer group">
+                            <div className="flex-1 flex flex-col items-center gap-1.5 cursor-pointer group">
                               <div 
-                                className={`w-full ${colors} rounded-t transition-all group-hover:opacity-80`}
-                                style={{ height: `${heights[i]}%` }}
+                                className={`w-full ${colors} rounded-t-md transition-all group-hover:opacity-80 group-hover:scale-105 min-h-[20px]`}
+                                style={{ height: `${actualHeight}%` }}
                               />
-                              <span className="text-[10px] text-muted-foreground">W{i+1}</span>
+                              <span className="text-[10px] text-muted-foreground font-medium">W{i+1}</span>
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p className="font-medium">Week {i+1}: {heights[i]}%</p>
-                            <p className="text-xs text-muted-foreground">Accuracy Score</p>
+                            <p className="font-semibold">Week {i+1}</p>
+                            <p className="text-sm">Accuracy: {actualHeight}%</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {actualHeight >= 90 ? 'Excellent Performance' : actualHeight >= 85 ? 'Good Performance' : 'Needs Attention'}
+                            </p>
                           </TooltipContent>
                         </Tooltip>
                       );
