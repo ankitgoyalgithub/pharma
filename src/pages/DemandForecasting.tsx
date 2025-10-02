@@ -94,6 +94,7 @@ import {
 import { Line, Bar, Pie, Scatter } from "react-chartjs-2";
 import { CompactMetricCard } from "@/components/CompactMetricCard";
 import { CompactProjectionCard } from "@/components/CompactProjectionCard";
+import { DemandAnalysisChart } from "@/components/DemandAnalysisChart";
 
 // Data imports
 import { workbookData } from "@/data/demandForecasting/workbookData";
@@ -2455,9 +2456,12 @@ const DemandForecasting = () => {
                 </DropdownMenu>
               </CardHeader>
               <CardContent className="pt-2">
-                <div className="h-[300px]">
-                  <Bar data={demandLineData as any} options={demandLineOptions} />
-                </div>
+                <DemandAnalysisChart
+                  granularity={granularity}
+                  valueMode={valueMode}
+                  classFilter={classFilter}
+                  locationFilter={locationFilter}
+                />
               </CardContent>
             </Card>
             
