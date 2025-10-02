@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import { Button } from '@/components/ui/button';
+import { ZoomIn, ZoomOut } from 'lucide-react';
 
 interface DemandAnalysisChartProps {
   granularity: 'weekly' | 'monthly' | 'quarterly';
@@ -8,9 +10,13 @@ interface DemandAnalysisChartProps {
   locationFilter: string;
 }
 
+type GranularityLevel = 'daily' | 'weekly' | 'monthly' | 'quarterly';
+
 export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter }: DemandAnalysisChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [currentGranularity, setCurrentGranularity] = useState<GranularityLevel>('weekly');
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
@@ -22,21 +28,59 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     const containerWidth = container.clientWidth;
     const containerHeight = 320;
 
-    // Data based on filters (simplified for demo)
-    const data = [
-      { week: 1, historical: 90, forecast: 120, optimized: 115, ml: 125 },
-      { week: 2, historical: 95, forecast: 125, optimized: 118, ml: 130 },
-      { week: 3, historical: 140, forecast: 210, optimized: 200, ml: 215 },
-      { week: 4, historical: 150, forecast: 245, optimized: 235, ml: 250 },
-      { week: 5, historical: 160, forecast: 265, optimized: 255, ml: 270 },
-      { week: 6, historical: 165, forecast: 280, optimized: 268, ml: 285 },
-      { week: 7, historical: 195, forecast: 290, optimized: 280, ml: 295 },
-      { week: 8, historical: 130, forecast: 210, optimized: 205, ml: 215 },
-      { week: 9, historical: 115, forecast: 160, optimized: 155, ml: 165 },
-      { week: 10, historical: 100, forecast: 140, optimized: 135, ml: 145 },
-      { week: 11, historical: 5, forecast: 10, optimized: 8, ml: 12 },
-      { week: 12, historical: 3, forecast: 5, optimized: 4, ml: 6 },
-    ];
+    // Generate data based on granularity
+    const generateData = () => {
+      switch (currentGranularity) {
+        case 'daily':
+          return Array.from({ length: 84 }, (_, i) => ({
+            period: i + 1,
+            historical: Math.random() * 50 + 80,
+            forecast: Math.random() * 60 + 120,
+            optimized: Math.random() * 55 + 115,
+            ml: Math.random() * 65 + 125,
+          }));
+        case 'weekly':
+          return [
+            { period: 1, historical: 90, forecast: 120, optimized: 115, ml: 125 },
+            { period: 2, historical: 95, forecast: 125, optimized: 118, ml: 130 },
+            { period: 3, historical: 140, forecast: 210, optimized: 200, ml: 215 },
+            { period: 4, historical: 150, forecast: 245, optimized: 235, ml: 250 },
+            { period: 5, historical: 160, forecast: 265, optimized: 255, ml: 270 },
+            { period: 6, historical: 165, forecast: 280, optimized: 268, ml: 285 },
+            { period: 7, historical: 195, forecast: 290, optimized: 280, ml: 295 },
+            { period: 8, historical: 130, forecast: 210, optimized: 205, ml: 215 },
+            { period: 9, historical: 115, forecast: 160, optimized: 155, ml: 165 },
+            { period: 10, historical: 100, forecast: 140, optimized: 135, ml: 145 },
+            { period: 11, historical: 5, forecast: 10, optimized: 8, ml: 12 },
+            { period: 12, historical: 3, forecast: 5, optimized: 4, ml: 6 },
+          ];
+        case 'monthly':
+          return [
+            { period: 1, historical: 380, forecast: 520, optimized: 495, ml: 545 },
+            { period: 2, historical: 420, forecast: 580, optimized: 550, ml: 605 },
+            { period: 3, historical: 460, forecast: 640, optimized: 610, ml: 665 },
+          ];
+        case 'quarterly':
+          return [
+            { period: 1, historical: 1260, forecast: 1740, optimized: 1655, ml: 1815 },
+          ];
+        default:
+          return [];
+      }
+    };
+
+    const data = generateData();
+    
+    // Get period label
+    const getPeriodLabel = (period: number) => {
+      switch (currentGranularity) {
+        case 'daily': return `Day ${period}`;
+        case 'weekly': return `Week ${period}`;
+        case 'monthly': return `Month ${period}`;
+        case 'quarterly': return `Q${period}`;
+        default: return `${period}`;
+      }
+    };
 
     // Chart dimensions
     const topSectionHeight = 120;
@@ -199,15 +243,16 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
 
     // Scales
     const xScale = d3.scaleLinear()
-      .domain([1, 12])
+      .domain([1, data.length])
       .range([0, chartWidth]);
 
+    const maxY = d3.max(data, d => Math.max(d.historical, d.forecast, d.optimized, d.ml)) || 400;
     const yScale = d3.scaleLinear()
-      .domain([0, 400])
+      .domain([0, maxY * 1.1])
       .range([chartHeight, 0]);
 
     // Grid lines
-    const yTicks = [0, 100, 200, 300, 400];
+    const yTicks = yScale.ticks(5);
     chartGroup.selectAll('.grid-line')
       .data(yTicks)
       .enter()
@@ -219,12 +264,16 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('y2', d => yScale(d))
       .attr('stroke', borderColor)
       .attr('stroke-width', 1)
-      .attr('opacity', 0.5);
+      .attr('opacity', 0.7);
 
-    // X axis - show only odd weeks
+    // X axis
+    const xTickValues = currentGranularity === 'daily' 
+      ? data.filter((_, i) => i % 7 === 0).map(d => d.period)
+      : data.filter((_, i) => i % 2 === 0).map(d => d.period);
+    
     const xAxis = d3.axisBottom(xScale)
-      .tickValues([1, 3, 5, 7, 9, 11])
-      .tickFormat(d => `Week ${d}`);
+      .tickValues(xTickValues)
+      .tickFormat(d => getPeriodLabel(d as number));
 
     chartGroup.append('g')
       .attr('transform', `translate(0, ${chartHeight})`)
@@ -252,7 +301,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     // Line generators
     const line = (key: 'historical' | 'forecast' | 'optimized' | 'ml') => 
       d3.line<typeof data[0]>()
-        .x(d => xScale(d.week))
+        .x(d => xScale(d.period))
         .y(d => yScale(d[key]))
         .curve(d3.curveMonotoneX);
 
@@ -273,25 +322,115 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
         .attr('stroke-width', width)
         .attr('d', line(key));
 
-      // Add dots
+      // Add dots with hover tooltip
       chartGroup.selectAll(`.dot-${key}`)
         .data(data)
         .enter()
         .append('circle')
         .attr('class', `dot-${key}`)
-        .attr('cx', d => xScale(d.week))
+        .attr('cx', d => xScale(d.period))
         .attr('cy', d => yScale(d[key]))
         .attr('r', 4)
         .attr('fill', color)
         .attr('stroke', 'white')
-        .attr('stroke-width', 2);
+        .attr('stroke-width', 2)
+        .style('cursor', 'pointer')
+        .on('mouseenter', function(event, d) {
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr('r', 6);
+          
+          if (tooltipRef.current) {
+            const tooltip = d3.select(tooltipRef.current);
+            tooltip
+              .style('opacity', 1)
+              .style('left', `${event.pageX + 10}px`)
+              .style('top', `${event.pageY - 10}px`)
+              .html(`
+                <div class="font-semibold mb-1">${getPeriodLabel(d.period)}</div>
+                <div class="text-sm">
+                  <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full" style="background-color: ${color}"></div>
+                    <span class="capitalize">${key}:</span>
+                    <span class="font-semibold">${d[key].toFixed(1)}</span>
+                  </div>
+                </div>
+              `);
+          }
+        })
+        .on('mousemove', function(event) {
+          if (tooltipRef.current) {
+            d3.select(tooltipRef.current)
+              .style('left', `${event.pageX + 10}px`)
+              .style('top', `${event.pageY - 10}px`);
+          }
+        })
+        .on('mouseleave', function() {
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr('r', 4);
+          
+          if (tooltipRef.current) {
+            d3.select(tooltipRef.current).style('opacity', 0);
+          }
+        });
     });
 
-  }, [granularity, valueMode, classFilter, locationFilter]);
+  }, [granularity, valueMode, classFilter, locationFilter, currentGranularity]);
+
+  const handleZoomIn = () => {
+    const levels: GranularityLevel[] = ['quarterly', 'monthly', 'weekly', 'daily'];
+    const currentIndex = levels.indexOf(currentGranularity);
+    if (currentIndex < levels.length - 1) {
+      setCurrentGranularity(levels[currentIndex + 1]);
+    }
+  };
+
+  const handleZoomOut = () => {
+    const levels: GranularityLevel[] = ['quarterly', 'monthly', 'weekly', 'daily'];
+    const currentIndex = levels.indexOf(currentGranularity);
+    if (currentIndex > 0) {
+      setCurrentGranularity(levels[currentIndex - 1]);
+    }
+  };
 
   return (
-    <div ref={containerRef} className="w-full">
-      <svg ref={svgRef}></svg>
+    <div className="relative">
+      {/* Zoom controls */}
+      <div className="absolute top-2 right-2 z-10 flex items-center gap-2 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-1">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={handleZoomOut}
+          disabled={currentGranularity === 'quarterly'}
+          className="h-8 w-8 p-0"
+        >
+          <ZoomOut className="h-4 w-4" />
+        </Button>
+        <span className="text-xs font-medium px-2 capitalize">{currentGranularity}</span>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={handleZoomIn}
+          disabled={currentGranularity === 'daily'}
+          className="h-8 w-8 p-0"
+        >
+          <ZoomIn className="h-4 w-4" />
+        </Button>
+      </div>
+      
+      <div ref={containerRef} className="w-full">
+        <svg ref={svgRef}></svg>
+      </div>
+      
+      {/* Tooltip */}
+      <div
+        ref={tooltipRef}
+        className="fixed pointer-events-none z-50 bg-popover text-popover-foreground border border-border rounded-lg shadow-lg p-3 opacity-0 transition-opacity"
+        style={{ maxWidth: '250px' }}
+      />
     </div>
   );
 };

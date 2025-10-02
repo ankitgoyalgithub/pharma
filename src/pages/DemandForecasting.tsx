@@ -1970,9 +1970,9 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex h-full pt-4">
+    <div className="flex pt-4">
       {/* Left Sidebar with Clickable Cards */}
-      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-4 flex flex-col h max-h-screen">
+      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-4 flex flex-col max-h-[calc(100vh-8rem)]">
         <div className="flex-none">
           <h2 className="text-xl font-bold text-foreground mb-2">Forecast Results</h2>
           <p className="text-sm text-muted-foreground">Click cards to explore insights</p>
@@ -2085,7 +2085,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 p-4 overflow-hidden pt-4">
+      <div className="flex-1 p-4 overflow-auto pt-4 max-h-[calc(100vh-8rem)]">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
