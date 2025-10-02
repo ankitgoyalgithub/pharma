@@ -121,7 +121,11 @@ ChartJS.register(
 
 
 const DemandForecasting = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  // Check if in share mode (Upsynq unique link)
+  const urlParams = new URLSearchParams(window.location.search);
+  const isShareMode = urlParams.has('share') && urlParams.get('step') === '4';
+  
+  const [currentStep, setCurrentStep] = useState(isShareMode ? 4 : 1);
   const [isLoading, setIsLoading] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [searchTerm, setSearchTerm] = useState("");
@@ -2097,9 +2101,11 @@ const DemandForecasting = () => {
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" onClick={() => setCurrentStep(3)}>
-              ← Back
-            </Button>
+            {!isShareMode && (
+              <Button variant="outline" onClick={() => setCurrentStep(3)}>
+                ← Back
+              </Button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
@@ -3300,6 +3306,19 @@ const DemandForecasting = () => {
       </div>
     </div>
   );
+
+  // If in share mode, show only Step 4 dashboard without navigation
+  if (isShareMode) {
+    return (
+      <TooltipProvider>
+        <div className="min-h-screen bg-gradient-subtle">
+          <div className="px-4 py-6">
+            {renderStep4()}
+          </div>
+        </div>
+      </TooltipProvider>
+    );
+  }
 
   return (
     <TooltipProvider>
