@@ -26,7 +26,7 @@ export const ForecastCard: React.FC<ForecastCardProps> = ({
   return (
     <Card
       className={clsx(
-        "p-3 sm:p-4 cursor-pointer transition-all duration-300 hover:shadow-lg bg-card border-border overflow-hidden max-w-[280px] min-h-[140px]",
+        "p-3 sm:p-4 cursor-pointer transition-all duration-300 hover:shadow-lg bg-card border-border overflow-hidden w-[280px] min-h-[140px]",
         "hover:border-primary/30 hover:shadow-[0_0_0_1px_hsl(var(--primary)/0.1),0_8px_25px_-8px_hsl(var(--primary)/0.15)]",
         isActive && "ring-2 ring-primary/30 border-primary/50",
         className
