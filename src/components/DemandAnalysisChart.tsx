@@ -91,25 +91,25 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('transform', `translate(${circleX}, ${circleY}) rotate(-90)`)
       .attr('fill', successColor);
 
-    // Percentage text
+    // Percentage text - positioned outside circle to the right
     topGroup.append('text')
-      .attr('x', circleX)
-      .attr('y', circleY)
-      .attr('text-anchor', 'middle')
+      .attr('x', circleX + circleRadius + 15)
+      .attr('y', circleY - 5)
+      .attr('text-anchor', 'start')
       .attr('dominant-baseline', 'middle')
-      .attr('font-size', '20px')
+      .attr('font-size', '36px')
       .attr('font-weight', 'bold')
       .attr('fill', successColor)
       .text(`${progressPercent}%`);
 
-    // "Backtested Accuracy" label
+    // "Backtested Accuracy" label - positioned below the percentage
     topGroup.append('text')
-      .attr('x', circleX + circleRadius + 20)
-      .attr('y', circleY)
+      .attr('x', circleX + circleRadius + 15)
+      .attr('y', circleY + 20)
       .attr('text-anchor', 'start')
       .attr('dominant-baseline', 'middle')
-      .attr('font-size', '14px')
-      .attr('fill', foregroundColor)
+      .attr('font-size', '13px')
+      .attr('fill', mutedForeground)
       .text('Backtested Accuracy');
 
     // Right side metrics
@@ -178,13 +178,13 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     
     gradient.append('stop')
       .attr('offset', '0%')
-      .attr('stop-color', getHSLColor('--background'))
-      .attr('stop-opacity', 1);
+      .attr('stop-color', getHSLColor('--muted'))
+      .attr('stop-opacity', 0.4);
     
     gradient.append('stop')
       .attr('offset', '100%')
-      .attr('stop-color', getHSLColor('--muted'))
-      .attr('stop-opacity', 0.3);
+      .attr('stop-color', getHSLColor('--background'))
+      .attr('stop-opacity', 0.8);
 
     svg.append('rect')
       .attr('x', 0)
