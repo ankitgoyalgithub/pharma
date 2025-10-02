@@ -14,6 +14,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import pptx from "pptxgenjs";
+import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import {
   FileText,
@@ -56,6 +57,7 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuItem,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
@@ -357,97 +359,109 @@ const DemandForecasting = () => {
         content: "Advanced time series analysis with seasonal decomposition, trend detection, and AI-powered accuracy improvements achieving 89% forecast accuracy."
       },
       {
-        title: "AI Forecast", 
-        content: "Deep learning models incorporating external drivers, market dynamics, and historical patterns to deliver precision forecasting with explainable insights."
+        title: "AI/ML Models",
+        content: "Deep learning neural networks (LSTM/GRU) trained on 5 years of historical data, capturing complex patterns and non-linear relationships."
       },
       {
-        title: "Consensus Forecast",
-        content: "Collaborative intelligence combining statistical rigor, AI insights, and human expertise to create the most reliable forecast for strategic planning."
-      },
-      {
-        title: "Data Quality Review",
-        content: "Comprehensive data integrity assessment with 85% completeness, 12% missing values, 3% outliers detected, and AI-enhanced quality insights for improved forecasting accuracy."
+        title: "Collaborative Intelligence",
+        content: "Hybrid approach combining statistical algorithms, machine learning predictions, and human expertise for superior forecast accuracy and business alignment."
       }
     ];
 
     // Title slide
     const titleSlide = presentation.addSlide();
-    titleSlide.background = { color: "F1F5F9" };
     titleSlide.addText("Demand Forecasting Results", {
-      x: 1,
-      y: 2,
-      w: 8,
+      x: 0.5,
+      y: 2.0,
+      w: "90%",
       h: 1.5,
-      fontSize: 36,
+      fontSize: 44,
       bold: true,
-      color: "1E293B",
+      color: "1E40AF",
       align: "center"
     });
-    titleSlide.addText(`Generated on ${format(new Date(), "PPP")}`, {
-      x: 1,
-      y: 4,
-      w: 8,
+    titleSlide.addText(`Generated on ${format(new Date(), "MMMM dd, yyyy")}`, {
+      x: 0.5,
+      y: 3.5,
+      w: "90%",
       h: 0.5,
       fontSize: 18,
       color: "64748B",
       align: "center"
     });
 
-    // Create slide for each forecast card
+    // Executive Summary slide
+    const summarySlide = presentation.addSlide();
+    summarySlide.addText("Executive Summary", {
+      x: 0.5,
+      y: 0.5,
+      w: "90%",
+      h: 0.6,
+      fontSize: 32,
+      bold: true,
+      color: "1E40AF"
+    });
+
     forecastCards.forEach((card, index) => {
-      const slide = presentation.addSlide();
-      slide.background = { color: "FFFFFF" };
-      
-      // Title
-      slide.addText(card.title, {
+      summarySlide.addText(card.title, {
         x: 0.5,
-        y: 0.5,
-        w: 9,
-        h: 1,
-        fontSize: 32,
+        y: 1.5 + (index * 1.2),
+        w: "90%",
+        h: 0.4,
+        fontSize: 20,
         bold: true,
-        color: "1E293B"
+        color: "334155"
       });
-      
-      // Content
-      slide.addText(card.content, {
+      summarySlide.addText(card.content, {
         x: 0.5,
-        y: 2,
-        w: 9,
-        h: 4,
-        fontSize: 16,
-        color: "475569",
-        valign: "top"
+        y: 1.9 + (index * 1.2),
+        w: "90%",
+        h: 0.7,
+        fontSize: 14,
+        color: "64748B"
+      });
+    });
+
+    // Metrics slide
+    const metricsSlide = presentation.addSlide();
+    metricsSlide.addText("Key Metrics", {
+      x: 0.5,
+      y: 0.5,
+      fontSize: 32,
+      bold: true,
+      color: "1E40AF"
+    });
+
+    forecastMetrics.forEach((metric, index) => {
+      const xPos = 0.5 + (index % 3) * 3.2;
+      const yPos = 1.5 + Math.floor(index / 3) * 2;
+
+      metricsSlide.addText(metric.label, {
+        x: xPos,
+        y: yPos,
+        w: 2.8,
+        h: 0.4,
+        fontSize: 14,
+        bold: true,
+        color: "334155",
+        align: "left"
       });
 
-      // Add metrics for forecast cards
-      if (index < 3) {
-        const metrics = [
-          "Accuracy: 89%",
-          "Confidence: 94%", 
-          "Coverage: 98%",
-          "Bias: ±2.1%"
-        ];
+      metricsSlide.addText(metric.value, {
+        x: xPos,
+        y: yPos + 0.5,
+        w: 2.8,
+        h: 0.6,
+        fontSize: 28,
+        bold: true,
+        color: "3B82F6",
+        align: "left"
+      });
 
-        metrics.forEach((metric, idx) => {
-          slide.addText(metric, {
-            x: 0.5 + (idx * 2.25),
-            y: 6,
-            w: 2,
-            h: 0.8,
-            fontSize: 14,
-            bold: true,
-            color: "059669",
-            align: "center"
-          });
-        });
-      }
-
-      // Slide number
-      slide.addText(`${index + 2}`, {
-        x: 9,
-        y: 7.5,
-        w: 0.5,
+      metricsSlide.addText(metric.trend, {
+        x: xPos,
+        y: yPos + 1.2,
+        w: 2.8,
         h: 0.3,
         fontSize: 12,
         color: "94A3B8",
@@ -458,6 +472,108 @@ const DemandForecasting = () => {
     // Save the presentation
     presentation.writeFile({ fileName: `Demand_Forecasting_Results_${format(new Date(), "yyyy-MM-dd")}.pptx` });
     toast.success("PPTX export completed successfully!");
+  };
+
+  // Export CSV functionality
+  const exportToCSV = () => {
+    // Prepare forecast data for CSV
+    const csvData = historicalForecastData.map(row => ({
+      Period: row.period,
+      Historical: row.historical,
+      Forecast: row.forecast,
+      Optimized: row.optimized
+    }));
+
+    // Convert to CSV string
+    const headers = Object.keys(csvData[0]).join(',');
+    const rows = csvData.map(row => Object.values(row).join(',')).join('\n');
+    const csv = `${headers}\n${rows}`;
+
+    // Download CSV
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Demand_Forecasting_${format(new Date(), "yyyy-MM-dd")}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    
+    toast.success("CSV export completed successfully!");
+  };
+
+  // Export XLSX functionality
+  const exportToXLSX = () => {
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1: Forecast Data
+    const forecastData = historicalForecastData.map(row => ({
+      Period: row.period,
+      Historical: row.historical,
+      Forecast: row.forecast,
+      Optimized: row.optimized
+    }));
+    const ws1 = XLSX.utils.json_to_sheet(forecastData);
+    XLSX.utils.book_append_sheet(wb, ws1, "Forecast Data");
+
+    // Sheet 2: Metrics
+    const metricsData = forecastMetrics.map(metric => ({
+      Metric: metric.label,
+      Value: metric.value,
+      Trend: metric.trend
+    }));
+    const ws2 = XLSX.utils.json_to_sheet(metricsData);
+    XLSX.utils.book_append_sheet(wb, ws2, "Metrics");
+
+    // Sheet 3: SKU Data
+    const ws3 = XLSX.utils.json_to_sheet(skuData);
+    XLSX.utils.book_append_sheet(wb, ws3, "SKU Analysis");
+
+    // Download XLSX
+    XLSX.writeFile(wb, `Demand_Forecasting_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
+    
+    toast.success("XLSX export completed successfully!");
+  };
+
+  // Export to Canva
+  const exportToCanva = () => {
+    // Prepare data for Canva
+    const canvaData = {
+      title: "Demand Forecasting Results",
+      date: format(new Date(), "MMMM dd, yyyy"),
+      metrics: forecastMetrics.map(m => ({ label: m.label, value: m.value, trend: m.trend })),
+      forecast: historicalForecastData.slice(-12) // Last 12 periods
+    };
+
+    // Encode data and open Canva with pre-filled template
+    const encodedData = encodeURIComponent(JSON.stringify(canvaData));
+    const canvaUrl = `https://www.canva.com/create/presentations/?template=data-presentation&data=${encodedData}`;
+    
+    window.open(canvaUrl, '_blank');
+    toast.success("Opening Canva with forecast data...");
+  };
+
+  // Generate and share Upsynq unique link
+  const exportToUpsynqLink = () => {
+    // Generate unique ID for this dashboard
+    const uniqueId = `upsynq-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // In a real app, you'd save the dashboard state to a database
+    // For now, we'll create a shareable link with the ID
+    const baseUrl = window.location.origin;
+    const shareUrl = `${baseUrl}/demand-forecasting?share=${uniqueId}&step=4`;
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast.success("Unique Upsynq link copied to clipboard!", {
+        description: shareUrl,
+        duration: 5000
+      });
+    }).catch(() => {
+      // Fallback: show the link in a prompt
+      prompt("Copy this Upsynq share link:", shareUrl);
+      toast.success("Upsynq link generated successfully!");
+    });
   };
 
   // ---- Step 1 ----
@@ -1984,10 +2100,39 @@ const DemandForecasting = () => {
             <Button variant="outline" onClick={() => setCurrentStep(3)}>
               ← Back
             </Button>
-            <Button variant="outline" onClick={exportToPPTX}>
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  Export As
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportToPPTX}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  PPTX
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToCSV}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToXLSX}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  XLSX
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportToCanva}>
+                  <Share className="w-4 h-4 mr-2" />
+                  Canva
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToUpsynqLink}>
+                  <Share className="w-4 h-4 mr-2" />
+                  Upsynq Unique Link
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button>
               <Share className="w-4 h-4 mr-2" />
               Share
