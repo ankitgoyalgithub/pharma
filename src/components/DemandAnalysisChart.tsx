@@ -1,22 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Button } from '@/components/ui/button';
-import { ZoomIn, ZoomOut } from 'lucide-react';
 
 interface DemandAnalysisChartProps {
   granularity: 'weekly' | 'monthly' | 'quarterly';
   valueMode: 'value' | 'volume';
   classFilter: string;
   locationFilter: string;
+  chartGranularity: 'daily' | 'weekly' | 'monthly' | 'quarterly';
 }
 
-type GranularityLevel = 'daily' | 'weekly' | 'monthly' | 'quarterly';
-
-export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter }: DemandAnalysisChartProps) => {
+export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity }: DemandAnalysisChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const [currentGranularity, setCurrentGranularity] = useState<GranularityLevel>('weekly');
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
@@ -30,7 +26,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
 
     // Generate data based on granularity
     const generateData = () => {
-      switch (currentGranularity) {
+      switch (chartGranularity) {
         case 'daily':
           return Array.from({ length: 84 }, (_, i) => ({
             period: i + 1,
@@ -73,7 +69,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     
     // Get period label
     const getPeriodLabel = (period: number) => {
-      switch (currentGranularity) {
+      switch (chartGranularity) {
         case 'daily': return `Day ${period}`;
         case 'weekly': return `Week ${period}`;
         case 'monthly': return `Month ${period}`;
@@ -267,7 +263,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('opacity', 0.7);
 
     // X axis
-    const xTickValues = currentGranularity === 'daily' 
+    const xTickValues = chartGranularity === 'daily'
       ? data.filter((_, i) => i % 7 === 0).map(d => d.period)
       : data.filter((_, i) => i % 2 === 0).map(d => d.period);
     
@@ -378,49 +374,10 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
         });
     });
 
-  }, [granularity, valueMode, classFilter, locationFilter, currentGranularity]);
-
-  const handleZoomIn = () => {
-    const levels: GranularityLevel[] = ['quarterly', 'monthly', 'weekly', 'daily'];
-    const currentIndex = levels.indexOf(currentGranularity);
-    if (currentIndex < levels.length - 1) {
-      setCurrentGranularity(levels[currentIndex + 1]);
-    }
-  };
-
-  const handleZoomOut = () => {
-    const levels: GranularityLevel[] = ['quarterly', 'monthly', 'weekly', 'daily'];
-    const currentIndex = levels.indexOf(currentGranularity);
-    if (currentIndex > 0) {
-      setCurrentGranularity(levels[currentIndex - 1]);
-    }
-  };
+  }, [granularity, valueMode, classFilter, locationFilter, chartGranularity]);
 
   return (
     <div className="relative">
-      {/* Zoom controls */}
-      <div className="absolute top-2 right-2 z-10 flex items-center gap-2 bg-card/80 backdrop-blur-sm border border-border rounded-lg p-1">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={handleZoomOut}
-          disabled={currentGranularity === 'quarterly'}
-          className="h-8 w-8 p-0"
-        >
-          <ZoomOut className="h-4 w-4" />
-        </Button>
-        <span className="text-xs font-medium px-2 capitalize">{currentGranularity}</span>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={handleZoomIn}
-          disabled={currentGranularity === 'daily'}
-          className="h-8 w-8 p-0"
-        >
-          <ZoomIn className="h-4 w-4" />
-        </Button>
-      </div>
-      
       <div ref={containerRef} className="w-full">
         <svg ref={svgRef}></svg>
       </div>

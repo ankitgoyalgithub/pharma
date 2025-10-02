@@ -54,6 +54,8 @@ import {
   Brain,
   Activity,
   Target,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -229,6 +231,23 @@ const DemandForecasting = () => {
   const [valueMode, setValueMode] = useState<"value" | "volume">("value");
   const [classFilter, setClassFilter] = useState<string>("all");
   const [locationFilter, setLocationFilter] = useState<string>("all");
+  const [chartGranularity, setChartGranularity] = useState<'daily' | 'weekly' | 'monthly' | 'quarterly'>('weekly');
+
+  const handleZoomIn = () => {
+    const levels: Array<'daily' | 'weekly' | 'monthly' | 'quarterly'> = ['quarterly', 'monthly', 'weekly', 'daily'];
+    const currentIndex = levels.indexOf(chartGranularity);
+    if (currentIndex < levels.length - 1) {
+      setChartGranularity(levels[currentIndex + 1]);
+    }
+  };
+
+  const handleZoomOut = () => {
+    const levels: Array<'daily' | 'weekly' | 'monthly' | 'quarterly'> = ['quarterly', 'monthly', 'weekly', 'daily'];
+    const currentIndex = levels.indexOf(chartGranularity);
+    if (currentIndex > 0) {
+      setChartGranularity(levels[currentIndex - 1]);
+    }
+  };
 
   // Right sidebar state
   const [rightSidebarTab, setRightSidebarTab] = useState<'ai' | 'filter' | 'scenario'>('filter');
@@ -2387,7 +2406,7 @@ const DemandForecasting = () => {
         ) : activeTab === "overview" && (
           <>
             {/* Demand Analysis Chart with controls */}
-            <Card className="shadow-card border-0 mb-4 flex-1">
+            <Card className="shadow-card border-0 mb-4 flex-1 bg-gradient-to-br from-card via-card to-muted/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <div className="flex items-center gap-2">
                   <CardTitle className="text-lg">Demand Analysis</CardTitle>
@@ -2400,7 +2419,30 @@ const DemandForecasting = () => {
                     </TooltipContent>
                   </Tooltip>
                 </div>
-                <DropdownMenu>
+                <div className="flex items-center gap-2">
+                  {/* Zoom controls */}
+                  <div className="flex items-center gap-1 bg-muted/50 border border-border rounded-lg p-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleZoomOut}
+                      disabled={chartGranularity === 'quarterly'}
+                      className="h-7 w-7 p-0"
+                    >
+                      <ZoomOut className="h-3.5 w-3.5" />
+                    </Button>
+                    <span className="text-xs font-medium px-2 capitalize min-w-[60px] text-center">{chartGranularity}</span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleZoomIn}
+                      disabled={chartGranularity === 'daily'}
+                      className="h-7 w-7 p-0"
+                    >
+                      <ZoomIn className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                  <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon" className="rounded-full" aria-label="Chart options">
                       <MoreHorizontal className="h-4 w-4" />
@@ -2454,6 +2496,7 @@ const DemandForecasting = () => {
                     </DropdownMenuSub>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                </div>
               </CardHeader>
               <CardContent className="pt-2">
                 <DemandAnalysisChart
@@ -2461,6 +2504,7 @@ const DemandForecasting = () => {
                   valueMode={valueMode}
                   classFilter={classFilter}
                   locationFilter={locationFilter}
+                  chartGranularity={chartGranularity}
                 />
               </CardContent>
             </Card>
