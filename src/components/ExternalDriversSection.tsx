@@ -105,11 +105,9 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
               className={`flex items-center justify-between p-3 rounded-lg border bg-card transition-colors ${
                 isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/50 cursor-pointer'
               } ${isAutoSelected && aiSuggestionsEnabled ? 'border-primary/50 bg-primary/5' : ''}`}
+              onClick={() => !isDisabled && !isLoadingThis && onToggleDriver(driver.name)}
             >
-              <div 
-                className="flex items-center gap-2 flex-1"
-                onClick={() => !isDisabled && !isLoadingThis && onToggleDriver(driver.name)}
-              >
+              <div className="flex items-center gap-2 flex-1">
                 <IconComponent className="h-4 w-4 text-muted-foreground" />
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">{driver.name}</span>
@@ -118,7 +116,7 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                 {isSelected && onPreviewDriver && (
                   <Button
                     variant="ghost"
