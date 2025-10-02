@@ -34,7 +34,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { ModernStepper } from "@/components/ModernStepper";
+import { useStepper } from "@/hooks/useStepper";
+import { useStepperContext } from "@/contexts/StepperContext";
 import WorkbookTable from "@/components/WorkbookTable";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
@@ -193,17 +194,38 @@ const InventoryOptimization: React.FC = () => {
   // Results tabs
   const [activeTab, setActiveTab] = useState<"overview" | "policies" | "capital" | "workbook">("overview");
 
+  // Stepper configuration
+  const stepperSteps = [
+    { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
+    { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
+    { id: 3, title: "Review Data", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
+    { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
+  ];
+  
+  const stepperHook = useStepper({
+    steps: stepperSteps,
+    title: "Inventory Optimization",
+    initialStep: currentStep
+  });
+
+  const { setOnStepClick } = useStepperContext();
+
+  // Set up step click handler
+  const handleStepClick = React.useCallback((stepId: number) => {
+    const targetStep = stepperSteps.find(s => s.id === stepId);
+    if (targetStep && (targetStep.status === 'completed' || stepId === currentStep + 1 || stepId === currentStep)) {
+      setCurrentStep(stepId);
+    }
+  }, [currentStep, stepperSteps]);
+
+  useEffect(() => {
+    setOnStepClick(() => handleStepClick);
+  }, [handleStepClick, setOnStepClick]);
+
   useEffect(() => {
     const event = new CustomEvent("collapseSidebar");
     window.dispatchEvent(event);
   }, []);
-
-  const stepperSteps = [
-    { id: 1, title: "Add Data", status: (currentStep > 1 ? "completed" : currentStep === 1 ? "active" : "pending") as "completed" | "active" | "pending" },
-    { id: 2, title: "Data Gaps", status: (currentStep > 2 ? "completed" : currentStep === 2 ? "active" : "pending") as "completed" | "active" | "pending" },
-    { id: 3, title: "Review Data", status: (currentStep > 3 ? "completed" : currentStep === 3 ? "active" : "pending") as "completed" | "active" | "pending" },
-    { id: 4, title: "Results", status: (currentStep === 4 ? "active" : "pending") as "completed" | "active" | "pending" },
-  ];
 
   const handleStepTransition = (nextStep: number) => {
     setIsLoading(true);
@@ -395,7 +417,7 @@ const InventoryOptimization: React.FC = () => {
 
   // ---------- Step 1 ----------
   const renderStep1 = () => (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 px-6 pt-10 pb-6">
       <div>
         <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
         <p className="text-sm text-muted-foreground">
@@ -1151,13 +1173,10 @@ const InventoryOptimization: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
-      <ModernStepper steps={stepperSteps} title="Inventory Optimization" />
-      <div className="p-8">
-        {currentStep === 1 && renderStep1()}
-        {currentStep === 2 && renderStep2()}
-        {currentStep === 3 && renderStep3()}
-        {currentStep === 4 && renderStep4()}
-      </div>
+      {currentStep === 1 && renderStep1()}
+      {currentStep === 2 && renderStep2()}
+      {currentStep === 3 && renderStep3()}
+      {currentStep === 4 && renderStep4()}
       {isLoading && <ScientificLoader message={`Processing Step ${currentStep + 1}...`} size="lg" />}
     </div>
   );
