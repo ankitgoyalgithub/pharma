@@ -243,21 +243,314 @@ export const externalDriversData = {
       volume: 4100000,
       sector: "Technology"
     }
+  ],
+  "Crude_Oil_Prices": [
+    {
+      date: "2024-01-01",
+      benchmark: "Brent Crude",
+      price: 78.45,
+      currency: "USD",
+      change: 1.2,
+      changePercent: 1.55,
+      volume: 125000000
+    },
+    {
+      date: "2024-01-02",
+      benchmark: "Brent Crude",
+      price: 79.12,
+      currency: "USD",
+      change: 0.67,
+      changePercent: 0.85,
+      volume: 132000000
+    }
+  ],
+  "NSE_Index": [
+    {
+      date: "2024-01-01",
+      index: "NIFTY 50",
+      value: 21850.45,
+      change: 125.30,
+      changePercent: 0.58,
+      volume: 2500000000,
+      sector: "All"
+    },
+    {
+      date: "2024-01-02",
+      index: "NIFTY 50",
+      value: 21920.15,
+      change: 69.70,
+      changePercent: 0.32,
+      volume: 2350000000,
+      sector: "All"
+    }
+  ],
+  "NASDAQ_Index": [
+    {
+      date: "2024-01-01",
+      index: "NASDAQ Composite",
+      value: 15240.85,
+      change: 85.40,
+      changePercent: 0.56,
+      volume: 4200000000,
+      sector: "Technology"
+    },
+    {
+      date: "2024-01-02",
+      index: "NASDAQ Composite",
+      value: 15310.20,
+      change: 69.35,
+      changePercent: 0.45,
+      volume: 4100000000,
+      sector: "Technology"
+    }
+  ],
+  "Weather_Data": [
+    {
+      date: "2024-01-01",
+      location: "Multiple Regions",
+      avgTemperature: 18.5,
+      precipitation: 2.3,
+      humidity: 65,
+      windSpeed: 12,
+      condition: "Partly Cloudy"
+    },
+    {
+      date: "2024-01-02",
+      location: "Multiple Regions",
+      avgTemperature: 19.2,
+      precipitation: 0.0,
+      humidity: 58,
+      windSpeed: 8,
+      condition: "Clear"
+    }
+  ],
+  "Exchange_Rates": [
+    {
+      date: "2024-01-01",
+      baseCurrency: "USD",
+      targetCurrency: "EUR",
+      rate: 0.92,
+      change: 0.002,
+      changePercent: 0.22,
+      bidRate: 0.919,
+      askRate: 0.921
+    },
+    {
+      date: "2024-01-02",
+      baseCurrency: "USD",
+      targetCurrency: "EUR",
+      rate: 0.918,
+      change: -0.002,
+      changePercent: -0.22,
+      bidRate: 0.917,
+      askRate: 0.919
+    }
+  ],
+  "Interest_Rates": [
+    {
+      date: "2024-01-01",
+      country: "USA",
+      centralBank: "Federal Reserve",
+      rate: 5.50,
+      change: 0.0,
+      rateType: "Federal Funds Rate",
+      decision: "Hold"
+    },
+    {
+      date: "2024-02-01",
+      country: "USA",
+      centralBank: "Federal Reserve",
+      rate: 5.50,
+      change: 0.0,
+      rateType: "Federal Funds Rate",
+      decision: "Hold"
+    }
+  ],
+  "Inflation_Data": [
+    {
+      date: "2024-01-01",
+      country: "USA",
+      cpiValue: 308.2,
+      change: 0.3,
+      changePercent: 3.4,
+      category: "All Items",
+      period: "Monthly"
+    },
+    {
+      date: "2024-02-01",
+      country: "USA",
+      cpiValue: 309.1,
+      change: 0.9,
+      changePercent: 3.2,
+      category: "All Items",
+      period: "Monthly"
+    }
+  ],
+  "GDP_Growth": [
+    {
+      date: "2024-Q1",
+      country: "USA",
+      gdpValue: 27.5,
+      currency: "Trillion USD",
+      growthRate: 2.5,
+      changePercent: 2.5,
+      sector: "All"
+    },
+    {
+      date: "2024-Q2",
+      country: "USA",
+      gdpValue: 27.8,
+      currency: "Trillion USD",
+      growthRate: 2.8,
+      changePercent: 2.8,
+      sector: "All"
+    }
+  ],
+  "Commodity_Prices": [
+    {
+      date: "2024-01-01",
+      commodity: "Gold",
+      price: 2065.50,
+      currency: "USD",
+      unit: "oz",
+      change: 12.30,
+      changePercent: 0.60,
+      exchange: "COMEX"
+    },
+    {
+      date: "2024-01-02",
+      commodity: "Gold",
+      price: 2072.80,
+      currency: "USD",
+      unit: "oz",
+      change: 7.30,
+      changePercent: 0.35,
+      exchange: "COMEX"
+    }
+  ],
+  "Labor_Market_Data": [
+    {
+      date: "2024-01-01",
+      country: "USA",
+      unemploymentRate: 3.7,
+      laborForceParticipation: 62.5,
+      avgHourlyEarnings: 34.25,
+      change: 0.15,
+      sector: "All"
+    },
+    {
+      date: "2024-02-01",
+      country: "USA",
+      unemploymentRate: 3.8,
+      laborForceParticipation: 62.6,
+      avgHourlyEarnings: 34.50,
+      change: 0.25,
+      sector: "All"
+    }
+  ],
+  "Energy_Costs": [
+    {
+      date: "2024-01-01",
+      energyType: "Electricity",
+      price: 0.142,
+      currency: "USD",
+      unit: "kWh",
+      change: 0.002,
+      changePercent: 1.43,
+      region: "USA"
+    },
+    {
+      date: "2024-01-02",
+      energyType: "Electricity",
+      price: 0.145,
+      currency: "USD",
+      unit: "kWh",
+      change: 0.003,
+      changePercent: 2.11,
+      region: "USA"
+    }
+  ],
+  "Supply_Chain_Events": [
+    {
+      date: "2024-01-01",
+      eventType: "Port Congestion",
+      location: "Los Angeles Port",
+      severity: "Medium",
+      impactedRoutes: "Asia-USA",
+      delayDays: 3,
+      status: "Ongoing"
+    },
+    {
+      date: "2024-01-05",
+      eventType: "Weather Disruption",
+      location: "Suez Canal",
+      severity: "Low",
+      impactedRoutes: "Asia-Europe",
+      delayDays: 1,
+      status: "Resolved"
+    }
+  ],
+  "Technology_Trends": [
+    {
+      date: "2024-01-01",
+      technology: "AI/Machine Learning",
+      adoptionRate: 68,
+      growthRate: 12.5,
+      industry: "Technology",
+      investmentMillions: 450,
+      maturityLevel: "Growing"
+    },
+    {
+      date: "2024-01-01",
+      technology: "Cloud Computing",
+      adoptionRate: 85,
+      growthRate: 8.2,
+      industry: "Technology",
+      investmentMillions: 620,
+      maturityLevel: "Mature"
+    }
+  ],
+  "Regulatory_Changes": [
+    {
+      date: "2024-01-01",
+      regulation: "Data Privacy Act",
+      country: "USA",
+      industry: "Technology",
+      impactLevel: "High",
+      complianceDeadline: "2024-12-31",
+      status: "Proposed"
+    },
+    {
+      date: "2024-01-15",
+      regulation: "Environmental Standards",
+      country: "EU",
+      industry: "Manufacturing",
+      impactLevel: "Medium",
+      complianceDeadline: "2025-06-30",
+      status: "Active"
+    }
   ]
 };
 
 // Helper function to get external driver data
 export const getExternalDriverData = (driverName: string) => {
-  // Map driver display names to data keys
+  // Map driver display names to data keys - aligned with Feature Store entities
   const driverKeyMap: Record<string, string> = {
     "Holiday Calendar": "Holiday_Calendar",
-    "Ad Spend": "Ad_Spend", 
-    "Rainfall": "Rainfall",
-    "Temperature": "Temperature",
-    "Economic Index": "Economic_Index",
-    "Competitor Pricing": "Competitor_Pricing",
-    "Social Media Trends": "Social_Media_Trends",
-    "Stock Market": "Stock_Market"
+    "Crude Oil Prices": "Crude_Oil_Prices",
+    "NSE Index": "NSE_Index",
+    "NASDAQ Index": "NASDAQ_Index",
+    "Weather Data": "Weather_Data",
+    "Exchange Rates": "Exchange_Rates",
+    "Interest Rates": "Interest_Rates",
+    "Inflation Data": "Inflation_Data",
+    "GDP Growth": "GDP_Growth",
+    "Commodity Prices": "Commodity_Prices",
+    "Labor Market Data": "Labor_Market_Data",
+    "Energy Costs": "Energy_Costs",
+    "Supply Chain Events": "Supply_Chain_Events",
+    "Technology Trends": "Technology_Trends",
+    "Regulatory Changes": "Regulatory_Changes",
   };
   
   const dataKey = driverKeyMap[driverName];
