@@ -2465,15 +2465,8 @@ const DemandForecasting = () => {
               </CardContent>
             </Card>
             
-            {/* Top KPI Row - 4 Smaller Cards */}
-            <div className="grid grid-cols-4 gap-2 mb-3">
-              <CompactMetricCard
-                value={filterValues.skuProduct !== 'all' || filterValues.location !== 'all' ? '91%' : '89%'}
-                label="Model Accuracy"
-                tooltip="Percentage of forecasts that fall within acceptable accuracy range. Higher is better."
-                valueColor="success"
-              />
-
+            {/* Top KPI Row - 3 Cards */}
+            <div className="grid grid-cols-3 gap-2 mb-3">
               <CompactMetricCard
                 value={filterValues.businessUnits === 'enterprise' ? '7.2%' : '8.7%'}
                 label="MAPE"
@@ -2501,23 +2494,6 @@ const DemandForecasting = () => {
                 label="VMAPE"
                 tooltip="Volume-weighted MAPE - accuracy metric accounting for volume importance of each forecast."
                 valueColor="info"
-              />
-            </div>
-
-            {/* Revenue and Volume Projections Row */}
-            <div className="grid grid-cols-2 gap-2 mb-3">
-              <CompactProjectionCard
-                title="Revenue Projection"
-                value={filterValues.location === 'north' ? '₹52.8M' : filterValues.location === 'south' ? '₹41.6M' : '₹48.2M'}
-                subtitle="Next 12 Months"
-                tooltip="Total forecasted revenue for the next 12 months based on demand predictions and pricing models."
-              />
-
-              <CompactProjectionCard
-                title="Volume Projection"
-                value={filterValues.channel === 'online' ? '98K' : filterValues.channel === 'retail' ? '78K' : '125K'}
-                subtitle="units (Next 12 Months)"
-                tooltip="Total forecasted demand volume (units) for the next 12 months across all products and channels."
               />
             </div>
 

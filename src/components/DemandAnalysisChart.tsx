@@ -97,7 +97,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('y', circleY)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .attr('font-size', '32px')
+      .attr('font-size', '20px')
       .attr('font-weight', 'bold')
       .attr('fill', successColor)
       .text(`${progressPercent}%`);
@@ -113,7 +113,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .text('Backtested Accuracy');
 
     // Right side metrics
-    const metricsX = containerWidth - 280;
+    const metricsX = containerWidth - 320;
     
     // Next 12 Weeks Value Projection
     topGroup.append('text')
@@ -166,6 +166,32 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('font-size', '11px')
       .attr('fill', mutedForeground)
       .text('units');
+
+    // Add subtle gradient background
+    const defs = svg.append('defs');
+    const gradient = defs.append('linearGradient')
+      .attr('id', 'chartGradient')
+      .attr('x1', '0%')
+      .attr('y1', '0%')
+      .attr('x2', '0%')
+      .attr('y2', '100%');
+    
+    gradient.append('stop')
+      .attr('offset', '0%')
+      .attr('stop-color', getHSLColor('--background'))
+      .attr('stop-opacity', 1);
+    
+    gradient.append('stop')
+      .attr('offset', '100%')
+      .attr('stop-color', getHSLColor('--muted'))
+      .attr('stop-opacity', 0.3);
+
+    svg.append('rect')
+      .attr('x', 0)
+      .attr('y', topSectionHeight)
+      .attr('width', containerWidth)
+      .attr('height', containerHeight - topSectionHeight)
+      .attr('fill', 'url(#chartGradient)');
 
     // Chart group
     const chartGroup = svg.append('g')
