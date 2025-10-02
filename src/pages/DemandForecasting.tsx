@@ -191,23 +191,25 @@ const DemandForecasting = () => {
 
 
   const handleFoundrySubmit = (data: {
-    selectedObject: string;
-    selectedDataType: 'master' | 'timeseries';
+    selectedObjects: string[];
+    selectedDataType: 'master' | 'timeseries' | 'featureStore';
     fromDate?: Date;
     toDate?: Date;
   }) => {
-    const newObject = {
-      name: data.selectedObject,
+    const newObjects = data.selectedObjects.map(objName => ({
+      name: objName,
       type: data.selectedDataType === 'timeseries' ? 'transactional' as const : 'master' as const,
       ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
-    };
+    }));
     
-    setFoundryObjects(prev => [...prev, newObject]);
+    setFoundryObjects(prev => [...prev, ...newObjects]);
     
-    // Set preview to new object
-    setSelectedPreview(data.selectedObject);
-    setPreviewLoading(true);
-    setTimeout(() => setPreviewLoading(false), 700);
+    // Set preview to first new object
+    if (data.selectedObjects.length > 0) {
+      setSelectedPreview(data.selectedObjects[0]);
+      setPreviewLoading(true);
+      setTimeout(() => setPreviewLoading(false), 700);
+    }
   };
   const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "quality">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
@@ -484,6 +486,7 @@ const DemandForecasting = () => {
             </Tooltip>
           </div>
           <p className="text-sm text-muted-foreground">
+            Upload multiple files at once. Supported formats: CSV, Excel, JSON. {" "}
             <Button 
               variant="link" 
               size="sm" 
@@ -498,14 +501,13 @@ const DemandForecasting = () => {
             >
               Download input template
             </Button>
-            {" "}with pre-configured sheets (Sales, Product, Location, Channel, External Factors)
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="flex-1" onClick={() => document.getElementById('file-upload')?.click()}>
               <Upload className="h-4 w-4 mr-2" />
-              Upload Files
+              Upload Multiple Files
             </Button>
             <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
               <DialogTrigger asChild>

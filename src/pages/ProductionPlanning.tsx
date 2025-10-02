@@ -276,7 +276,7 @@ const ProductionPlanning = () => {
   
   // Foundry mapping modal states
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
-  const [foundryObjects, setFoundryObjects] = useState<Array<{id: string, name: string, type: 'master' | 'timeseries', status: string, dateRange?: string}>>([]);
+  const [foundryObjects, setFoundryObjects] = useState<Array<{id: string, name: string, type: 'master' | 'timeseries' | 'featureStore', status: string, dateRange?: string}>>([]);
 
   const [activeTab, setActiveTab] = useState("overview"); // overview | workcenters | orders | timeline | workbook
   const [horizon, setHorizon] = useState("4 Weeks");
@@ -396,29 +396,31 @@ const ProductionPlanning = () => {
   };
 
   const handleFoundrySubmit = (data: {
-    selectedObject: string;
-    selectedDataType: 'master' | 'timeseries';
+    selectedObjects: string[];
+    selectedDataType: 'master' | 'timeseries' | 'featureStore';
     fromDate?: Date;
     toDate?: Date;
   }) => {
-    // Create a new foundry object
-    const newFoundryObject = {
-      id: `foundry_${Date.now()}`,
-      name: data.selectedObject,
+    // Create new foundry objects
+    const newFoundryObjects = data.selectedObjects.map(objName => ({
+      id: `foundry_${Date.now()}_${objName}`,
+      name: objName,
       type: data.selectedDataType,
       status: 'imported' as const,
       dateRange: data.selectedDataType === 'timeseries' && data.fromDate && data.toDate 
         ? `${format(data.fromDate, "MMM d, yyyy")} - ${format(data.toDate, "MMM d, yyyy")}` 
         : undefined
-    };
+    }));
 
     // Add to foundry objects list
-    setFoundryObjects(prev => [...prev, newFoundryObject]);
+    setFoundryObjects(prev => [...prev, ...newFoundryObjects]);
     
-    // Set preview to new object
-    setSelectedPreview(data.selectedObject);
-    setPreviewLoading(true);
-    setTimeout(() => setPreviewLoading(false), 700);
+    // Set preview to first new object
+    if (data.selectedObjects.length > 0) {
+      setSelectedPreview(data.selectedObjects[0]);
+      setPreviewLoading(true);
+      setTimeout(() => setPreviewLoading(false), 700);
+    }
   };
 
   // ---------- STEP 1: Add Data ----------

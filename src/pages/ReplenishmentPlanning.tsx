@@ -248,7 +248,7 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
 
   // Step 1: add data preview - align with DemandForecasting flow
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [foundryObjects, setFoundryObjects] = useState<Array<{name: string; type: 'master' | 'timeseries', fromDate?: Date, toDate?: Date}>>([]);
+  const [foundryObjects, setFoundryObjects] = useState<Array<{name: string; type: 'master' | 'timeseries' | 'featureStore', fromDate?: Date, toDate?: Date}>>([]);
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
@@ -303,28 +303,30 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
 
   // ---------- STEP 1: Add Data ----------
   const handleFoundrySubmit = (data: {
-    selectedObject: string;
-    selectedDataType: 'master' | 'timeseries';
+    selectedObjects: string[];
+    selectedDataType: 'master' | 'timeseries' | 'featureStore';
     fromDate?: Date;
     toDate?: Date;
   }) => {
-    const newObject = {
-      name: data.selectedObject,
+    const newObjects = data.selectedObjects.map(objName => ({
+      name: objName,
       type: data.selectedDataType === 'timeseries' ? 'timeseries' as const : 'master' as const,
       ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
-    };
-    setFoundryObjects(prev => [...prev, newObject]);
+    }));
+    setFoundryObjects(prev => [...prev, ...newObjects]);
 
-    setSelectedPreview(newObject.name);
-    setPreviewLoading(true);
-    setTimeout(() => setPreviewLoading(false), 600);
+    if (data.selectedObjects.length > 0) {
+      setSelectedPreview(data.selectedObjects[0]);
+      setPreviewLoading(true);
+      setTimeout(() => setPreviewLoading(false), 600);
+    }
     setIsFoundryModalOpen(false);
   };
 
   const handleSubmitFoundryModal = () => {
     if (selectedObject) {
       handleFoundrySubmit({
-        selectedObject,
+        selectedObjects: [selectedObject],
         selectedDataType: selectedDataType as 'master' | 'timeseries',
         fromDate,
         toDate

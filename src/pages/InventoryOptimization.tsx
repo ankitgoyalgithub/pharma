@@ -236,21 +236,23 @@ const InventoryOptimization: React.FC = () => {
   };
 
   const handleFoundrySubmit = (data: {
-    selectedObject: string;
-    selectedDataType: 'master' | 'timeseries';
+    selectedObjects: string[];
+    selectedDataType: 'master' | 'timeseries' | 'featureStore';
     fromDate?: Date;
     toDate?: Date;
   }) => {
-    const newObject = {
-      name: data.selectedObject,
+    const newObjects = data.selectedObjects.map(objName => ({
+      name: objName,
       type: data.selectedDataType === 'timeseries' ? 'timeseries' as const : 'master' as const,
       ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
-    };
-    setFoundryObjects(prev => [...prev, newObject]);
+    }));
+    setFoundryObjects(prev => [...prev, ...newObjects]);
 
-    setSelectedPreview(newObject.name);
-    setPreviewLoading(true);
-    setTimeout(() => setPreviewLoading(false), 600);
+    if (data.selectedObjects.length > 0) {
+      setSelectedPreview(data.selectedObjects[0]);
+      setPreviewLoading(true);
+      setTimeout(() => setPreviewLoading(false), 600);
+    }
   };
 
   // Auto-select drivers when data sources are added

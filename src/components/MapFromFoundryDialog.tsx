@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Database, FileText, TrendingUp } from "lucide-react";
+import { CalendarIcon, Database, FileText, TrendingUp, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -14,7 +14,7 @@ interface MapFromFoundryDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: {
-    selectedObject: string;
+    selectedObjects: string[];
     selectedDataType: 'master' | 'timeseries' | 'featureStore';
     fromDate?: Date;
     toDate?: Date;
@@ -27,7 +27,7 @@ export const MapFromFoundryDialog: React.FC<MapFromFoundryDialogProps> = ({
   onSubmit
 }) => {
   const [selectedDataType, setSelectedDataType] = useState<'master' | 'timeseries' | 'featureStore' | ''>('');
-  const [selectedObject, setSelectedObject] = useState('');
+  const [selectedObjects, setSelectedObjects] = useState<string[]>([]);
   const [fromDate, setFromDate] = useState<Date | undefined>();
   const [toDate, setToDate] = useState<Date | undefined>();
 
@@ -57,10 +57,10 @@ export const MapFromFoundryDialog: React.FC<MapFromFoundryDialogProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!selectedObject || !selectedDataType) return;
+    if (selectedObjects.length === 0 || !selectedDataType) return;
     
     onSubmit({
-      selectedObject,
+      selectedObjects,
       selectedDataType: selectedDataType as 'master' | 'timeseries' | 'featureStore',
       fromDate,
       toDate,
@@ -68,7 +68,7 @@ export const MapFromFoundryDialog: React.FC<MapFromFoundryDialogProps> = ({
 
     // Reset form
     setSelectedDataType('');
-    setSelectedObject('');
+    setSelectedObjects([]);
     setFromDate(undefined);
     setToDate(undefined);
     onClose();
@@ -77,10 +77,18 @@ export const MapFromFoundryDialog: React.FC<MapFromFoundryDialogProps> = ({
   const handleClose = () => {
     // Reset form
     setSelectedDataType('');
-    setSelectedObject('');
+    setSelectedObjects([]);
     setFromDate(undefined);
     setToDate(undefined);
     onClose();
+  };
+
+  const toggleObjectSelection = (objectKey: string) => {
+    setSelectedObjects(prev => 
+      prev.includes(objectKey) 
+        ? prev.filter(key => key !== objectKey)
+        : [...prev, objectKey]
+    );
   };
 
   return (
@@ -147,90 +155,134 @@ export const MapFromFoundryDialog: React.FC<MapFromFoundryDialogProps> = ({
           {/* Object Selection */}
           {selectedDataType && (
             <div className="space-y-3">
-              <Label className="text-sm font-semibold text-foreground">Available Objects</Label>
-              <Select value={selectedObject} onValueChange={setSelectedObject}>
-                <SelectTrigger className="h-12 w-full">
-                  <SelectValue 
-                    placeholder="Select object to import"
-                    className="truncate w-full text-left"
-                  >
-                    {selectedObject && (
-                      <div className="truncate w-full text-left font-medium">
-                        {selectedObject}
+              <Label className="text-sm font-semibold text-foreground">
+                Available Objects
+                {selectedObjects.length > 0 && (
+                  <span className="ml-2 text-xs text-muted-foreground">
+                    ({selectedObjects.length} selected)
+                  </span>
+                )}
+              </Label>
+              <div className="max-h-80 overflow-y-auto space-y-2 border rounded-lg p-2">
+                {selectedDataType === 'master' ? (
+                  foundryObjects.master.map((entity) => (
+                    <div
+                      key={entity.key}
+                      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                        selectedObjects.includes(entity.key)
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:bg-accent/50'
+                      }`}
+                      onClick={() => toggleObjectSelection(entity.key)}
+                    >
+                      <div className="w-8 h-8 rounded bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
+                        <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       </div>
-                    )}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {selectedDataType === 'master' ? (
-                    foundryObjects.master.map((entity) => (
-                      <SelectItem key={entity.key} value={entity.key} className="py-3">
-                        <div className="flex items-center gap-3 w-full">
-                          <div className="w-8 h-8 rounded bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                            <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium truncate">{entity.title}</div>
-                            <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="secondary" className="text-xs px-2 py-0">
-                                {entity.recordCount.toLocaleString()} records
-                              </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0">
-                                Foundry
-                              </Badge>
-                            </div>
-                          </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium truncate">{entity.title}</div>
+                        <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant="secondary" className="text-xs px-2 py-0">
+                            {entity.recordCount.toLocaleString()} records
+                          </Badge>
+                          <Badge variant="outline" className="text-xs px-2 py-0">
+                            Foundry
+                          </Badge>
                         </div>
-                      </SelectItem>
-                    ))
-                  ) : selectedDataType === 'timeseries' ? (
-                    foundryObjects.timeseries.map((entity) => (
-                      <SelectItem key={entity.key} value={entity.key} className="py-3">
-                        <div className="flex items-center gap-3 w-full">
-                          <div className="w-8 h-8 rounded bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium truncate">{entity.title}</div>
-                            <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="secondary" className="text-xs px-2 py-0">
-                                {entity.recordCount.toLocaleString()} records
-                              </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0">
-                                Foundry
-                              </Badge>
-                            </div>
-                          </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          selectedObjects.includes(entity.key)
+                            ? 'border-primary bg-primary'
+                            : 'border-border'
+                        }`}>
+                          {selectedObjects.includes(entity.key) && (
+                            <CheckCircle className="w-4 h-4 text-primary-foreground" />
+                          )}
                         </div>
-                      </SelectItem>
-                    ))
-                  ) : selectedDataType === 'featureStore' ? (
-                    foundryObjects.featureStore.map((entity) => (
-                      <SelectItem key={entity.key} value={entity.key} className="py-3">
-                        <div className="flex items-center gap-3 w-full">
-                          <div className="w-8 h-8 rounded bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
-                            <Database className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium truncate">{entity.title}</div>
-                            <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="secondary" className="text-xs px-2 py-0">
-                                {entity.recordCount.toLocaleString()} records
-                              </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0">
-                                Foundry
-                              </Badge>
-                            </div>
-                          </div>
+                      </div>
+                    </div>
+                  ))
+                ) : selectedDataType === 'timeseries' ? (
+                  foundryObjects.timeseries.map((entity) => (
+                    <div
+                      key={entity.key}
+                      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                        selectedObjects.includes(entity.key)
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:bg-accent/50'
+                      }`}
+                      onClick={() => toggleObjectSelection(entity.key)}
+                    >
+                      <div className="w-8 h-8 rounded bg-green-100 dark:bg-green-900/20 flex items-center justify-center flex-shrink-0">
+                        <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium truncate">{entity.title}</div>
+                        <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant="secondary" className="text-xs px-2 py-0">
+                            {entity.recordCount.toLocaleString()} records
+                          </Badge>
+                          <Badge variant="outline" className="text-xs px-2 py-0">
+                            Foundry
+                          </Badge>
                         </div>
-                      </SelectItem>
-                    ))
-                  ) : null}
-                </SelectContent>
-              </Select>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          selectedObjects.includes(entity.key)
+                            ? 'border-primary bg-primary'
+                            : 'border-border'
+                        }`}>
+                          {selectedObjects.includes(entity.key) && (
+                            <CheckCircle className="w-4 h-4 text-primary-foreground" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : selectedDataType === 'featureStore' ? (
+                  foundryObjects.featureStore.map((entity) => (
+                    <div
+                      key={entity.key}
+                      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                        selectedObjects.includes(entity.key)
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:bg-accent/50'
+                      }`}
+                      onClick={() => toggleObjectSelection(entity.key)}
+                    >
+                      <div className="w-8 h-8 rounded bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
+                        <Database className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium truncate">{entity.title}</div>
+                        <div className="text-xs text-muted-foreground truncate">{entity.description}</div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant="secondary" className="text-xs px-2 py-0">
+                            {entity.recordCount.toLocaleString()} records
+                          </Badge>
+                          <Badge variant="outline" className="text-xs px-2 py-0">
+                            Foundry
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          selectedObjects.includes(entity.key)
+                            ? 'border-primary bg-primary'
+                            : 'border-border'
+                        }`}>
+                          {selectedObjects.includes(entity.key) && (
+                            <CheckCircle className="w-4 h-4 text-primary-foreground" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : null}
+              </div>
             </div>
           )}
           
@@ -281,41 +333,46 @@ export const MapFromFoundryDialog: React.FC<MapFromFoundryDialogProps> = ({
             </div>
           )}
           
-          {/* Selected Object Preview */}
-          {selectedObject && (
-            <div className="p-4 border rounded-lg bg-muted/50">
-              <div className="flex items-start gap-3">
-                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                   selectedDataType === 'master' 
-                     ? 'bg-blue-100 dark:bg-blue-900/20' 
-                     : selectedDataType === 'timeseries'
-                     ? 'bg-green-100 dark:bg-green-900/20'
-                     : 'bg-purple-100 dark:bg-purple-900/20'
-                 }`}>
-                   {selectedDataType === 'master' ? (
-                     <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                   ) : selectedDataType === 'timeseries' ? (
-                     <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
-                   ) : (
-                     <Database className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                   )}
-                 </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-sm">Selected: {
-                    [...foundryObjects.master, ...foundryObjects.timeseries, ...foundryObjects.featureStore]
-                      .find(obj => obj.key === selectedObject)?.title || selectedObject
-                  }</h4>
-                   <p className="text-xs text-muted-foreground mt-1">
-                     {selectedDataType === 'master' ? 'Master data object' : selectedDataType === 'timeseries' ? 'Time series data object' : 'Feature store data object'}
-                     {selectedDataType === 'timeseries' && fromDate && toDate && 
-                       ` • ${format(fromDate, "MMM d, yyyy")} to ${format(toDate, "MMM d, yyyy")}`
-                     }
-                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Preview: {foundryDataMapper[selectedObject as keyof typeof foundryDataMapper]?.length || 0} sample records available
-                  </p>
-                </div>
+          {/* Selected Objects Preview */}
+          {selectedObjects.length > 0 && (
+            <div className="p-4 border rounded-lg bg-muted/50 space-y-2">
+              <h4 className="font-semibold text-sm">
+                Selected Objects ({selectedObjects.length})
+              </h4>
+              <div className="space-y-2 max-h-32 overflow-y-auto">
+                {selectedObjects.map((objKey) => {
+                  const obj = [...foundryObjects.master, ...foundryObjects.timeseries, ...foundryObjects.featureStore]
+                    .find(o => o.key === objKey);
+                  return (
+                    <div key={objKey} className="flex items-center gap-2 text-xs p-2 rounded bg-background">
+                      <div className={`w-6 h-6 rounded flex items-center justify-center ${
+                        selectedDataType === 'master' 
+                          ? 'bg-blue-100 dark:bg-blue-900/20' 
+                          : selectedDataType === 'timeseries'
+                          ? 'bg-green-100 dark:bg-green-900/20'
+                          : 'bg-purple-100 dark:bg-purple-900/20'
+                      }`}>
+                        {selectedDataType === 'master' ? (
+                          <FileText className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                        ) : selectedDataType === 'timeseries' ? (
+                          <TrendingUp className="w-3 h-3 text-green-600 dark:text-green-400" />
+                        ) : (
+                          <Database className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+                        )}
+                      </div>
+                      <span className="flex-1">{obj?.title || objKey}</span>
+                      <Badge variant="outline" className="text-xs">
+                        {obj?.recordCount} records
+                      </Badge>
+                    </div>
+                  );
+                })}
               </div>
+              {selectedDataType === 'timeseries' && fromDate && toDate && (
+                <p className="text-xs text-muted-foreground">
+                  Date Range: {format(fromDate, "MMM d, yyyy")} to {format(toDate, "MMM d, yyyy")}
+                </p>
+              )}
             </div>
           )}
         </div>
@@ -328,10 +385,10 @@ export const MapFromFoundryDialog: React.FC<MapFromFoundryDialogProps> = ({
           <Button 
             className="flex-1 h-12" 
             onClick={handleSubmit}
-            disabled={!selectedObject || (selectedDataType === 'timeseries' && (!fromDate || !toDate))}
+            disabled={selectedObjects.length === 0 || (selectedDataType === 'timeseries' && (!fromDate || !toDate))}
           >
             <Database className="w-4 h-4 mr-2" />
-            Import from Foundry
+            Import from Foundry ({selectedObjects.length})
           </Button>
         </div>
       </DialogContent>
