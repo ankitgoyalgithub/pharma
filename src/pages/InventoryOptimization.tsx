@@ -1,31 +1,48 @@
-
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScientificLoader } from "@/components/ScientificLoader";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
+import pptx from "pptxgenjs";
+import * as XLSX from "xlsx";
+import { toast } from "sonner";
 import {
   FileText,
   Download,
   PieChart as PieChartIcon,
   BarChart3,
+  TrendingUp,
+  Package,
+  DollarSign,
   Share,
   MoreHorizontal,
-  Settings,
+  AlertTriangle,
   X,
   Database,
   Upload,
-  CalendarIcon,
+  Plus,
+  Info,
+  Trash2,
+  Shield,
+  Wand2,
   Boxes,
   ShieldCheck,
   Wallet,
   Zap,
+  Activity,
+  Target,
+  ZoomIn,
+  ZoomOut,
+  MessageCircle,
+  Filter,
+  TrendingDown,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,15 +50,18 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useStepper } from "@/hooks/useStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
-import WorkbookTable from "@/components/WorkbookTable";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
 import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
 import { ExternalDriversSection } from "@/components/ExternalDriversSection";
+import { InventoryAnalysisChart } from "@/components/InventoryAnalysisChart";
+import { InventoryScenarioCreation } from "@/components/InventoryScenarioCreation";
 
 // ---- Chart.js imports ----
 import {
@@ -57,7 +77,7 @@ import {
   Filler,
   Title,
 } from "chart.js";
-import { Line, Bar, Pie, Scatter } from "react-chartjs-2";
+import { Line, Bar, Pie } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -72,56 +92,42 @@ ChartJS.register(
   Title
 );
 
-// ---------- Sample mock data ----------
-const workbookData = [
-  { sku: "SKU001", location: "Delhi FC", onHand: 520, onOrder: 200, backorder: 0, leadTime: 12, demandMean: 45, demandStd: 18 },
-  { sku: "SKU002", location: "Mumbai FC", onHand: 140, onOrder: 80, backorder: 10, leadTime: 18, demandMean: 22, demandStd: 9 },
-  { sku: "SKU003", location: "Bengaluru FC", onHand: 60, onOrder: 0, backorder: 5, leadTime: 25, demandMean: 15, demandStd: 15 },
+// Sample AI responses
+const sampleAiResponses = [
+  "Based on current inventory levels, I recommend increasing safety stock for Widget A by 15% to maintain 95% service level during peak season.",
+  "Analysis shows that Lead Time variability is impacting stockout risk. Consider negotiating shorter lead times with suppliers or adding buffer stock.",
+  "The current reorder point for SKU002 appears too low. Increasing it by 10% would reduce stockout probability by 23%.",
+  "Cost optimization suggests consolidating orders for Component B to reduce ordering costs while maintaining service levels.",
+  "Inventory turnover rate is below target. Consider implementing more frequent reviews for slow-moving SKUs.",
 ];
 
-const policyRows = [
-  { sku: "SKU001", abc: "A", service: 95, reorderPoint: 700, safetyStock: 220, orderQty: 500, policy: "Min/Max 700-1200" },
-  { sku: "SKU002", abc: "B", service: 92, reorderPoint: 330, safetyStock: 150, orderQty: 300, policy: "EOQ 300" },
-  { sku: "SKU003", abc: "C", service: 85, reorderPoint: 190, safetyStock: 140, orderQty: 200, policy: "Review-Period 2W" },
-];
-
-const kpi = {
-  fillRate: 0.965,
-  stockoutsAvoided: 37,
-  workingCapital: 4.2,
-  turns: 9.1,
-  carryingCost: 0.14,
-};
-
-const skuServicePie = [
-  { name: ">=95%", value: 38, fill: "#10b981" },
-  { name: "90–95%", value: 27, fill: "#3b82f6" },
-  { name: "<90%", value: 12, fill: "#f59e0b" },
-  { name: "Unclassified", value: 5, fill: "#8b5cf6" },
-];
-
-// ---------- Lightweight Network Diagram ----------
+// Network Diagram Components
 type EchelonMode = "single" | "multi";
 
-const Node: React.FC<{ x: number; y: number; label: string; kind: "plant" | "dc" | "store"}> = ({ x, y, label, kind }) => {
+const Node: React.FC<{ x: number; y: number; label: string; kind: "plant" | "dc" | "store" }> = ({ x, y, label, kind }) => {
   const color = kind === "plant" ? "#22c55e" : kind === "dc" ? "#3b82f6" : "#f59e0b";
   return (
     <g>
-      <rect x={x-48} y={y-18} rx="10" ry="10" width="96" height="36" fill={color} opacity="0.9" />
-      <text x={x} y={y+4} textAnchor="middle" fontSize="12" fill="#ffffff">{label}</text>
+      <rect x={x - 48} y={y - 18} rx="10" ry="10" width="96" height="36" fill={color} opacity="0.9" />
+      <text x={x} y={y + 4} textAnchor="middle" fontSize="12" fill="#ffffff">
+        {label}
+      </text>
     </g>
   );
 };
 
-const Arrow: React.FC<{ x1:number; y1:number; x2:number; y2:number }> = ({ x1, y1, x2, y2 }) => {
-  const dx = x2 - x1, dy = y2 - y1;
-  const len = Math.sqrt(dx*dx + dy*dy);
-  const ux = dx / len, uy = dy / len;
-  const ax = x2 - ux * 12, ay = y2 - uy * 12;
+const Arrow: React.FC<{ x1: number; y1: number; x2: number; y2: number }> = ({ x1, y1, x2, y2 }) => {
+  const dx = x2 - x1,
+    dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const ux = dx / len,
+    uy = dy / len;
+  const ax = x2 - ux * 12,
+    ay = y2 - uy * 12;
   return (
     <g>
-      <line x1={x1} y1={y1} x2={x2-ux*12} y2={y2-uy*12} stroke="#94a3b8" strokeWidth="2" />
-      <polygon points={`${ax},${ay} ${ax-uy*6},${ay+ux*6} ${ax+uy*6},${ay-ux*6}`} fill="#94a3b8" />
+      <line x1={x1} y1={y1} x2={x2 - ux * 12} y2={y2 - uy * 12} stroke="#94a3b8" strokeWidth="2" />
+      <polygon points={`${ax},${ay} ${ax - uy * 6},${ay + ux * 6} ${ax + uy * 6},${ay - ux * 6}`} fill="#94a3b8" />
     </g>
   );
 };
@@ -130,7 +136,6 @@ const NetworkDiagram: React.FC<{ mode: EchelonMode }> = ({ mode }) => {
   return (
     <div className="w-full h-[280px] bg-muted rounded-lg border flex items-center justify-center">
       <svg viewBox="0 0 800 240" className="w-full h-full">
-        {/* single echelon: Plant -> Stores */}
         {mode === "single" && (
           <>
             <Node x={120} y={120} label="Plant" kind="plant" />
@@ -142,8 +147,6 @@ const NetworkDiagram: React.FC<{ mode: EchelonMode }> = ({ mode }) => {
             <Arrow x1={168} y1={120} x2={372} y2={180} />
           </>
         )}
-
-        {/* multi echelon: Plant -> DCs -> Stores */}
         {mode === "multi" && (
           <>
             <Node x={120} y={120} label="Plant" kind="plant" />
@@ -166,33 +169,13 @@ const NetworkDiagram: React.FC<{ mode: EchelonMode }> = ({ mode }) => {
   );
 };
 
-// ---------- Component ----------
-const InventoryOptimization: React.FC = () => {
+const InventoryOptimization = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Add Data states
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'timeseries', fromDate?: Date, toDate?: Date}>>([]);
+  const [foundryObjects, setFoundryObjects] = useState<Array<{ name: string; type: "master" | "transactional"; fromDate?: Date; toDate?: Date }>>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
-  const [driversLoading, setDriversLoading] = useState(false);
-  const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
-
-  const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
-
-  // Data Gaps
-  const [showImputedReview, setShowImputedReview] = useState(false);
-
-  // Review step controls
-  const [serviceLevel, setServiceLevel] = useState<number>(95);
-  const [holdingCostPct, setHoldingCostPct] = useState<number>(14);
-  const [orderingCost, setOrderingCost] = useState<number>(1500);
-  const [leadTimeMode, setLeadTimeMode] = useState<"static" | "variable">("variable");
-  const [echelonMode, setEchelonMode] = useState<EchelonMode>("single");
-
-  // Results tabs
-  const [activeTab, setActiveTab] = useState<"overview" | "policies" | "capital" | "workbook">("overview");
 
   // Stepper configuration
   const stepperSteps = [
@@ -201,80 +184,242 @@ const InventoryOptimization: React.FC = () => {
     { id: 3, title: "Review Data", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
     { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
   ];
-  
+
   const stepperHook = useStepper({
     steps: stepperSteps,
     title: "Inventory Optimization",
-    initialStep: currentStep
+    initialStep: currentStep,
   });
 
   const { setOnStepClick } = useStepperContext();
 
-  // Set up step click handler
-  const handleStepClick = React.useCallback((stepId: number) => {
-    const targetStep = stepperSteps.find(s => s.id === stepId);
-    if (targetStep && (targetStep.status === 'completed' || stepId === currentStep + 1 || stepId === currentStep)) {
-      setCurrentStep(stepId);
-    }
-  }, [currentStep, stepperSteps]);
+  const handleStepClick = React.useCallback(
+    (stepId: number) => {
+      const targetStep = stepperSteps.find((s) => s.id === stepId);
+      if (targetStep && (targetStep.status === "completed" || stepId === currentStep + 1 || stepId === currentStep)) {
+        setCurrentStep(stepId);
+      }
+    },
+    [currentStep, stepperSteps]
+  );
 
   useEffect(() => {
     setOnStepClick(() => handleStepClick);
   }, [handleStepClick, setOnStepClick]);
 
   useEffect(() => {
+    window.scrollTo({ top: 60, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    if (currentStep === 4) {
+      window.scrollTo({ top: 200, behavior: "smooth" });
+    }
+  }, [currentStep]);
+
+  const [driversLoading, setDriversLoading] = useState(false);
+  const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
+  const [serviceLevel, setServiceLevel] = useState<number>(95);
+  const [holdingCostPct, setHoldingCostPct] = useState<number>(14);
+  const [orderingCost, setOrderingCost] = useState<number>(1500);
+  const [leadTimeMode, setLeadTimeMode] = useState<"static" | "variable">("variable");
+  const [echelonMode, setEchelonMode] = useState<EchelonMode>("single");
+
+  const handleFoundrySubmit = (data: {
+    selectedObjects: string[];
+    selectedDataType: "master" | "timeseries" | "featureStore";
+    fromDate?: Date;
+    toDate?: Date;
+  }) => {
+    const newObjects = data.selectedObjects.map((objName) => ({
+      name: objName,
+      type: data.selectedDataType === "timeseries" ? ("transactional" as const) : ("master" as const),
+      ...(data.selectedDataType === "timeseries" && { fromDate: data.fromDate, toDate: data.toDate }),
+    }));
+
+    setFoundryObjects((prev) => [...prev, ...newObjects]);
+
+    if (data.selectedObjects.length > 0) {
+      setSelectedPreview(data.selectedObjects[0]);
+      setPreviewLoading(true);
+      setTimeout(() => setPreviewLoading(false), 700);
+    }
+  };
+
+  const [activeTab, setActiveTab] = useState<"overview" | "policies" | "capital" | "workbook" | "quality">("overview");
+  const [showImputedReview, setShowImputedReview] = useState(false);
+  const [chartGranularity, setChartGranularity] = useState<"daily" | "weekly" | "monthly" | "quarterly">("weekly");
+
+  const handleZoomIn = () => {
+    const levels: Array<"daily" | "weekly" | "monthly" | "quarterly"> = ["quarterly", "monthly", "weekly", "daily"];
+    const currentIndex = levels.indexOf(chartGranularity);
+    if (currentIndex < levels.length - 1) {
+      setChartGranularity(levels[currentIndex + 1]);
+    }
+  };
+
+  const handleZoomOut = () => {
+    const levels: Array<"daily" | "weekly" | "monthly" | "quarterly"> = ["quarterly", "monthly", "weekly", "daily"];
+    const currentIndex = levels.indexOf(chartGranularity);
+    if (currentIndex > 0) {
+      setChartGranularity(levels[currentIndex - 1]);
+    }
+  };
+
+  // Right sidebar state
+  const [rightSidebarTab, setRightSidebarTab] = useState<"ai" | "filter" | "scenario">("filter");
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
+  const [scenarios, setScenarios] = useState<
+    Array<{
+      id: string;
+      name: string;
+      value: string;
+      subtitle: string;
+      factors?: any;
+    }>
+  >([]);
+  const [filterValues, setFilterValues] = useState({
+    skuProduct: "all",
+    location: "all",
+    channel: "all",
+    timePeriod: "all",
+    businessUnits: "all",
+    dataAvailability: "all",
+  });
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiMessages, setAiMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([]);
+  const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
+  const [isScenarioDialogOpen, setIsScenarioDialogOpen] = useState(false);
+
+  useEffect(() => {
     const event = new CustomEvent("collapseSidebar");
     window.dispatchEvent(event);
   }, []);
+
+  useEffect(() => {
+    const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
+    if (hasData && selectedDrivers.length === 0) {
+      setDriversLoading(true);
+      setTimeout(() => {
+        const driversToSelect = [
+          { name: "Lead Time Variability", autoSelected: true },
+          { name: "Supplier Reliability", autoSelected: true },
+          { name: "Seasonal Patterns", autoSelected: true },
+        ];
+        setSelectedDrivers(driversToSelect.filter((d) => d.autoSelected).map((d) => d.name));
+        setDriversLoading(false);
+      }, 500);
+    }
+  }, [uploadedFiles.length, foundryObjects.length]);
+
+  const toggleDriver = (driver: string) => {
+    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
+  };
 
   const handleStepTransition = (nextStep: number) => {
     setIsLoading(true);
     setTimeout(() => {
       setCurrentStep(nextStep);
       setIsLoading(false);
-    }, 900);
+    }, 1500);
   };
 
-  const handleFoundrySubmit = (data: {
-    selectedObjects: string[];
-    selectedDataType: 'master' | 'timeseries' | 'featureStore';
-    fromDate?: Date;
-    toDate?: Date;
-  }) => {
-    const newObjects = data.selectedObjects.map(objName => ({
-      name: objName,
-      type: data.selectedDataType === 'timeseries' ? 'timeseries' as const : 'master' as const,
-      ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
-    }));
-    setFoundryObjects(prev => [...prev, ...newObjects]);
+  const createScenario = (scenario: any) => {
+    if (scenarios.length >= 3) {
+      alert("Maximum 3 scenarios allowed");
+      return;
+    }
+    setScenarios((prev) => [...prev, scenario]);
+    setSelectedScenario(scenario.id);
+    setActiveTab("overview");
+  };
 
-    if (data.selectedObjects.length > 0) {
-      setSelectedPreview(data.selectedObjects[0]);
-      setPreviewLoading(true);
-      setTimeout(() => setPreviewLoading(false), 600);
+  const deleteScenario = (scenarioId: string) => {
+    setScenarios((prev) => prev.filter((s) => s.id !== scenarioId));
+    if (selectedScenario === scenarioId) {
+      setSelectedScenario(null);
+      setActiveTab("overview");
     }
   };
 
-  // Auto-select drivers when data sources are added
-  const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
-  const externalDrivers = getExternalDrivers("inventory-optimization", hasData);
+  const sendAiMessage = () => {
+    if (!aiPrompt.trim()) return;
 
-  const toggleDriver = (driver: string) => {
-    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
+    const userMessage = { role: "user" as const, content: aiPrompt };
+    const randomResponse = sampleAiResponses[Math.floor(Math.random() * sampleAiResponses.length)];
+    const assistantMessage = { role: "assistant" as const, content: randomResponse };
+
+    setAiMessages((prev) => [...prev, userMessage, assistantMessage]);
+    setAiPrompt("");
   };
 
-  useEffect(() => {
-    if (hasData && selectedDrivers.length === 0) {
-      setDriversLoading(true);
-      setTimeout(() => {
-        const driversToSelect = externalDrivers.filter(d => d.autoSelected).map(d => d.name);
-        setSelectedDrivers(driversToSelect);
-        setDriversLoading(false);
-      }, 500);
-    }
-  }, [uploadedFiles.length, foundryObjects.length]);
+  const applyFilters = () => {
+    console.log("Filters applied:", filterValues);
+  };
 
-  // ---------- Charts: Step 2 (Data Gaps) ----------
+  // Export PPTX functionality
+  const exportToPPTX = () => {
+    const presentation = new pptx();
+    presentation.layout = "LAYOUT_WIDE";
+
+    const titleSlide = presentation.addSlide();
+    titleSlide.addText("Inventory Optimization Results", {
+      x: 0.5,
+      y: 2.0,
+      w: "90%",
+      h: 1.5,
+      fontSize: 44,
+      bold: true,
+      color: "1E40AF",
+      align: "center",
+    });
+    titleSlide.addText(`Generated on ${format(new Date(), "MMMM dd, yyyy")}`, {
+      x: 0.5,
+      y: 3.5,
+      w: "90%",
+      h: 0.5,
+      fontSize: 18,
+      color: "64748B",
+      align: "center",
+    });
+
+    presentation.writeFile({ fileName: `Inventory_Optimization_${format(new Date(), "yyyy-MM-dd")}.pptx` });
+    toast.success("PPTX exported successfully!");
+  };
+
+  const exportToCSV = () => {
+    toast.success("CSV exported successfully!");
+  };
+
+  const exportToXLSX = () => {
+    toast.success("XLSX exported successfully!");
+  };
+
+  const exportToCanva = () => {
+    toast.success("Opening in Canva...");
+  };
+
+  const exportToUpsynqLink = () => {
+    const shareLink = `${window.location.origin}${window.location.pathname}?share=true&step=4`;
+    navigator.clipboard.writeText(shareLink);
+    toast.success("Upsynq link copied to clipboard!");
+  };
+
+  // Sample data for workbook, policies, gaps
+  const workbookData = [
+    { sku: "SKU001", location: "Delhi FC", onHand: 520, onOrder: 200, backorder: 0, leadTime: 12, demandMean: 45, demandStd: 18 },
+    { sku: "SKU002", location: "Mumbai FC", onHand: 140, onOrder: 80, backorder: 10, leadTime: 18, demandMean: 22, demandStd: 9 },
+    { sku: "SKU003", location: "Bengaluru FC", onHand: 60, onOrder: 0, backorder: 5, leadTime: 25, demandMean: 15, demandStd: 15 },
+  ];
+
+  const policyRows = [
+    { sku: "SKU001", abc: "A", service: 95, reorderPoint: 700, safetyStock: 220, orderQty: 500, policy: "Min/Max 700-1200" },
+    { sku: "SKU002", abc: "B", service: 92, reorderPoint: 330, safetyStock: 150, orderQty: 300, policy: "EOQ 300" },
+    { sku: "SKU003", abc: "C", service: 85, reorderPoint: 190, safetyStock: 140, orderQty: 200, policy: "Review-Period 2W" },
+  ];
+
   const gapData = [
     { bucket: "Service Gap (by ABC)", issues: 7 },
     { bucket: "Lead Time Variability", issues: 5 },
@@ -298,503 +443,241 @@ const InventoryOptimization: React.FC = () => {
   };
 
   const gapsBarOptions: any = buildChartOptions({
-    plugins: { legend: { position: "top" } },
-    scales: {
-      x: { grid: { display: false } },
-      y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { display: true } },
+    indexAxis: "y" as const,
+    plugins: {
+      legend: { display: false },
     },
-  });
-  // Inventory Exposure by Location (₹ Lakhs) - stacked bar
-  const exposureBarData = {
-    labels: ["Delhi FC", "Mumbai FC", "Bengaluru FC"],
-    datasets: [
-      {
-        label: "Overstock (₹L)",
-        data: [12, 9, 7],
-        backgroundColor: "rgba(239,68,68,0.7)",
-        stack: "exposure",
-      },
-      {
-        label: "Healthy (₹L)",
-        data: [30, 22, 18],
-        backgroundColor: "rgba(16,185,129,0.7)",
-        stack: "exposure",
-      },
-      {
-        label: "At-Risk (₹L)",
-        data: [5, 8, 6],
-        backgroundColor: "rgba(245,158,11,0.8)",
-        stack: "exposure",
-      },
-    ],
-  };
-
-  const exposureBarOptions: any = buildChartOptions({
-    plugins: { legend: { position: "bottom" as const } },
     scales: {
-      x: { stacked: true, grid: { display: false } },
-      y: { stacked: true, beginAtZero: true, title: { display: true, text: "₹ Lakhs" } },
+      x: { beginAtZero: true, title: { display: true, text: "Number of Issues" } },
+      y: { ticks: { autoSkip: false } },
     },
   });
 
-
-  // Lead time distribution (Step 3 visualization)
   const leadTimeHist = {
-    labels: ["8", "10", "12", "14", "16", "18", "20", "22", "24", "26"],
+    labels: ["0-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31+"],
     datasets: [
       {
-        label: "Lead Time (days) Frequency",
-        data: [1, 3, 7, 10, 14, 9, 6, 3, 2, 1],
-        backgroundColor: "rgba(59,130,246,0.5)",
+        label: "Frequency",
+        data: [3, 8, 15, 20, 12, 6, 2],
+        backgroundColor: hslVar("--chart-1", 0.6),
+        borderColor: hslVar("--chart-1"),
+        borderWidth: 1,
       },
     ],
   };
 
   const histOptions: any = buildChartOptions({
-    plugins: { legend: { position: "top" } },
-    scales: { x: { grid: { display: false } }, y: { beginAtZero: true } },
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      y: { beginAtZero: true, title: { display: true, text: "Count" } },
+      x: { title: { display: true, text: "Lead Time (days)" } },
+    },
   });
 
-  // Stock position vs reorder point line (Step 4)
-  const stockPositionData = {
-    labels: Array.from({ length: 24 }, (_, i) => `W${i + 1}`),
-    datasets: [
-      {
-        label: "Stock Position",
-        data: [920, 870, 810, 760, 710, 670, 620, 570, 530, 510, 480, 450, 880, 830, 780, 740, 710, 670, 640, 590, 560, 520, 490, 460],
-        borderColor: hslVar("--primary"),
-        backgroundColor: "transparent",
-        borderWidth: 2.5,
-        tension: 0.35,
-        pointRadius: 0,
-      },
-      {
-        label: "Reorder Point",
-        data: Array(24).fill(700),
-        borderColor: hslVar("--destructive"),
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        borderDash: [6,4],
-        pointRadius: 0,
-      },
-      {
-        label: "Safety Stock Band",
-        data: Array(24).fill(920),
-        fill: "+1",
-        borderColor: "transparent",
-        backgroundColor: "rgba(16,185,129,0.10)",
-        pointRadius: 0,
-      },
-      {
-        label: "Safety Stock Floor",
-        data: Array(24).fill(700),
-        borderColor: "transparent",
-        backgroundColor: "rgba(16,185,129,0.10)",
-        pointRadius: 0,
-      },
-    ],
-  };
-
-  const stockPositionOptions: any = buildChartOptions({
-    plugins: { legend: { position: "bottom" } },
-    scales: { x: { grid: { display: true } }, y: { beginAtZero: false } },
-  });
-
-  const serviceLevelPie = {
-    labels: skuServicePie.map(d => d.name),
-    datasets: [
-      {
-        label: "SKUs",
-        data: skuServicePie.map(d => d.value),
-        backgroundColor: skuServicePie.map(d => d.fill),
-      }
-    ]
-  };
-
-  const pieOptions: any = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { position: "bottom" } }
-  };
-
-  // ---------- Step 1 ----------
+  // Step 1 - Add Data
   const renderStep1 = () => (
-    <div className="space-y-6 px-6 pt-10 pb-6">
-      <div>
-        <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
-        <p className="text-sm text-muted-foreground">
-          Upload demand history, on-hand/on-order, lead times, supplier constraints (MOQ/LOT), and costs. Or map directly from Foundry.
-        </p>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-foreground mb-1">Add Data Sources</h2>
+          <p className="text-sm text-muted-foreground">Upload files or map from Foundry to begin optimization</p>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Upload Data Files</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            <Button variant="link" size="sm" className="p-0 h-auto text-sm text-primary underline"
-              onClick={() => {
-                const link = document.createElement('a');
-                link.href = '#';
-                link.download = 'inventory-optimization-input-template.xlsx';
-                link.click();
-              }}
-            >
-              Download input template
-            </Button>
-            {" "}with sheets (Demand, OnHand, OnOrder, LeadTimes, Supplier, Costs)
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="flex-1" onClick={() => document.getElementById('io-file-upload')?.click()}>
-              <Upload className="h-4 w-4 mr-2" />
-              Upload Files
-            </Button>
-            <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="flex-1">
-                  <Database className="h-4 w-4 mr-2" />
-                  Map from Foundry
-                </Button>
-              </DialogTrigger>
-            </Dialog>
-          </div>
-
-          <Input id="io-file-upload" type="file" multiple accept=".csv,.xlsx,.xls" className="hidden"
-            onChange={(e) => {
-              const files = Array.from(e.target.files || []);
-              if (files.length > 0) {
-                setUploadedFiles(prev => [...prev, ...files]);
-                setSelectedPreview(files[0].name);
-                setPreviewLoading(true);
-                setTimeout(() => setPreviewLoading(false), 700);
-              }
-            }}
-          />
-
-          {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">Data Sources:</h4>
-              {uploadedFiles.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
-                  <div className="space-y-1">
-                    {uploadedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
-                        <div className="flex items-center gap-2 text-xs">
-                          <FileText className="h-3 w-3 text-violet-700" />
-                          <span className="text-foreground">{file.name}</span>
-                        </div>
-                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
-                          onClick={() => {
-                            setUploadedFiles(prev => prev.filter((_, i) => i !== index));
-                            if (selectedPreview === file.name) {
-                              const remaining = uploadedFiles.filter((_, i) => i !== index);
-                              setSelectedPreview(remaining.length > 0 ? remaining[0].name : null);
-                            }
-                          }}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {foundryObjects.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-xs font-medium text-muted-foreground">Foundry Objects</h5>
-                  <div className="space-y-1">
-                    {foundryObjects.map((obj, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
-                        <div className="flex items-center gap-2 text-xs">
-                          <Database className="h-3 w-3 text-green-600" />
-                          <span className="text-foreground">{obj.name}</span>
-                          <Badge variant="secondary" className="text-xs">{obj.type}</Badge>
-                        </div>
-                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
-                          onClick={() => {
-                            setFoundryObjects(prev => prev.filter((_, i) => i !== index));
-                            if (selectedPreview === obj.name) {
-                              const allSources = [...uploadedFiles.map(f => f.name), ...foundryObjects.filter((_, i) => i !== index).map(o => o.name)];
-                              setSelectedPreview(allSources.length > 0 ? allSources[0] : null);
-                            }
-                          }}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <ExternalDriversSection
-        title="AI Suggested External Drivers"
-        description="AI-suggested external factors that may influence inventory patterns based on your data characteristics."
-        drivers={externalDrivers}
-        selectedDrivers={selectedDrivers}
-        driversLoading={driversLoading}
-        onToggleDriver={toggleDriver}
-        onPreviewDriver={(driverName) => {
-          setSelectedPreview(driverName);
-          setPreviewLoading(true);
-          setTimeout(() => setPreviewLoading(false), 700);
-        }}
-      />
-
-      {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
-        <Card className="border border-border bg-muted/30">
+      {/* Upload and Map sections... */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-medium text-foreground">Preview</h3>
-              <div className="flex items-center gap-2">
-                <div className="flex gap-2">
-                  {uploadedFiles.map((file) => (
-                    <Button key={file.name} size="sm" variant={selectedPreview === file.name ? "default" : "outline"}
-                      onClick={() => { setSelectedPreview(file.name); setPreviewLoading(true); setTimeout(() => setPreviewLoading(false), 500); }}
-                    >
-                      <FileText className="h-3 w-3 mr-1" />{file.name.split(".")[0]}
-                    </Button>
-                  ))}
-                  {foundryObjects.map((obj) => (
-                    <Button key={obj.name} size="sm" variant={selectedPreview === obj.name ? "default" : "outline"}
-                      onClick={() => { setSelectedPreview(obj.name); setPreviewLoading(true); setTimeout(() => setPreviewLoading(false), 500); }}
-                    >
-                      <Database className="h-3 w-3 mr-1" />{obj.name.split("_")[0]}
-                    </Button>
-                  ))}
-                  {selectedDrivers.map((driver, index) => (
-                    <Button
-                      key={driver}
-                      size="sm"
-                      variant={selectedPreview === driver ? "default" : "outline"}
-                      onClick={() => {
-                        setSelectedPreview(driver);
-                        setPreviewLoading(true);
-                        setTimeout(() => setPreviewLoading(false), 500);
-                      }}
-                    >
-                      <Zap className="h-3 w-3 mr-1" />
-                      {driver}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Upload className="w-4 h-4" />
+              Upload Files
+            </CardTitle>
           </CardHeader>
-          <CardContent className="overflow-x-auto">
-            {previewLoading ? (
-              <div className="flex items-center justify-center h-32">
-                <div className="h-8 w-8 rounded-full border-2 border-border border-t-transparent animate-spin" aria-label="Loading preview" />
+          <CardContent className="space-y-4">
+            <input
+              type="file"
+              multiple
+              accept=".csv,.xlsx,.xls"
+              className="w-full text-sm"
+              onChange={(e) => {
+                const files = Array.from(e.target.files || []);
+                setUploadedFiles((prev) => [...prev, ...files]);
+              }}
+            />
+            {uploadedFiles.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Uploaded Files:</p>
+                {uploadedFiles.map((file, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
+                    <span>{file.name}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="w-6 h-6"
+                      onClick={() => setUploadedFiles((prev) => prev.filter((_, i) => i !== idx))}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <>
-                {selectedPreview ? (
-                  <>
-                    <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-                      {selectedDrivers.includes(selectedPreview) ? (
-                        <Zap className="h-3 w-3" />
-                      ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
-                        <Database className="h-3 w-3" />
-                      ) : (
-                        <FileText className="h-3 w-3" />
-                      )}
-                      {selectedPreview}
-                    </p>
-                    {selectedDrivers.includes(selectedPreview) ? (
-                      // External driver preview
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <h4 className="text-sm font-medium mb-2">Sample Data Points</h4>
-                            <table className="min-w-full text-xs border border-border rounded">
-                              <thead className="bg-muted text-muted-foreground">
-                                <tr>
-                                  <th className="text-left px-3 py-2">Date</th>
-                                  <th className="text-left px-3 py-2">Value</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr className="hover:bg-muted/20">
-                                  <td className="px-3 py-2">2024-01-01</td>
-                                  <td className="px-3 py-2">85.2</td>
-                                </tr>
-                                <tr className="hover:bg-muted/20">
-                                  <td className="px-3 py-2">2024-01-15</td>
-                                  <td className="px-3 py-2">87.1</td>
-                                </tr>
-                                <tr className="hover:bg-muted/20">
-                                  <td className="px-3 py-2">2024-02-01</td>
-                                  <td className="px-3 py-2">83.9</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium mb-2">Impact Analysis</h4>
-                            <div className="text-xs space-y-1">
-                              <p><span className="font-medium">Correlation:</span> 0.74 (Strong)</p>
-                              <p><span className="font-medium">Forecast Lift:</span> +12.3%</p>
-                              <p><span className="font-medium">Data Quality:</span> High</p>
-                              <p><span className="font-medium">Coverage:</span> 98.2%</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      // File or foundry object preview
-                      <table className="min-w-full text-xs border border-border rounded">
-                        <thead className="bg-muted text-muted-foreground">
-                          <tr>
-                            <th className="text-left px-3 py-2">SKU</th>
-                            <th className="text-left px-3 py-2">Location</th>
-                            <th className="text-left px-3 py-2">On-hand</th>
-                            <th className="text-left px-3 py-2">On-order</th>
-                            <th className="text-left px-3 py-2">Backorder</th>
-                            <th className="text-left px-3 py-2">Lead Time (d)</th>
-                            <th className="text-left px-3 py-2">μ Demand</th>
-                            <th className="text-left px-3 py-2">σ Demand</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {workbookData.map((row, idx) => (
-                            <tr key={idx} className="hover:bg-muted/20">
-                              <td className="px-3 py-2">{row.sku}</td>
-                              <td className="px-3 py-2">{row.location}</td>
-                              <td className="px-3 py-2"><Input value={row.onHand.toString()} className="w-20" /></td>
-                              <td className="px-3 py-2"><Input value={row.onOrder.toString()} className="w-20" /></td>
-                              <td className="px-3 py-2"><Input value={row.backorder.toString()} className="w-20" /></td>
-                              <td className="px-3 py-2"><Input value={row.leadTime.toString()} className="w-20" /></td>
-                              <td className="px-3 py-2"><Input value={row.demandMean.toString()} className="w-20" /></td>
-                              <td className="px-3 py-2"><Input value={row.demandStd.toString()} className="w-20" /></td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-sm text-muted-foreground">Select a file to preview.</p>
-                )}
-              </>
             )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Database className="w-4 h-4" />
+              Map from Foundry
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" className="w-full" onClick={() => setIsFoundryModalOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Select Data Objects
+            </Button>
+            {foundryObjects.length > 0 && (
+              <div className="mt-4 space-y-2">
+                <p className="text-sm font-medium">Mapped Objects:</p>
+                {foundryObjects.map((obj, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
+                    <span>{obj.name}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="w-6 h-6"
+                      onClick={() => setFoundryObjects((prev) => prev.filter((_, i) => i !== idx))}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* External Drivers Section */}
+      {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">External Drivers (Optional)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Select external factors that may influence inventory levels
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {['Lead Time Variability', 'Supplier Reliability', 'Seasonal Patterns', 'Demand Volatility'].map((driver) => (
+                <Badge
+                  key={driver}
+                  variant={selectedDrivers.includes(driver) ? "default" : "outline"}
+                  className="cursor-pointer"
+                  onClick={() => toggleDriver(driver)}
+                >
+                  {driver}
+                </Badge>
+              ))}
+            </div>
           </CardContent>
         </Card>
       )}
 
+      {/* Navigation buttons */}
       <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => window.history.back()}>← Back</Button>
-        <Button size="sm" onClick={() => handleStepTransition(2)}>Continue to Data Gaps →</Button>
-      </div>
-    </div>
-  );
-
-  // ---------- Step 2 (Inventory-First Insights) ----------
-  const renderStep2 = () => (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
-          <p className="text-sm text-muted-foreground">AI detects inventory-specific issues like lead-time variability, service gaps by ABC, and stock imbalance.</p>
-        </div>
-        <Button size="sm" variant="outline" onClick={() => setShowImputedReview(true)}>
-          <Settings className="w-4 h-4 mr-2" />
-          Auto Fix with AI
+        <div></div>
+        <Button size="sm" onClick={() => handleStepTransition(2)} disabled={uploadedFiles.length === 0 && foundryObjects.length === 0}>
+          Continue to Data Gaps →
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-        <Card className="relative overflow-hidden bg-gradient-to-br bg-emerald-50 border-emerald-200">
-          <CardContent className="p-4 relative">
-            <div className="text-xs text-muted-foreground mb-1">ABC Service Coverage</div>
-            <div className="text-2xl font-bold text-emerald-700">A: 97% / B: 94% / C: 89%</div>
-            <div className="text-[11px] text-muted-foreground mt-1">Target ≥ A: 98%, B: 95%, C: 90%</div>
-          </CardContent>
-        </Card>
-        <Card className="relative overflow-hidden bg-gradient-to-br bg-amber-50 border-amber-200">
-          <CardContent className="p-4 relative">
-            <div className="text-xs text-muted-foreground mb-1">Lead-Time CV</div>
-            <div className="text-2xl font-bold text-amber-700">0.34</div>
-            <div className="text-[11px] text-muted-foreground mt-1">High variability on 12 SKUs</div>
-          </CardContent>
-        </Card>
-        <Card className="relative overflow-hidden bg-gradient-to-br bg-sky-50 border-sky-200">
-          <CardContent className="p-4 relative">
-            <div className="text-xs text-muted-foreground mb-1">Supplier Reliability</div>
-            <div className="text-2xl font-bold text-sky-700">92.1%</div>
-            <div className="text-[11px] text-muted-foreground mt-1">OTIF {"<"} 90% for 3 suppliers</div>
-          </CardContent>
-        </Card>
-        <Card className="relative overflow-hidden bg-gradient-to-br bg-violet-50 border-violet-200">
-          <CardContent className="p-4 relative">
-            <div className="text-xs text-muted-foreground mb-1">Dead/Slow Movers</div>
-            <div className="text-2xl font-bold text-violet-700">36</div>
-            <div className="text-[11px] text-muted-foreground mt-1">Recommend: review phase-out & transfer</div>
-          </CardContent>
-        </Card>
-        <Card className="relative overflow-hidden bg-gradient-to-br bg-amber-50 border-amber-200">
-          <CardContent className="p-4 relative">
-            <div className="text-xs text-muted-foreground mb-1">Overstock Hotspots</div>
-            <div className="text-2xl font-bold text-amber-700">5</div>
-            <div className="text-[11px] text-muted-foreground mt-1">₹ 28.3L tied-up capital</div>
-          </CardContent>
-        </Card>
-        <Card className="relative overflow-hidden bg-gradient-to-br bg-red-50 border-red-200">
-          <CardContent className="p-4 relative">
-            <div className="text-xs text-muted-foreground mb-1">Stockout Hotspots</div>
-            <div className="text-2xl font-bold text-red-700">2</div>
-            <div className="text-[11px] text-muted-foreground mt-1">High risk within next 2 weeks</div>
-          </CardContent>
-        </Card>
+      <MapFromFoundryDialog isOpen={isFoundryModalOpen} onClose={() => setIsFoundryModalOpen(false)} onSubmit={handleFoundrySubmit} contextModule="inventory-optimization" />
+    </div>
+  );
+
+  // Step 2 - Data Gaps
+  const renderStep2 = () => (
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-foreground mb-1">Data Gaps & Quality Check</h2>
+          <p className="text-sm text-muted-foreground">AI-detected issues and suggested corrections</p>
+        </div>
+        <Badge variant="secondary" className="bg-warning/10 text-warning">
+          {gapData.reduce((acc, g) => acc + g.issues, 0)} issues detected
+        </Badge>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader><h3 className="text-base font-medium text-foreground">Issues by Category</h3></CardHeader>
-          <CardContent className="h-[300px]">
-            <Bar data={gapsBarData} options={gapsBarOptions} />
+          <CardHeader>
+            <CardTitle className="text-base">Inventory Insights</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-success/10 rounded-lg">
+              <span className="text-sm">Products Analyzed</span>
+              <span className="font-bold text-lg">82</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg">
+              <span className="text-sm">Locations Covered</span>
+              <span className="font-bold text-lg">5</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-warning/10 rounded-lg">
+              <span className="text-sm">Avg Fill Rate</span>
+              <span className="font-bold text-lg">94.2%</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-info/10 rounded-lg">
+              <span className="text-sm">Total Inventory Value</span>
+              <span className="font-bold text-lg">₹4.2Cr</span>
+            </div>
           </CardContent>
         </Card>
 
-        
         <Card>
-          <CardHeader><h3 className="text-base font-medium text-foreground">Inventory Exposure by Location (₹ Lakhs)</h3></CardHeader>
-          <CardContent className="h-[300px]">
-            <Bar data={exposureBarData} options={exposureBarOptions} />
+          <CardHeader>
+            <CardTitle className="text-base">Data Gap Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[260px]">
+              <Bar data={gapsBarData} options={gapsBarOptions} />
+            </div>
           </CardContent>
         </Card>
-
       </div>
 
       <Card>
-        <CardHeader><h3 className="text-base font-medium text-foreground">High-Risk SKUs (Top 10)</h3></CardHeader>
+        <CardHeader>
+          <h3 className="text-base font-medium text-foreground">Inventory Workbook Preview</h3>
+        </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border rounded">
             <thead className="bg-muted text-muted-foreground">
               <tr>
                 <th className="text-left px-3 py-2">SKU</th>
-                <th className="text-left px-3 py-2">ABC</th>
                 <th className="text-left px-3 py-2">Location</th>
-                <th className="text-left px-3 py-2">Risk Reason</th>
-                <th className="text-left px-3 py-2">Action</th>
+                <th className="text-left px-3 py-2">On-Hand</th>
+                <th className="text-left px-3 py-2">On-Order</th>
+                <th className="text-left px-3 py-2">Backorder</th>
+                <th className="text-left px-3 py-2">Lead Time</th>
+                <th className="text-left px-3 py-2">Demand μ</th>
+                <th className="text-left px-3 py-2">Demand σ</th>
               </tr>
             </thead>
             <tbody>
-              {Array.from({length:10}).map((_,i)=> (
-                <tr key={i} className="hover:bg-muted/20">
-                  <td className="px-3 py-2">SKU{(100+i)}</td>
-                  <td className="px-3 py-2">{["A","B","C"][i%3]}</td>
-                  <td className="px-3 py-2">{["Delhi","Mumbai","Bengaluru"][i%3]} FC</td>
-                  <td className="px-3 py-2">{["Lead-time CV high","Overstock","Service < target","Supplier OTIF < 90%"][i%4]}</td>
-                  <td className="px-3 py-2">
-                    <Button size="sm" variant="outline">Auto-fix</Button>
-                  </td>
+              {workbookData.map((row, idx) => (
+                <tr key={idx} className="hover:bg-muted/20">
+                  <td className="px-3 py-2">{row.sku}</td>
+                  <td className="px-3 py-2">{row.location}</td>
+                  <td className="px-3 py-2">{row.onHand}</td>
+                  <td className="px-3 py-2">{row.onOrder}</td>
+                  <td className="px-3 py-2">{row.backorder}</td>
+                  <td className="px-3 py-2">{row.leadTime}</td>
+                  <td className="px-3 py-2">{row.demandMean}</td>
+                  <td className="px-3 py-2">{row.demandStd}</td>
                 </tr>
               ))}
             </tbody>
@@ -804,7 +687,9 @@ const InventoryOptimization: React.FC = () => {
 
       {showImputedReview && (
         <Card>
-          <CardHeader><h3 className="text-base font-medium text-foreground">Review Imputed Values</h3></CardHeader>
+          <CardHeader>
+            <h3 className="text-base font-medium text-foreground">Review Imputed Values</h3>
+          </CardHeader>
           <CardContent className="overflow-x-auto">
             <table className="min-w-full text-sm border border-border rounded">
               <thead className="bg-muted text-muted-foreground">
@@ -824,7 +709,9 @@ const InventoryOptimization: React.FC = () => {
                     <td className="px-3 py-2">{row.sku}</td>
                     <td className="px-3 py-2">{row.field}</td>
                     <td className="px-3 py-2 text-red-700">{row.original || "Missing"}</td>
-                    <td className="px-3 py-2"><Input className="w-24" value={row.imputed.toString()} /></td>
+                    <td className="px-3 py-2">
+                      <Input className="w-24" value={row.imputed.toString()} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -834,25 +721,31 @@ const InventoryOptimization: React.FC = () => {
       )}
 
       <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => setCurrentStep(1)}>← Back</Button>
-        <Button size="sm" onClick={() => handleStepTransition(3)}>Continue to Review →</Button>
+        <Button size="sm" variant="outline" onClick={() => setCurrentStep(1)}>
+          ← Back
+        </Button>
+        <Button size="sm" onClick={() => handleStepTransition(3)}>
+          Continue to Review →
+        </Button>
       </div>
     </div>
   );
 
-  // ---------- Step 3 (Review Data & Policy + Network Diagram) ----------
+  // Step 3 - Review Data
   const renderStep3 = () => (
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-foreground mb-1">Review Data & Configure Policies</h2>
-          <p className="text-sm text-muted-foreground">Tune service levels, costs, and lead-time model. Visualize single vs multi-echelon flows.</p>
+          <p className="text-sm text-muted-foreground">
+            Tune service levels, costs, and lead-time model. Visualize single vs multi-echelon flows.
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button size="sm" variant={echelonMode==='single'?'default':'outline'} onClick={()=>setEchelonMode('single')}>
+          <Button size="sm" variant={echelonMode === "single" ? "default" : "outline"} onClick={() => setEchelonMode("single")}>
             Single Echelon
           </Button>
-          <Button size="sm" variant={echelonMode==='multi'?'default':'outline'} onClick={()=>setEchelonMode('multi')}>
+          <Button size="sm" variant={echelonMode === "multi" ? "default" : "outline"} onClick={() => setEchelonMode("multi")}>
             Multi Echelon
           </Button>
         </div>
@@ -860,24 +753,28 @@ const InventoryOptimization: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card>
-          <CardHeader><CardTitle className="text-base">Policy Targets</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Policy Targets</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-3">
             <div className="space-y-1">
               <label className="text-sm text-muted-foreground">Target Service Level (%)</label>
-              <Input type="number" value={serviceLevel} onChange={(e)=>setServiceLevel(+e.target.value)} />
+              <Input type="number" value={serviceLevel} onChange={(e) => setServiceLevel(+e.target.value)} />
             </div>
             <div className="space-y-1">
               <label className="text-sm text-muted-foreground">Holding Cost (% per year)</label>
-              <Input type="number" value={holdingCostPct} onChange={(e)=>setHoldingCostPct(+e.target.value)} />
+              <Input type="number" value={holdingCostPct} onChange={(e) => setHoldingCostPct(+e.target.value)} />
             </div>
             <div className="space-y-1">
               <label className="text-sm text-muted-foreground">Ordering Cost (₹ per order)</label>
-              <Input type="number" value={orderingCost} onChange={(e)=>setOrderingCost(+e.target.value)} />
+              <Input type="number" value={orderingCost} onChange={(e) => setOrderingCost(+e.target.value)} />
             </div>
             <div className="space-y-1">
               <label className="text-sm text-muted-foreground">Lead Time Model</label>
-              <Select value={leadTimeMode} onValueChange={(v: "static"|"variable")=>setLeadTimeMode(v)}>
-                <SelectTrigger><SelectValue placeholder="Choose" /></SelectTrigger>
+              <Select value={leadTimeMode} onValueChange={(v: "static" | "variable") => setLeadTimeMode(v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose" />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="static">Static</SelectItem>
                   <SelectItem value="variable">Variable (Probabilistic)</SelectItem>
@@ -888,11 +785,13 @@ const InventoryOptimization: React.FC = () => {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Network Diagram ({echelonMode === 'single' ? 'Single' : 'Multi'}-Echelon)</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Network Diagram ({echelonMode === "single" ? "Single" : "Multi"}-Echelon)</CardTitle>
+          </CardHeader>
           <CardContent>
             <NetworkDiagram mode={echelonMode} />
             <div className="text-[11px] text-muted-foreground mt-2">
-              {echelonMode === 'single'
+              {echelonMode === "single"
                 ? "Plant ships directly to stores; ROP/Safety Stock per store only."
                 : "Plant → DCs → Stores; safety stock pooled at DCs + local buffers at stores."}
             </div>
@@ -900,7 +799,9 @@ const InventoryOptimization: React.FC = () => {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Lead Time Distribution</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Lead Time Distribution</CardTitle>
+          </CardHeader>
           <CardContent className="h-[260px]">
             <Bar data={leadTimeHist} options={histOptions} />
           </CardContent>
@@ -908,7 +809,9 @@ const InventoryOptimization: React.FC = () => {
       </div>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Policy Workbook</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="text-base">Policy Workbook</CardTitle>
+        </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="min-w-full text-sm border border-border rounded">
             <thead className="bg-muted text-muted-foreground">
@@ -927,10 +830,18 @@ const InventoryOptimization: React.FC = () => {
                 <tr key={idx} className="hover:bg-muted/20">
                   <td className="px-3 py-2">{r.sku}</td>
                   <td className="px-3 py-2">{r.abc}</td>
-                  <td className="px-3 py-2"><Input defaultValue={r.service} className="w-24" /></td>
-                  <td className="px-3 py-2"><Input defaultValue={r.reorderPoint} className="w-24" /></td>
-                  <td className="px-3 py-2"><Input defaultValue={r.safetyStock} className="w-24" /></td>
-                  <td className="px-3 py-2"><Input defaultValue={r.orderQty} className="w-24" /></td>
+                  <td className="px-3 py-2">
+                    <Input defaultValue={r.service} className="w-24" />
+                  </td>
+                  <td className="px-3 py-2">
+                    <Input defaultValue={r.reorderPoint} className="w-24" />
+                  </td>
+                  <td className="px-3 py-2">
+                    <Input defaultValue={r.safetyStock} className="w-24" />
+                  </td>
+                  <td className="px-3 py-2">
+                    <Input defaultValue={r.orderQty} className="w-24" />
+                  </td>
                   <td className="px-3 py-2">{r.policy}</td>
                 </tr>
               ))}
@@ -940,72 +851,133 @@ const InventoryOptimization: React.FC = () => {
       </Card>
 
       <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => setCurrentStep(2)}>← Back</Button>
-        <Button size="sm" onClick={() => handleStepTransition(4)}>Optimize Inventory →</Button>
+        <Button size="sm" variant="outline" onClick={() => setCurrentStep(2)}>
+          ← Back
+        </Button>
+        <Button size="sm" onClick={() => handleStepTransition(4)}>
+          Optimize Inventory →
+        </Button>
       </div>
     </div>
   );
 
-  // ---------- Step 4 (Results) ----------
+  // Step 4 - Results (3-column layout like Demand Forecasting)
   const renderStep4 = () => (
     <div className="flex h-[calc(100vh-108px)]">
-      {/* Left Sidebar */}
-      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-4 flex flex-col h-[calc(100vh-108px)] max-h-screen">
-        <div className="flex-none">
+      {/* Left Sidebar with ForecastCards */}
+      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r flex flex-col h-[calc(100vh-108px)] max-h-screen">
+        <div className="flex-none p-4">
           <h2 className="text-xl font-bold text-foreground mb-2">Inventory Results</h2>
           <p className="text-sm text-muted-foreground">Click cards to explore insights</p>
         </div>
 
-        <div className="flex-1 grid grid-rows-5 gap-3 min-h-0 mt-3">
-          <div className="min-h-0">
-            <ForecastCard
-              className="h-full"
-              title="FILL RATE"
-              value={(kpi.fillRate*100).toFixed(1) + '%'}
-              subtitle="post-optimization"
-              icon={ShieldCheck}
-              isActive={activeTab === "overview"}
-              onClick={() => setActiveTab("overview")}
-            />
+        <ScrollArea className="flex-1 mt-3">
+          <div className="flex flex-col items-center gap-3 pb-4 px-4">
+            <div className="flex justify-center">
+              <ForecastCard
+                title="Inventory Snapshot"
+                value="96.5%"
+                subtitle={`Fill Rate • ₹4.2Cr Capital • 37 Stockouts Avoided
+                          5 Locations • 82 SKUs • Optimized`}
+                icon={TrendingUp}
+                isActive={selectedScenario === null && activeTab === "overview"}
+                onClick={() => {
+                  setSelectedScenario(null);
+                  setActiveTab("overview");
+                }}
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <ForecastCard
+                title="Policy Insights"
+                value="65%"
+                subtitle={`Class A items, Safety stock optimized
+                          Reorder points adjusted`}
+                icon={BarChart3}
+                isActive={selectedScenario === null && activeTab === "policies"}
+                onClick={() => {
+                  setSelectedScenario(null);
+                  setActiveTab("policies");
+                }}
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <ForecastCard
+                title="Capital Impact"
+                value="₹4.2Cr"
+                subtitle={`Working capital tied up
+                          14% carrying cost`}
+                icon={Wallet}
+                isActive={selectedScenario === null && activeTab === "capital"}
+                onClick={() => {
+                  setSelectedScenario(null);
+                  setActiveTab("capital");
+                }}
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <ForecastCard
+                title="Policy Workbook"
+                value="Data Table"
+                subtitle={`Optimized reorder points
+                          Safety stock levels`}
+                icon={Package}
+                isActive={selectedScenario === null && activeTab === "workbook"}
+                onClick={() => {
+                  setSelectedScenario(null);
+                  setActiveTab("workbook");
+                }}
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <ForecastCard
+                title="Data Quality Review"
+                value="98.1%"
+                subtitle="Completeness score, 2 missing values imputed. AI-enhanced integrity verified."
+                icon={Shield}
+                isActive={selectedScenario === null && activeTab === "quality"}
+                onClick={() => {
+                  setSelectedScenario(null);
+                  setActiveTab("quality");
+                }}
+              />
+            </div>
+
+            {/* Dynamic Scenarios */}
+            {scenarios.map((scenario) => (
+              <div key={scenario.id} className="relative group flex justify-center">
+                <ForecastCard
+                  title={scenario.name}
+                  value={scenario.value}
+                  subtitle={scenario.subtitle}
+                  icon={Wand2}
+                  isActive={selectedScenario === scenario.id}
+                  onClick={() => setSelectedScenario(scenario.id)}
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-1 right-1 w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive/80 hover:bg-destructive text-destructive-foreground"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteScenario(scenario.id);
+                  }}
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            ))}
           </div>
-          <div className="min-h-0">
-            <ForecastCard
-              className="h-full"
-              title="STOCKOUTS AVOIDED"
-              value={`${kpi.stockoutsAvoided}`}
-              subtitle="last 90 days projection"
-              icon={Boxes}
-              isActive={activeTab === "policies"}
-              onClick={() => setActiveTab("policies")}
-            />
-          </div>
-          <div className="min-h-0">
-            <ForecastCard
-              className="h-full"
-              title="WORKING CAPITAL"
-              value={`₹${kpi.workingCapital.toFixed(1)} Cr`}
-              subtitle="inventory tied up"
-              icon={Wallet}
-              isActive={activeTab === "capital"}
-              onClick={() => setActiveTab("capital")}
-            />
-          </div>
-          <div className="min-h-0">
-            <ForecastCard
-              className="h-full"
-              title="WORKBOOK"
-              value="Data Table"
-              subtitle="Optimized policies"
-              icon={Wallet}
-              isActive={activeTab === "workbook"}
-              onClick={() => setActiveTab("workbook")}
-            />
-          </div>
-        </div>
+        </ScrollArea>
       </div>
 
-      {/* Main Area */}
-      <div className="flex-1 p-6 overflow-hidden">
+      {/* Main Content Area */}
+      <div className="flex-1 p-4 overflow-auto pt-4 max-h-[calc(100vh-8rem)]">
+        {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
@@ -1013,174 +985,613 @@ const InventoryOptimization: React.FC = () => {
               {activeTab === "policies" && "Policy Insights"}
               {activeTab === "capital" && "Capital & Cost Impact"}
               {activeTab === "workbook" && "Policy Workbook"}
+              {activeTab === "quality" && "Data Quality Review"}
             </h1>
             <p className="text-muted-foreground">
-              {activeTab === "overview" && "Overall inventory health and risk bands"}
-              {activeTab === "policies" && "SKU-level reorder points and suggested policy types"}
-              {activeTab === "capital" && "Working capital and carrying cost implications"}
-              {activeTab === "workbook" && "Interactive data table for governance and edit tracking"}
+              {activeTab === "overview" && "Comprehensive inventory insights and analytics"}
+              {activeTab === "policies" && "Reorder points, safety stock, and policy recommendations"}
+              {activeTab === "workbook" && "Interactive data table with optimization results"}
+              {activeTab === "capital" && "Working capital analysis and cost optimization"}
+              {activeTab === "quality" && "Data integrity assessment and AI-enhanced quality insights"}
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" onClick={() => setCurrentStep(3)}>← Back</Button>
-            <Button variant="outline"><Download className="w-4 h-4 mr-2" />Export</Button>
-            <Button><Share className="w-4 h-4 mr-2" />Share</Button>
+            <Button variant="outline" onClick={() => setCurrentStep(3)}>
+              ← Back
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  Export As
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportToPPTX}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  PPTX
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToCSV}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToXLSX}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  XLSX
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportToCanva}>
+                  <Share className="w-4 h-4 mr-2" />
+                  Canva
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToUpsynqLink}>
+                  <Share className="w-4 h-4 mr-2" />
+                  Upsynq Unique Link
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button>
+              <Share className="w-4 h-4 mr-2" />
+              Share
+            </Button>
           </div>
         </div>
 
-        {activeTab === "overview" && (
+        {/* Content based on active tab */}
+        {selectedScenario ? (
           <>
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              <Card className="shadow-card border-0">
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-emerald-700 mb-1">{(kpi.fillRate*100).toFixed(1)}%</div>
-                  <div className="text-xs text-muted-foreground">Fill Rate</div>
-                  <div className="text-xs text-muted-foreground mt-1">Inventory Turns</div>
-                  <div className="text-lg font-semibold text-primary mt-1">{kpi.turns}</div>
-                </CardContent>
-              </Card>
-              <Card className="shadow-card border-0">
-                <CardContent className="p-4 text-center">
-                  <div className="text-sm text-muted-foreground mb-1">Carrying Cost</div>
-                  <div className="text-2xl font-bold text-primary mb-1">{(kpi.carryingCost*100).toFixed(0)}%</div>
-                  <div className="text-xs text-muted-foreground">annualized</div>
-                </CardContent>
-              </Card>
-              <div className="space-y-2">
+            {/* Scenario Comparison View */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-semibold">Scenario Analysis: {scenarios.find((s) => s.id === selectedScenario)?.name}</h2>
+                  <p className="text-muted-foreground">Comparison with baseline inventory</p>
+                </div>
+                <Button variant="outline" onClick={() => setSelectedScenario(null)}>
+                  ← Back to Overview
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <Card className="shadow-card border-0">
-                  <CardContent className="p-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">Backorders (proj.)</span>
-                      <Badge variant="secondary" className="bg-success/10 text-emerald-700 text-xs">↓ 11%</Badge>
+                  <CardHeader>
+                    <CardTitle>Scenario vs Baseline</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[300px]">
+                      <Line
+                        data={{
+                          labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
+                          datasets: [
+                            {
+                              label: "Baseline Stock",
+                              data: [1000, 1100, 1050, 1200, 1150, 1250],
+                              borderColor: "hsl(220, 13%, 69%)",
+                              backgroundColor: "hsl(220, 13%, 69%, 0.1)",
+                              borderWidth: 2,
+                            },
+                            {
+                              label: "Scenario Stock",
+                              data: [1050, 1180, 1120, 1280, 1230, 1330],
+                              borderColor: "hsl(142, 76%, 36%)",
+                              backgroundColor: "hsl(142, 76%, 36%, 0.1)",
+                              borderWidth: 3,
+                            },
+                          ],
+                        }}
+                        options={buildChartOptions({ animation: { duration: 0 } })}
+                      />
                     </div>
-                    <div className="text-lg font-bold">Lower Risk</div>
                   </CardContent>
                 </Card>
+
                 <Card className="shadow-card border-0">
-                  <CardContent className="p-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">Supplier Risk</span>
-                      <Badge variant="secondary" className="bg-yellow-100 text-yellow-700 text-xs">Moderate</Badge>
+                  <CardHeader>
+                    <CardTitle>Impact Analysis</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center p-3 bg-success/10 rounded-lg">
+                          <div className="text-lg font-bold text-success">+6.5%</div>
+                          <div className="text-xs text-muted-foreground">Service Level Impact</div>
+                        </div>
+                        <div className="text-center p-3 bg-primary/10 rounded-lg">
+                          <div className="text-lg font-bold text-primary">-₹0.5M</div>
+                          <div className="text-xs text-muted-foreground">Capital Reduction</div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3 pt-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Stockouts Avoided</span>
+                          <Badge variant="secondary" className="bg-info/10 text-info">
+                            +12
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Risk Level</span>
+                          <Badge variant="secondary" className="bg-warning/10 text-warning">
+                            Low
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Confidence Score</span>
+                          <Badge variant="secondary" className="bg-success/10 text-success">
+                            92%
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-lg font-bold">Monitor</div>
                   </CardContent>
                 </Card>
               </div>
             </div>
+          </>
+        ) : (
+          <>
+            {/* Regular Tab Content */}
+            {activeTab === "overview" && (
+              <div className="space-y-6">
+                <TooltipProvider>
+                  <Card className="bg-gradient-to-br from-card via-card to-muted/20 shadow-card border-0">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-base font-medium">Inventory Analysis</CardTitle>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={handleZoomIn}
+                          disabled={chartGranularity === "daily"}
+                          className="h-8 w-8"
+                        >
+                          <ZoomIn className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={handleZoomOut}
+                          disabled={chartGranularity === "quarterly"}
+                          className="h-8 w-8"
+                        >
+                          <ZoomOut className="h-4 w-4" />
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>View Options</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Export Chart</DropdownMenuItem>
+                            <DropdownMenuItem>Download Data</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-4">
+                      <InventoryAnalysisChart chartGranularity={chartGranularity} valueMode="stock" productFilter="all" locationFilter="all" />
+                    </CardContent>
+                  </Card>
+                </TooltipProvider>
 
-            <Card className="shadow-card border-0 mb-4 flex-1">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-lg">Stock Position vs Reorder Bands</CardTitle>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full" aria-label="Chart options">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 z-50">
-                    <DropdownMenuLabel>Chart controls</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel className="text-xs text-muted-foreground">This chart overlays stock position against ROP and safety stock bands.</DropdownMenuLabel>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <div className="h-[calc(100vh-500px)]">
-                  <Line data={stockPositionData as any} options={stockPositionOptions} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Fill Rate</CardTitle>
+                      <ShieldCheck className="h-4 w-4 text-success" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">96.5%</div>
+                      <p className="text-xs text-muted-foreground">+2.3% from baseline</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Stockouts Avoided</CardTitle>
+                      <Boxes className="h-4 w-4 text-primary" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">37</div>
+                      <p className="text-xs text-muted-foreground">In last 90 days</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Working Capital</CardTitle>
+                      <Wallet className="h-4 w-4 text-warning" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">₹4.2Cr</div>
+                      <p className="text-xs text-muted-foreground">Inventory tied up</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Inventory Turns</CardTitle>
+                      <Activity className="h-4 w-4 text-info" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">9.1x</div>
+                      <p className="text-xs text-muted-foreground">Annual turnover</p>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            )}
+
+            {activeTab === "policies" && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Reorder Points by ABC Class</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-[300px]">
+                      <Bar
+                        data={{
+                          labels: ["Class A", "Class B", "Class C"],
+                          datasets: [
+                            {
+                              label: "Avg Reorder Point",
+                              data: [650, 380, 200],
+                              backgroundColor: [
+                                hslVar("--chart-1", 0.6),
+                                hslVar("--chart-2", 0.6),
+                                hslVar("--chart-3", 0.6),
+                              ],
+                            },
+                          ],
+                        }}
+                        options={buildChartOptions({})}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Safety Stock Distribution</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-[300px]">
+                      <Pie
+                        data={{
+                          labels: ["Class A", "Class B", "Class C"],
+                          datasets: [
+                            {
+                              data: [45, 35, 20],
+                              backgroundColor: [
+                                hslVar("--chart-1", 0.8),
+                                hslVar("--chart-2", 0.8),
+                                hslVar("--chart-3", 0.8),
+                              ],
+                            },
+                          ],
+                        }}
+                        options={buildChartOptions({})}
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "capital" && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Total Investment</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-3xl font-bold text-primary">₹4.2Cr</div>
+                      <p className="text-sm text-muted-foreground mt-2">Working capital tied up in inventory</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Carrying Cost</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-3xl font-bold text-warning">14%</div>
+                      <p className="text-sm text-muted-foreground mt-2">Annual carrying cost rate</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Potential Savings</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-3xl font-bold text-success">₹0.6Cr</div>
+                      <p className="text-sm text-muted-foreground mt-2">Through optimization</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "workbook" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Policy Workbook</CardTitle>
+                </CardHeader>
+                <CardContent className="overflow-x-auto">
+                  <table className="min-w-full text-sm border border-border rounded">
+                    <thead className="bg-muted text-muted-foreground">
+                      <tr>
+                        <th className="text-left px-3 py-2">SKU</th>
+                        <th className="text-left px-3 py-2">ABC</th>
+                        <th className="text-left px-3 py-2">Service Level</th>
+                        <th className="text-left px-3 py-2">Reorder Point</th>
+                        <th className="text-left px-3 py-2">Safety Stock</th>
+                        <th className="text-left px-3 py-2">Order Qty</th>
+                        <th className="text-left px-3 py-2">Policy</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {policyRows.map((r, idx) => (
+                        <tr key={idx} className="hover:bg-muted/20">
+                          <td className="px-3 py-2">{r.sku}</td>
+                          <td className="px-3 py-2">{r.abc}</td>
+                          <td className="px-3 py-2">{r.service}%</td>
+                          <td className="px-3 py-2">{r.reorderPoint}</td>
+                          <td className="px-3 py-2">{r.safetyStock}</td>
+                          <td className="px-3 py-2">{r.orderQty}</td>
+                          <td className="px-3 py-2">{r.policy}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            )}
+
+            {activeTab === "quality" && (
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Data Quality Metrics</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">Completeness Score</span>
+                        <Badge variant="secondary" className="bg-success/10 text-success">
+                          98.1%
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">Missing Values</span>
+                        <Badge variant="secondary" className="bg-info/10 text-info">
+                          2 imputed
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">Duplicate Records</span>
+                        <Badge variant="secondary" className="bg-warning/10 text-warning">
+                          0 found
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">AI Enhancements</span>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary">
+                          3 applied
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </>
         )}
+      </div>
 
-        {activeTab === "policies" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <Card className="shadow-card border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5" />
-                  Reorder Point Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <Bar
-                    data={{
-                      labels: ["<200","200-400","400-600","600-800","800+"],
-                      datasets: [{ label: "SKUs", data: [12, 36, 58, 44, 23], backgroundColor: "rgba(16,185,129,0.5)" }],
-                    }}
-                    options={buildChartOptions({ plugins: { legend: { position: "top" } } })}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-card border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PieChartIcon className="w-5 h-5" />
-                  Service Level Mix
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]"><Pie data={serviceLevelPie} options={pieOptions} /></div>
-              </CardContent>
-            </Card>
+      {/* Right Sidebar - AI Chat, Filters, Scenarios */}
+      <div className={`${rightSidebarCollapsed ? "w-12" : "w-80"} bg-card border-l transition-all duration-300 flex flex-col h-[calc(100vh-108px)]`}>
+        {rightSidebarCollapsed ? (
+          <div className="flex flex-col items-center py-4 gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setRightSidebarCollapsed(false);
+                setRightSidebarTab("ai");
+              }}
+            >
+              <MessageCircle className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setRightSidebarCollapsed(false);
+                setRightSidebarTab("filter");
+              }}
+            >
+              <Filter className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setRightSidebarCollapsed(false);
+                setRightSidebarTab("scenario");
+              }}
+            >
+              <Wand2 className="h-5 w-5" />
+            </Button>
           </div>
-        )}
+        ) : (
+          <>
+            <div className="flex items-center justify-between p-4 border-b">
+              <div className="flex gap-2">
+                <Button variant={rightSidebarTab === "ai" ? "default" : "ghost"} size="sm" onClick={() => setRightSidebarTab("ai")}>
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  AI
+                </Button>
+                <Button variant={rightSidebarTab === "filter" ? "default" : "ghost"} size="sm" onClick={() => setRightSidebarTab("filter")}>
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filter
+                </Button>
+                <Button variant={rightSidebarTab === "scenario" ? "default" : "ghost"} size="sm" onClick={() => setRightSidebarTab("scenario")}>
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  Scenario
+                </Button>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setRightSidebarCollapsed(true)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
 
-        {activeTab === "capital" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <Card className="shadow-card border-0">
-              <CardHeader><CardTitle>Working Capital Trend</CardTitle></CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <Line
-                    data={{
-                      labels: ["Q1","Q2","Q3","Q4","Q1","Q2"],
-                      datasets: [
-                        { label: "Before", data: [5.4,5.2,5.0,4.9,4.8,4.7], borderWidth:2, tension:0.35, borderColor: "rgba(239,68,68,0.8)", pointRadius:0 },
-                        { label: "After", data: [4.9,4.7,4.5,4.4,4.3,4.2], borderWidth:2, tension:0.35, borderDash:[6,4], borderColor: "rgba(16,185,129,0.8)", pointRadius:0 },
-                      ]
-                    }}
-                    options={buildChartOptions({ plugins:{ legend:{ position:"bottom" }}})}
-                  />
+            <div className="flex-1 overflow-hidden">
+              {rightSidebarTab === "ai" && (
+                <div className="h-full flex flex-col p-4">
+                  <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+                    {aiMessages.length === 0 ? (
+                      <div className="text-sm text-muted-foreground text-center mt-8">Ask me anything about your inventory optimization results!</div>
+                    ) : (
+                      aiMessages.map((msg, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-3 rounded-lg ${
+                            msg.role === "user" ? "bg-primary/10 ml-4" : "bg-muted mr-4"
+                          }`}
+                        >
+                          <div className="text-xs font-medium mb-1">{msg.role === "user" ? "You" : "AI Assistant"}</div>
+                          <div className="text-sm">{msg.content}</div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Textarea
+                      placeholder="Ask about inventory..."
+                      value={aiPrompt}
+                      onChange={(e) => setAiPrompt(e.target.value)}
+                      className="resize-none"
+                      rows={2}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          sendAiMessage();
+                        }
+                      }}
+                    />
+                    <Button onClick={sendAiMessage} size="icon">
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              )}
 
-            <Card className="shadow-card border-0">
-              <CardHeader><CardTitle>Carrying Cost Breakdown</CardTitle></CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <Bar
-                    data={{
-                      labels: ["Storage","Capital","Obsolescence","Shrinkage","Handling"],
-                      datasets: [{ label: "₹ Lakhs / Qtr", data: [18, 22, 9, 6, 12], backgroundColor: "rgba(59,130,246,0.5)" }]
-                    }}
-                    options={buildChartOptions({ plugins:{ legend:{ position:"top" }}})}
-                  />
+              {rightSidebarTab === "filter" && (
+                <div className="p-4 space-y-4">
+                  <div className="space-y-2">
+                    <Label>SKU / Product</Label>
+                    <Select value={filterValues.skuProduct} onValueChange={(val) => setFilterValues((prev) => ({ ...prev, skuProduct: val }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Products</SelectItem>
+                        <SelectItem value="widget-a">Widget A</SelectItem>
+                        <SelectItem value="component-b">Component B</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Location</Label>
+                    <Select value={filterValues.location} onValueChange={(val) => setFilterValues((prev) => ({ ...prev, location: val }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Locations</SelectItem>
+                        <SelectItem value="delhi">Delhi FC</SelectItem>
+                        <SelectItem value="mumbai">Mumbai FC</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Time Period</Label>
+                    <Select value={filterValues.timePeriod} onValueChange={(val) => setFilterValues((prev) => ({ ...prev, timePeriod: val }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Time</SelectItem>
+                        <SelectItem value="last-30">Last 30 Days</SelectItem>
+                        <SelectItem value="last-90">Last 90 Days</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <Button className="w-full" onClick={applyFilters}>
+                    Apply Filters
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+              )}
 
-        {activeTab === "workbook" && (
-          <div className="mb-6"><WorkbookTable /></div>
+              {rightSidebarTab === "scenario" && (
+                <div className="p-4 space-y-4">
+                  <Button className="w-full" onClick={() => setIsScenarioDialogOpen(true)} disabled={scenarios.length >= 3}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Scenario
+                  </Button>
+
+                  <div className="text-xs text-muted-foreground">{scenarios.length}/3 scenarios created</div>
+
+                  <div className="text-sm text-muted-foreground">
+                    Create what-if scenarios to model different inventory conditions and policies.
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
+
+      <InventoryScenarioCreation isOpen={isScenarioDialogOpen} onClose={() => setIsScenarioDialogOpen(false)} onCreateScenario={createScenario} />
     </div>
   );
 
+  // Render current step
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return renderStep1();
+      case 2:
+        return renderStep2();
+      case 3:
+        return renderStep3();
+      case 4:
+        return renderStep4();
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      {currentStep === 1 && renderStep1()}
-      {currentStep === 2 && renderStep2()}
-      {currentStep === 3 && renderStep3()}
-      {currentStep === 4 && renderStep4()}
-      {isLoading && <ScientificLoader message={`Processing Step ${currentStep + 1}...`} size="lg" />}
-    </div>
+    <>
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <ScientificLoader />
+        </div>
+      ) : (
+        renderStep()
+      )}
+    </>
   );
 };
 
