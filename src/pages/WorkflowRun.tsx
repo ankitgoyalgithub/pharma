@@ -146,8 +146,9 @@ const WorkflowRun = () => {
 
   // Use actual workflow data or generate based on workflow type
   const generateWorkflowData = (workflow) => {
-    // If we have actual workflow structure from builder, use it
-    if (workflow?.blocks && Array.isArray(workflow.blocks) && workflow?.connections && Array.isArray(workflow.connections)) {
+    // If we have actual workflow structure from builder with arrays, use it
+    if (workflow?.blocks && Array.isArray(workflow.blocks) && workflow.blocks.length > 0 &&
+        workflow?.connections && Array.isArray(workflow.connections)) {
       return {
         blocks: workflow.blocks.map(block => ({
           id: block.canvasId || block.id,
@@ -165,7 +166,7 @@ const WorkflowRun = () => {
       };
     }
 
-    // Fallback to predefined structures that match WorkflowBuilder
+    // Fallback to predefined structures based on workflow name
     if (workflow?.name === 'Supply Chain Optimization') {
       return {
         blocks: [
