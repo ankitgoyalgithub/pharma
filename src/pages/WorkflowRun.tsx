@@ -141,6 +141,14 @@ const WorkflowRun = () => {
   const [progress, setProgress] = useState(0);
   const [selectedComponent, setSelectedComponent] = useState('');
   const [isRunning, setIsRunning] = useState(false);
+  const [logs, setLogs] = useState<Array<{timestamp: string, level: string, message: string}>>([]);
+  const [metricsHistory, setMetricsHistory] = useState<Array<{time: string, cpu: number, memory: number, network: number, diskIO: number}>>([]);
+  const [dataStats, setDataStats] = useState<{rowsProcessed: number, errors: number, warnings: number, avgProcessingTime: number}>({
+    rowsProcessed: 0,
+    errors: 0,
+    warnings: 0,
+    avgProcessingTime: 0
+  });
   
   const { workflowData, workflowName, isEditing } = location.state || {};
 
@@ -317,32 +325,28 @@ const WorkflowRun = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // Mock data for metrics
-  const memoryData = [
-    { time: '0s', memory: 180, disk: 45 },
-    { time: '30s', memory: 220, disk: 52 },
-    { time: '60s', memory: 195, disk: 48 },
-    { time: '90s', memory: 245, disk: 55 },
-    { time: '120s', memory: 210, disk: 50 },
-    { time: '150s', memory: 275, disk: 58 },
-  ];
-
-  const progressData = [
-    { step: 'Data Loading', completed: 100, total: 100 },
-    { step: 'Processing', completed: 85, total: 100 },
-    { step: 'Analysis', completed: 60, total: 100 },
-    { step: 'Output', completed: 0, total: 100 },
-  ];
-
-  const edaData = [
-    { category: 'Product A', value: 30, count: 245 },
-    { category: 'Product B', value: 25, count: 189 },
-    { category: 'Product C', value: 20, count: 156 },
-    { category: 'Product D', value: 15, count: 123 },
-    { category: 'Product E', value: 10, count: 78 },
-  ];
-
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+  
+  // Helper to add log entry
+  const addLog = (level: string, message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setLogs(prev => [...prev, { timestamp, level, message }]);
+  };
+  
+  // Helper to add metrics data point
+  const addMetricsPoint = () => {
+    const time = new Date().toLocaleTimeString();
+    const cpu = 20 + Math.random() * 60;
+    const memory = 40 + Math.random() * 40;
+    const network = 10 + Math.random() * 50;
+    const diskIO = 5 + Math.random() * 30;
+    
+    setMetricsHistory(prev => {
+      const newHistory = [...prev, { time, cpu, memory, network, diskIO }];
+      // Keep only last 20 points
+      return newHistory.slice(-20);
+    });
+  };
 
   // Workflow execution simulation
   const runWorkflow = useCallback(() => {
@@ -350,17 +354,36 @@ const WorkflowRun = () => {
     setStatus('running');
     setProgress(0);
     setCurrentStep(0);
+    setLogs([]);
+    setMetricsHistory([]);
+    setDataStats({rowsProcessed: 0, errors: 0, warnings: 0, avgProcessingTime: 0});
+
+    addLog('info', '🚀 Workflow execution started');
+    addLog('info', `📋 Total blocks to execute: ${workflowStructure.blocks.length}`);
 
     const totalSteps = workflowStructure.blocks.length;
     let stepProgress = 0;
+    
+    // Start metrics collection
+    const metricsInterval = setInterval(() => {
+      if (stepProgress < totalSteps) {
+        addMetricsPoint();
+      }
+    }, 1000);
 
     const executeStep = () => {
       if (stepProgress >= totalSteps) {
+        clearInterval(metricsInterval);
         setStatus('completed');
         setIsRunning(false);
         setProgress(100);
+        addLog('success', '✅ Workflow execution completed successfully');
+        addLog('info', `📊 Total rows processed: ${dataStats.rowsProcessed}`);
         return;
       }
+
+      const currentBlock = workflowStructure.blocks[stepProgress];
+      addLog('info', `⚡ Executing block: ${currentBlock.name}`);
 
       // Update current node to running
       setNodes(currentNodes => 
@@ -381,6 +404,29 @@ const WorkflowRun = () => {
       const stepDuration = 2000 + Math.random() * 2000;
       
       setTimeout(() => {
+        // Simulate processing data
+        const rowsProcessed = Math.floor(1000 + Math.random() * 5000);
+        const errors = Math.floor(Math.random() * 5);
+        const warnings = Math.floor(Math.random() * 10);
+        const processingTime = (stepDuration / 1000).toFixed(2);
+        
+        setDataStats(prev => ({
+          rowsProcessed: prev.rowsProcessed + rowsProcessed,
+          errors: prev.errors + errors,
+          warnings: prev.warnings + warnings,
+          avgProcessingTime: parseFloat(((prev.avgProcessingTime * stepProgress + parseFloat(processingTime)) / (stepProgress + 1)).toFixed(2))
+        }));
+        
+        addLog('success', `✓ ${currentBlock.name} completed in ${processingTime}s`);
+        addLog('info', `  └─ Processed ${rowsProcessed.toLocaleString()} rows`);
+        
+        if (errors > 0) {
+          addLog('error', `  └─ ${errors} errors detected`);
+        }
+        if (warnings > 0) {
+          addLog('warning', `  └─ ${warnings} warnings`);
+        }
+        
         // Mark current step as completed
         setNodes(currentNodes => 
           currentNodes.map((node, index) => ({
@@ -398,7 +444,7 @@ const WorkflowRun = () => {
     };
 
     executeStep();
-  }, [workflowStructure.blocks.length, setNodes]);
+  }, [workflowStructure.blocks, setNodes, dataStats.rowsProcessed, dataStats.errors, dataStats.warnings, dataStats.avgProcessingTime]);
 
   const pauseWorkflow = () => {
     setIsRunning(false);
@@ -410,6 +456,10 @@ const WorkflowRun = () => {
     setStatus('ready');
     setProgress(0);
     setCurrentStep(0);
+    setLogs([]);
+    setMetricsHistory([]);
+    setDataStats({rowsProcessed: 0, errors: 0, warnings: 0, avgProcessingTime: 0});
+    addLog('info', '⏹️ Workflow execution stopped');
     
     // Reset all nodes to pending
     setNodes(currentNodes => 
@@ -650,41 +700,97 @@ const WorkflowRun = () => {
             <Tabs defaultValue="metrics" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="metrics" className="flex items-center gap-2">
+                  <Activity className="h-4 w-4" />
+                  Performance Metrics
+                </TabsTrigger>
+                <TabsTrigger value="logs" className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  Logs
+                </TabsTrigger>
+                <TabsTrigger value="analysis" className="flex items-center gap-2">
                   <BarChart3 className="h-4 w-4" />
-                  Run Metrics
-                </TabsTrigger>
-                <TabsTrigger value="progress" className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4" />
-                  Run Progress
-                </TabsTrigger>
-                <TabsTrigger value="eda" className="flex items-center gap-2">
-                  <PieChart className="h-4 w-4" />
                   Data Analysis
                 </TabsTrigger>
               </TabsList>
               
               <TabsContent value="metrics" className="space-y-4 mt-4">
+                {/* Summary Cards */}
+                <div className="grid grid-cols-4 gap-4">
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-sm text-muted-foreground">CPU Utilization</div>
+                      <div className="text-2xl font-bold mt-1">
+                        {metricsHistory.length > 0 ? `${Math.round(metricsHistory[metricsHistory.length - 1]?.cpu || 0)}%` : '0%'}
+                      </div>
+                      <Progress value={metricsHistory[metricsHistory.length - 1]?.cpu || 0} className="mt-2 h-1" />
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-sm text-muted-foreground">Memory</div>
+                      <div className="text-2xl font-bold mt-1">
+                        {metricsHistory.length > 0 ? `${Math.round(metricsHistory[metricsHistory.length - 1]?.memory || 0)}%` : '0%'}
+                      </div>
+                      <Progress value={metricsHistory[metricsHistory.length - 1]?.memory || 0} className="mt-2 h-1" />
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-sm text-muted-foreground">Network I/O</div>
+                      <div className="text-2xl font-bold mt-1">
+                        {metricsHistory.length > 0 ? `${Math.round(metricsHistory[metricsHistory.length - 1]?.network || 0)} MB/s` : '0 MB/s'}
+                      </div>
+                      <Progress value={(metricsHistory[metricsHistory.length - 1]?.network || 0) * 2} className="mt-2 h-1" />
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-sm text-muted-foreground">Disk I/O</div>
+                      <div className="text-2xl font-bold mt-1">
+                        {metricsHistory.length > 0 ? `${Math.round(metricsHistory[metricsHistory.length - 1]?.diskIO || 0)} MB/s` : '0 MB/s'}
+                      </div>
+                      <Progress value={(metricsHistory[metricsHistory.length - 1]?.diskIO || 0) * 3} className="mt-2 h-1" />
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <Cpu className="h-5 w-5" />
-                        Memory Usage
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <Cpu className="h-4 w-4" />
+                        CPU & Memory Utilization
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ResponsiveContainer width="100%" height={200}>
-                        <RechartsLineChart data={memoryData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="time" />
-                          <YAxis />
-                          <Tooltip />
+                      <ResponsiveContainer width="100%" height={180}>
+                        <RechartsLineChart data={metricsHistory}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--card))', 
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '6px'
+                            }} 
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="cpu" 
+                            stroke="#3b82f6" 
+                            strokeWidth={2}
+                            name="CPU %"
+                            dot={false}
+                          />
                           <Line 
                             type="monotone" 
                             dataKey="memory" 
-                            stroke="#8884d8" 
+                            stroke="#10b981" 
                             strokeWidth={2}
-                            name="Memory (MB)"
+                            name="Memory %"
+                            dot={false}
                           />
                         </RechartsLineChart>
                       </ResponsiveContainer>
@@ -693,78 +799,248 @@ const WorkflowRun = () => {
 
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <HardDrive className="h-5 w-5" />
-                        Disk Usage
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <HardDrive className="h-4 w-4" />
+                        Network & Disk I/O
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ResponsiveContainer width="100%" height={200}>
-                        <RechartsLineChart data={memoryData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="time" />
-                          <YAxis />
-                          <Tooltip />
+                      <ResponsiveContainer width="100%" height={180}>
+                        <RechartsLineChart data={metricsHistory}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--card))', 
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '6px'
+                            }} 
+                          />
                           <Line 
                             type="monotone" 
-                            dataKey="disk" 
-                            stroke="#82ca9d" 
+                            dataKey="network" 
+                            stroke="#f59e0b" 
                             strokeWidth={2}
-                            name="Disk (GB)"
+                            name="Network MB/s"
+                            dot={false}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="diskIO" 
+                            stroke="#8b5cf6" 
+                            strokeWidth={2}
+                            name="Disk MB/s"
+                            dot={false}
                           />
                         </RechartsLineChart>
                       </ResponsiveContainer>
                     </CardContent>
                   </Card>
                 </div>
+
+                {metricsHistory.length === 0 && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Activity className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                    <p>No metrics data yet. Run the workflow to see performance metrics.</p>
+                  </div>
+                )}
               </TabsContent>
               
-              <TabsContent value="progress" className="mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5" />
-                      Step Progress for {workflowStructure.blocks.find(b => b.id === selectedComponent)?.name || 'Selected Component'}
+              <TabsContent value="logs" className="mt-4">
+                <Card className="bg-slate-950 border-slate-800">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-slate-300">
+                        <FileText className="h-4 w-4" />
+                        Execution Logs
+                      </div>
+                      <Badge variant="outline" className="font-mono text-xs border-slate-700 text-slate-400">
+                        {logs.length} entries
+                      </Badge>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <RechartsBarChart data={progressData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="step" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="completed" fill="#10b981" name="Completed %" />
-                        <Bar dataKey="total" fill="#e5e7eb" name="Remaining %" />
-                      </RechartsBarChart>
-                    </ResponsiveContainer>
+                  <CardContent className="p-0">
+                    <div className="bg-slate-950 font-mono text-sm h-[400px] overflow-y-auto">
+                      {logs.length === 0 ? (
+                        <div className="flex items-center justify-center h-full text-slate-500">
+                          <div className="text-center">
+                            <FileText className="h-8 w-8 mx-auto mb-2 opacity-30" />
+                            <p className="text-xs">No logs yet. Start the workflow to see execution logs.</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="px-4 py-3 space-y-1">
+                          {logs.map((log, index) => (
+                            <div key={index} className="flex gap-3 text-xs leading-relaxed hover:bg-slate-900/50 px-2 py-1 rounded">
+                              <span className="text-slate-500 flex-shrink-0">{log.timestamp}</span>
+                              <span className={`flex-shrink-0 font-semibold ${
+                                log.level === 'error' ? 'text-red-400' :
+                                log.level === 'warning' ? 'text-yellow-400' :
+                                log.level === 'success' ? 'text-green-400' :
+                                'text-blue-400'
+                              }`}>
+                                [{log.level.toUpperCase()}]
+                              </span>
+                              <span className="text-slate-300 break-all">{log.message}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
               
-              <TabsContent value="eda" className="mt-4">
+              <TabsContent value="analysis" className="mt-4">
+                {/* Statistics Cards */}
+                <div className="grid grid-cols-4 gap-4 mb-4">
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Rows Processed</div>
+                          <div className="text-2xl font-bold mt-1">{dataStats.rowsProcessed.toLocaleString()}</div>
+                        </div>
+                        <Database className="h-8 w-8 text-blue-500 opacity-70" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Errors</div>
+                          <div className="text-2xl font-bold mt-1 text-red-500">{dataStats.errors}</div>
+                        </div>
+                        <AlertCircle className="h-8 w-8 text-red-500 opacity-70" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Warnings</div>
+                          <div className="text-2xl font-bold mt-1 text-yellow-500">{dataStats.warnings}</div>
+                        </div>
+                        <AlertCircle className="h-8 w-8 text-yellow-500 opacity-70" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Avg Time/Block</div>
+                          <div className="text-2xl font-bold mt-1">{dataStats.avgProcessingTime}s</div>
+                        </div>
+                        <Clock className="h-8 w-8 text-green-500 opacity-70" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {/* Data Quality Score */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <PieChart className="h-5 w-5" />
-                        Data Distribution
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <CheckCircle className="h-4 w-4" />
+                        Data Quality Score
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ResponsiveContainer width="100%" height={300}>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <RechartsBarChart data={[
+                          { metric: 'Completeness', score: 95 },
+                          { metric: 'Accuracy', score: 92 },
+                          { metric: 'Consistency', score: 88 },
+                          { metric: 'Validity', score: 96 },
+                        ]} layout="vertical">
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis type="number" domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <YAxis dataKey="metric" type="category" stroke="hsl(var(--muted-foreground))" fontSize={11} width={90} />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--card))', 
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '6px'
+                            }} 
+                          />
+                          <Bar dataKey="score" fill="#10b981" radius={[0, 4, 4, 0]} />
+                        </RechartsBarChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+
+                  {/* Processing Throughput */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <TrendingUp className="h-4 w-4" />
+                        Processing Throughput
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <RechartsLineChart data={[
+                          { block: 'B1', rowsPerSec: 1200 },
+                          { block: 'B2', rowsPerSec: 1800 },
+                          { block: 'B3', rowsPerSec: 1500 },
+                          { block: 'B4', rowsPerSec: 2100 },
+                          { block: 'B5', rowsPerSec: 1900 },
+                        ]}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="block" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--card))', 
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '6px'
+                            }} 
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="rowsPerSec" 
+                            stroke="#3b82f6" 
+                            strokeWidth={2}
+                            name="Rows/sec"
+                            dot={{ fill: '#3b82f6', r: 4 }}
+                          />
+                        </RechartsLineChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+
+                  {/* Data Distribution */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <PieChart className="h-4 w-4" />
+                        Block Execution Time Distribution
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={200}>
                         <RechartsPieChart>
                           <Pie
-                            data={edaData}
+                            data={[
+                              { name: 'Data Loading', value: 25 },
+                              { name: 'Processing', value: 35 },
+                              { name: 'Analysis', value: 20 },
+                              { name: 'Output', value: 20 },
+                            ]}
                             cx="50%"
                             cy="50%"
                             labelLine={false}
-                            label={({ category, value }) => `${category}: ${value}%`}
-                            outerRadius={80}
+                            label={({ name, value }) => `${name}: ${value}%`}
+                            outerRadius={70}
                             fill="#8884d8"
                             dataKey="value"
                           >
-                            {edaData.map((entry, index) => (
+                            {[0, 1, 2, 3].map((index) => (
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Pie>
@@ -774,26 +1050,45 @@ const WorkflowRun = () => {
                     </CardContent>
                   </Card>
 
+                  {/* Error Types */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <LineChart className="h-5 w-5" />
-                        Record Counts
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <AlertCircle className="h-4 w-4" />
+                        Issue Breakdown
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <RechartsBarChart data={edaData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="category" />
-                          <YAxis />
-                          <Tooltip />
-                          <Bar dataKey="count" fill="#3b82f6" />
+                      <ResponsiveContainer width="100%" height={200}>
+                        <RechartsBarChart data={[
+                          { type: 'Missing Data', count: dataStats.errors },
+                          { type: 'Format Error', count: Math.floor(dataStats.errors * 0.6) },
+                          { type: 'Validation', count: dataStats.warnings },
+                          { type: 'Duplicates', count: Math.floor(dataStats.warnings * 0.4) },
+                        ]}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" fontSize={10} angle={-15} textAnchor="end" height={60} />
+                          <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--card))', 
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '6px'
+                            }} 
+                          />
+                          <Bar dataKey="count" fill="#ef4444" radius={[4, 4, 0, 0]} />
                         </RechartsBarChart>
                       </ResponsiveContainer>
                     </CardContent>
                   </Card>
                 </div>
+
+                {dataStats.rowsProcessed === 0 && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                    <p>No analysis data yet. Run the workflow to see data insights.</p>
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
           </div>
