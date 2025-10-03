@@ -59,9 +59,11 @@ import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
 import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
+import { getExternalDriverData } from "@/data/demandForecasting/externalDriversData";
 import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 import { InventoryAnalysisChart } from "@/components/InventoryAnalysisChart";
 import { InventoryScenarioCreation } from "@/components/InventoryScenarioCreation";
+import { getFoundryObjectData } from "@/data/foundry";
 
 // ---- Chart.js imports ----
 import {
@@ -477,125 +479,371 @@ const InventoryOptimization = () => {
   });
 
   // Step 1 - Add Data
+  const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
+  const externalDrivers = getExternalDrivers("inventory-optimization", hasData);
+
   const renderStep1 = () => (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-1">Add Data Sources</h2>
-          <p className="text-sm text-muted-foreground">Upload files or map from Foundry to begin optimization</p>
-        </div>
+    <div className="space-y-6 pt-10 px-0 pb-0">
+      <div>
+        <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
+        <p className="text-sm text-muted-foreground">Upload all your data files at once. You can also select external factors to include in the model.</p>
       </div>
 
-      {/* Upload and Map sections... */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Upload className="w-4 h-4" />
-              Upload Files
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <input
-              type="file"
-              multiple
-              accept=".csv,.xlsx,.xls"
-              className="w-full text-sm"
-              onChange={(e) => {
-                const files = Array.from(e.target.files || []);
-                setUploadedFiles((prev) => [...prev, ...files]);
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base">Upload Data Files</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Upload your inventory data, product master data, and other relevant files. Supported formats: CSV, Excel, JSON.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Upload multiple files at once. Supported formats: CSV, Excel, JSON. {" "}
+            <Button 
+              variant="link" 
+              size="sm" 
+              className="p-0 h-auto text-sm text-primary underline"
+              onClick={() => {
+                // Create and download Excel template
+                const link = document.createElement('a');
+                link.href = '#'; // This would be the actual template file URL
+                link.download = 'inventory-data-template.xlsx';
+                link.click();
               }}
-            />
-            {uploadedFiles.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Uploaded Files:</p>
-                {uploadedFiles.map((file, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
-                    <span>{file.name}</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-6 h-6"
-                      onClick={() => setUploadedFiles((prev) => prev.filter((_, i) => i !== idx))}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Database className="w-4 h-4" />
-              Map from Foundry
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full" onClick={() => setIsFoundryModalOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Select Data Objects
+            >
+              Download input template
             </Button>
-            {foundryObjects.length > 0 && (
-              <div className="mt-4 space-y-2">
-                <p className="text-sm font-medium">Mapped Objects:</p>
-                {foundryObjects.map((obj, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
-                    <span>{obj.name}</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-6 h-6"
-                      onClick={() => setFoundryObjects((prev) => prev.filter((_, i) => i !== idx))}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="flex-1" onClick={() => document.getElementById('file-upload')?.click()}>
+              <Upload className="h-4 w-4 mr-2" />
+              Upload Multiple Files
+            </Button>
+            <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="flex-1">
+                  <Database className="h-4 w-4 mr-2" />
+                  Map from Foundry
+                </Button>
+              </DialogTrigger>
+            </Dialog>
+          </div>
+          
+          <Input
+            id="file-upload"
+            type="file"
+            multiple
+            accept=".csv,.xlsx,.xls"
+            className="hidden"
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              if (files.length > 0) {
+                setUploadedFiles(prev => [...prev, ...files]);
+                setSelectedPreview(files[0].name);
+                setPreviewLoading(true);
+                setTimeout(() => setPreviewLoading(false), 700);
+              }
+            }}
+          />
 
-      {/* External Drivers Section */}
-      {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">External Drivers (Optional)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Select external factors that may influence inventory levels
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {['Lead Time Variability', 'Supplier Reliability', 'Seasonal Patterns', 'Demand Volatility'].map((driver) => (
-                <Badge
-                  key={driver}
-                  variant={selectedDrivers.includes(driver) ? "default" : "outline"}
-                  className="cursor-pointer"
-                  onClick={() => toggleDriver(driver)}
-                >
-                  {driver}
-                </Badge>
-              ))}
+          {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Data Sources:</h4>
+              
+              {uploadedFiles.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
+                  <div className="space-y-1">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs">
+                          <FileText className="h-3 w-3 text-blue-600" />
+                          <span className="text-foreground">{file.name}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => {
+                            setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === file.name) {
+                              const remaining = uploadedFiles.filter((_, i) => i !== index);
+                              setSelectedPreview(remaining.length > 0 ? remaining[0].name : null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {foundryObjects.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Foundry Objects</h5>
+                  <div className="space-y-1">
+                    {foundryObjects.map((obj, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs">
+                          <Database className="h-3 w-3 text-green-600" />
+                          <span className="text-foreground">{obj.name}</span>
+                          <Badge variant="secondary" className="text-xs">
+                            {obj.type}
+                          </Badge>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => {
+                            setFoundryObjects(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === obj.name) {
+                              const allSources = [...uploadedFiles.map(f => f.name), ...foundryObjects.filter((_, i) => i !== index).map(o => o.name)];
+                              setSelectedPreview(allSources.length > 0 ? allSources[0] : null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <ExternalDriversSection
+        title="External Drivers"
+        description="External factors that may influence inventory patterns. Toggle AI suggestions on/off and manually select additional drivers."
+        drivers={externalDrivers}
+        selectedDrivers={selectedDrivers}
+        driversLoading={driversLoading}
+        onToggleDriver={toggleDriver}
+        onPreviewDriver={(driverName) => {
+          setSelectedPreview(driverName);
+          setPreviewLoading(true);
+          setTimeout(() => setPreviewLoading(false), 700);
+        }}
+        showManualControls={true}
+      />
+
+      {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
+        <Card className="border border-border bg-muted/30">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-foreground">Preview</h3>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  {uploadedFiles.map((file, index) => (
+                    <Button
+                      key={file.name}
+                      size="sm"
+                      variant={selectedPreview === file.name ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(file.name);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
+                    >
+                      <FileText className="h-3 w-3 mr-1" />
+                      {file.name.split('.')[0]}
+                    </Button>
+                  ))}
+                  {foundryObjects.map((obj, index) => (
+                    <Button
+                      key={obj.name}
+                      size="sm"
+                      variant={selectedPreview === obj.name ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(obj.name);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
+                    >
+                      <Database className="h-3 w-3 mr-1" />
+                      {obj.name.split('_')[0]}
+                    </Button>
+                  ))}
+                  {selectedDrivers.map((driver, index) => (
+                    <Button
+                      key={driver}
+                      size="sm"
+                      variant={selectedPreview === driver ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(driver);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
+                    >
+                      <Zap className="h-3 w-3 mr-1" />
+                      {driver}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="overflow-x-auto">
+            {previewLoading ? (
+              <div className="flex items-center justify-center h-32">
+                <div className="h-8 w-8 rounded-full border-2 border-border border-t-transparent animate-spin" aria-label="Loading preview" />
+              </div>
+            ) : (
+              <>
+                {selectedPreview ? (
+                  <>
+                    <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
+                      {selectedDrivers.includes(selectedPreview) ? (
+                        <Zap className="h-3 w-3" />
+                      ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                        <Database className="h-3 w-3" />
+                      ) : (
+                        <FileText className="h-3 w-3" />
+                      )}
+                      {selectedPreview}
+                    </p>
+                     {selectedDrivers.includes(selectedPreview) ? (
+                      // External driver preview - showing Foundry format data
+                      <div className="space-y-4">
+                        {(() => {
+                          const driverData = getExternalDriverData(selectedPreview || "");
+                          if (!driverData || driverData.length === 0) {
+                            return <p className="text-sm text-muted-foreground">No data available for this driver.</p>;
+                          }
+                          
+                          // Get column headers from first data object
+                          const columns = Object.keys(driverData[0]);
+                          
+                          return (
+                            <div className="grid grid-cols-1 gap-4">
+                              <div>
+                                <h4 className="text-sm font-medium mb-2">Sample Data Points</h4>
+                                <table className="min-w-full text-xs border border-border rounded">
+                                  <thead className="bg-muted text-muted-foreground">
+                                    <tr>
+                                      {columns.map((col) => (
+                                        <th key={col} className="text-left px-3 py-2 capitalize">
+                                          {col.replace(/_/g, ' ')}
+                                        </th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {driverData.slice(0, 3).map((row, idx) => (
+                                      <tr key={idx} className="hover:bg-muted/20">
+                                        {columns.map((col) => (
+                                          <td key={col} className="px-3 py-2">
+                                            {String((row as any)[col])}
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className="text-xs text-muted-foreground space-y-2">
+                                <div><strong>Data Points:</strong> {driverData.length} records</div>
+                                <div><strong>Source:</strong> Foundry Feature Store</div>
+                                <div><strong>Update Frequency:</strong> Real-time</div>
+                                <div><strong>Historical Coverage:</strong> 5+ years</div>
+                                <div><strong>Reliability:</strong> High (99.5% uptime)</div>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                        (() => {
+                          const data = getFoundryObjectData(selectedPreview as string) as any[];
+                          const columns = data.length > 0 ? Object.keys(data[0]) : [];
+                          return (
+                            <table className="min-w-full text-xs border border-border rounded">
+                              <thead className="bg-muted text-muted-foreground">
+                                <tr>
+                                  {columns.map((col) => (
+                                    <th key={col} className="text-left px-3 py-2 capitalize">{col.replace(/_/g, ' ')}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {data.slice(0, 10).map((row, idx) => (
+                                  <tr key={idx} className="hover:bg-muted/20">
+                                    {columns.map((col) => (
+                                      <td key={col} className="px-3 py-2">{String((row as any)[col])}</td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          );
+                        })()
+                      ) : (
+                        <table className="min-w-full text-xs border border-border rounded">
+                          <thead className="bg-muted text-muted-foreground">
+                            <tr>
+                              <th className="text-left px-3 py-2">SKU</th>
+                              <th className="text-left px-3 py-2">Location</th>
+                              <th className="text-left px-3 py-2">On-Hand</th>
+                              <th className="text-left px-3 py-2">On-Order</th>
+                              <th className="text-left px-3 py-2">Lead Time</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {workbookData.map((row, idx) => (
+                              <tr key={idx} className="hover:bg-muted/20">
+                                <td className="px-3 py-2">{row.sku}</td>
+                                <td className="px-3 py-2">{row.location}</td>
+                                <td className="px-3 py-2">
+                                  <Input value={row.onHand.toString()} className="w-16" readOnly />
+                                </td>
+                                <td className="px-3 py-2">
+                                  <Input value={row.onOrder.toString()} className="w-16" readOnly />
+                                </td>
+                                <td className="px-3 py-2">
+                                  <Input value={row.leadTime.toString()} className="w-16" readOnly />
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Select a file or driver to preview.</p>
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
       )}
 
-      {/* Navigation buttons */}
       <div className="flex justify-between pt-4">
-        <div></div>
-        <Button size="sm" onClick={() => handleStepTransition(2)} disabled={uploadedFiles.length === 0 && foundryObjects.length === 0}>
+        <Button size="sm" variant="outline" onClick={() => window.history.back()}>
+          ← Back
+        </Button>
+        <Button size="sm" onClick={() => handleStepTransition(2)}>
           Continue to Data Gaps →
         </Button>
       </div>
 
-      <MapFromFoundryDialog isOpen={isFoundryModalOpen} onClose={() => setIsFoundryModalOpen(false)} onSubmit={handleFoundrySubmit} />
+      <MapFromFoundryDialog
+        isOpen={isFoundryModalOpen}
+        onClose={() => setIsFoundryModalOpen(false)}
+        onSubmit={handleFoundrySubmit}
+      />
     </div>
   );
 
