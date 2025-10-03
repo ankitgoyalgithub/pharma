@@ -470,6 +470,7 @@ const WorkflowBuilder = () => {
     const workflowData = {
       blocks: canvasBlocks.map(block => ({
         id: block.id,
+        canvasId: block.canvasId,  // Include canvasId for connection mapping
         name: block.name,
         color: block.color,
         x: block.x,
@@ -480,6 +481,7 @@ const WorkflowBuilder = () => {
     };
     
     console.log("Running workflow with data:", workflowData);
+    console.log("Connections:", connections);
     toast.success("Starting workflow execution...");
     
     navigate('/workflow-run', { 

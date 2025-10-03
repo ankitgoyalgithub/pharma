@@ -154,27 +154,33 @@ const WorkflowRun = () => {
 
   // Use actual workflow data or generate based on workflow type
   const generateWorkflowData = (workflow) => {
+    console.log("Generating workflow data from:", workflow);
+    
     // If we have actual workflow structure from builder with arrays, use it
-    if (workflow?.blocks && Array.isArray(workflow.blocks) && workflow.blocks.length > 0 &&
-        workflow?.connections && Array.isArray(workflow.connections)) {
+    if (workflow?.blocks && Array.isArray(workflow.blocks) && workflow.blocks.length > 0) {
+      const hasConnections = workflow?.connections && Array.isArray(workflow.connections) && workflow.connections.length > 0;
+      
+      console.log("Using workflow builder data. Blocks:", workflow.blocks.length, "Connections:", hasConnections ? workflow.connections.length : 0);
+      
       return {
         blocks: workflow.blocks.map(block => ({
           id: block.canvasId || block.id,
           name: block.name,
-          type: getBlockType(block.id),
+          type: getBlockType(block.canvasId || block.id),
           color: block.color || 'bg-blue-500',
           x: block.x || 100,
           y: block.y || 80
         })),
-        connections: workflow.connections.map(conn => ({
+        connections: hasConnections ? workflow.connections.map(conn => ({
           id: conn.id,
           from: conn.from,
           to: conn.to
-        }))
+        })) : []
       };
     }
 
     // Fallback to predefined structures based on workflow name
+    console.log("Using predefined workflow structure for:", workflow?.name);
     if (workflow?.name === 'Supply Chain Optimization') {
       return {
         blocks: [
@@ -288,7 +294,8 @@ const WorkflowRun = () => {
 
   // Convert connections to React Flow edges
   const initialEdges = useMemo(() => {
-    return workflowStructure.connections.map((connection) => ({
+    console.log("Creating edges from connections:", workflowStructure.connections);
+    const edges = workflowStructure.connections.map((connection) => ({
       id: connection.id,
       source: connection.from,
       target: connection.to,
@@ -320,6 +327,8 @@ const WorkflowRun = () => {
         fillOpacity: 0.9,
       },
     }));
+    console.log("Created edges:", edges);
+    return edges;
   }, [workflowStructure.connections, isRunning]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
