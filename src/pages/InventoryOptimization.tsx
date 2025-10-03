@@ -1500,9 +1500,10 @@ const InventoryOptimization = () => {
             {activeTab === "policies" && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card>
+                  <Card className="bg-gradient-to-br from-card to-blue-50/10 dark:to-blue-950/10 shadow-lg">
                     <CardHeader>
                       <CardTitle>Reorder Points by ABC Class</CardTitle>
+                      <p className="text-xs text-muted-foreground">Optimal reorder levels across inventory tiers</p>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                       <Bar
@@ -1513,21 +1514,39 @@ const InventoryOptimization = () => {
                               label: "Avg Reorder Point",
                               data: [650, 380, 200],
                               backgroundColor: [
-                                hslVar("--chart-1", 0.6),
-                                hslVar("--chart-2", 0.6),
-                                hslVar("--chart-3", 0.6),
+                                "rgba(59, 130, 246, 0.8)",
+                                "rgba(168, 85, 247, 0.8)",
+                                "rgba(236, 72, 153, 0.8)",
                               ],
+                              borderColor: [
+                                "rgba(59, 130, 246, 1)",
+                                "rgba(168, 85, 247, 1)",
+                                "rgba(236, 72, 153, 1)",
+                              ],
+                              borderWidth: 2,
+                              borderRadius: 8,
                             },
                           ],
                         }}
-                        options={buildChartOptions({})}
+                        options={buildChartOptions({
+                          plugins: {
+                            legend: { display: false },
+                          },
+                          scales: {
+                            y: {
+                              beginAtZero: true,
+                              title: { display: true, text: "Reorder Point (units)" },
+                            },
+                          },
+                        })}
                       />
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className="bg-gradient-to-br from-card to-purple-50/10 dark:to-purple-950/10 shadow-lg">
                     <CardHeader>
                       <CardTitle>Safety Stock Distribution</CardTitle>
+                      <p className="text-xs text-muted-foreground">Buffer inventory allocation by category</p>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                       <Pie
@@ -1537,14 +1556,106 @@ const InventoryOptimization = () => {
                             {
                               data: [45, 35, 20],
                               backgroundColor: [
-                                hslVar("--chart-1", 0.8),
-                                hslVar("--chart-2", 0.8),
-                                hslVar("--chart-3", 0.8),
+                                "rgba(34, 197, 94, 0.8)",
+                                "rgba(251, 191, 36, 0.8)",
+                                "rgba(239, 68, 68, 0.8)",
                               ],
+                              borderColor: [
+                                "rgba(34, 197, 94, 1)",
+                                "rgba(251, 191, 36, 1)",
+                                "rgba(239, 68, 68, 1)",
+                              ],
+                              borderWidth: 2,
                             },
                           ],
                         }}
-                        options={buildChartOptions({})}
+                        options={buildChartOptions({
+                          plugins: {
+                            legend: {
+                              position: "bottom" as const,
+                              labels: {
+                                padding: 15,
+                                font: { size: 12 },
+                              },
+                            },
+                          },
+                        })}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-gradient-to-br from-card to-green-50/10 dark:to-green-950/10 shadow-lg">
+                    <CardHeader>
+                      <CardTitle>Service Level Achievement</CardTitle>
+                      <p className="text-xs text-muted-foreground">Target vs actual service levels</p>
+                    </CardHeader>
+                    <CardContent className="h-[300px]">
+                      <Line
+                        data={{
+                          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+                          datasets: [
+                            {
+                              label: "Target",
+                              data: [95, 95, 95, 95, 95, 95],
+                              borderColor: "rgba(156, 163, 175, 0.8)",
+                              borderDash: [5, 5],
+                              borderWidth: 2,
+                              pointRadius: 0,
+                            },
+                            {
+                              label: "Actual",
+                              data: [93.5, 94.8, 96.2, 97.1, 95.8, 96.5],
+                              borderColor: "rgba(34, 197, 94, 1)",
+                              backgroundColor: "rgba(34, 197, 94, 0.1)",
+                              borderWidth: 3,
+                              fill: true,
+                              tension: 0.4,
+                            },
+                          ],
+                        }}
+                        options={buildChartOptions({
+                          scales: {
+                            y: {
+                              beginAtZero: false,
+                              min: 90,
+                              max: 100,
+                              title: { display: true, text: "Service Level (%)" },
+                            },
+                          },
+                        })}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-gradient-to-br from-card to-amber-50/10 dark:to-amber-950/10 shadow-lg">
+                    <CardHeader>
+                      <CardTitle>Order Frequency Analysis</CardTitle>
+                      <p className="text-xs text-muted-foreground">Replenishment cycle patterns</p>
+                    </CardHeader>
+                    <CardContent className="h-[300px]">
+                      <Bar
+                        data={{
+                          labels: ["Weekly", "Bi-Weekly", "Monthly", "Quarterly"],
+                          datasets: [
+                            {
+                              label: "Number of SKUs",
+                              data: [28, 35, 15, 4],
+                              backgroundColor: [
+                                "rgba(14, 165, 233, 0.8)",
+                                "rgba(99, 102, 241, 0.8)",
+                                "rgba(168, 85, 247, 0.8)",
+                                "rgba(236, 72, 153, 0.8)",
+                              ],
+                              borderRadius: 8,
+                            },
+                          ],
+                        }}
+                        options={buildChartOptions({
+                          plugins: { legend: { display: false } },
+                          scales: {
+                            y: { beginAtZero: true, title: { display: true, text: "SKU Count" } },
+                          },
+                        })}
                       />
                     </CardContent>
                   </Card>
@@ -1589,73 +1700,372 @@ const InventoryOptimization = () => {
             )}
 
             {activeTab === "workbook" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Policy Workbook</CardTitle>
-                </CardHeader>
-                <CardContent className="overflow-x-auto">
-                  <table className="min-w-full text-sm border border-border rounded">
-                    <thead className="bg-muted text-muted-foreground">
-                      <tr>
-                        <th className="text-left px-3 py-2">SKU</th>
-                        <th className="text-left px-3 py-2">ABC</th>
-                        <th className="text-left px-3 py-2">Service Level</th>
-                        <th className="text-left px-3 py-2">Reorder Point</th>
-                        <th className="text-left px-3 py-2">Safety Stock</th>
-                        <th className="text-left px-3 py-2">Order Qty</th>
-                        <th className="text-left px-3 py-2">Policy</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {policyRows.map((r, idx) => (
-                        <tr key={idx} className="hover:bg-muted/20">
-                          <td className="px-3 py-2">{r.sku}</td>
-                          <td className="px-3 py-2">{r.abc}</td>
-                          <td className="px-3 py-2">{r.service}%</td>
-                          <td className="px-3 py-2">{r.reorderPoint}</td>
-                          <td className="px-3 py-2">{r.safetyStock}</td>
-                          <td className="px-3 py-2">{r.orderQty}</td>
-                          <td className="px-3 py-2">{r.policy}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </CardContent>
-              </Card>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">Policy Workbook</h3>
+                    <p className="text-sm text-muted-foreground">Interactive planning table with AI-recommended policies</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">
+                      <Download className="w-4 h-4 mr-2" />
+                      Export
+                    </Button>
+                    <Button size="sm">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Submit for Approval
+                    </Button>
+                  </div>
+                </div>
+
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full text-sm">
+                        <thead className="bg-gradient-to-r from-primary/5 to-primary/10 sticky top-0 z-10">
+                          <tr>
+                            <th className="text-left px-3 py-3 font-semibold">
+                              <div className="flex items-center gap-1">
+                                SKU
+                                <Info className="w-3 h-3 text-muted-foreground" />
+                              </div>
+                            </th>
+                            <th className="text-left px-3 py-3 font-semibold">ABC</th>
+                            <th className="text-left px-3 py-3 font-semibold">
+                              <div className="flex items-center gap-1">
+                                AI Recommended
+                                <Badge variant="secondary" className="ml-1 text-xs bg-primary/10 text-primary">AI</Badge>
+                              </div>
+                            </th>
+                            <th className="text-left px-3 py-3 font-semibold">
+                              <div className="flex items-center gap-1">
+                                Planner Override
+                                <Badge variant="secondary" className="ml-1 text-xs bg-warning/10 text-warning">Manual</Badge>
+                              </div>
+                            </th>
+                            <th className="text-left px-3 py-3 font-semibold">Service Level %</th>
+                            <th className="text-left px-3 py-3 font-semibold">Reorder Point</th>
+                            <th className="text-left px-3 py-3 font-semibold">Safety Stock</th>
+                            <th className="text-left px-3 py-3 font-semibold">Order Qty</th>
+                            <th className="text-left px-3 py-3 font-semibold">Policy Type</th>
+                            <th className="text-left px-3 py-3 font-semibold">Status</th>
+                            <th className="text-left px-3 py-3 font-semibold">Notes</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {policyRows.map((r, idx) => (
+                            <tr key={idx} className="hover:bg-muted/30 border-b border-border transition-colors">
+                              <td className="px-3 py-3 font-medium">{r.sku}</td>
+                              <td className="px-3 py-3">
+                                <Badge
+                                  variant="secondary"
+                                  className={
+                                    r.abc === "A"
+                                      ? "bg-success/10 text-success"
+                                      : r.abc === "B"
+                                      ? "bg-warning/10 text-warning"
+                                      : "bg-muted text-muted-foreground"
+                                  }
+                                >
+                                  {r.abc}
+                                </Badge>
+                              </td>
+                              <td className="px-3 py-3">
+                                <div className="flex items-center gap-2">
+                                  <CheckCircle className="w-4 h-4 text-success" />
+                                  <span className="text-xs text-success font-medium">Accepted</span>
+                                </div>
+                              </td>
+                              <td className="px-3 py-3">
+                                <Select defaultValue="none">
+                                  <SelectTrigger className="w-32 h-8">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="none">No Override</SelectItem>
+                                    <SelectItem value="increase">Increase +10%</SelectItem>
+                                    <SelectItem value="decrease">Decrease -10%</SelectItem>
+                                    <SelectItem value="custom">Custom Value</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </td>
+                              <td className="px-3 py-3">
+                                <Input type="number" value={r.service} className="w-20 h-8" />
+                              </td>
+                              <td className="px-3 py-3">
+                                <Input type="number" value={r.reorderPoint} className="w-24 h-8" />
+                              </td>
+                              <td className="px-3 py-3">
+                                <Input type="number" value={r.safetyStock} className="w-24 h-8" />
+                              </td>
+                              <td className="px-3 py-3">
+                                <Input type="number" value={r.orderQty} className="w-24 h-8" />
+                              </td>
+                              <td className="px-3 py-3">
+                                <Select defaultValue={r.policy.split(" ")[0].toLowerCase()}>
+                                  <SelectTrigger className="w-32 h-8">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="min/max">Min/Max</SelectItem>
+                                    <SelectItem value="eoq">EOQ</SelectItem>
+                                    <SelectItem value="review-period">Review Period</SelectItem>
+                                    <SelectItem value="(s,s)">(s, S) Policy</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </td>
+                              <td className="px-3 py-3">
+                                <Badge variant="secondary" className="bg-info/10 text-info">
+                                  Pending Review
+                                </Badge>
+                              </td>
+                              <td className="px-3 py-3">
+                                <Textarea placeholder="Add notes..." className="w-40 h-8 text-xs resize-none" />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="bg-success/5 border-success/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-success/10 rounded-lg">
+                          <CheckCircle className="w-5 h-5 text-success" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-success">{policyRows.length}</div>
+                          <div className="text-xs text-muted-foreground">AI Recommendations Accepted</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-warning/5 border-warning/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-warning/10 rounded-lg">
+                          <AlertCircle className="w-5 h-5 text-warning" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-warning">0</div>
+                          <div className="text-xs text-muted-foreground">Manual Overrides Pending</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-primary/5 border-primary/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Target className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-primary">96.5%</div>
+                          <div className="text-xs text-muted-foreground">Avg Service Level Target</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             )}
 
             {activeTab === "quality" && (
               <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Card className="bg-gradient-to-br from-success/10 to-success/5 border-success/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-success/10 rounded-lg">
+                          <CheckCircle className="w-5 h-5 text-success" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-foreground">98.1%</div>
+                          <div className="text-xs text-muted-foreground">Completeness</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-gradient-to-br from-info/10 to-info/5 border-info/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-info/10 rounded-lg">
+                          <Zap className="w-5 h-5 text-info" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-foreground">2</div>
+                          <div className="text-xs text-muted-foreground">AI Imputations</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-warning/10 rounded-lg">
+                          <AlertTriangle className="w-5 h-5 text-warning" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-foreground">0</div>
+                          <div className="text-xs text-muted-foreground">Duplicates</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Shield className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-foreground">A+</div>
+                          <div className="text-xs text-muted-foreground">Quality Grade</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Data Quality Score by Dimension</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-[300px]">
+                      <Bar
+                        data={{
+                          labels: ["Accuracy", "Completeness", "Consistency", "Timeliness", "Validity"],
+                          datasets: [
+                            {
+                              label: "Quality Score",
+                              data: [96, 98, 94, 99, 97],
+                              backgroundColor: [
+                                "rgba(34, 197, 94, 0.8)",
+                                "rgba(59, 130, 246, 0.8)",
+                                "rgba(168, 85, 247, 0.8)",
+                                "rgba(251, 191, 36, 0.8)",
+                                "rgba(236, 72, 153, 0.8)",
+                              ],
+                              borderRadius: 8,
+                            },
+                          ],
+                        }}
+                        options={buildChartOptions({
+                          indexAxis: "y" as const,
+                          plugins: { legend: { display: false } },
+                          scales: {
+                            x: { beginAtZero: true, max: 100, title: { display: true, text: "Score (%)" } },
+                          },
+                        })}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Validation Rules Applied</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3 p-3 bg-success/5 border border-success/10 rounded-lg">
+                          <CheckCircle className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <div className="text-sm font-medium text-foreground">Lead Time Range Check</div>
+                            <div className="text-xs text-muted-foreground mt-1">All values within 0-60 days ✓</div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3 p-3 bg-success/5 border border-success/10 rounded-lg">
+                          <CheckCircle className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <div className="text-sm font-medium text-foreground">Demand Non-Negativity</div>
+                            <div className="text-xs text-muted-foreground mt-1">No negative demand values ✓</div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3 p-3 bg-success/5 border border-success/10 rounded-lg">
+                          <CheckCircle className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <div className="text-sm font-medium text-foreground">SKU Master Integrity</div>
+                            <div className="text-xs text-muted-foreground mt-1">All SKUs match master data ✓</div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3 p-3 bg-info/5 border border-info/10 rounded-lg">
+                          <Info className="w-5 h-5 text-info flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <div className="text-sm font-medium text-foreground">Statistical Outliers</div>
+                            <div className="text-xs text-muted-foreground mt-1">4 outliers detected, flagged for review</div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
                 <Card>
                   <CardHeader>
-                    <CardTitle>Data Quality Metrics</CardTitle>
+                    <CardTitle>AI Data Enhancement Details</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Completeness Score</span>
-                        <Badge variant="secondary" className="bg-success/10 text-success">
-                          98.1%
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Missing Values</span>
-                        <Badge variant="secondary" className="bg-info/10 text-info">
-                          2 imputed
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Duplicate Records</span>
-                        <Badge variant="secondary" className="bg-warning/10 text-warning">
-                          0 found
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">AI Enhancements</span>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary">
-                          3 applied
-                        </Badge>
-                      </div>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full text-sm">
+                        <thead className="bg-muted">
+                          <tr>
+                            <th className="text-left px-3 py-2">Field</th>
+                            <th className="text-left px-3 py-2">Issue Type</th>
+                            <th className="text-left px-3 py-2">Records Affected</th>
+                            <th className="text-left px-3 py-2">AI Action</th>
+                            <th className="text-left px-3 py-2">Confidence</th>
+                            <th className="text-left px-3 py-2">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="hover:bg-muted/20 border-b">
+                            <td className="px-3 py-3">Lead Time</td>
+                            <td className="px-3 py-3">Missing Value</td>
+                            <td className="px-3 py-3">1</td>
+                            <td className="px-3 py-3">Imputed from similar SKUs (avg: 12 days)</td>
+                            <td className="px-3 py-3">
+                              <Badge variant="secondary" className="bg-success/10 text-success">94%</Badge>
+                            </td>
+                            <td className="px-3 py-3">
+                              <Badge variant="secondary" className="bg-success/10 text-success">Applied</Badge>
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-muted/20 border-b">
+                            <td className="px-3 py-3">On-Order Qty</td>
+                            <td className="px-3 py-3">Missing Value</td>
+                            <td className="px-3 py-3">1</td>
+                            <td className="px-3 py-3">Set to 0 (no pending orders detected)</td>
+                            <td className="px-3 py-3">
+                              <Badge variant="secondary" className="bg-success/10 text-success">99%</Badge>
+                            </td>
+                            <td className="px-3 py-3">
+                              <Badge variant="secondary" className="bg-success/10 text-success">Applied</Badge>
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-muted/20">
+                            <td className="px-3 py-3">Demand Std Dev</td>
+                            <td className="px-3 py-3">Outlier Detection</td>
+                            <td className="px-3 py-3">4</td>
+                            <td className="px-3 py-3">Capped at 3σ threshold for stability</td>
+                            <td className="px-3 py-3">
+                              <Badge variant="secondary" className="bg-warning/10 text-warning">87%</Badge>
+                            </td>
+                            <td className="px-3 py-3">
+                              <Badge variant="secondary" className="bg-info/10 text-info">Pending Review</Badge>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </CardContent>
                 </Card>
