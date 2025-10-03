@@ -67,6 +67,7 @@ import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 import { InventoryAnalysisChart } from "@/components/InventoryAnalysisChart";
 import { InventoryScenarioCreation } from "@/components/InventoryScenarioCreation";
 import { getFoundryObjectData } from "@/data/foundry";
+import { NetworkDiagram } from "@/components/NetworkDiagram";
 
 // ---- Chart.js imports ----
 import {
@@ -106,73 +107,8 @@ const sampleAiResponses = [
   "Inventory turnover rate is below target. Consider implementing more frequent reviews for slow-moving SKUs.",
 ];
 
-// Network Diagram Components
+// Network Diagram Types
 type EchelonMode = "single" | "multi";
-
-const Node: React.FC<{ x: number; y: number; label: string; kind: "plant" | "dc" | "store" }> = ({ x, y, label, kind }) => {
-  const color = kind === "plant" ? "#22c55e" : kind === "dc" ? "#3b82f6" : "#f59e0b";
-  return (
-    <g>
-      <rect x={x - 48} y={y - 18} rx="10" ry="10" width="96" height="36" fill={color} opacity="0.9" />
-      <text x={x} y={y + 4} textAnchor="middle" fontSize="12" fill="#ffffff">
-        {label}
-      </text>
-    </g>
-  );
-};
-
-const Arrow: React.FC<{ x1: number; y1: number; x2: number; y2: number }> = ({ x1, y1, x2, y2 }) => {
-  const dx = x2 - x1,
-    dy = y2 - y1;
-  const len = Math.sqrt(dx * dx + dy * dy);
-  const ux = dx / len,
-    uy = dy / len;
-  const ax = x2 - ux * 12,
-    ay = y2 - uy * 12;
-  return (
-    <g>
-      <line x1={x1} y1={y1} x2={x2 - ux * 12} y2={y2 - uy * 12} stroke="#94a3b8" strokeWidth="2" />
-      <polygon points={`${ax},${ay} ${ax - uy * 6},${ay + ux * 6} ${ax + uy * 6},${ay - ux * 6}`} fill="#94a3b8" />
-    </g>
-  );
-};
-
-const NetworkDiagram: React.FC<{ mode: EchelonMode }> = ({ mode }) => {
-  return (
-    <div className="w-full h-[280px] bg-muted rounded-lg border flex items-center justify-center">
-      <svg viewBox="0 0 800 240" className="w-full h-full">
-        {mode === "single" && (
-          <>
-            <Node x={120} y={120} label="Plant" kind="plant" />
-            <Node x={420} y={60} label="Store A" kind="store" />
-            <Node x={420} y={120} label="Store B" kind="store" />
-            <Node x={420} y={180} label="Store C" kind="store" />
-            <Arrow x1={168} y1={120} x2={372} y2={60} />
-            <Arrow x1={168} y1={120} x2={372} y2={120} />
-            <Arrow x1={168} y1={120} x2={372} y2={180} />
-          </>
-        )}
-        {mode === "multi" && (
-          <>
-            <Node x={120} y={120} label="Plant" kind="plant" />
-            <Node x={360} y={80} label="DC North" kind="dc" />
-            <Node x={360} y={160} label="DC South" kind="dc" />
-            <Node x={620} y={40} label="Store A" kind="store" />
-            <Node x={620} y={100} label="Store B" kind="store" />
-            <Node x={620} y={160} label="Store C" kind="store" />
-            <Node x={620} y={220} label="Store D" kind="store" />
-            <Arrow x1={168} y1={120} x2={312} y2={80} />
-            <Arrow x1={168} y1={120} x2={312} y2={160} />
-            <Arrow x1={408} y1={80} x2={572} y2={40} />
-            <Arrow x1={408} y1={80} x2={572} y2={100} />
-            <Arrow x1={408} y1={160} x2={572} y2={160} />
-            <Arrow x1={408} y1={160} x2={572} y2={220} />
-          </>
-        )}
-      </svg>
-    </div>
-  );
-};
 
 const InventoryOptimization = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -231,6 +167,7 @@ const InventoryOptimization = () => {
   const [orderingCost, setOrderingCost] = useState<number>(1500);
   const [leadTimeMode, setLeadTimeMode] = useState<"static" | "variable">("variable");
   const [echelonMode, setEchelonMode] = useState<EchelonMode>("single");
+  const [solver, setSolver] = useState<string>("gurobi");
 
   const handleFoundrySubmit = (data: {
     selectedObjects: string[];
@@ -1072,7 +1009,7 @@ const InventoryOptimization = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Policy Targets</CardTitle>
+            <CardTitle className="text-base">Planning Inputs</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="space-y-1">
@@ -1096,6 +1033,21 @@ const InventoryOptimization = () => {
                 <SelectContent>
                   <SelectItem value="static">Static</SelectItem>
                   <SelectItem value="variable">Variable (Probabilistic)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm text-muted-foreground">Solver</label>
+              <Select value={solver} onValueChange={setSolver}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose solver" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="gurobi">Gurobi</SelectItem>
+                  <SelectItem value="cplex">CPLEX</SelectItem>
+                  <SelectItem value="cbc">CBC</SelectItem>
+                  <SelectItem value="glpk">GLPK</SelectItem>
+                  <SelectItem value="scip">SCIP</SelectItem>
                 </SelectContent>
               </Select>
             </div>
