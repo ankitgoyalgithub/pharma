@@ -1831,15 +1831,19 @@ const InventoryOptimization = () => {
   };
 
   return (
-    <>
-      {isLoading ? (
-        <div className="flex items-center justify-center min-h-screen">
-          <ScientificLoader />
+    <TooltipProvider>
+      <div className="min-h-screen bg-gradient-subtle">
+        <div className="px-4 py-6">
+          {renderStep()}
         </div>
-      ) : (
-        renderStep()
-      )}
-    </>
+        {isLoading && (
+          <ScientificLoader 
+            message={`Processing Step ${currentStep + 1}...`}
+            size="lg"
+          />
+        )}
+      </div>
+    </TooltipProvider>
   );
 };
 
