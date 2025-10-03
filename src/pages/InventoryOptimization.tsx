@@ -43,6 +43,7 @@ import {
   MessageCircle,
   Filter,
   TrendingDown,
+  Settings,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -849,15 +850,16 @@ const InventoryOptimization = () => {
 
   // Step 2 - Data Gaps
   const renderStep2 = () => (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 pt-10 px-0 pb-0">
+      <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold text-foreground mb-1">Data Gaps & Quality Check</h2>
-          <p className="text-sm text-muted-foreground">AI-detected issues and suggested corrections</p>
+          <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
+          <p className="text-sm text-muted-foreground">AI detected missing data and suggested imputed values.</p>
         </div>
-        <Badge variant="secondary" className="bg-warning/10 text-warning">
-          {gapData.reduce((acc, g) => acc + g.issues, 0)} issues detected
-        </Badge>
+        <Button size="sm" variant="outline" onClick={() => setShowImputedReview(true)}>
+          <Settings className="w-4 h-4 mr-2" />
+          Auto Fix with AI
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
