@@ -147,7 +147,7 @@ const WorkflowRun = () => {
   // Use actual workflow data or generate based on workflow type
   const generateWorkflowData = (workflow) => {
     // If we have actual workflow structure from builder, use it
-    if (workflow?.blocks && workflow?.connections) {
+    if (workflow?.blocks && Array.isArray(workflow.blocks) && workflow?.connections && Array.isArray(workflow.connections)) {
       return {
         blocks: workflow.blocks.map(block => ({
           id: block.canvasId || block.id,
