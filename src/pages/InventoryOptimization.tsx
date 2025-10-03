@@ -44,6 +44,8 @@ import {
   Filter,
   TrendingDown,
   Settings,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -862,27 +864,89 @@ const InventoryOptimization = () => {
         </Button>
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-success/20 to-transparent rounded-bl-full" />
+          <CardContent className="p-4 relative">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="w-4 h-4 text-success" />
+              <span className="text-xs font-medium text-success">Complete</span>
+            </div>
+            <div className="text-2xl font-bold text-foreground mb-1">85%</div>
+            <div className="text-xs text-muted-foreground">Data Completeness</div>
+          </CardContent>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-warning/20 to-transparent rounded-bl-full" />
+          <CardContent className="p-4 relative">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="w-4 h-4 text-warning" />
+              <span className="text-xs font-medium text-warning">Missing</span>
+            </div>
+            <div className="text-2xl font-bold text-foreground mb-1">12</div>
+            <div className="text-xs text-muted-foreground">Lead Time Gaps</div>
+          </CardContent>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-gradient-to-br from-info/10 to-info/5 border-info/20 hover:shadow-lg transition-shadow">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-info/20 to-transparent rounded-bl-full" />
+          <CardContent className="p-4 relative">
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="w-4 h-4 text-info" />
+              <span className="text-xs font-medium text-info">Auto-fixed</span>
+            </div>
+            <div className="text-2xl font-bold text-foreground mb-1">8</div>
+            <div className="text-xs text-muted-foreground">AI Corrections</div>
+          </CardContent>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-destructive/20 to-transparent rounded-bl-full" />
+          <CardContent className="p-4 relative">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="w-4 h-4 text-destructive" />
+              <span className="text-xs font-medium text-destructive">Critical</span>
+            </div>
+            <div className="text-2xl font-bold text-foreground mb-1">4</div>
+            <div className="text-xs text-muted-foreground">Requires Review</div>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Inventory Insights</CardTitle>
+            <CardTitle className="text-base">Critical Data Gaps</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="flex justify-between items-center p-3 bg-success/10 rounded-lg">
-              <span className="text-sm">Products Analyzed</span>
-              <span className="font-bold text-lg">82</span>
+            <div className="flex items-start gap-3 p-3 bg-destructive/5 border border-destructive/10 rounded-lg">
+              <AlertTriangle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="text-sm font-medium text-foreground">Missing Lead Time Data</div>
+                <div className="text-xs text-muted-foreground mt-1">12 SKUs lack supplier lead time information</div>
+              </div>
             </div>
-            <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg">
-              <span className="text-sm">Locations Covered</span>
-              <span className="font-bold text-lg">5</span>
+            <div className="flex items-start gap-3 p-3 bg-warning/5 border border-warning/10 rounded-lg">
+              <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="text-sm font-medium text-foreground">Incomplete Demand History</div>
+                <div className="text-xs text-muted-foreground mt-1">8 products with less than 6 months data</div>
+              </div>
             </div>
-            <div className="flex justify-between items-center p-3 bg-warning/10 rounded-lg">
-              <span className="text-sm">Avg Fill Rate</span>
-              <span className="font-bold text-lg">94.2%</span>
+            <div className="flex items-start gap-3 p-3 bg-warning/5 border border-warning/10 rounded-lg">
+              <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="text-sm font-medium text-foreground">Missing Cost Parameters</div>
+                <div className="text-xs text-muted-foreground mt-1">Holding & ordering costs undefined for 15 SKUs</div>
+              </div>
             </div>
-            <div className="flex justify-between items-center p-3 bg-info/10 rounded-lg">
-              <span className="text-sm">Total Inventory Value</span>
-              <span className="font-bold text-lg">₹4.2Cr</span>
+            <div className="flex items-start gap-3 p-3 bg-info/5 border border-info/10 rounded-lg">
+              <Info className="w-5 h-5 text-info flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="text-sm font-medium text-foreground">ABC Classification Gaps</div>
+                <div className="text-xs text-muted-foreground mt-1">6 items need ABC category assignment</div>
+              </div>
             </div>
           </CardContent>
         </Card>
