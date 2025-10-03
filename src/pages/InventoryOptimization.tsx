@@ -948,6 +948,7 @@ const InventoryOptimization = () => {
                   <th className="text-left px-3 py-2">Field</th>
                   <th className="text-left px-3 py-2">Original</th>
                   <th className="text-left px-3 py-2">AI Imputed</th>
+                  <th className="text-left px-3 py-2">Manual Override</th>
                 </tr>
               </thead>
               <tbody>
@@ -960,7 +961,10 @@ const InventoryOptimization = () => {
                     <td className="px-3 py-2">{row.field}</td>
                     <td className="px-3 py-2 text-red-700">{row.original || "Missing"}</td>
                     <td className="px-3 py-2">
-                      <Input className="w-24" value={row.imputed.toString()} />
+                      <Input className="w-24" value={row.imputed.toString()} disabled />
+                    </td>
+                    <td className="px-3 py-2">
+                      <Input className="w-24" placeholder="Override" />
                     </td>
                   </tr>
                 ))}
