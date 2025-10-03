@@ -595,7 +595,7 @@ const InventoryOptimization = () => {
         </Button>
       </div>
 
-      <MapFromFoundryDialog isOpen={isFoundryModalOpen} onClose={() => setIsFoundryModalOpen(false)} onSubmit={handleFoundrySubmit} contextModule="inventory-optimization" />
+      <MapFromFoundryDialog isOpen={isFoundryModalOpen} onClose={() => setIsFoundryModalOpen(false)} onSubmit={handleFoundrySubmit} />
     </div>
   );
 
