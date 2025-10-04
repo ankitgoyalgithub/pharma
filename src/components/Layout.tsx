@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TopbarStepper } from "@/components/ModernStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
 
@@ -96,40 +97,90 @@ export const Layout = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2">
-          {navigation.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.href}
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                  "hover:bg-secondary hover:text-foreground",
-                  isActive 
-                    ? "bg-primary text-primary-foreground shadow-sm" 
-                    : "text-muted-foreground"
-                )
+        <TooltipProvider delayDuration={0}>
+          <nav className="p-4 space-y-2">
+            {navigation.map((item) => {
+              const navLink = (
+                <NavLink
+                  key={item.name}
+                  to={item.href}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                      "hover:bg-secondary hover:text-foreground hover:scale-105",
+                      isActive 
+                        ? "bg-gradient-primary text-primary-foreground shadow-glow" 
+                        : "text-muted-foreground"
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <item.icon 
+                        className={cn(
+                          sidebarCollapsed ? "h-7 w-7 mx-auto" : "h-5 w-5 mr-3",
+                          "transition-all duration-200"
+                        )} 
+                        style={
+                          isActive && sidebarCollapsed
+                            ? { filter: 'drop-shadow(0 0 8px hsl(var(--primary-glow)))' }
+                            : {}
+                        }
+                      />
+                      {!sidebarCollapsed && <span>{item.name}</span>}
+                    </>
+                  )}
+                </NavLink>
+              );
+
+              if (sidebarCollapsed) {
+                return (
+                  <Tooltip key={item.name}>
+                    <TooltipTrigger asChild>
+                      <div>
+                        {navLink}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="font-medium">
+                      {item.name}
+                    </TooltipContent>
+                  </Tooltip>
+                );
               }
-            >
-              <item.icon className={cn("h-5 w-5", sidebarCollapsed ? "mx-auto" : "mr-3")} />
-              {!sidebarCollapsed && <span>{item.name}</span>}
-            </NavLink>
-          ))}
-        </nav>
+
+              return navLink;
+            })}
+          </nav>
+        </TooltipProvider>
 
         {/* Theme switcher at bottom */}
         <div className="absolute bottom-4 left-4 right-4">
-          <Button
-            variant="ghost"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className={cn(
-              "w-full justify-start hover:bg-secondary hover:text-foreground",
-              sidebarCollapsed && "justify-center px-0"
-            )}
-          >
-            {theme === "dark" ? <Sun className={cn("h-4 w-4", !sidebarCollapsed && "mr-2")} /> : <Moon className={cn("h-4 w-4", !sidebarCollapsed && "mr-2")} />}
-            {!sidebarCollapsed && <span>Toggle Theme</span>}
-          </Button>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className={cn(
+                    "w-full justify-start hover:bg-secondary hover:text-foreground transition-all duration-200",
+                    sidebarCollapsed && "justify-center px-0"
+                  )}
+                >
+                  {theme === "dark" ? (
+                    <Sun className={cn(sidebarCollapsed ? "h-6 w-6" : "h-4 w-4", !sidebarCollapsed && "mr-2")} />
+                  ) : (
+                    <Moon className={cn(sidebarCollapsed ? "h-6 w-6" : "h-4 w-4", !sidebarCollapsed && "mr-2")} />
+                  )}
+                  {!sidebarCollapsed && <span>Toggle Theme</span>}
+                </Button>
+              </TooltipTrigger>
+              {sidebarCollapsed && (
+                <TooltipContent side="right" className="font-medium">
+                  Toggle Theme
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
