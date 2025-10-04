@@ -288,8 +288,8 @@ export const Layout = () => {
           </div>
         </div>
         
-        {/* Main content area with margin for fixed header */}
-        <div className="mt-16">
+        {/* Main content area with padding for fixed header */}
+        <div className="pt-16">
           <Outlet />
         </div>
       </div>
