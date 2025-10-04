@@ -17,7 +17,8 @@ import {
   CreditCard,
   ChevronDown,
   Bell,
-  Clock
+  Clock,
+  BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -32,6 +33,7 @@ const navigation = [
   { name: "Study", href: "/study", icon: LayoutDashboard },
   { name: "Foundry", href: "/foundry", icon: Database },
   { name: "Workflows", href: "/workflows", icon: Wrench },
+  { name: "Reports", href: "/reports", icon: BarChart3 },
   { name: "Build", href: "/build", icon: Settings },
   { name: "Jobs", href: "/jobs", icon: Clock },
 ];
