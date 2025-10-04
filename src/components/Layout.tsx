@@ -107,26 +107,34 @@ export const Layout = () => {
                   className={({ isActive }) =>
                     cn(
                       "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                      "hover:bg-secondary hover:text-foreground hover:scale-105",
-                      isActive 
+                      "hover:bg-secondary/50 hover:scale-105",
+                      isActive && !sidebarCollapsed
                         ? "bg-gradient-primary text-primary-foreground shadow-glow" 
-                        : "text-muted-foreground"
+                        : "",
+                      sidebarCollapsed && "justify-center"
                     )
                   }
                 >
                   {({ isActive }) => (
                     <>
-                      <item.icon 
-                        className={cn(
-                          sidebarCollapsed ? "h-7 w-7 mx-auto" : "h-5 w-5 mr-3",
-                          "transition-all duration-200"
-                        )} 
-                        style={
-                          isActive && sidebarCollapsed
-                            ? { filter: 'drop-shadow(0 0 8px hsl(var(--primary-glow)))' }
-                            : {}
-                        }
-                      />
+                      <div className={cn(
+                        "relative",
+                        sidebarCollapsed && "p-2 rounded-lg",
+                        isActive && sidebarCollapsed && "bg-gradient-primary shadow-glow"
+                      )}>
+                        <item.icon 
+                          className={cn(
+                            sidebarCollapsed ? "h-6 w-6" : "h-5 w-5 mr-3",
+                            "transition-all duration-200",
+                            isActive && sidebarCollapsed ? "text-primary-foreground" : isActive ? "text-primary-foreground" : "text-muted-foreground"
+                          )} 
+                          style={
+                            isActive && sidebarCollapsed
+                              ? { filter: 'drop-shadow(0 0 6px hsl(var(--primary-glow)))' }
+                              : {}
+                          }
+                        />
+                      </div>
                       {!sidebarCollapsed && <span>{item.name}</span>}
                     </>
                   )}
