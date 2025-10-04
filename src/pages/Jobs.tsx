@@ -133,31 +133,33 @@ const JobsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b border-border bg-card">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                Jobs
+              </h1>
+              <p className="text-muted-foreground mt-2">Monitor and manage all application jobs</p>
+            </div>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
               onClick={() => navigate(-1)}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
             </Button>
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-                Jobs
-              </h1>
-              <p className="text-muted-foreground">Monitor and manage all application jobs</p>
-            </div>
           </div>
         </div>
+      </div>
 
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
         {/* Search and filters */}
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input

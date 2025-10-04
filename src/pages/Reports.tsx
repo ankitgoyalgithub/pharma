@@ -104,25 +104,26 @@ const Reports = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-secondary/20 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-              Reports & Analytics
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Create and manage embedded Metabase reports and dashboards
-            </p>
-          </div>
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Create Report
-              </Button>
-            </DialogTrigger>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b border-border bg-card">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                Reports & Analytics
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Create and manage embedded Metabase reports and dashboards
+              </p>
+            </div>
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Create Report
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>Create New Report</DialogTitle>
@@ -199,8 +200,12 @@ const Reports = () => {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
+      </div>
 
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-6">
         <Tabs defaultValue="gallery" className="space-y-6">
           <TabsList>
             <TabsTrigger value="gallery">Reports Gallery</TabsTrigger>

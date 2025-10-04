@@ -289,17 +289,23 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background/50">
-      <div className="p-6 space-y-6">
-        {/* Modern Header Section */}
-        <div className="space-y-3">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-            Select your Study
-          </h1>
-          <p className="text-muted-foreground text-base max-w-4xl leading-relaxed">
-            All studies are powered by AI Insight Engine. Just add your data - our models handle the rest. No coding or configuration required ⚡
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b border-border bg-card">
+        <div className="px-6 py-6">
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+              Select your Study
+            </h1>
+            <p className="text-muted-foreground mt-2 text-base max-w-4xl leading-relaxed">
+              All studies are powered by AI Insight Engine. Just add your data - our models handle the rest. No coding or configuration required ⚡
+            </p>
+          </div>
         </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="p-6 space-y-6">
 
         {/* Modern Tabs and Search */}
         <div className="flex items-center justify-between">
