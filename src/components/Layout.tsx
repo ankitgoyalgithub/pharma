@@ -289,7 +289,7 @@ export const Layout = () => {
         </div>
         
         {/* Main content area with padding for fixed header */}
-        <div className="pt-20 min-h-screen">
+        <div className="pt-16">
           <Outlet />
         </div>
       </div>
