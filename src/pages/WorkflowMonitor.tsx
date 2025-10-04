@@ -109,7 +109,9 @@ const WorkflowMonitor = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Workflow Monitor</h1>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+              Workflow Monitor
+            </h1>
             <p className="text-muted-foreground">Track Workflow Runs</p>
           </div>
           <Button className="bg-gradient-primary hover:bg-gradient-primary/90">

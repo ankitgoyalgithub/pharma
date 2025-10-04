@@ -454,7 +454,9 @@ export default function AddLookupPage() {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Add Lookup Relations</h1>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+            Add Lookup Relations
+          </h1>
           <p className="text-muted-foreground mt-1">
             Connect entities with referential integrity by creating field-level lookups.
           </p>

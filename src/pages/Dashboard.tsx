@@ -293,7 +293,9 @@ export default function Dashboard() {
       <div className="p-6 space-y-6">
         {/* Modern Header Section */}
         <div className="space-y-3">
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">Select your Study</h1>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+            Select your Study
+          </h1>
           <p className="text-muted-foreground text-base max-w-4xl leading-relaxed">
             All studies are powered by AI Insight Engine. Just add your data - our models handle the rest. No coding or configuration required ⚡
           </p>

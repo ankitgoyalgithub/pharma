@@ -1149,7 +1149,9 @@ export default function Foundry() {
         <div className="border-b border-border bg-card">
           <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Data Health Dashboard</h1>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                Data Health Dashboard
+              </h1>
               <p className="text-muted-foreground mt-1">Comprehensive insights into data quality, freshness and stability across all entities.</p>
             </div>
             <div className="flex gap-3">
@@ -1502,7 +1504,9 @@ export default function Foundry() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Entity</h1>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                Entity
+              </h1>
               <p className="text-muted-foreground mt-1">
                 These Master and Time Series entities fuel AI models. You can preview, sync, or append them below.
               </p>

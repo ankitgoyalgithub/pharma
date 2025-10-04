@@ -265,7 +265,9 @@ const Analytics: React.FC = () => {
         <div className="container mx-auto px-6 py-16 md:py-24 max-w-5xl">
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-foreground mb-3">Welcome to SynQ Assistant</h1>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent mb-3">
+                Welcome to SynQ Assistant
+              </h1>
               <p className="text-sm text-muted-foreground">
                 Drop files, or ask anything about your data. I’ll respond like ChatGPT with text, tables, charts, or images.
               </p>

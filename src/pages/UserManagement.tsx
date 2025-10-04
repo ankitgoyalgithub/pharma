@@ -156,7 +156,9 @@ const UserManagement = () => {
               Back to Settings
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">User Management</h1>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                User Management
+              </h1>
               <p className="text-muted-foreground">Manage Users & Roles</p>
             </div>
           </div>

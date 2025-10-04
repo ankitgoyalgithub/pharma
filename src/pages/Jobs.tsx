@@ -148,7 +148,9 @@ const JobsPage = () => {
               Back
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Jobs</h1>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                Jobs
+              </h1>
               <p className="text-muted-foreground">Monitor and manage all application jobs</p>
             </div>
           </div>
