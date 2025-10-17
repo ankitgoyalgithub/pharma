@@ -2192,17 +2192,30 @@ const DemandForecasting = () => {
         </div>
 
         {/* Main Workspace */}
-        <div className="flex-1 overflow-auto p-4 bg-background">
+        <div className="flex-1 flex flex-col overflow-hidden bg-background">
+          {/* Fixed Section Header */}
+          <div className="flex-none px-4 pt-4 pb-3 border-b bg-background">
+            <h2 className="text-xl font-semibold text-foreground">
+              {selectedScenario ? `Scenario Analysis: ${scenarios.find(s => s.id === selectedScenario)?.name}` : 
+               activeTab === "overview" ? "Forecast Overview" :
+               activeTab === "insights" ? "Demand Insights" :
+               activeTab === "workbook" ? "Collaborative Workbook" :
+               activeTab === "impact" ? "Impact Analysis" :
+               activeTab === "quality" ? "Data Quality Review" : "Results"}
+            </h2>
+            {selectedScenario && (
+              <p className="text-sm text-muted-foreground">Comparison with baseline forecast</p>
+            )}
+          </div>
+          
+          {/* Scrollable Content Area */}
+          <div className="flex-1 overflow-y-auto p-4">
         {/* Content based on active tab or selected scenario */}
         {selectedScenario ? (
           <>
             {/* Scenario Comparison View */}
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-xl font-semibold">Scenario Analysis: {scenarios.find(s => s.id === selectedScenario)?.name}</h2>
-                  <p className="text-muted-foreground">Comparison with baseline forecast</p>
-                </div>
+              <div className="flex items-center justify-end mb-4">
                 <Button variant="outline" onClick={() => setSelectedScenario(null)}>
                   ← Back to Overview
                 </Button>
@@ -2970,7 +2983,7 @@ const DemandForecasting = () => {
           </div>
         )}
         {activeTab === "impact" && (
-          <div className="space-y-4 h-[calc(100vh-200px)] overflow-y-auto">
+          <div className="space-y-4">
             {/* Simplified Layout - Two Main Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Waterfall Chart - Contribution Analysis */}
@@ -3309,6 +3322,7 @@ const DemandForecasting = () => {
             </Card>
           </div>
         )}
+          </div>
         </div>
       </div>
 
