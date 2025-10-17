@@ -2021,13 +2021,13 @@ const DemandForecasting = () => {
   const renderStep4 = () => (
     <div className="flex h-[calc(100vh-4rem)] bg-background">
       {/* Left Sidebar - Canva-style compact panel */}
-      <div className="w-[280px] bg-card border-r flex flex-col">
+      <div className="w-[280px] bg-card border-r flex flex-col overflow-hidden">
         <div className="flex-none px-4 py-3 border-b">
           <h2 className="text-xl font-semibold text-foreground">Results</h2>
         </div>
 
         {/* Scrollable Metric Cards */}
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           <div className="p-3 space-y-2">
             <div className="flex justify-center">
             <ForecastCard
@@ -2129,13 +2129,21 @@ const DemandForecasting = () => {
               </div>
             ))}
           </div>
-        </ScrollArea>
+        </div>
       </div>
 
       {/* Main Content Area - Canva-style workspace */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header Bar */}
-        <div className="flex-none flex items-center justify-end px-4 py-2 border-b bg-card/50">
+        <div className="flex-none flex items-center justify-between px-4 py-2 border-b bg-card/50">
+          <h1 className="text-xl font-semibold text-foreground">
+            {selectedScenario ? `Scenario Analysis: ${scenarios.find(s => s.id === selectedScenario)?.name}` : 
+             activeTab === "overview" ? "Forecast Overview" :
+             activeTab === "insights" ? "Demand Insights" :
+             activeTab === "workbook" ? "Collaborative Workbook" :
+             activeTab === "impact" ? "Impact Analysis" :
+             activeTab === "quality" ? "Data Quality Review" : "Results"}
+          </h1>
           <div className="flex items-center gap-2">
             {!isShareMode && (
               <Button variant="outline" size="sm" onClick={() => setCurrentStep(3)}>
@@ -2184,21 +2192,6 @@ const DemandForecasting = () => {
 
         {/* Main Workspace */}
         <div className="flex-1 flex flex-col overflow-hidden bg-background">
-          {/* Fixed Section Header */}
-          <div className="flex-none px-4 pt-4 pb-3 border-b bg-background">
-            <h2 className="text-xl font-semibold text-foreground">
-              {selectedScenario ? `Scenario Analysis: ${scenarios.find(s => s.id === selectedScenario)?.name}` : 
-               activeTab === "overview" ? "Forecast Overview" :
-               activeTab === "insights" ? "Demand Insights" :
-               activeTab === "workbook" ? "Collaborative Workbook" :
-               activeTab === "impact" ? "Impact Analysis" :
-               activeTab === "quality" ? "Data Quality Review" : "Results"}
-            </h2>
-            {selectedScenario && (
-              <p className="text-sm text-muted-foreground">Comparison with baseline forecast</p>
-            )}
-          </div>
-          
           {/* Scrollable Content Area */}
           <div className="flex-1 overflow-y-auto p-4">
         {/* Content based on active tab or selected scenario */}
@@ -2206,7 +2199,10 @@ const DemandForecasting = () => {
           <>
             {/* Scenario Comparison View */}
             <div className="mb-6">
-              <div className="flex items-center justify-end mb-4">
+              <div className="flex items-center justify-between mb-4">
+                {selectedScenario && (
+                  <p className="text-sm text-muted-foreground">Comparison with baseline forecast</p>
+                )}
                 <Button variant="outline" onClick={() => setSelectedScenario(null)}>
                   ← Back to Overview
                 </Button>
