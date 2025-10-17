@@ -2023,10 +2023,10 @@ const DemandForecasting = () => {
       {/* Left Sidebar - Canva-style compact panel */}
       <div className="w-[280px] bg-card border-r flex flex-col">
         <div className="flex-none px-4 py-3 border-b">
-          <h2 className="text-sm font-semibold text-foreground">Results</h2>
+          <h2 className="text-xl font-semibold text-foreground">Results</h2>
         </div>
 
-        {/* Clickable Metric Cards */}
+        {/* Scrollable Metric Cards */}
         <ScrollArea className="flex-1">
           <div className="p-3 space-y-2">
             <div className="flex justify-center">
@@ -2135,16 +2135,7 @@ const DemandForecasting = () => {
       {/* Main Content Area - Canva-style workspace */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header Bar */}
-        <div className="flex-none flex items-center justify-between px-4 py-2 border-b bg-card/50">
-          <div>
-            <h1 className="text-lg font-semibold text-foreground">
-              {activeTab === "overview" && "Forecast Overview"}
-              {activeTab === "insights" && "Demand Insights"}
-              {activeTab === "workbook" && "Collaborative Workbook"}
-              {activeTab === "impact" && "Impact Analysis"}
-              {activeTab === "quality" && "Data Quality Review"}
-            </h1>
-          </div>
+        <div className="flex-none flex items-center justify-end px-4 py-2 border-b bg-card/50">
           <div className="flex items-center gap-2">
             {!isShareMode && (
               <Button variant="outline" size="sm" onClick={() => setCurrentStep(3)}>
