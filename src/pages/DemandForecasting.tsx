@@ -141,6 +141,7 @@ const DemandForecasting = () => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'transactional', fromDate?: Date, toDate?: Date}>>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+  const [previewDriverDialog, setPreviewDriverDialog] = useState<{open: boolean, driverName: string | null}>({open: false, driverName: null});
 
   // Stepper configuration
   const stepperSteps = [
@@ -291,8 +292,7 @@ const DemandForecasting = () => {
       setTimeout(() => {
         const driversToSelect = [
           { name: "Holiday Calendar", autoSelected: true, icon: "Calendar" },
-          { name: "Ad Spend", autoSelected: true, icon: "DollarSign" },
-          { name: "Competitor Pricing", autoSelected: true, icon: "Users" },
+          { name: "Weather Data", autoSelected: true, icon: "CloudRain" },
         ];
         setSelectedDrivers(driversToSelect.filter(d => d.autoSelected).map(d => d.name));
         setDriversLoading(false);
@@ -971,9 +971,7 @@ const DemandForecasting = () => {
             driversLoading={driversLoading}
             onToggleDriver={toggleDriver}
             onPreviewDriver={(driverName) => {
-              setSelectedPreview(driverName);
-              setPreviewLoading(true);
-              setTimeout(() => setPreviewLoading(false), 700);
+              setPreviewDriverDialog({open: true, driverName});
             }}
             showManualControls={false}
           />
@@ -3598,6 +3596,78 @@ const DemandForecasting = () => {
             size="lg"
           />
         )}
+        
+        {/* External Driver Preview Dialog */}
+        <Dialog open={previewDriverDialog.open} onOpenChange={(open) => setPreviewDriverDialog({open, driverName: null})}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Database className="w-5 h-5 text-primary" />
+                {previewDriverDialog.driverName} - Sample Data
+              </DialogTitle>
+            </DialogHeader>
+            <div className="flex-1 overflow-y-auto">
+              {previewDriverDialog.driverName && (() => {
+                const driverData = getExternalDriverData(previewDriverDialog.driverName.replace(/ /g, '_'));
+                if (!driverData || driverData.length === 0) {
+                  return (
+                    <div className="flex flex-col items-center justify-center py-12">
+                      <Database className="w-12 h-12 text-muted-foreground mb-4" />
+                      <p className="text-sm text-muted-foreground">No sample data available for this driver</p>
+                    </div>
+                  );
+                }
+                
+                const columns = Object.keys(driverData[0]);
+                
+                return (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                      <div>
+                        <p className="text-sm font-medium">Data Preview</p>
+                        <p className="text-xs text-muted-foreground">Showing {driverData.length} sample records from {previewDriverDialog.driverName}</p>
+                      </div>
+                      <Badge variant="outline" className="text-xs">
+                        {columns.length} columns
+                      </Badge>
+                    </div>
+                    
+                    <div className="border rounded-lg overflow-hidden">
+                      <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+                        <table className="w-full text-xs">
+                          <thead className="bg-muted sticky top-0">
+                            <tr>
+                              {columns.map((col) => (
+                                <th key={col} className="text-left p-3 font-medium capitalize border-b">
+                                  {col.replace(/_/g, ' ')}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {driverData.map((row: any, index: number) => (
+                              <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
+                                {columns.map((col) => (
+                                  <td key={col} className="p-3">
+                                    {typeof row[col] === 'number' ? (
+                                      <span className="font-mono">{row[col].toLocaleString()}</span>
+                                    ) : (
+                                      row[col]
+                                    )}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </TooltipProvider>
   );

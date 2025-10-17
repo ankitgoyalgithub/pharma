@@ -154,38 +154,6 @@ export const externalDriversData = {
       region: "USA"
     }
   ],
-  "Competitor_Pricing": [
-    {
-      date: "2024-01-01",
-      product: "Widget A",
-      competitor: "Competitor X",
-      price: 49.99,
-      currency: "USD",
-      channel: "Online",
-      availability: "In Stock",
-      priceChange: 0.00
-    },
-    {
-      date: "2024-01-02",
-      product: "Widget A",
-      competitor: "Competitor X",
-      price: 51.99,
-      currency: "USD",
-      channel: "Online",
-      availability: "In Stock",
-      priceChange: 2.00
-    },
-    {
-      date: "2024-01-03",
-      product: "Widget A",
-      competitor: "Competitor X",
-      price: 48.99,
-      currency: "USD",
-      channel: "Online",
-      availability: "In Stock",
-      priceChange: -3.00
-    }
-  ],
   "Social_Media_Trends": [
     {
       date: "2024-01-01",

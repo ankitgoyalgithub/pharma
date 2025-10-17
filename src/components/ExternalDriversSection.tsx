@@ -106,7 +106,6 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
             if (driver.name.toLowerCase().includes('promotion')) return 'text-orange-500';
             if (driver.name.toLowerCase().includes('price')) return 'text-green-500';
             if (driver.name.toLowerCase().includes('inventory')) return 'text-cyan-500';
-            if (driver.name.toLowerCase().includes('competitor')) return 'text-red-500';
             if (driver.name.toLowerCase().includes('crude') || driver.name.toLowerCase().includes('oil')) return 'text-amber-600';
             if (driver.name.toLowerCase().includes('nse') || driver.name.toLowerCase().includes('nasdaq')) return 'text-indigo-500';
             if (driver.name.toLowerCase().includes('exchange')) return 'text-emerald-500';
