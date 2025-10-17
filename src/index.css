@@ -40,15 +40,15 @@ Typography-first design with crisp, modern aesthetics.
     /* Muted backgrounds and text */
     --muted: 220 13% 97%;
     --muted-foreground: 225 10% 40%;
-    --muted-hover: 220 13% 94%;
-    --muted-hover-subtle: 220 13% 99%;
+    --muted-hover: 220 13% 93%;
+    --muted-hover-subtle: 220 13% 96%;
 
     /* Accent colors - Modern emerald green */
     --accent: 158 70% 45%;
     --accent-foreground: 0 0% 100%;
     --accent-light: 158 70% 55%;
     --accent-hover: 158 70% 50%;
-    --accent-hover-subtle: 158 70% 92%;
+    --accent-hover-subtle: 158 70% 94%;
 
     /* Status colors - Modern vibrant palette */
     --success: 142 72% 29%;
@@ -303,34 +303,38 @@ Typography-first design with crisp, modern aesthetics.
     line-height: 1.6;
   }
 
-  /* Heading System - Professional hierarchy */
+  /* Heading System - Enterprise Professional hierarchy */
   h1, .text-h1 {
-    @apply text-3xl font-bold tracking-tight text-foreground;
-    line-height: 1.2;
+    @apply text-4xl font-bold tracking-tight text-foreground;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
   }
 
   h2, .text-h2 {
-    @apply text-2xl font-semibold tracking-tight text-foreground;
-    line-height: 1.3;
+    @apply text-3xl font-semibold tracking-tight text-foreground;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
   }
 
   h3, .text-h3 {
-    @apply text-xl font-semibold text-foreground;
-    line-height: 1.4;
+    @apply text-2xl font-semibold text-foreground;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
   }
 
   h4, .text-h4 {
+    @apply text-xl font-semibold text-foreground;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  h5, .text-h5 {
     @apply text-lg font-medium text-foreground;
     line-height: 1.4;
   }
 
-  h5, .text-h5 {
-    @apply text-base font-medium text-foreground;
-    line-height: 1.5;
-  }
-
   h6, .text-h6 {
-    @apply text-sm font-medium text-foreground;
+    @apply text-base font-medium text-foreground;
     line-height: 1.5;
   }
 }
