@@ -751,21 +751,6 @@ const DemandForecasting = () => {
         </CardContent>
       </Card>
 
-      <ExternalDriversSection
-        title="External Drivers"
-        description="External factors that may influence demand patterns. Toggle AI suggestions on/off and manually select additional drivers."
-        drivers={externalDrivers}
-        selectedDrivers={selectedDrivers}
-        driversLoading={driversLoading}
-        onToggleDriver={toggleDriver}
-        onPreviewDriver={(driverName) => {
-          setSelectedPreview(driverName);
-          setPreviewLoading(true);
-          setTimeout(() => setPreviewLoading(false), 700);
-        }}
-        showManualControls={true}
-      />
-
       {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
         <Card className="border border-border bg-muted/30">
           <CardHeader>
@@ -958,6 +943,39 @@ const DemandForecasting = () => {
           </CardContent>
         </Card>
       )}
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base">External Drivers</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Select external factors that may influence demand patterns in your forecast model.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            External factors that may influence demand patterns. Select drivers to include in the model.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <ExternalDriversSection
+            drivers={externalDrivers}
+            selectedDrivers={selectedDrivers}
+            driversLoading={driversLoading}
+            onToggleDriver={toggleDriver}
+            onPreviewDriver={(driverName) => {
+              setSelectedPreview(driverName);
+              setPreviewLoading(true);
+              setTimeout(() => setPreviewLoading(false), 700);
+            }}
+            showManualControls={false}
+          />
+        </CardContent>
+      </Card>
 
       <div className="flex justify-between pt-4">
         <Button size="sm" variant="outline" onClick={() => window.history.back()}>

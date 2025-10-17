@@ -67,20 +67,20 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
   
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <h3 className="text-base font-medium text-foreground">{title}</h3>
-          <Tooltip>
-            <TooltipTrigger>
-              <Info className="w-4 h-4 text-muted-foreground" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{description}</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-        
-        {showManualControls && (
+      {showManualControls && (
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <h3 className="text-base font-medium text-foreground">{title}</h3>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{description}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">AI Suggestions</span>
             <GradientSwitch 
@@ -88,10 +88,10 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
               onCheckedChange={setAiSuggestionsEnabled}
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
       
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-3">
         {drivers.map((driver) => {
           const isSelected = selectedDrivers.includes(driver.name);
           const isAutoSelected = driver.autoSelected && aiSuggestionsEnabled;
@@ -99,43 +99,39 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
           const isDisabled = driversLoading && !isAutoSelected && !isSelected;
           const IconComponent = getIconComponent(driver.icon);
           
+          // Icon colors based on driver type
+          const getIconColor = () => {
+            if (driver.name.toLowerCase().includes('weather')) return 'text-blue-500';
+            if (driver.name.toLowerCase().includes('holiday')) return 'text-purple-500';
+            if (driver.name.toLowerCase().includes('promotion')) return 'text-orange-500';
+            if (driver.name.toLowerCase().includes('price')) return 'text-green-500';
+            if (driver.name.toLowerCase().includes('inventory')) return 'text-cyan-500';
+            if (driver.name.toLowerCase().includes('competitor')) return 'text-red-500';
+            return 'text-primary';
+          };
+          
           return (
             <div
               key={driver.name}
-              className={`flex items-center justify-between p-3 rounded-lg border bg-card transition-colors ${
-                isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/50 cursor-pointer'
-              } ${isAutoSelected && aiSuggestionsEnabled ? 'border-primary/50 bg-primary/5' : ''}`}
+              className={`flex flex-col items-center justify-center p-3 rounded-lg border bg-card transition-all hover:shadow-md ${
+                isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-primary/30'
+              } ${isSelected ? 'border-primary bg-primary/5 shadow-sm' : ''}`}
               onClick={() => !isDisabled && !isLoadingThis && onToggleDriver(driver.name)}
             >
-              <div className="flex items-center gap-2 flex-1">
-                <IconComponent className="h-4 w-4 text-muted-foreground" />
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">{driver.name}</span>
-                  {isAutoSelected && aiSuggestionsEnabled && (
-                    <span className="text-xs text-primary">AI Suggested</span>
-                  )}
+              <div className="relative mb-2">
+                <div className={`p-2 rounded-lg ${isSelected ? 'bg-primary/10' : 'bg-muted/50'}`}>
+                  <IconComponent className={`h-5 w-5 ${isSelected ? 'text-primary' : getIconColor()}`} />
                 </div>
-              </div>
-              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                {isSelected && onPreviewDriver && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="px-2 py-1 h-6 text-xs"
-                    onClick={() => onPreviewDriver(driver.name)}
-                  >
-                    Preview
-                  </Button>
-                )}
-                {isLoadingThis ? (
-                  <div className="animate-spin h-4 w-4 border-2 border-primary/20 border-t-primary rounded-full" />
-                ) : (
-                  <GradientSwitch 
-                    checked={isSelected} 
-                    disabled={isDisabled}
-                  />
+                {isSelected && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                    <Icons.Check className="w-3 h-3 text-primary-foreground" />
+                  </div>
                 )}
               </div>
+              <span className="text-xs font-medium text-center leading-tight">{driver.name}</span>
+              {isLoadingThis && (
+                <div className="mt-1 animate-spin h-3 w-3 border-2 border-primary/20 border-t-primary rounded-full" />
+              )}
             </div>
           );
         })}
