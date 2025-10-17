@@ -106,7 +106,7 @@ import { historicalForecastData } from "@/data/demandForecasting/historicalForec
 import { pieData } from "@/data/demandForecasting/pieData";
 import { skuData } from "@/data/demandForecasting/skuData";
 import { gapData } from "@/data/demandForecasting/gapData";
-import { getExternalDriverData } from "@/data/demandForecasting/externalDriversData";
+
 import { sampleAiResponses } from "@/data/demandForecasting/aiResponses";
 import { masterObjects, timeseriesObjects } from "@/data/demandForecasting/foundryObjects";
 import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
@@ -142,6 +142,15 @@ const DemandForecasting = () => {
   const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'transactional', fromDate?: Date, toDate?: Date}>>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
   const [previewDriverDialog, setPreviewDriverDialog] = useState<{open: boolean, driverName: string | null}>({open: false, driverName: null});
+
+  // Map external driver display names to Foundry object keys
+  const driverToFoundryKey: Record<string, string> = {
+    "Holiday Calendar": "Holiday_Calendar",
+    "Crude Oil Prices": "Crude_Oil_Prices",
+    "NSE Index": "NSE_Index",
+    "NASDAQ Index": "NASDAQ_Index",
+    "Weather Data": "Weather_Data",
+  };
 
   // Stepper configuration
   const stepperSteps = [
@@ -829,17 +838,18 @@ const DemandForecasting = () => {
                       )}
                       {selectedPreview}
                     </p>
-                     {selectedDrivers.includes(selectedPreview) ? (
-                      // External driver preview - showing Foundry format data
-                      <div className="space-y-4">
-                        {(() => {
-                          const driverData = getExternalDriverData(selectedPreview || "");
-                          if (!driverData || driverData.length === 0) {
-                            return <p className="text-sm text-muted-foreground">No data available for this driver.</p>;
-                          }
-                          
-                          // Get column headers from first data object
-                          const columns = Object.keys(driverData[0]);
+                      {selectedDrivers.includes(selectedPreview) ? (
+                       // External driver preview - showing Foundry format data
+                       <div className="space-y-4">
+                         {(() => {
+                           const foundryKey = driverToFoundryKey[selectedPreview] || selectedPreview.replace(/ /g, '_');
+                           const driverData = getFoundryObjectData(foundryKey) as any[];
+                           if (!driverData || driverData.length === 0) {
+                             return <p className="text-sm text-muted-foreground">No data available for this driver.</p>;
+                           }
+                           
+                           // Get column headers from first data object
+                           const columns = Object.keys(driverData[0]);
                           
                           return (
                             <div className="grid grid-cols-1 gap-4">
@@ -909,27 +919,29 @@ const DemandForecasting = () => {
                           <thead className="bg-muted text-muted-foreground">
                             <tr>
                               <th className="text-left px-3 py-2">SKU</th>
+                              <th className="text-left px-3 py-2">Product</th>
                               <th className="text-left px-3 py-2">Location</th>
                               <th className="text-left px-3 py-2">Channel</th>
-                              <th className="text-left px-3 py-2">Week 1</th>
-                              <th className="text-left px-3 py-2">Week 2</th>
-                              <th className="text-left px-3 py-2">Week 3</th>
+                              <th className="text-left px-3 py-2">Date</th>
+                              <th className="text-left px-3 py-2">Sales</th>
+                              <th className="text-left px-3 py-2">Revenue</th>
+                              <th className="text-left px-3 py-2">Stock</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {workbookData.map((row, idx) => (
-                              <tr key={idx} className="hover:bg-muted/20">
-                                <td className="px-3 py-2">{row.sku}</td>
+                            {dataPreviewSample.map((row, idx) => (
+                              <tr key={idx} className="hover:bg-muted/20 border-t">
+                                <td className="px-3 py-2 font-mono">{row.sku}</td>
+                                <td className="px-3 py-2 font-medium">{row.product}</td>
                                 <td className="px-3 py-2">{row.location}</td>
-                                <td className="px-3 py-2">{row.channel}</td>
                                 <td className="px-3 py-2">
-                                  <Input value={row.week1.toString()} className="w-16" readOnly />
+                                  <Badge variant="outline" className="text-xs">{row.channel}</Badge>
                                 </td>
+                                <td className="px-3 py-2 text-xs">{row.date}</td>
+                                <td className="px-3 py-2 font-medium">{row.sales}</td>
+                                <td className="px-3 py-2 text-success font-medium">{row.revenue}</td>
                                 <td className="px-3 py-2">
-                                  <Input value={row.week2.toString()} className="w-16" readOnly />
-                                </td>
-                                <td className="px-3 py-2">
-                                  <Input value={row.week3.toString()} className="w-16" readOnly />
+                                  <Badge variant="secondary" className="text-xs">{row.stock}</Badge>
                                 </td>
                               </tr>
                             ))}
@@ -3608,7 +3620,9 @@ const DemandForecasting = () => {
             </DialogHeader>
             <div className="flex-1 overflow-y-auto">
               {previewDriverDialog.driverName && (() => {
-                const driverData = getExternalDriverData(previewDriverDialog.driverName.replace(/ /g, '_'));
+                const keyName = previewDriverDialog.driverName;
+                const foundryKey = keyName ? (driverToFoundryKey[keyName] || keyName.replace(/ /g, '_')) : '';
+                const driverData = getFoundryObjectData(foundryKey) as any[];
                 if (!driverData || driverData.length === 0) {
                   return (
                     <div className="flex flex-col items-center justify-center py-12">
