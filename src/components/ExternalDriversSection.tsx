@@ -91,7 +91,7 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
         </div>
       )}
       
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-5 gap-2">
         {drivers.map((driver) => {
           const isSelected = selectedDrivers.includes(driver.name);
           const isAutoSelected = driver.autoSelected && aiSuggestionsEnabled;
@@ -107,30 +107,54 @@ export const ExternalDriversSection: React.FC<ExternalDriversSectionProps> = ({
             if (driver.name.toLowerCase().includes('price')) return 'text-green-500';
             if (driver.name.toLowerCase().includes('inventory')) return 'text-cyan-500';
             if (driver.name.toLowerCase().includes('competitor')) return 'text-red-500';
+            if (driver.name.toLowerCase().includes('crude') || driver.name.toLowerCase().includes('oil')) return 'text-amber-600';
+            if (driver.name.toLowerCase().includes('nse') || driver.name.toLowerCase().includes('nasdaq')) return 'text-indigo-500';
+            if (driver.name.toLowerCase().includes('exchange')) return 'text-emerald-500';
+            if (driver.name.toLowerCase().includes('interest')) return 'text-pink-500';
+            if (driver.name.toLowerCase().includes('gdp') || driver.name.toLowerCase().includes('inflation')) return 'text-teal-500';
+            if (driver.name.toLowerCase().includes('commodity')) return 'text-yellow-600';
+            if (driver.name.toLowerCase().includes('labor')) return 'text-violet-500';
+            if (driver.name.toLowerCase().includes('energy')) return 'text-orange-600';
+            if (driver.name.toLowerCase().includes('supply')) return 'text-sky-500';
+            if (driver.name.toLowerCase().includes('technology')) return 'text-cyan-600';
+            if (driver.name.toLowerCase().includes('regulatory')) return 'text-slate-600';
             return 'text-primary';
           };
           
           return (
             <div
               key={driver.name}
-              className={`flex flex-col items-center justify-center p-3 rounded-lg border bg-card transition-all hover:shadow-md ${
+              className={`flex items-center gap-2 p-2 rounded-lg border bg-card transition-all hover:shadow-md ${
                 isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-primary/30'
               } ${isSelected ? 'border-primary bg-primary/5 shadow-sm' : ''}`}
               onClick={() => !isDisabled && !isLoadingThis && onToggleDriver(driver.name)}
             >
-              <div className="relative mb-2">
-                <div className={`p-2 rounded-lg ${isSelected ? 'bg-primary/10' : 'bg-muted/50'}`}>
-                  <IconComponent className={`h-5 w-5 ${isSelected ? 'text-primary' : getIconColor()}`} />
+              <div className="relative flex-shrink-0">
+                <div className={`p-1.5 rounded ${isSelected ? 'bg-primary/10' : 'bg-muted/50'}`}>
+                  <IconComponent className={`h-4 w-4 ${isSelected ? 'text-primary' : getIconColor()}`} />
                 </div>
                 {isSelected && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                    <Icons.Check className="w-3 h-3 text-primary-foreground" />
+                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-primary rounded-full flex items-center justify-center">
+                    <Icons.Check className="w-2 h-2 text-primary-foreground" />
                   </div>
                 )}
               </div>
-              <span className="text-xs font-medium text-center leading-tight">{driver.name}</span>
+              <span className="text-xs font-medium leading-tight flex-1">{driver.name}</span>
+              {onPreviewDriver && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 flex-shrink-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPreviewDriver(driver.name);
+                  }}
+                >
+                  <Icons.Eye className="h-3 w-3" />
+                </Button>
+              )}
               {isLoadingThis && (
-                <div className="mt-1 animate-spin h-3 w-3 border-2 border-primary/20 border-t-primary rounded-full" />
+                <div className="animate-spin h-3 w-3 border-2 border-primary/20 border-t-primary rounded-full flex-shrink-0" />
               )}
             </div>
           );

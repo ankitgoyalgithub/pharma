@@ -690,14 +690,17 @@ const DemandForecasting = () => {
                   <div className="space-y-1">
                     {uploadedFiles.map((file, index) => (
                       <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
-                        <div className="flex items-center gap-2 text-xs">
+                        <div className="flex items-center gap-2 text-xs flex-1">
                           <FileText className="h-3 w-3 text-blue-600" />
                           <span className="text-foreground">{file.name}</span>
+                          <Badge variant="secondary" className="text-xs ml-auto">
+                            {dataPreviewSample.length} rows
+                          </Badge>
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 w-6 p-0"
+                          className="h-6 w-6 p-0 ml-2"
                           onClick={() => {
                             setUploadedFiles(prev => prev.filter((_, i) => i !== index));
                             if (selectedPreview === file.name) {
@@ -1739,28 +1742,27 @@ const DemandForecasting = () => {
                             <th className="text-left p-2 font-medium">Product</th>
                             <th className="text-left p-2 font-medium">Location</th>
                             <th className="text-left p-2 font-medium">Channel</th>
-                            <th className="text-left p-2 font-medium">Current Demand</th>
-                            <th className="text-left p-2 font-medium">Forecasted Demand</th>
-                            <th className="text-left p-2 font-medium">Variance</th>
+                            <th className="text-left p-2 font-medium">Date</th>
+                            <th className="text-left p-2 font-medium">Sales</th>
+                            <th className="text-left p-2 font-medium">Revenue</th>
+                            <th className="text-left p-2 font-medium">Stock</th>
                           </tr>
                         </thead>
                         <tbody>
                           {dataPreviewSample.map((row, index) => (
                             <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
-                              <td className="p-2">{row.sku}</td>
-                              <td className="p-2">{row.product}</td>
+                              <td className="p-2 text-xs font-mono">{row.sku}</td>
+                              <td className="p-2 font-medium">{row.product}</td>
                               <td className="p-2">{row.location}</td>
                               <td className="p-2">
                                 <Badge variant="outline" className="text-xs">{row.channel}</Badge>
                               </td>
-                              <td className="p-2 font-medium">{row.currentDemand}</td>
-                              <td className="p-2 font-medium">{row.forecastedDemand}</td>
+                              <td className="p-2 text-xs">{row.date}</td>
+                              <td className="p-2 font-medium">{row.sales}</td>
+                              <td className="p-2 font-medium text-success">{row.revenue}</td>
                               <td className="p-2">
-                                <Badge 
-                                  variant="secondary" 
-                                  className={`text-xs ${row.variance.startsWith('+') ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}
-                                >
-                                  {row.variance}
+                                <Badge variant="secondary" className="text-xs">
+                                  {row.stock}
                                 </Badge>
                               </td>
                             </tr>
