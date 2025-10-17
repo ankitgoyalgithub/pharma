@@ -1989,12 +1989,12 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex pt-4">
+    <div className="flex gap-0">
       {/* Left Sidebar with Clickable Cards */}
-      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-4 flex flex-col max-h-[calc(100vh-8rem)]">
-        <div className="flex-none">
-          <h2 className="text-xl font-bold text-foreground mb-2">Forecast Results</h2>
-          <p className="text-sm text-muted-foreground">Click cards to explore insights</p>
+      <div className="w-full sm:w-[300px] lg:w-[320px] bg-card border-r pr-3 pl-2 py-3 flex flex-col max-h-[calc(100vh-8rem)]">
+        <div className="flex-none px-2">
+          <h2 className="text-lg font-bold text-foreground mb-1">Forecast Results</h2>
+          <p className="text-xs text-muted-foreground">Click cards to explore insights</p>
         </div>
 
         {/* Clickable Metric Cards */}
@@ -2104,9 +2104,9 @@ const DemandForecasting = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 p-4 overflow-auto pt-4 max-h-[calc(100vh-8rem)]">
+      <div className="flex-1 px-6 py-3 overflow-auto max-h-[calc(100vh-8rem)]">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
               {activeTab === "overview" && "Forecast Overview"}
@@ -2115,7 +2115,7 @@ const DemandForecasting = () => {
               {activeTab === "impact" && "Impact Analysis"}
               {activeTab === "quality" && "Data Quality Review"}
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {activeTab === "overview" && "Comprehensive forecast insights and analytics"}
               {activeTab === "insights" && "Demand analysis, revenue projections, and classification insights"}
               {activeTab === "workbook" && "Interactive data table with collaboration features"}
@@ -2123,17 +2123,17 @@ const DemandForecasting = () => {
               {activeTab === "quality" && "Data integrity assessment, completeness metrics, and AI-enhanced quality insights"}
             </p>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-2">
             {!isShareMode && (
-              <Button variant="outline" onClick={() => setCurrentStep(3)}>
+              <Button variant="outline" size="sm" onClick={() => setCurrentStep(3)}>
                 ← Back
               </Button>
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" size="sm">
                   <Download className="w-4 h-4 mr-2" />
-                  Export As
+                  Export
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -2162,7 +2162,7 @@ const DemandForecasting = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button>
+            <Button size="sm">
               <Share className="w-4 h-4 mr-2" />
               Share
             </Button>
