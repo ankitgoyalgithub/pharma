@@ -1989,17 +1989,16 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex gap-0">
-      {/* Left Sidebar with Clickable Cards */}
-      <div className="w-full sm:w-[300px] lg:w-[320px] bg-card border-r pr-3 pl-2 py-3 flex flex-col max-h-[calc(100vh-8rem)]">
-        <div className="flex-none px-2">
-          <h2 className="text-lg font-bold text-foreground mb-1">Forecast Results</h2>
-          <p className="text-xs text-muted-foreground">Click cards to explore insights</p>
+    <div className="flex h-[calc(100vh-4rem)] bg-background">
+      {/* Left Sidebar - Canva-style compact panel */}
+      <div className="w-[280px] bg-card border-r flex flex-col">
+        <div className="flex-none px-4 py-3 border-b">
+          <h2 className="text-sm font-semibold text-foreground">Results</h2>
         </div>
 
         {/* Clickable Metric Cards */}
-        <ScrollArea className="flex-1 mt-3">
-          <div className="flex flex-col items-center gap-3 pb-4">
+        <ScrollArea className="flex-1">
+          <div className="p-3 space-y-2">
             <div className="flex justify-center">
             <ForecastCard
               title="Forecast Snapshot"
@@ -2103,25 +2102,18 @@ const DemandForecasting = () => {
         </ScrollArea>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 px-6 py-3 overflow-auto max-h-[calc(100vh-8rem)]">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+      {/* Main Content Area - Canva-style workspace */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header Bar */}
+        <div className="flex-none flex items-center justify-between px-4 py-2 border-b bg-card/50">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-lg font-semibold text-foreground">
               {activeTab === "overview" && "Forecast Overview"}
-              {activeTab === "insights" && "Insights Dashboard"}
-              {activeTab === "workbook" && "Forecast Workbook"}
+              {activeTab === "insights" && "Demand Insights"}
+              {activeTab === "workbook" && "Collaborative Workbook"}
               {activeTab === "impact" && "Impact Analysis"}
               {activeTab === "quality" && "Data Quality Review"}
             </h1>
-            <p className="text-sm text-muted-foreground">
-              {activeTab === "overview" && "Comprehensive forecast insights and analytics"}
-              {activeTab === "insights" && "Demand analysis, revenue projections, and classification insights"}
-              {activeTab === "workbook" && "Interactive data table with collaboration features"}
-              {activeTab === "impact" && "Driver contributions, sensitivity analysis, and event impact assessment"}
-              {activeTab === "quality" && "Data integrity assessment, completeness metrics, and AI-enhanced quality insights"}
-            </p>
           </div>
           <div className="flex items-center gap-2">
             {!isShareMode && (
@@ -2169,6 +2161,8 @@ const DemandForecasting = () => {
           </div>
         </div>
 
+        {/* Main Workspace */}
+        <div className="flex-1 overflow-auto p-4 bg-background">
         {/* Content based on active tab or selected scenario */}
         {selectedScenario ? (
           <>
@@ -3285,6 +3279,7 @@ const DemandForecasting = () => {
             </Card>
           </div>
         )}
+        </div>
       </div>
 
       {/* Right Sidebar */}

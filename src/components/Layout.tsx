@@ -198,7 +198,7 @@ export const Layout = () => {
       <div className={cn("transition-all duration-300", sidebarCollapsed ? "ml-16" : "ml-64")}>
         {/* Fixed Top navigation bar with stepper and user dropdown */}
         <div className={cn(
-          "fixed top-0 right-0 z-40 h-16 border-b border-border bg-card/95 backdrop-blur-md flex items-center justify-between px-6 glaze-subtle transition-all duration-300",
+          "fixed top-0 right-0 z-40 h-16 border-b border-border bg-card flex items-center justify-between px-6 transition-all duration-300",
           sidebarCollapsed ? "left-16" : "left-64"
         )}>
           {/* Left side - Stepper */}
