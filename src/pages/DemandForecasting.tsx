@@ -1989,312 +1989,200 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex h-[calc(100vh-5rem)] bg-muted/20">
-      {/* Left Sidebar - Canva Style */}
-      <div className="w-80 bg-background border-r border-border flex flex-col">
-        {/* Sidebar Header */}
-        <div className="p-6 border-b border-border">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">Forecast Results</h2>
-              <p className="text-xs text-muted-foreground">Explore insights</p>
-            </div>
-          </div>
+    <div className="flex pt-4">
+      {/* Left Sidebar with Clickable Cards */}
+      <div className="w-full sm:w-[30%] lg:w-[25%] xl:w-[20%] bg-card border-r p-4 flex flex-col max-h-[calc(100vh-8rem)]">
+        <div className="flex-none">
+          <h2 className="text-xl font-bold text-foreground mb-2">Forecast Results</h2>
+          <p className="text-sm text-muted-foreground">Click cards to explore insights</p>
         </div>
 
-        {/* Clickable Metric Cards - Scrollable */}
-        <ScrollArea className="flex-1">
-          <div className="p-4 space-y-3">
-            {/* Primary Cards */}
-            <div 
+        {/* Clickable Metric Cards */}
+        <ScrollArea className="flex-1 mt-3">
+          <div className="flex flex-col items-center gap-3 pb-4">
+            <div className="flex justify-center">
+            <ForecastCard
+              title="Forecast Snapshot"
+              value="94.2%"
+              subtitle="ML-Powered Accuracy • ₹48.2M Revenue • 125K+ Units
+                        12-Month Horizon • 5 Active SKUs • 4 Channels"
+              icon={TrendingUp}
+              isActive={selectedScenario === null && activeTab === "overview"}
               onClick={() => {
                 setSelectedScenario(null);
                 setActiveTab("overview");
               }}
-              className={`group cursor-pointer rounded-xl p-4 transition-all duration-200 border ${
-                selectedScenario === null && activeTab === "overview"
-                  ? "bg-primary/10 border-primary/30 shadow-lg shadow-primary/5"
-                  : "bg-card border-border hover:border-primary/20 hover:shadow-md"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                  selectedScenario === null && activeTab === "overview"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-                }`}>
-                  <TrendingUp className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-foreground mb-1">Forecast Snapshot</div>
-                  <div className="text-2xl font-bold text-foreground mb-2">94.2%</div>
-                  <div className="text-xs text-muted-foreground line-clamp-2">
-                    ML-Powered Accuracy • ₹48.2M Revenue • 125K+ Units
-                  </div>
-                </div>
-              </div>
+            />
             </div>
 
-            <div 
+            <div className="flex justify-center">
+            <ForecastCard
+              title="ABC, XYZ & More"
+              value="65%"
+              subtitle="from class A, 40% from class X
+                        $ sales from class A -
+                        down by x% from last cycle"
+              icon={BarChart3}
+              isActive={selectedScenario === null && activeTab === "insights"}
               onClick={() => {
                 setSelectedScenario(null);
                 setActiveTab("insights");
               }}
-              className={`group cursor-pointer rounded-xl p-4 transition-all duration-200 border ${
-                selectedScenario === null && activeTab === "insights"
-                  ? "bg-primary/10 border-primary/30 shadow-lg shadow-primary/5"
-                  : "bg-card border-border hover:border-primary/20 hover:shadow-md"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                  selectedScenario === null && activeTab === "insights"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-                }`}>
-                  <BarChart3 className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-foreground mb-1">ABC, XYZ & More</div>
-                  <div className="text-2xl font-bold text-foreground mb-2">65%</div>
-                  <div className="text-xs text-muted-foreground line-clamp-2">
-                    from class A, 40% from class X
-                  </div>
-                </div>
-              </div>
+            />
             </div>
 
-            <div 
+            <div className="flex justify-center">
+            <ForecastCard
+              title="Collaborate"
+              value="Planner Input"
+              subtitle="Provide your inputs & comments
+                        Share with your team"
+              icon={Award}
+              isActive={selectedScenario === null && activeTab === "workbook"}
               onClick={() => {
                 setSelectedScenario(null);
                 setActiveTab("workbook");
               }}
-              className={`group cursor-pointer rounded-xl p-4 transition-all duration-200 border ${
-                selectedScenario === null && activeTab === "workbook"
-                  ? "bg-primary/10 border-primary/30 shadow-lg shadow-primary/5"
-                  : "bg-card border-border hover:border-primary/20 hover:shadow-md"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                  selectedScenario === null && activeTab === "workbook"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-                }`}>
-                  <Award className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-foreground mb-1">Collaborate</div>
-                  <div className="text-lg font-bold text-foreground mb-2">Planner Input</div>
-                  <div className="text-xs text-muted-foreground line-clamp-2">
-                    Provide your inputs & comments
-                  </div>
-                </div>
-              </div>
+            />
             </div>
 
-            <div 
+            <div>
+            <ForecastCard
+              title="Impact Analysis"
+              value="10K"
+              subtitle="Units sold due to promotion
+                        High price sensitivity"
+              icon={BarChart3}
+              isActive={selectedScenario === null && activeTab === "impact"}
               onClick={() => {
                 setSelectedScenario(null);
                 setActiveTab("impact");
               }}
-              className={`group cursor-pointer rounded-xl p-4 transition-all duration-200 border ${
-                selectedScenario === null && activeTab === "impact"
-                  ? "bg-primary/10 border-primary/30 shadow-lg shadow-primary/5"
-                  : "bg-card border-border hover:border-primary/20 hover:shadow-md"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                  selectedScenario === null && activeTab === "impact"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-                }`}>
-                  <BarChart3 className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-foreground mb-1">Impact Analysis</div>
-                  <div className="text-2xl font-bold text-foreground mb-2">10K</div>
-                  <div className="text-xs text-muted-foreground line-clamp-2">
-                    Units sold due to promotion
-                  </div>
-                </div>
-              </div>
+            />
             </div>
 
-            <div 
+            <div className="flex justify-center">
+            <ForecastCard
+              title="Data Quality Review"
+              value="97.4%"
+              subtitle="Completeness score, 1 missing value imputed, 2 duplicates resolved. AI-enhanced data integrity verified."
+              icon={Shield}
+              isActive={selectedScenario === null && activeTab === "quality"}
               onClick={() => {
                 setSelectedScenario(null);
                 setActiveTab("quality");
               }}
-              className={`group cursor-pointer rounded-xl p-4 transition-all duration-200 border ${
-                selectedScenario === null && activeTab === "quality"
-                  ? "bg-primary/10 border-primary/30 shadow-lg shadow-primary/5"
-                  : "bg-card border-border hover:border-primary/20 hover:shadow-md"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                  selectedScenario === null && activeTab === "quality"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-                }`}>
-                  <Shield className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-foreground mb-1">Data Quality</div>
-                  <div className="text-2xl font-bold text-foreground mb-2">97.4%</div>
-                  <div className="text-xs text-muted-foreground line-clamp-2">
-                    Completeness score verified
-                  </div>
-                </div>
-              </div>
+            />
             </div>
 
             {/* Dynamic Scenarios */}
-            {scenarios.length > 0 && (
-              <>
-                <div className="pt-4 pb-2">
-                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2">
-                    Scenarios
-                  </div>
-                </div>
-                {scenarios.map((scenario) => (
-                  <div key={scenario.id} className="relative group">
-                    <div 
-                      onClick={() => setSelectedScenario(scenario.id)}
-                      className={`cursor-pointer rounded-xl p-4 transition-all duration-200 border ${
-                        selectedScenario === scenario.id
-                          ? "bg-primary/10 border-primary/30 shadow-lg shadow-primary/5"
-                          : "bg-card border-border hover:border-primary/20 hover:shadow-md"
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                          selectedScenario === scenario.id
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
-                        }`}>
-                          <Wand2 className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1 min-w-0 pr-8">
-                          <div className="text-sm font-semibold text-foreground mb-1">{scenario.name}</div>
-                          <div className="text-2xl font-bold text-foreground mb-2">{scenario.value}</div>
-                          <div className="text-xs text-muted-foreground line-clamp-2">
-                            {scenario.subtitle}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-2 right-2 w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive/10 hover:bg-destructive hover:text-destructive-foreground"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteScenario(scenario.id);
-                      }}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
-                  </div>
-                ))}
-              </>
-            )}
+            {scenarios.map((scenario) => (
+              <div key={scenario.id} className="relative group flex justify-center">
+                  <ForecastCard
+                  title={scenario.name}
+                  value={scenario.value}
+                  subtitle={scenario.subtitle}
+                  icon={Wand2}
+                  isActive={selectedScenario === scenario.id}
+                  onClick={() => setSelectedScenario(scenario.id)}
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-1 right-1 w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive/80 hover:bg-destructive text-destructive-foreground"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteScenario(scenario.id);
+                  }}
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            ))}
           </div>
         </ScrollArea>
       </div>
 
-      {/* Main Content Area - Canva Style */}
-      <div className="flex-1 flex flex-col bg-background overflow-hidden">
-        {/* Header Bar */}
-        <div className="bg-background border-b border-border px-8 py-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground mb-1">
-                {activeTab === "overview" && "Forecast Overview"}
-                {activeTab === "insights" && "Insights Dashboard"}
-                {activeTab === "workbook" && "Forecast Workbook"}
-                {activeTab === "impact" && "Impact Analysis"}
-                {activeTab === "quality" && "Data Quality Review"}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                {activeTab === "overview" && "Comprehensive forecast insights and analytics"}
-                {activeTab === "insights" && "Demand analysis, revenue projections, and classification insights"}
-                {activeTab === "workbook" && "Interactive data table with collaboration features"}
-                {activeTab === "impact" && "Driver contributions, sensitivity analysis, and event impact assessment"}
-                {activeTab === "quality" && "Data integrity assessment, completeness metrics, and AI-enhanced quality insights"}
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              {!isShareMode && (
-                <Button variant="outline" size="sm" onClick={() => setCurrentStep(3)}>
-                  ← Back
-                </Button>
-              )}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Download className="w-4 h-4 mr-2" />
-                    Export
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-popover z-50">
-                  <DropdownMenuLabel>Export Options</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={exportToPPTX}>
-                    <FileText className="w-4 h-4 mr-2" />
-                    PPTX
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={exportToCSV}>
-                    <FileText className="w-4 h-4 mr-2" />
-                    CSV
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={exportToXLSX}>
-                    <FileText className="w-4 h-4 mr-2" />
-                    XLSX
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={exportToCanva}>
-                    <Share className="w-4 h-4 mr-2" />
-                    Canva
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={exportToUpsynqLink}>
-                    <Share className="w-4 h-4 mr-2" />
-                    Upsynq Link
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button size="sm" className="gap-2">
-                <Share className="w-4 h-4" />
-                Share
+      {/* Main Content Area */}
+      <div className="flex-1 p-4 overflow-auto pt-4 max-h-[calc(100vh-8rem)]">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              {activeTab === "overview" && "Forecast Overview"}
+              {activeTab === "insights" && "Insights Dashboard"}
+              {activeTab === "workbook" && "Forecast Workbook"}
+              {activeTab === "impact" && "Impact Analysis"}
+              {activeTab === "quality" && "Data Quality Review"}
+            </h1>
+            <p className="text-muted-foreground">
+              {activeTab === "overview" && "Comprehensive forecast insights and analytics"}
+              {activeTab === "insights" && "Demand analysis, revenue projections, and classification insights"}
+              {activeTab === "workbook" && "Interactive data table with collaboration features"}
+              {activeTab === "impact" && "Driver contributions, sensitivity analysis, and event impact assessment"}
+              {activeTab === "quality" && "Data integrity assessment, completeness metrics, and AI-enhanced quality insights"}
+            </p>
+          </div>
+          <div className="flex items-center space-x-3">
+            {!isShareMode && (
+              <Button variant="outline" onClick={() => setCurrentStep(3)}>
+                ← Back
               </Button>
-            </div>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  Export As
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportToPPTX}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  PPTX
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToCSV}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToXLSX}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  XLSX
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={exportToCanva}>
+                  <Share className="w-4 h-4 mr-2" />
+                  Canva
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={exportToUpsynqLink}>
+                  <Share className="w-4 h-4 mr-2" />
+                  Upsynq Unique Link
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button>
+              <Share className="w-4 h-4 mr-2" />
+              Share
+            </Button>
           </div>
         </div>
 
-        {/* Scrollable Content Area */}
-        <ScrollArea className="flex-1">
-          <div className="p-8 space-y-6">
-            {/* Content based on active tab or selected scenario */}
-            {selectedScenario ? (
-              <>
-                {/* Scenario Comparison View */}
+        {/* Content based on active tab or selected scenario */}
+        {selectedScenario ? (
+          <>
+            {/* Scenario Comparison View */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h2 className="text-xl font-semibold text-foreground">
-                        Scenario Analysis: {scenarios.find(s => s.id === selectedScenario)?.name}
-                      </h2>
-                      <p className="text-sm text-muted-foreground">Comparison with baseline forecast</p>
-                    </div>
-                    <Button variant="outline" size="sm" onClick={() => setSelectedScenario(null)}>
-                      ← Back to Overview
-                    </Button>
-                  </div>
+                  <h2 className="text-xl font-semibold">Scenario Analysis: {scenarios.find(s => s.id === selectedScenario)?.name}</h2>
+                  <p className="text-muted-foreground">Comparison with baseline forecast</p>
+                </div>
+                <Button variant="outline" onClick={() => setSelectedScenario(null)}>
+                  ← Back to Overview
+                </Button>
+              </div>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <Card className="shadow-card border-0">
@@ -2513,10 +2401,9 @@ const DemandForecasting = () => {
                   </CardContent>
                 </Card>
               </div>
-             </>
-          ) : null}
-
-          {!selectedScenario && activeTab === "overview" && (
+            </div>
+          </>
+        ) : activeTab === "overview" && (
           <>
             {/* Demand Analysis Chart with controls */}
             <Card className="shadow-card border-0 mb-4 flex-1 bg-gradient-to-br from-card via-card to-muted/20">
@@ -2877,9 +2764,9 @@ const DemandForecasting = () => {
             </div>
             
           </>
-        ) : null}
+        )}
 
-        {!selectedScenario && activeTab === "insights" && (
+        {activeTab === "insights" && (
           <div className="space-y-6">
             {/* Top Row - Channel Distribution and ABC Classification */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -3053,14 +2940,12 @@ const DemandForecasting = () => {
             </div>
           </div>
         )}
-
-        {!selectedScenario && activeTab === "workbook" && (
+        {activeTab === "workbook" && (
           <div className="mb-6">
             <CollaborativeForecastTable />
           </div>
         )}
-
-        {!selectedScenario && activeTab === "impact" && (
+        {activeTab === "impact" && (
           <div className="space-y-4 h-[calc(100vh-200px)] overflow-y-auto">
             {/* Simplified Layout - Two Main Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -3254,8 +3139,7 @@ const DemandForecasting = () => {
             </Card>
           </div>
         )}
-
-        {!selectedScenario && activeTab === "quality" && (
+        {activeTab === "quality" && (
           <div className="space-y-6">
             {/* Data Quality Metrics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -3401,7 +3285,6 @@ const DemandForecasting = () => {
             </Card>
           </div>
         )}
-        </ScrollArea>
       </div>
 
       {/* Right Sidebar */}

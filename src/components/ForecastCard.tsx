@@ -26,39 +26,37 @@ export const ForecastCard: React.FC<ForecastCardProps> = ({
   return (
     <Card
       className={clsx(
-        "p-5 cursor-pointer transition-all duration-200 bg-background border overflow-hidden w-[280px] min-h-[140px] rounded-2xl",
-        "hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5",
-        isActive 
-          ? "shadow-lg border-primary/40 bg-primary/5" 
-          : "shadow-sm border-border/60",
+        "p-3 sm:p-4 cursor-pointer transition-all duration-300 hover:shadow-lg bg-card border-border overflow-hidden w-[280px] min-h-[140px]",
+        "hover:border-primary/30 hover:shadow-[0_0_0_1px_hsl(var(--primary)/0.1),0_8px_25px_-8px_hsl(var(--primary)/0.15)]",
+        isActive && "ring-2 ring-primary/30 border-primary/50",
         className
       )}
       onClick={onClick}
     >
-      <div className="flex flex-col h-full space-y-3">
-        {/* Header with icon and title */}
-        <div className="flex items-center gap-3">
-          <div className={clsx(
-            "flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center transition-colors",
-            isActive 
-              ? "bg-primary text-primary-foreground shadow-md" 
-              : "bg-primary/10 text-primary"
-          )}>
-            <Icon className="w-5 h-5" />
-          </div>
-          <h3 className="text-sm font-semibold text-foreground/90 flex-1 min-w-0 truncate">
+      <div className="flex flex-col h-full min-h-0">
+        {/* Header with title */}
+        <div className="mb-2">
+          <h3 className="text-xs font-semibold text-primary truncate">
             {title}
           </h3>
         </div>
         
-        {/* Value and subtitle */}
-        <div className="flex-1 space-y-1.5">
-          <p className="text-2xl font-bold text-foreground leading-none">
-            {value}
-          </p>
-          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-            {subtitle}
-          </p>
+        {/* Main content with icon on left and data on right */}
+        <div className="flex items-start gap-3 flex-1 min-w-0">
+          {/* Enhanced icon with blue accent */}
+          <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10 border border-primary/20">
+            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+          </div>
+          
+          {/* Content on right */}
+          <div className="flex-1 min-w-0">
+            <p className="text-lg sm:text-xl font-bold text-foreground leading-none mb-1 truncate">
+              {value}
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed break-words">
+              {subtitle}
+            </p>
+          </div>
         </div>
       </div>
     </Card>
