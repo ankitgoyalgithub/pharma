@@ -26,34 +26,35 @@ export const ForecastCard: React.FC<ForecastCardProps> = ({
   return (
     <Card
       className={clsx(
-        "p-3 sm:p-4 cursor-pointer transition-all duration-300 hover:shadow-lg bg-card border-border overflow-hidden w-[280px] min-h-[140px]",
-        "hover:border-primary/30 hover:shadow-[0_0_0_1px_hsl(var(--primary)/0.1),0_8px_25px_-8px_hsl(var(--primary)/0.15)]",
-        isActive && "ring-2 ring-primary/30 border-primary/50",
+        "p-5 cursor-pointer transition-all duration-300 bg-card border-border/40 overflow-hidden w-[280px] min-h-[140px]",
+        "rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5",
+        "hover:border-primary/20 hover:shadow-primary/5",
+        isActive && "bg-primary/5 border-primary/30 shadow-md",
         className
       )}
       onClick={onClick}
     >
-      <div className="flex flex-col h-full min-h-0">
+      <div className="flex flex-col h-full min-h-0 gap-3">
         {/* Header with title */}
-        <div className="mb-2">
-          <h3 className="text-xs font-semibold text-primary truncate">
+        <div>
+          <h3 className="text-xs font-semibold text-primary/80 uppercase tracking-wide truncate">
             {title}
           </h3>
         </div>
         
         {/* Main content with icon on left and data on right */}
-        <div className="flex items-start gap-3 flex-1 min-w-0">
-          {/* Enhanced icon with blue accent */}
-          <div className="flex-shrink-0 p-2 rounded-lg bg-primary/10 border border-primary/20">
-            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+        <div className="flex items-start gap-4 flex-1 min-w-0">
+          {/* Icon with gradient background */}
+          <div className="flex-shrink-0 p-3 rounded-xl bg-primary/10">
+            <Icon className="w-6 h-6 text-primary" />
           </div>
           
           {/* Content on right */}
-          <div className="flex-1 min-w-0">
-            <p className="text-lg sm:text-xl font-bold text-foreground leading-none mb-1 truncate">
+          <div className="flex-1 min-w-0 flex flex-col justify-center">
+            <p className="text-2xl font-bold text-foreground leading-tight mb-1.5 truncate">
               {value}
             </p>
-            <p className="text-sm text-muted-foreground leading-relaxed break-words">
+            <p className="text-sm text-muted-foreground leading-snug break-words">
               {subtitle}
             </p>
           </div>
