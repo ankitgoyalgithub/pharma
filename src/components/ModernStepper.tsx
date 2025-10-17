@@ -28,7 +28,7 @@ export const TopbarStepper: React.FC<TopbarStepperProps> = ({ steps, title = "Pr
       {/* Process Title */}
       <div className="flex items-center gap-1.5">
         <div className="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
-        <span className={`font-medium text-foreground ${compact ? 'text-xs' : 'text-sm'}`}>{title}</span>
+        <span className={`font-medium text-foreground ${compact ? 'text-xs' : 'text-2xl'}`}>{title}</span>
       </div>
     
       {/* Steps */}
