@@ -26,10 +26,13 @@ export const ForecastCard: React.FC<ForecastCardProps> = ({
   return (
     <Card
       className={clsx(
-        "p-5 cursor-pointer transition-all duration-300 bg-card border-border/40 overflow-hidden w-[280px] min-h-[140px]",
-        "rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-0.5",
+        "p-5 cursor-pointer bg-card border-border/40 overflow-hidden w-[280px] min-h-[140px]",
+        "rounded-2xl shadow-sm",
+        "transition-all duration-500 ease-out",
+        "hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02]",
         "hover:border-primary/20 hover:shadow-primary/5",
-        isActive && "bg-primary/5 border-primary/30 shadow-md",
+        "active:scale-[0.98]",
+        isActive && "bg-primary/5 border-primary/30 shadow-md scale-[1.01]",
         className
       )}
       onClick={onClick}

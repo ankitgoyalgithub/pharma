@@ -2136,7 +2136,7 @@ const DemandForecasting = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header Bar - Sticky */}
         <div className="flex-none flex items-center justify-between px-4 py-2 border-b bg-card/50 sticky top-0 z-10">
-          <h1 className="text-xl font-semibold text-foreground">
+          <h1 className="text-xl font-semibold text-foreground animate-fade-in">
             {selectedScenario ? `Scenario Analysis: ${scenarios.find(s => s.id === selectedScenario)?.name}` : 
              activeTab === "overview" ? "Forecast Overview" :
              activeTab === "insights" ? "Demand Insights" :
@@ -2428,7 +2428,7 @@ const DemandForecasting = () => {
             </div>
           </>
         ) : activeTab === "overview" && (
-          <>
+          <div className="animate-fade-in">
             {/* Demand Analysis Chart with controls */}
             <Card className="shadow-card border-0 mb-4 flex-1 bg-gradient-to-br from-card via-card to-muted/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -2786,12 +2786,11 @@ const DemandForecasting = () => {
                 </CardContent>
               </Card>
             </div>
-            
-          </>
+          </div>
         )}
 
         {activeTab === "insights" && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in">
             {/* Top Row - Channel Distribution and ABC Classification */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Card className="shadow-card border-0">
@@ -2965,12 +2964,12 @@ const DemandForecasting = () => {
           </div>
         )}
         {activeTab === "workbook" && (
-          <div className="mb-6">
+          <div className="mb-6 animate-fade-in">
             <CollaborativeForecastTable />
           </div>
         )}
         {activeTab === "impact" && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fade-in">
             {/* Simplified Layout - Two Main Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Waterfall Chart - Contribution Analysis */}
@@ -3164,7 +3163,7 @@ const DemandForecasting = () => {
           </div>
         )}
         {activeTab === "quality" && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in">
             {/* Data Quality Metrics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
