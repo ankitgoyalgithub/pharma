@@ -608,7 +608,7 @@ const DemandForecasting = () => {
   const externalDrivers = getExternalDrivers("demand-forecasting", hasData);
 
   const renderStep1 = () => (
-    <div className="relative flex flex-col h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden">
+    <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
       {/* Fixed Header */}
       <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
@@ -616,7 +616,7 @@ const DemandForecasting = () => {
       </div>
       
       {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-auto">
         <div className="space-y-6 p-6">
 
       <Card>
@@ -999,7 +999,7 @@ const DemandForecasting = () => {
           onSubmit={handleFoundrySubmit}
         />
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 
@@ -1174,7 +1174,7 @@ const DemandForecasting = () => {
   });
 
   const renderStep2 = () => (
-    <div className="relative flex flex-col h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden">
+    <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
       {/* Fixed Header */}
       <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <div className="flex justify-between items-center">
@@ -1190,7 +1190,7 @@ const DemandForecasting = () => {
       </div>
       
       {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-auto">
         <div className="space-y-6 p-6">
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -1440,7 +1440,7 @@ const DemandForecasting = () => {
           </Button>
         </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 
@@ -1615,7 +1615,7 @@ const DemandForecasting = () => {
 
   // ---- Step 3 - Review Data ----
   const renderStep3 = () => (
-    <div className="relative flex flex-col h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden">
+    <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
       {/* Fixed Header */}
       <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <h2 className="text-xl font-semibold text-foreground mb-1">Review Data</h2>
@@ -1623,7 +1623,7 @@ const DemandForecasting = () => {
       </div>
       
       {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-auto">
         <div className="space-y-6 p-6">
 
       {/* Data Quality Summary - Same as Step 2 */}
@@ -2024,7 +2024,7 @@ const DemandForecasting = () => {
           </Button>
         </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { NavLink, Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -112,7 +112,7 @@ const AppSidebar = () => {
   );
 };
 
-const TopBar = () => {
+const TopBar = ({ topbarRef }: { topbarRef: React.RefObject<HTMLDivElement> }) => {
   const navigate = useNavigate();
   const { steps, title, showStepper, onStepClick } = useStepperContext();
   const { toggleSidebar } = useSidebar();
@@ -135,7 +135,7 @@ const TopBar = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-40 h-16 border-b border-border bg-card flex items-center justify-between px-4">
+    <div ref={topbarRef} className="fixed top-0 left-0 right-0 z-40 h-16 border-b border-border bg-card flex items-center justify-between px-4">
       {/* Left side - Hamburger + Stepper */}
       <div className="flex items-center gap-4 flex-1">
         <Button
@@ -235,16 +235,28 @@ const TopBar = () => {
 };
 
 export const Layout = () => {
+  const topbarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateVar = () => {
+      const h = topbarRef.current?.offsetHeight ?? 64;
+      document.documentElement.style.setProperty("--topbar-height", `${h}px`);
+    };
+    updateVar();
+    window.addEventListener("resize", updateVar);
+    return () => window.removeEventListener("resize", updateVar);
+  }, []);
+
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-background/95 to-secondary/20">
         <AppSidebar />
         
         <div className="flex-1 min-w-0 flex flex-col">
-          <TopBar />
+          <TopBar topbarRef={topbarRef} />
           
           {/* Main content area with padding for fixed header */}
-          <main className="flex-1 min-w-0 pt-16 overflow-x-hidden">
+          <main className="flex-1 min-w-0 overflow-x-hidden" style={{ paddingTop: "var(--topbar-height, 64px)" }}>
             <Outlet />
           </main>
         </div>
