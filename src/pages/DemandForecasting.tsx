@@ -619,11 +619,16 @@ const DemandForecasting = () => {
   const externalDrivers = getExternalDrivers("demand-forecasting", hasData);
 
   const renderStep1 = () => (
-    <div className="space-y-6 pt-10 px-0 pb-0">
-      <div>
+    <div className="flex flex-col h-full">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
         <p className="text-sm text-muted-foreground">Upload all your data files at once. You can also select external factors to include in the model.</p>
       </div>
+      
+      {/* Scrollable Content */}
+      <ScrollArea className="flex-1">
+        <div className="space-y-6 p-6">
 
       <Card>
         <CardHeader>
@@ -990,20 +995,22 @@ const DemandForecasting = () => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => window.history.back()}>
-          ← Back
-        </Button>
-        <Button size="sm" onClick={() => handleStepTransition(2)}>
-          Continue to Data Gaps →
-        </Button>
-      </div>
+        <div className="flex justify-between pt-4">
+          <Button size="sm" variant="outline" onClick={() => window.history.back()}>
+            ← Back
+          </Button>
+          <Button size="sm" onClick={() => handleStepTransition(2)}>
+            Continue to Data Gaps →
+          </Button>
+        </div>
 
-      <MapFromFoundryDialog
-        isOpen={isFoundryModalOpen}
-        onClose={() => setIsFoundryModalOpen(false)}
-        onSubmit={handleFoundrySubmit}
-      />
+        <MapFromFoundryDialog
+          isOpen={isFoundryModalOpen}
+          onClose={() => setIsFoundryModalOpen(false)}
+          onSubmit={handleFoundrySubmit}
+        />
+        </div>
+      </ScrollArea>
     </div>
   );
 
@@ -1178,17 +1185,24 @@ const DemandForecasting = () => {
   });
 
   const renderStep2 = () => (
-    <div className="space-y-6 pt-10 px-0 pb-0">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
-          <p className="text-sm text-muted-foreground">AI detected missing data and suggested imputed values.</p>
+    <div className="flex flex-col h-full">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
+            <p className="text-sm text-muted-foreground">AI detected missing data and suggested imputed values.</p>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => setShowImputedReview(true)}>
+            <Settings className="w-4 h-4 mr-2" />
+            Auto Fix with AI
+          </Button>
         </div>
-        <Button size="sm" variant="outline" onClick={() => setShowImputedReview(true)}>
-          <Settings className="w-4 h-4 mr-2" />
-          Auto Fix with AI
-        </Button>
       </div>
+      
+      {/* Scrollable Content */}
+      <ScrollArea className="flex-1">
+        <div className="space-y-6 p-6">
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
@@ -1428,14 +1442,16 @@ const DemandForecasting = () => {
       </Card>
       )}
 
-      <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => setCurrentStep(1)}>
-          ← Back
-        </Button>
-        <Button size="sm" onClick={() => handleStepTransition(3)}>
-          Continue to Review →
-        </Button>
-      </div>
+        <div className="flex justify-between pt-4">
+          <Button size="sm" variant="outline" onClick={() => setCurrentStep(1)}>
+            ← Back
+          </Button>
+          <Button size="sm" onClick={() => handleStepTransition(3)}>
+            Continue to Review →
+          </Button>
+        </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 
@@ -1610,11 +1626,16 @@ const DemandForecasting = () => {
 
   // ---- Step 3 - Review Data ----
   const renderStep3 = () => (
-    <div className="space-y-6 pt-10 px-0 pb-0">
-      <div>
+    <div className="flex flex-col h-full">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <h2 className="text-xl font-semibold text-foreground mb-1">Review Data</h2>
         <p className="text-sm text-muted-foreground">Review your processed data and configure forecast settings.</p>
       </div>
+      
+      {/* Scrollable Content */}
+      <ScrollArea className="flex-1">
+        <div className="space-y-6 p-6">
 
       {/* Data Quality Summary - Same as Step 2 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -2005,14 +2026,16 @@ const DemandForecasting = () => {
         </Card>
       </div>
 
-      <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => setCurrentStep(2)}>
-          ← Back
-        </Button>
-        <Button size="sm" onClick={() => handleStepTransition(4)}>
-          Generate Forecast →
-        </Button>
-      </div>
+        <div className="flex justify-between pt-4">
+          <Button size="sm" variant="outline" onClick={() => setCurrentStep(2)}>
+            ← Back
+          </Button>
+          <Button size="sm" onClick={() => handleStepTransition(4)}>
+            Generate Forecast →
+          </Button>
+        </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 
