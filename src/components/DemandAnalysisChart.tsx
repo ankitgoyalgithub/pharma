@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 interface DemandAnalysisChartProps {
@@ -13,15 +13,29 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const [renderWidth, setRenderWidth] = useState(0);
 
   useEffect(() => {
-    if (!svgRef.current || !containerRef.current) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      setRenderWidth(Math.max(0, Math.floor(entry.contentRect.width)));
+    });
+    ro.observe(el);
+    // initialize once
+    setRenderWidth(el.clientWidth);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!svgRef.current || !containerRef.current || renderWidth === 0) return;
 
     // Clear previous chart
     d3.select(svgRef.current).selectAll('*').remove();
 
     const container = containerRef.current;
-    const containerWidth = Math.max(container.clientWidth, 400); // Ensure minimum width
+    const containerWidth = renderWidth;
     const containerHeight = 320;
 
     // Generate data based on granularity
@@ -100,6 +114,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     const mutedForeground = getHSLColor('--muted-foreground');
     const borderColor = getHSLColor('--border');
     const foregroundColor = getHSLColor('--foreground');
+    const backgroundColor = getHSLColor('--background');
 
     // Top section - Circular progress and metrics
     const topGroup = svg.append('g');
@@ -301,21 +316,22 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
         .y(d => yScale(d[key]))
         .curve(d3.curveMonotoneX);
 
-    // Define line colors (matching the screenshot)
+    // Define line styles using theme colors for better dark/light contrast
     const lineStyles = [
-      { key: 'ml' as const, color: '#90EE90', width: 2.5 },
-      { key: 'optimized' as const, color: '#98D8C8', width: 2.5 },
-      { key: 'historical' as const, color: '#228B22', width: 2.5 },
-      { key: 'forecast' as const, color: '#4682B4', width: 2.5 },
+      { key: 'ml' as const, color: successColor, width: 2.5, opacity: 1 },
+      { key: 'optimized' as const, color: accentColor, width: 2.5, opacity: 1 },
+      { key: 'historical' as const, color: foregroundColor, width: 2, opacity: 0.9 },
+      { key: 'forecast' as const, color: primaryColor, width: 2.5, opacity: 1 },
     ];
 
     // Draw lines
-    lineStyles.forEach(({ key, color, width }) => {
+    lineStyles.forEach(({ key, color, width, opacity = 1 }) => {
       chartGroup.append('path')
         .datum(data)
         .attr('fill', 'none')
         .attr('stroke', color)
         .attr('stroke-width', width)
+        .attr('opacity', opacity)
         .attr('d', line(key));
 
       // Add dots with hover tooltip
@@ -328,7 +344,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
         .attr('cy', d => yScale(d[key]))
         .attr('r', 4)
         .attr('fill', color)
-        .attr('stroke', 'white')
+        .attr('stroke', backgroundColor)
         .attr('stroke-width', 2)
         .style('cursor', 'pointer')
         .on('mouseenter', function(event, d) {
@@ -372,9 +388,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
             d3.select(tooltipRef.current).style('opacity', 0);
           }
         });
-    });
+        });
 
-  }, [granularity, valueMode, classFilter, locationFilter, chartGranularity]);
+  }, [granularity, valueMode, classFilter, locationFilter, chartGranularity, renderWidth]);
 
   return (
     <div className="relative w-full min-w-0">
