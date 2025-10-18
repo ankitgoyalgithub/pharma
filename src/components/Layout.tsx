@@ -240,11 +240,11 @@ export const Layout = () => {
       <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-background/95 to-secondary/20">
         <AppSidebar />
         
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 min-w-0 flex flex-col">
           <TopBar />
           
           {/* Main content area with padding for fixed header */}
-          <main className="flex-1 pt-16">
+          <main className="flex-1 min-w-0 pt-16 overflow-x-hidden">
             <Outlet />
           </main>
         </div>

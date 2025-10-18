@@ -3313,7 +3313,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Right Sidebar */}
-      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80 max-w-[90vw]'} absolute right-0 top-0 h-full z-20 bg-card border-l p-4 flex flex-col overflow-hidden transition-all duration-200 shadow-lg`}>
+      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} shrink-0 flex-none h-full max-h-screen bg-card border-l p-4 flex flex-col overflow-hidden transition-all duration-200`}>
         {rightSidebarCollapsed ? (
           /* Collapsed Sidebar - Icons Only */
           <div className="flex flex-col items-center gap-4 pt-4">
