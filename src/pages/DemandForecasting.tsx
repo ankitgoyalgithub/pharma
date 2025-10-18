@@ -3584,7 +3584,7 @@ const DemandForecasting = () => {
   if (isShareMode) {
     return (
       <TooltipProvider>
-        <div className="min-h-screen bg-gradient-subtle">
+        <div className="min-h-screen bg-gradient-subtle overflow-x-hidden">
           <div className="px-4 py-6">
             {renderStep4()}
           </div>
@@ -3595,7 +3595,7 @@ const DemandForecasting = () => {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-gradient-subtle">
+      <div className="min-h-screen bg-gradient-subtle overflow-x-hidden">
         <div className="px-4 py-6">
           {currentStep === 1 && renderStep1()}
           {currentStep === 2 && renderStep2()}
