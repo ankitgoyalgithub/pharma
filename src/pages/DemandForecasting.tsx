@@ -181,17 +181,6 @@ const DemandForecasting = () => {
     setOnStepClick(() => handleStepClick);
   }, [handleStepClick, setOnStepClick]);
 
-  // Auto-scroll down to avoid topbar overlap on initial load
-  useEffect(() => {
-    window.scrollTo({ top: 60, behavior: 'smooth' });
-  }, []); // Empty dependency array means this runs once on mount
-
-  // Auto-scroll down when Step 4 loads to avoid topbar overlap
-  useEffect(() => {
-    if (currentStep === 4) {
-      window.scrollTo({ top: 200, behavior: 'smooth' });
-    }
-  }, [currentStep]);
 
   const [driversLoading, setDriversLoading] = useState(false);
 
