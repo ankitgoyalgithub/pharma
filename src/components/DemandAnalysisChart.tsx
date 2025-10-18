@@ -21,7 +21,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     d3.select(svgRef.current).selectAll('*').remove();
 
     const container = containerRef.current;
-    const containerWidth = container.clientWidth;
+    const containerWidth = Math.max(container.clientWidth, 400); // Ensure minimum width
     const containerHeight = 320;
 
     // Generate data based on granularity
@@ -377,9 +377,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
   }, [granularity, valueMode, classFilter, locationFilter, chartGranularity]);
 
   return (
-    <div className="relative">
-      <div ref={containerRef} className="w-full">
-        <svg ref={svgRef}></svg>
+    <div className="relative w-full min-w-0">
+      <div ref={containerRef} className="w-full min-w-0 overflow-hidden">
+        <svg ref={svgRef} className="max-w-full"></svg>
       </div>
       
       {/* Tooltip */}
