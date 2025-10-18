@@ -619,7 +619,7 @@ const DemandForecasting = () => {
   const externalDrivers = getExternalDrivers("demand-forecasting", hasData);
 
   const renderStep1 = () => (
-    <div className="flex flex-col h-full">
+    <div className="relative flex flex-col h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden">
       {/* Fixed Header */}
       <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
@@ -1185,7 +1185,7 @@ const DemandForecasting = () => {
   });
 
   const renderStep2 = () => (
-    <div className="flex flex-col h-full">
+    <div className="relative flex flex-col h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden">
       {/* Fixed Header */}
       <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <div className="flex justify-between items-center">
@@ -1626,7 +1626,7 @@ const DemandForecasting = () => {
 
   // ---- Step 3 - Review Data ----
   const renderStep3 = () => (
-    <div className="flex flex-col h-full">
+    <div className="relative flex flex-col h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden">
       {/* Fixed Header */}
       <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
         <h2 className="text-xl font-semibold text-foreground mb-1">Review Data</h2>
@@ -3618,13 +3618,16 @@ const DemandForecasting = () => {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-gradient-subtle overflow-x-hidden">
-        <div className="px-4 py-6 overflow-x-hidden">
-          {currentStep === 1 && renderStep1()}
-          {currentStep === 2 && renderStep2()}
-          {currentStep === 3 && renderStep3()}
-          {currentStep === 4 && renderStep4()}
+      <div className="h-screen bg-gradient-subtle overflow-hidden">
+        <div className="h-full px-4 py-0 overflow-hidden">
+          <div className="h-full w-full overflow-hidden">
+            {currentStep === 1 && renderStep1()}
+            {currentStep === 2 && renderStep2()}
+            {currentStep === 3 && renderStep3()}
+            {currentStep === 4 && renderStep4()}
+          </div>
         </div>
+      </div>
         {isLoading && (
           <ScientificLoader 
             message={`Processing Step ${currentStep + 1}...`}
@@ -3705,7 +3708,6 @@ const DemandForecasting = () => {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
     </TooltipProvider>
   );
 };
