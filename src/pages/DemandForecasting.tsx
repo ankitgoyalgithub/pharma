@@ -2019,7 +2019,7 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex h-[calc(100vh-4rem)] bg-background">
+    <div className="flex h-[calc(100vh-4rem)] max-w-full overflow-x-hidden bg-background">
       {/* Left Sidebar - Canva-style compact panel */}
       <div className="w-[280px] bg-card border-r flex flex-col overflow-hidden">
         <div className="flex-none px-4 py-3 border-b bg-card sticky top-0 z-10">
