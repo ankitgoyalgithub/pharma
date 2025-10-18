@@ -2193,7 +2193,7 @@ const DemandForecasting = () => {
         {/* Main Workspace */}
         <div className="flex-1 min-w-0 flex flex-col overflow-hidden bg-background">
           {/* Scrollable Content Area */}
-          <div className="flex-1 min-w-0 overflow-y-auto p-4">
+          <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4">
         {/* Content based on active tab or selected scenario */}
         {selectedScenario ? (
           <>
@@ -2534,7 +2534,7 @@ const DemandForecasting = () => {
             </Card>
             
             {/* Top KPI Row - 3 Cards */}
-            <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 mb-3">
               <CompactMetricCard
                 value={filterValues.businessUnits === 'enterprise' ? '7.2%' : '8.7%'}
                 label="MAPE"
@@ -3585,7 +3585,7 @@ const DemandForecasting = () => {
     return (
       <TooltipProvider>
         <div className="min-h-screen bg-gradient-subtle overflow-x-hidden">
-          <div className="px-4 py-6">
+          <div className="px-4 py-6 overflow-x-hidden">
             {renderStep4()}
           </div>
         </div>
@@ -3596,7 +3596,7 @@ const DemandForecasting = () => {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gradient-subtle overflow-x-hidden">
-        <div className="px-4 py-6">
+        <div className="px-4 py-6 overflow-x-hidden">
           {currentStep === 1 && renderStep1()}
           {currentStep === 2 && renderStep2()}
           {currentStep === 3 && renderStep3()}
