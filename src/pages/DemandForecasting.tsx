@@ -2019,7 +2019,7 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden bg-background">
+    <div className="relative flex h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden bg-background">
       {/* Left Sidebar - Canva-style compact panel */}
       <div className="w-[280px] shrink-0 h-full bg-card border-r flex flex-col overflow-hidden">
         <div className="flex-none px-4 py-3 border-b bg-card sticky top-0 z-10">
@@ -3313,7 +3313,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Right Sidebar */}
-      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} shrink-0 flex-none h-full max-h-screen bg-card border-l p-4 flex flex-col overflow-hidden transition-all duration-200`}>
+      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80 max-w-[90vw]'} absolute right-0 top-0 h-full z-20 bg-card border-l p-4 flex flex-col overflow-hidden transition-all duration-200 shadow-lg`}>
         {rightSidebarCollapsed ? (
           /* Collapsed Sidebar - Icons Only */
           <div className="flex flex-col items-center gap-4 pt-4">
