@@ -2019,9 +2019,9 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="flex h-[calc(100vh-4rem)] max-w-full overflow-x-hidden bg-background">
+    <div className="flex h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden bg-background">
       {/* Left Sidebar - Canva-style compact panel */}
-      <div className="w-[280px] bg-card border-r flex flex-col overflow-hidden">
+      <div className="w-[280px] shrink-0 h-full bg-card border-r flex flex-col overflow-hidden">
         <div className="flex-none px-4 py-3 border-b bg-card sticky top-0 z-10">
           <h2 className="text-xl font-semibold text-foreground">Results</h2>
         </div>
@@ -2133,7 +2133,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Main Content Area - Canva-style workspace */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         {/* Header Bar - Sticky */}
         <div className="flex-none flex items-center justify-between px-4 py-2 border-b bg-card/50 sticky top-0 z-10">
           <h1 className="text-xl font-semibold text-foreground animate-fade-in">
@@ -2191,9 +2191,9 @@ const DemandForecasting = () => {
         </div>
 
         {/* Main Workspace */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-background">
+        <div className="flex-1 min-w-0 flex flex-col overflow-hidden bg-background">
           {/* Scrollable Content Area */}
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 min-w-0 overflow-y-auto p-4">
         {/* Content based on active tab or selected scenario */}
         {selectedScenario ? (
           <>
@@ -3313,7 +3313,7 @@ const DemandForecasting = () => {
       </div>
 
       {/* Right Sidebar */}
-      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} bg-card border-l p-4 flex flex-col h max-h-screen transition-all duration-200`}>
+      <div className={`${rightSidebarCollapsed ? 'w-16' : 'w-80'} shrink-0 flex-none h-full max-h-screen bg-card border-l p-4 flex flex-col overflow-hidden transition-all duration-200`}>
         {rightSidebarCollapsed ? (
           /* Collapsed Sidebar - Icons Only */
           <div className="flex flex-col items-center gap-4 pt-4">
