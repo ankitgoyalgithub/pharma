@@ -2208,7 +2208,7 @@ const DemandForecasting = () => {
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-6">
                 <Card className="shadow-card border-0">
                   <CardHeader>
                     <CardTitle>Scenario vs Baseline Trend</CardTitle>
@@ -2330,7 +2330,7 @@ const DemandForecasting = () => {
               </div>
 
               {/* Additional Insights Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
                 <Card className="shadow-card border-0">
                   <CardHeader>
                     <CardTitle className="text-sm">Channel Performance</CardTitle>
@@ -2534,7 +2534,7 @@ const DemandForecasting = () => {
             </Card>
             
             {/* Top KPI Row - 3 Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 mb-3">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2 mb-3">
               <CompactMetricCard
                 value={filterValues.businessUnits === 'enterprise' ? '7.2%' : '8.7%'}
                 label="MAPE"
@@ -2566,7 +2566,7 @@ const DemandForecasting = () => {
             </div>
 
             {/* Enhanced Forecast Snapshot - Logility & Kinexis Inspired */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 mb-4">
               {/* AI Insights & Recommendations */}
               <Card className="shadow-card border-0 lg:col-span-2">
                 <CardHeader className="pb-3">
