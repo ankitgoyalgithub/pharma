@@ -79,7 +79,6 @@ const AppSidebar = () => {
                       "hover:bg-muted-hover hover:scale-105",
                       isActive(item.href) && "bg-gradient-primary text-primary-foreground shadow-glow"
                     )}
-                    onClick={() => setOpen(false)}
                   >
                     <NavLink to={item.href}>
                       <item.icon className="h-5 w-5 mr-3" />
@@ -248,7 +247,7 @@ export const Layout = () => {
   }, []);
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-background/95 to-secondary/20">
         <AppSidebar />
         
