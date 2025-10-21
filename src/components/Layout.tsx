@@ -36,13 +36,13 @@ import {
 } from "@/components/ui/sidebar";
 
 const navigation = [
-  { name: "SynQAI", href: "/", icon: Bot },
-  { name: "Study", href: "/study", icon: LayoutDashboard },
-  { name: "Foundry", href: "/foundry", icon: Database },
-  { name: "Workflows", href: "/workflows", icon: Wrench },
-  { name: "Reports", href: "/reports", icon: BarChart3 },
-  { name: "Build", href: "/build", icon: Settings },
-  { name: "Jobs", href: "/jobs", icon: Clock },
+  { name: "SynQAI", href: "/", icon: Bot, iconColor: "text-[hsl(225,84%,55%)]" },
+  { name: "Study", href: "/study", icon: LayoutDashboard, iconColor: "text-[hsl(158,70%,45%)]" },
+  { name: "Foundry", href: "/foundry", icon: Database, iconColor: "text-[hsl(280,65%,55%)]" },
+  { name: "Workflows", href: "/workflows", icon: Wrench, iconColor: "text-[hsl(25,85%,55%)]" },
+  { name: "Reports", href: "/reports", icon: BarChart3, iconColor: "text-[hsl(142,72%,29%)]" },
+  { name: "Build", href: "/build", icon: Settings, iconColor: "text-[hsl(210,85%,55%)]" },
+  { name: "Jobs", href: "/jobs", icon: Clock, iconColor: "text-[hsl(32,95%,44%)]" },
 ];
 
 const AppSidebar = () => {
@@ -76,12 +76,12 @@ const AppSidebar = () => {
                     isActive={isActive(item.href)}
                     className={cn(
                       "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300",
-                      "hover:bg-muted-hover hover:scale-105",
+                      "hover:bg-primary-hover-subtle hover:scale-105",
                       isActive(item.href) && "bg-gradient-primary text-primary-foreground shadow-glow"
                     )}
                   >
                     <NavLink to={item.href}>
-                      <item.icon className="h-5 w-5 mr-3" />
+                      <item.icon className={cn("h-5 w-5 mr-3", !isActive(item.href) && item.iconColor)} />
                       <span>{item.name}</span>
                     </NavLink>
                   </SidebarMenuButton>
