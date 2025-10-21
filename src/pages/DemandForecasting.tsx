@@ -162,7 +162,7 @@ const DemandForecasting = () => {
   const stepperSteps = [
     { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
     { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
-    { id: 3, title: "Review Data", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
+    { id: 3, title: "Configuration", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
     { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
   ];
   
@@ -1637,60 +1637,56 @@ const DemandForecasting = () => {
 
       {/* Data Configuration Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 hover:shadow-lg transition-shadow">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/20 to-transparent rounded-bl-full" />
-          <CardContent className="p-4 relative">
-            <div className="flex items-center gap-2 mb-2">
-              <Calendar className="w-4 h-4 text-primary" />
-              <div className="text-xs text-muted-foreground">Data Period</div>
+        <Card className="border-primary/20 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-1">
+              <CalendarIcon className="w-4 h-4 text-primary" />
+              <div className="text-xs font-medium text-muted-foreground">Data Period</div>
             </div>
-            <div className="text-lg font-bold text-primary">Jan 2022 - Dec 2024</div>
-            <div className="text-xs text-muted-foreground mt-1">36 months</div>
+            <div className="text-base font-bold text-foreground">Jan 2022 - Dec 2024</div>
+            <div className="text-xs text-muted-foreground">36 months</div>
           </CardContent>
         </Card>
         
-        <Card className="relative overflow-hidden bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20 hover:shadow-lg transition-shadow">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-accent/20 to-transparent rounded-bl-full" />
-          <CardContent className="p-4 relative">
-            <div className="flex items-center gap-2 mb-2">
+        <Card className="border-accent/20 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-1">
               <Database className="w-4 h-4 text-accent" />
-              <div className="text-xs text-muted-foreground">Total Records</div>
+              <div className="text-xs font-medium text-muted-foreground">Total Records</div>
             </div>
-            <div className="text-2xl font-bold text-accent">847,592</div>
-            <div className="text-xs text-muted-foreground mt-1">Across all sources</div>
+            <div className="text-base font-bold text-foreground">847,592</div>
+            <div className="text-xs text-muted-foreground">Across all sources</div>
           </CardContent>
         </Card>
         
-        <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-success/20 to-transparent rounded-bl-full" />
-          <CardContent className="p-4 relative">
-            <div className="flex items-center gap-2 mb-2">
+        <Card className="border-success/20 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-1">
               <Box className="w-4 h-4 text-success" />
-              <div className="text-xs text-muted-foreground">SKUs/Products</div>
+              <div className="text-xs font-medium text-muted-foreground">SKUs/Products</div>
             </div>
-            <div className="text-2xl font-bold text-success">2,847</div>
-            <div className="text-xs text-muted-foreground mt-1">Unique items</div>
+            <div className="text-base font-bold text-foreground">2,847</div>
+            <div className="text-xs text-muted-foreground">Unique items</div>
           </CardContent>
         </Card>
         
-        <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-warning/20 to-transparent rounded-bl-full" />
-          <CardContent className="p-4 relative">
-            <div className="flex items-center gap-2 mb-2">
+        <Card className="border-warning/20 hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-1">
               <MapPin className="w-4 h-4 text-warning" />
-              <div className="text-xs text-muted-foreground">Locations</div>
+              <div className="text-xs font-medium text-muted-foreground">Locations</div>
             </div>
-            <div className="text-2xl font-bold text-warning">127</div>
-            <div className="text-xs text-muted-foreground mt-1">Geographic points</div>
+            <div className="text-base font-bold text-foreground">127</div>
+            <div className="text-xs text-muted-foreground">Geographic points</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Model Configuration - Elevated */}
-      <Card className="border-primary/20 shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
+      <Card className="border-primary/20">
+        <CardHeader>
           <div className="flex items-center gap-2">
-            <CardTitle className="text-lg">Model Configuration</CardTitle>
+            <CardTitle className="text-base">Model Configuration</CardTitle>
             <Tooltip>
               <TooltipTrigger>
                 <Info className="w-4 h-4 text-muted-foreground" />
@@ -1700,13 +1696,12 @@ const DemandForecasting = () => {
               </TooltipContent>
             </Tooltip>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">Define how the AI model should process and forecast your data</p>
         </CardHeader>
-        <CardContent className="space-y-6 pt-6">
+        <CardContent className="space-y-4">
           {/* Primary Settings */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 text-foreground">Primary Settings</h4>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <h4 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">Primary Settings</h4>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="forecast-horizon">Forecast Horizon</Label>
                 <Select value={forecastHorizon} onValueChange={setForecastHorizon}>
@@ -1773,12 +1768,12 @@ const DemandForecasting = () => {
             </div>
           </div>
 
-          <Separator />
+          <Separator className="my-3" />
 
           {/* Advanced Model Settings */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 text-foreground">Advanced Model Settings</h4>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            <h4 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">Advanced Model Settings</h4>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="validation-split">Validation Split</Label>
                 <Select value={validationSplit} onValueChange={setValidationSplit}>
@@ -1921,12 +1916,12 @@ const DemandForecasting = () => {
             </div>
           </div>
 
-          <Separator />
+          <Separator className="my-3" />
 
           {/* Algorithm Selection */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 text-foreground">Algorithm Selection</h4>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <h4 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">Algorithm Selection</h4>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="primary-algorithm">Primary Algorithm</Label>
                 <Select value="auto" onValueChange={() => {}}>
@@ -2121,41 +2116,6 @@ const DemandForecasting = () => {
               <Database className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">No data sources added yet</p>
               <p className="text-xs text-muted-foreground">Go back to Step 1 to add data sources</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* External Drivers */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-base">External Drivers</CardTitle>
-            <Tooltip>
-              <TooltipTrigger>
-                <Info className="w-4 h-4 text-muted-foreground" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>External factors selected in Step 1 that will be included in the forecast model to improve accuracy.</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          <p className="text-sm text-muted-foreground mt-1">Active external factors influencing the forecast</p>
-        </CardHeader>
-        <CardContent>
-          {selectedDrivers.length > 0 ? (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {selectedDrivers.map((driver) => (
-                <div key={driver} className="flex items-center justify-between p-3 bg-muted/30 rounded border">
-                  <span className="text-sm font-medium">{driver}</span>
-                  <Badge variant="outline" className="text-xs ml-2">Active</Badge>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-6">
-              <p className="text-sm text-muted-foreground">No external drivers selected</p>
-              <p className="text-xs text-muted-foreground mt-1">Add external factors in Step 1 to improve forecast accuracy</p>
             </div>
           )}
         </CardContent>
