@@ -54,9 +54,9 @@ const AppSidebar = () => {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <Sidebar className="border-r border-border" collapsible="offcanvas">
+    <Sidebar className="border-r border-border w-56" collapsible="offcanvas">
       {/* Logo Header */}
-      <div className="flex h-16 items-center justify-between px-6 border-b border-border">
+      <div className="flex h-16 items-center justify-between px-4 border-b border-border">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">U</span>
@@ -65,7 +65,7 @@ const AppSidebar = () => {
         </div>
       </div>
 
-      <SidebarContent className="px-4 py-6">
+      <SidebarContent className="px-3 py-6">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
@@ -92,7 +92,7 @@ const AppSidebar = () => {
         </SidebarGroup>
 
         {/* Theme Switcher */}
-        <div className="absolute bottom-6 left-4 right-4">
+        <div className="absolute bottom-6 left-3 right-3">
           <Button
             variant="ghost"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
