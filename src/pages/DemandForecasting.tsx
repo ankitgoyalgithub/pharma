@@ -78,6 +78,10 @@ import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { ScenarioCreation } from "@/components/ScenarioCreation";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
+import { gapData } from '@/data/demandForecasting/gapData';
+import { dataQualityIssues, dataQualitySummary } from '@/data/demandForecasting/dataQualityIssues';
+import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
+import { AutoFixDialog } from '@/components/AutoFixDialog';
 
 // ---- Chart.js imports (replaces Recharts) ----
 import {
@@ -105,7 +109,6 @@ import { forecastMetrics } from "@/data/demandForecasting/forecastMetrics";
 import { historicalForecastData } from "@/data/demandForecasting/historicalForecastData";
 import { pieData } from "@/data/demandForecasting/pieData";
 import { skuData } from "@/data/demandForecasting/skuData";
-import { gapData } from "@/data/demandForecasting/gapData";
 
 import { sampleAiResponses } from "@/data/demandForecasting/aiResponses";
 import { masterObjects, timeseriesObjects } from "@/data/demandForecasting/foundryObjects";
@@ -225,6 +228,7 @@ const DemandForecasting = () => {
   };
   const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "quality">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
+  const [showAutoFixDialog, setShowAutoFixDialog] = useState(false);
   // Demand Analysis controls
   const [granularity, setGranularity] = useState<"weekly" | "monthly" | "quarterly">("weekly");
   const [valueMode, setValueMode] = useState<"value" | "volume">("value");
@@ -1182,10 +1186,18 @@ const DemandForecasting = () => {
             <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
             <p className="text-sm text-muted-foreground">AI detected missing data and suggested imputed values.</p>
           </div>
-          <Button size="sm" variant="outline" onClick={() => setShowImputedReview(true)}>
-            <Settings className="w-4 h-4 mr-2" />
-            Auto Fix with AI
-          </Button>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <div className="text-sm font-medium">{dataQualitySummary.totalIssues} Issues Detected</div>
+              <div className="text-xs text-muted-foreground">
+                {dataQualitySummary.highSeverity} high · {dataQualitySummary.mediumSeverity} medium · {dataQualitySummary.lowSeverity} low
+              </div>
+            </div>
+            <Button size="sm" onClick={() => setShowAutoFixDialog(true)}>
+              <Sparkles className="w-4 h-4 mr-2" />
+              Auto Fix with AI
+            </Button>
+          </div>
         </div>
       </div>
       
@@ -1329,28 +1341,13 @@ const DemandForecasting = () => {
       </div>
 
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <h3 className="text-base font-medium text-foreground">Correlation: External Factors vs Sales</h3>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info className="w-4 h-4 text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Shows how strongly external factors correlate with sales data. Values closer to +1 or -1 indicate stronger relationships.</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            <div className="h-full">
-              <Bar data={correlationData} options={correlationOptions} />
-            </div>
-          </CardContent>
-        </Card>
+      {/* Data Quality Issues Table */}
+      <DataQualityIssuesTable 
+        issues={dataQualityIssues}
+        onAutoFix={() => setShowAutoFixDialog(true)}
+      />
 
+      <div className="grid grid-cols-1 gap-6">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -1386,6 +1383,16 @@ const DemandForecasting = () => {
           </CardContent>
         </Card>
       </div>
+
+      <AutoFixDialog
+        open={showAutoFixDialog}
+        onOpenChange={setShowAutoFixDialog}
+        issues={dataQualityIssues}
+        onApplyFixes={() => {
+          console.log('Applying fixes...');
+          // Here you would apply the fixes to the actual data
+        }}
+      />
 
       {showImputedReview && (
         <Card>
