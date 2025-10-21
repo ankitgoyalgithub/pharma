@@ -1,4 +1,7 @@
 export const workbookData = [
-  { sku: "SKU001", location: "Delhi", channel: "Online", week1: 100, week2: 110, week3: 105 },
-  { sku: "SKU002", location: "Mumbai", channel: "Offline", week1: 120, week2: 130, week3: 125 },
+  { sku: "PRD001", product: "Widget A", location: "New York", channel: "Online", week1: 150, week2: 155, week3: 148 },
+  { sku: "PRD002", product: "Component B", location: "Chicago", channel: "Retail", week1: 200, week2: 210, week3: 205 },
+  { sku: "PRD003", product: "Assembly C", location: "Los Angeles", channel: "B2B", week1: 75, week2: 80, week3: 78 },
+  { sku: "PRD004", product: "Tool D", location: "Dallas", channel: "Direct Sales", week1: 50, week2: 52, week3: 51 },
+  { sku: "PRD005", product: "Material E", location: "Miami", channel: "Online", week1: 300, week2: 310, week3: 305 },
 ];

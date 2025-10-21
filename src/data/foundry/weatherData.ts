@@ -1,7 +1,7 @@
 export const weatherData = [
   {
     date: "2024-07-01",
-    location: "New York, NY",
+    location: "New York",
     temperature: 78,
     humidity: 65,
     precipitation: 0.0,
@@ -13,7 +13,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-01",
-    location: "Chicago, IL", 
+    location: "Chicago", 
     temperature: 75,
     humidity: 70,
     precipitation: 0.12,
@@ -25,7 +25,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-01",
-    location: "Los Angeles, CA",
+    location: "Los Angeles",
     temperature: 82,
     humidity: 55,
     precipitation: 0.0,
@@ -37,7 +37,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-02",
-    location: "Dallas, TX",
+    location: "Dallas",
     temperature: 88,
     humidity: 60,
     precipitation: 0.0,
@@ -49,7 +49,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-02",
-    location: "Miami, FL",
+    location: "Miami",
     temperature: 85,
     humidity: 80,
     precipitation: 0.25,
@@ -61,7 +61,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-03",
-    location: "New York, NY",
+    location: "New York",
     temperature: 80,
     humidity: 68,
     precipitation: 0.05,
@@ -73,7 +73,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-03",
-    location: "Chicago, IL",
+    location: "Chicago",
     temperature: 77,
     humidity: 65, 
     precipitation: 0.0,
@@ -85,7 +85,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-04",
-    location: "Los Angeles, CA",
+    location: "Los Angeles",
     temperature: 79,
     humidity: 58,
     precipitation: 0.0,
@@ -97,7 +97,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-04",
-    location: "Dallas, TX",
+    location: "Dallas",
     temperature: 90,
     humidity: 55,
     precipitation: 0.0,
@@ -109,7 +109,7 @@ export const weatherData = [
   },
   {
     date: "2024-07-05",
-    location: "Miami, FL",
+    location: "Miami",
     temperature: 84,
     humidity: 75, 
     precipitation: 0.18,

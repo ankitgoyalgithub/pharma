@@ -1,7 +1,7 @@
 export const inventoryLevelsData = [
   {
     date: "2024-07-01",
-    location: "New York Warehouse",
+    location: "New York",
     product: "Widget A",
     currentStock: 1250,
     minimumStock: 200,
@@ -12,7 +12,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-01",
-    location: "Chicago Distribution Center", 
+    location: "Chicago", 
     product: "Component B",
     currentStock: 1875,
     minimumStock: 300,
@@ -23,7 +23,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-01",
-    location: "Los Angeles Port Terminal",
+    location: "Los Angeles",
     product: "Assembly C",
     currentStock: 750,
     minimumStock: 100,
@@ -34,7 +34,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-02",
-    location: "Dallas Manufacturing Plant",
+    location: "Dallas",
     product: "Tool D",
     currentStock: 425,
     minimumStock: 50,
@@ -45,7 +45,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-02",
-    location: "Miami Retail Store", 
+    location: "Miami", 
     product: "Material E",
     currentStock: 3200,
     minimumStock: 500,
@@ -56,7 +56,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-03",
-    location: "New York Warehouse",
+    location: "New York",
     product: "Component B",
     currentStock: 980,
     minimumStock: 150,
@@ -67,7 +67,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-03",
-    location: "Chicago Distribution Center",
+    location: "Chicago",
     product: "Widget A",
     currentStock: 1450,
     minimumStock: 200,
@@ -78,7 +78,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-04",
-    location: "Los Angeles Port Terminal",
+    location: "Los Angeles",
     product: "Tool D",
     currentStock: 315,
     minimumStock: 50,
@@ -89,7 +89,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-04",
-    location: "Dallas Manufacturing Plant",
+    location: "Dallas",
     product: "Material E",
     currentStock: 2750,
     minimumStock: 400,
@@ -100,7 +100,7 @@ export const inventoryLevelsData = [
   },
   {
     date: "2024-07-05",
-    location: "Miami Retail Store",
+    location: "Miami",
     product: "Assembly C",
     currentStock: 625,
     minimumStock: 80,

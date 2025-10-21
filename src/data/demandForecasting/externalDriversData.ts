@@ -67,7 +67,7 @@ export const externalDriversData = {
   "Rainfall": [
     {
       date: "2024-01-01",
-      location: "New York, NY",
+      location: "New York",
       precipitation: 2.3,
       unit: "mm",
       intensity: "Light",
@@ -76,7 +76,7 @@ export const externalDriversData = {
     },
     {
       date: "2024-01-02",
-      location: "New York, NY",
+      location: "Chicago",
       precipitation: 0.0,
       unit: "mm",
       intensity: "None",
@@ -85,7 +85,7 @@ export const externalDriversData = {
     },
     {
       date: "2024-01-03",
-      location: "New York, NY",
+      location: "Los Angeles",
       precipitation: 1.2,
       unit: "mm",
       intensity: "Light",
@@ -96,7 +96,7 @@ export const externalDriversData = {
   "Temperature": [
     {
       date: "2024-01-01",
-      location: "New York, NY",
+      location: "New York",
       temperature: 24,
       unit: "Celsius",
       humidity: 65,
@@ -106,7 +106,7 @@ export const externalDriversData = {
     },
     {
       date: "2024-01-02",
-      location: "New York, NY",
+      location: "Chicago",
       temperature: 26,
       unit: "Celsius",
       humidity: 60,
@@ -116,7 +116,7 @@ export const externalDriversData = {
     },
     {
       date: "2024-01-03",
-      location: "New York, NY",
+      location: "Los Angeles",
       temperature: 22,
       unit: "Celsius",
       humidity: 70,
@@ -275,20 +275,20 @@ export const externalDriversData = {
   "Weather_Data": [
     {
       date: "2024-01-01",
-      location: "Multiple Regions",
-      avgTemperature: 18.5,
-      precipitation: 2.3,
+      location: "US Regions",
+      avgTemperature: 65.5,
+      precipitation: 0.15,
       humidity: 65,
-      windSpeed: 12,
+      windSpeed: 8,
       condition: "Partly Cloudy"
     },
     {
       date: "2024-01-02",
-      location: "Multiple Regions",
-      avgTemperature: 19.2,
+      location: "US Regions",
+      avgTemperature: 67.2,
       precipitation: 0.0,
       humidity: 58,
-      windSpeed: 8,
+      windSpeed: 6,
       condition: "Clear"
     }
   ],

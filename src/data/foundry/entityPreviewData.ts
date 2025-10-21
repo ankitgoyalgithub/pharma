@@ -9,80 +9,78 @@ export const entityPreviewData: EntityPreviewMap = {
       { accessorKey: "name", header: "Product Name" },
       { accessorKey: "category", header: "Category" },
       { accessorKey: "brand", header: "Brand" },
-      { accessorKey: "uom", header: "UOM" },
+      { accessorKey: "unit", header: "Unit" },
       { accessorKey: "price", header: "Price ($)" },
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "P-1001", name: "Widget A Pro", category: "Gadgets", brand: "TechCorp", uom: "PCS", price: 29.99, status: "Active" },
-      { id: "P-1002", name: "Widget B Elite", category: "Gadgets", brand: "TechCorp", uom: "PCS", price: 45.50, status: "Active" },
-      { id: "P-1003", name: "Tool X Premium", category: "Tools", brand: "ToolMaster", uom: "SET", price: 125.00, status: "Active" },
-      { id: "P-1004", name: "Tool Y Standard", category: "Tools", brand: "ToolMaster", uom: "PCS", price: 78.25, status: "Active" },
-      { id: "P-1005", name: "Accessory M", category: "Accessories", brand: "AccessPro", uom: "PCS", price: 15.75, status: "Active" },
-      { id: "P-1006", name: "Accessory N", category: "Accessories", brand: "AccessPro", uom: "PCS", price: 22.50, status: "Pending" },
-      { id: "P-1007", name: "Widget Z Legacy", category: "Gadgets", brand: "OldTech", uom: "PCS", price: 12.99, status: "Discontinued" },
-      { id: "P-1008", name: "Gizmo P Advanced", category: "Devices", brand: "GizmoInc", uom: "BOX", price: 89.99, status: "Active" }
+      { id: "PRD001", name: "Widget A", category: "Electronics", brand: "TechCorp", unit: "pieces", price: 29.99, status: "Active" },
+      { id: "PRD002", name: "Component B", category: "Hardware", brand: "BuildCorp", unit: "units", price: 15.50, status: "Active" },
+      { id: "PRD003", name: "Assembly C", category: "Manufacturing", brand: "MakeCorp", unit: "sets", price: 45.25, status: "Inactive" },
+      { id: "PRD004", name: "Tool D", category: "Industrial", brand: "WorkCorp", unit: "pieces", price: 125.00, status: "Active" },
+      { id: "PRD005", name: "Material E", category: "Raw Materials", brand: "SupplyCorp", unit: "kg", price: 8.75, status: "Active" }
     ],
-    stats: { totalRecords: 3582, lastSync: "2025-07-21 15:20", source: "Snowflake" }
+    stats: { totalRecords: 5, lastSync: "2025-07-21 15:20", source: "Snowflake" }
   },
   "location": {
     title: "Location Master",
-    description: "Global network of warehouses, distribution centers, and fulfillment locations",
+    description: "Network of warehouses, distribution centers, and retail locations across the US",
     columns: [
       { accessorKey: "id", header: "Location ID" },
       { accessorKey: "name", header: "Location Name" },
       { accessorKey: "type", header: "Type" },
-      { accessorKey: "region", header: "Region" },
-      { accessorKey: "capacity", header: "Capacity (sq ft)" },
+      { accessorKey: "address", header: "Address" },
+      { accessorKey: "capacity", header: "Capacity" },
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "LOC-201", name: "Delhi Warehouse", type: "Warehouse", region: "North", capacity: 50000, status: "Active" },
-      { id: "LOC-202", name: "Mumbai Distribution Center", type: "Distribution", region: "West", capacity: 75000, status: "Active" },
-      { id: "LOC-203", name: "Bangalore Fulfillment", type: "Fulfillment", region: "South", capacity: 45000, status: "Active" },
-      { id: "LOC-204", name: "Kolkata Distribution", type: "Distribution", region: "East", capacity: 60000, status: "Active" },
-      { id: "LOC-205", name: "Chennai Warehouse", type: "Warehouse", region: "South", capacity: 40000, status: "Inactive" }
+      { id: "LOC001", name: "New York Warehouse", type: "Warehouse", address: "New York, NY", capacity: 50000, status: "Active" },
+      { id: "LOC002", name: "Chicago Distribution Center", type: "Distribution Center", address: "Chicago, IL", capacity: 75000, status: "Active" },
+      { id: "LOC003", name: "Los Angeles Port Terminal", type: "Port", address: "Los Angeles, CA", capacity: 100000, status: "Active" },
+      { id: "LOC004", name: "Dallas Manufacturing Plant", type: "Manufacturing", address: "Dallas, TX", capacity: 25000, status: "Under Maintenance" },
+      { id: "LOC005", name: "Miami Retail Store", type: "Retail", address: "Miami, FL", capacity: 5000, status: "Active" }
     ],
-    stats: { totalRecords: 213, lastSync: "2025-07-18 09:45", source: "CSV Upload" }
+    stats: { totalRecords: 5, lastSync: "2025-07-18 09:45", source: "CSV Upload" }
   },
   "customer": {
     title: "Customer Master",
-    description: "Customer demographics, preferences, and account information",
+    description: "Customer demographics, account information, and credit details",
     columns: [
       { accessorKey: "id", header: "Customer ID" },
       { accessorKey: "name", header: "Customer Name" },
-      { accessorKey: "segment", header: "Segment" },
-      { accessorKey: "region", header: "Region" },
-      { accessorKey: "lifetime_value", header: "LTV ($)" },
+      { accessorKey: "type", header: "Type" },
+      { accessorKey: "industry", header: "Industry" },
+      { accessorKey: "creditLimit", header: "Credit Limit ($)" },
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "C-10001", name: "TechSolutions Inc", segment: "Enterprise", region: "North", lifetime_value: 125000, status: "Active" },
-      { id: "C-10002", name: "Global Retail Corp", segment: "Corporate", region: "West", lifetime_value: 87500, status: "Active" },
-      { id: "C-10003", name: "StartUp Dynamics", segment: "SMB", region: "South", lifetime_value: 23000, status: "Active" },
-      { id: "C-10004", name: "Innovation Labs", segment: "Enterprise", region: "East", lifetime_value: 156000, status: "Premium" }
+      { id: "CUST001", name: "Acme Corporation", type: "Enterprise", industry: "Manufacturing", creditLimit: 500000, status: "Active" },
+      { id: "CUST002", name: "Global Tech Solutions", type: "Enterprise", industry: "Technology", creditLimit: 750000, status: "Active" },
+      { id: "CUST003", name: "Regional Retail Chain", type: "Mid-Market", industry: "Retail", creditLimit: 250000, status: "Active" },
+      { id: "CUST004", name: "StartUp Innovations Inc", type: "Small Business", industry: "Technology", creditLimit: 50000, status: "Active" },
+      { id: "CUST005", name: "Heritage Manufacturing", type: "Enterprise", industry: "Manufacturing", creditLimit: 400000, status: "Under Review" }
     ],
-    stats: { totalRecords: 15420, lastSync: "2025-07-20 14:30", source: "Salesforce" }
+    stats: { totalRecords: 5, lastSync: "2025-07-20 14:30", source: "Salesforce" }
   },
   "sales-history": {
     title: "Sales History",
     description: "Detailed transaction records with temporal patterns and trends",
     columns: [
       { accessorKey: "date", header: "Transaction Date" },
-      { accessorKey: "sku", header: "SKU" },
+      { accessorKey: "product", header: "Product" },
       { accessorKey: "customer", header: "Customer" },
       { accessorKey: "location", header: "Location" },
-      { accessorKey: "units", header: "Units Sold" },
+      { accessorKey: "quantity", header: "Quantity" },
       { accessorKey: "revenue", header: "Revenue ($)" },
-      { accessorKey: "profit_margin", header: "Margin %" }
+      { accessorKey: "channel", header: "Channel" }
     ],
     rows: [
-      { id: 1, date: "2024-01-15", sku: "P-1001", customer: "TechSolutions", location: "Delhi", units: 120, revenue: 3598.80, profit_margin: 22.5 },
-      { id: 2, date: "2024-01-16", sku: "P-1002", customer: "Global Retail", location: "Mumbai", units: 85, revenue: 3867.50, profit_margin: 18.7 },
-      { id: 3, date: "2024-01-17", sku: "P-1003", customer: "StartUp Dynamics", location: "Bangalore", units: 98, revenue: 12250.00, profit_margin: 35.2 },
-      { id: 4, date: "2024-01-18", sku: "P-1004", customer: "Innovation Labs", location: "Chennai", units: 110, revenue: 8607.50, profit_margin: 28.9 }
+      { id: 1, date: "2024-07-01", product: "Widget A", customer: "Acme Corporation", location: "New York", quantity: 150, revenue: 4497.50, channel: "Online" },
+      { id: 2, date: "2024-07-01", product: "Component B", customer: "Global Tech Solutions", location: "Chicago", quantity: 200, revenue: 3100.00, channel: "Direct Sales" },
+      { id: 3, date: "2024-07-02", product: "Assembly C", customer: "Regional Retail Chain", location: "Los Angeles", quantity: 75, revenue: 3393.75, channel: "B2B" },
+      { id: 4, date: "2024-07-02", product: "Tool D", customer: "Heritage Manufacturing", location: "Dallas", quantity: 50, revenue: 6250.00, channel: "Direct Sales" }
     ],
-    stats: { totalRecords: 14236, lastSync: "2025-07-19 18:15", source: "HDFS" }
+    stats: { totalRecords: 10, lastSync: "2025-07-19 18:15", source: "HDFS" }
   },
   "copper-prices": {
     title: "Copper Prices",
@@ -181,17 +179,17 @@ export const entityPreviewData: EntityPreviewMap = {
     columns: [
       { accessorKey: "date", header: "Date" },
       { accessorKey: "location", header: "Location" },
-      { accessorKey: "temperature", header: "Temp (°C)" },
+      { accessorKey: "temperature", header: "Temp (°F)" },
       { accessorKey: "humidity", header: "Humidity %" },
-      { accessorKey: "precipitation", header: "Rainfall (mm)" },
-      { accessorKey: "conditions", header: "Conditions" }
+      { accessorKey: "precipitation", header: "Rainfall (in)" },
+      { accessorKey: "weatherCondition", header: "Conditions" }
     ],
     rows: [
-      { id: 1, date: "2024-01-15", location: "Delhi", temperature: 18.5, humidity: 65, precipitation: 0, conditions: "Clear" },
-      { id: 2, date: "2024-01-16", location: "Mumbai", temperature: 26.8, humidity: 78, precipitation: 2.3, conditions: "Light Rain" },
-      { id: 3, date: "2024-01-17", location: "Bangalore", temperature: 22.1, humidity: 72, precipitation: 0, conditions: "Partly Cloudy" },
-      { id: 4, date: "2024-01-18", location: "Chennai", temperature: 28.9, humidity: 81, precipitation: 5.7, conditions: "Thunderstorm" }
+      { id: 1, date: "2024-07-01", location: "New York", temperature: 78, humidity: 65, precipitation: 0.0, weatherCondition: "Sunny" },
+      { id: 2, date: "2024-07-01", location: "Chicago", temperature: 75, humidity: 70, precipitation: 0.12, weatherCondition: "Partly Cloudy" },
+      { id: 3, date: "2024-07-01", location: "Los Angeles", temperature: 82, humidity: 55, precipitation: 0.0, weatherCondition: "Clear" },
+      { id: 4, date: "2024-07-02", location: "Dallas", temperature: 88, humidity: 60, precipitation: 0.0, weatherCondition: "Hot" }
     ],
-    stats: { totalRecords: 87456, lastSync: "2025-07-21 08:20", source: "HDFS" }
+    stats: { totalRecords: 10, lastSync: "2025-07-21 08:20", source: "HDFS" }
   }
 };

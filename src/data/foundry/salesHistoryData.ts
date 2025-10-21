@@ -2,7 +2,7 @@ export const salesHistoryData = [
   {
     date: "2024-07-01",
     product: "Widget A",
-    region: "North America", 
+    location: "New York", 
     quantity: 150,
     revenue: 4497.50,
     channel: "Online",
@@ -11,7 +11,7 @@ export const salesHistoryData = [
   {
     date: "2024-07-01",
     product: "Component B",
-    region: "Europe",
+    location: "Chicago",
     quantity: 200,
     revenue: 3100.00,
     channel: "Direct Sales",
@@ -20,16 +20,16 @@ export const salesHistoryData = [
   {
     date: "2024-07-02",
     product: "Assembly C", 
-    region: "Asia Pacific",
+    location: "Los Angeles",
     quantity: 75,
     revenue: 3393.75,
-    channel: "Partner",
+    channel: "B2B",
     customer: "Regional Retail Chain"
   },
   {
     date: "2024-07-02",
     product: "Tool D",
-    region: "North America",
+    location: "Dallas",
     quantity: 50,
     revenue: 6250.00,
     channel: "Direct Sales", 
@@ -38,7 +38,7 @@ export const salesHistoryData = [
   {
     date: "2024-07-03",
     product: "Material E",
-    region: "Europe",
+    location: "Miami",
     quantity: 300,
     revenue: 2625.00,
     channel: "Online",
@@ -47,16 +47,16 @@ export const salesHistoryData = [
   {
     date: "2024-07-03",
     product: "Widget A",
-    region: "Asia Pacific",
+    location: "Chicago",
     quantity: 125,
     revenue: 3748.75,
-    channel: "Partner",
+    channel: "B2B",
     customer: "Acme Corporation"
   },
   {
     date: "2024-07-04",
     product: "Component B",
-    region: "North America",
+    location: "New York",
     quantity: 175,
     revenue: 2712.50,
     channel: "Direct Sales",
@@ -65,7 +65,7 @@ export const salesHistoryData = [
   {
     date: "2024-07-04", 
     product: "Tool D",
-    region: "Europe",
+    location: "Los Angeles",
     quantity: 60,
     revenue: 7500.00,
     channel: "Online",
@@ -74,16 +74,16 @@ export const salesHistoryData = [
   {
     date: "2024-07-05",
     product: "Material E",
-    region: "Asia Pacific",
+    location: "Dallas",
     quantity: 250,
     revenue: 2187.50,
-    channel: "Partner",
+    channel: "Retail",
     customer: "Regional Retail Chain"
   },
   {
     date: "2024-07-05",
     product: "Assembly C",
-    region: "North America",
+    location: "Miami",
     quantity: 90,
     revenue: 4072.50,
     channel: "Direct Sales",
