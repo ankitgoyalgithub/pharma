@@ -52,9 +52,9 @@ const sampleForecastData: ForecastRow[] = [
   { 
     id: "1", 
     sku: "SKU001-WGT-A", 
-    node: "Delhi-North", 
+    node: "New York", 
     channel: "Online", 
-    owner: "Aman Gupta",
+    owner: "Sarah Johnson",
     week1: { forecast: 2400 },
     week2: { forecast: 2550 },
     week3: { forecast: 2350, plannerInput: 2500, reason: "Marketing campaign launch" },
@@ -72,27 +72,27 @@ const sampleForecastData: ForecastRow[] = [
     approvalStatus: "approved",
     approverRole: "Regional Manager",
     approvalDetails: {
-      approvedBy: "Sarah Johnson",
+      approvedBy: "Mike Chen",
       approvedAt: "2024-09-27 14:30",
       remarks: "Looks good with seasonal adjustments"
     },
     allRemarks: [
-      { date: "2024-09-25 10:00", user: "Aman Gupta", comment: "Adjusted for seasonal peak expected in week 3" },
-      { date: "2024-09-26 14:15", user: "Sarah Johnson", comment: "Reviewed historical patterns - looks accurate" },
-      { date: "2024-09-27 14:30", user: "Sarah Johnson", comment: "Approved with seasonal adjustments" }
+      { date: "2024-09-25 10:00", user: "Sarah Johnson", comment: "Adjusted for seasonal peak expected in week 3" },
+      { date: "2024-09-26 14:15", user: "Mike Chen", comment: "Reviewed historical patterns - looks accurate" },
+      { date: "2024-09-27 14:30", user: "Mike Chen", comment: "Approved with seasonal adjustments" }
     ]
   },
   { 
     id: "2", 
     sku: "SKU002-WGT-B", 
-    node: "Mumbai-West", 
+    node: "Chicago", 
     channel: "Retail", 
-    owner: "Neha Rao",
+    owner: "Emma Davis",
     week1: { forecast: 1800 },
     week2: { forecast: 1920 },
     week3: { forecast: 1750 },
     week4: { forecast: 1880 },
-    week5: { forecast: 1960, plannerInput: 2100, reason: "Festival season demand" },
+    week5: { forecast: 1960, plannerInput: 2100, reason: "Holiday season demand" },
     week6: { forecast: 2050 },
     week7: { forecast: 1890 },
     week8: { forecast: 1940 },
@@ -101,25 +101,25 @@ const sampleForecastData: ForecastRow[] = [
     week11: { forecast: 1980 },
     week12: { forecast: 1920 },
     label: "Add Labels",
-    remarks: "Festival impact",
+    remarks: "Holiday impact",
     approvalStatus: "approved",
     approverRole: "Demand Planner",
     approvalDetails: {
-      approvedBy: "Priya Shah",
+      approvedBy: "John Smith",
       approvedAt: "2024-09-28 09:20",
-      remarks: "Festival season adjustment approved"
+      remarks: "Holiday season adjustment approved"
     },
     allRemarks: [
-      { date: "2024-09-27 11:00", user: "Neha Rao", comment: "Increased forecast for week 5 due to festival season" },
-      { date: "2024-09-28 09:20", user: "Priya Shah", comment: "Approved - aligned with marketing campaign" }
+      { date: "2024-09-27 11:00", user: "Emma Davis", comment: "Increased forecast for week 5 due to holiday season" },
+      { date: "2024-09-28 09:20", user: "John Smith", comment: "Approved - aligned with marketing campaign" }
     ]
   },
   { 
     id: "3", 
     sku: "SKU003-WGT-C", 
-    node: "Bangalore-South", 
+    node: "Los Angeles", 
     channel: "B2B", 
-    owner: "Priya Shah",
+    owner: "David Martinez",
     week1: { forecast: 3200 },
     week2: { forecast: 3100 },
     week3: { forecast: 3350 },
@@ -137,22 +137,22 @@ const sampleForecastData: ForecastRow[] = [
     approvalStatus: "rejected",
     approverRole: "Supply Chain Manager",
     approvalDetails: {
-      rejectedBy: "Mike Chen",
+      rejectedBy: "Lisa Anderson",
       rejectedAt: "2024-09-26 16:45",
       remarks: "Supply chain analysis doesn't support this forecast"
     },
     allRemarks: [
-      { date: "2024-09-25 14:00", user: "Priya Shah", comment: "Adjusting week 8 due to expected supply limitations" },
-      { date: "2024-09-26 16:00", user: "Mike Chen", comment: "Supply capacity analysis shows max 3200 units possible" },
-      { date: "2024-09-26 16:45", user: "Mike Chen", comment: "Rejected - forecast exceeds supply capacity" }
+      { date: "2024-09-25 14:00", user: "David Martinez", comment: "Adjusting week 8 due to expected supply limitations" },
+      { date: "2024-09-26 16:00", user: "Lisa Anderson", comment: "Supply capacity analysis shows max 3200 units possible" },
+      { date: "2024-09-26 16:45", user: "Lisa Anderson", comment: "Rejected - forecast exceeds supply capacity" }
     ]
   },
   { 
     id: "4", 
     sku: "SKU004-WGT-D", 
-    node: "Chennai-South", 
+    node: "Dallas", 
     channel: "Direct", 
-    owner: "Suresh I.",
+    owner: "James Wilson",
     week1: { forecast: 1600 },
     week2: { forecast: 1720 },
     week3: { forecast: 1580 },
@@ -170,21 +170,21 @@ const sampleForecastData: ForecastRow[] = [
     approvalStatus: "approved",
     approverRole: "Sales Director",
     approvalDetails: {
-      approvedBy: "Emma Davis",
+      approvedBy: "Robert Taylor",
       approvedAt: "2024-09-28 10:15",
       remarks: "Approved based on confirmed client expansion"
     },
     allRemarks: [
-      { date: "2024-09-27 09:00", user: "Suresh I.", comment: "New client confirmed - increasing week 11 forecast" },
-      { date: "2024-09-28 10:15", user: "Emma Davis", comment: "Client contract verified - approved" }
+      { date: "2024-09-27 09:00", user: "James Wilson", comment: "New client confirmed - increasing week 11 forecast" },
+      { date: "2024-09-28 10:15", user: "Robert Taylor", comment: "Client contract verified - approved" }
     ]
   },
   { 
     id: "5", 
     sku: "SKU005-WGT-E", 
-    node: "Kolkata-East", 
+    node: "Miami", 
     channel: "Online", 
-    owner: "Ritika P.",
+    owner: "Jennifer Lee",
     week1: { forecast: 2100 },
     week2: { forecast: 2180 },
     week3: { forecast: 2050 },
@@ -202,13 +202,13 @@ const sampleForecastData: ForecastRow[] = [
     approvalStatus: "approved",
     approverRole: "Regional Head",
     approvalDetails: {
-      approvedBy: "Rajesh Kumar",
+      approvedBy: "Michael Brown",
       approvedAt: "2024-09-28 11:00",
       remarks: "Standard forecast approved"
     },
     allRemarks: [
-      { date: "2024-09-27 16:00", user: "Ritika P.", comment: "Standard forecast based on historical trends" },
-      { date: "2024-09-28 11:00", user: "Rajesh Kumar", comment: "Approved - no adjustments needed" }
+      { date: "2024-09-27 16:00", user: "Jennifer Lee", comment: "Standard forecast based on historical trends" },
+      { date: "2024-09-28 11:00", user: "Michael Brown", comment: "Approved - no adjustments needed" }
     ]
   },
 ];
@@ -382,11 +382,11 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Nodes</SelectItem>
-              <SelectItem value="Delhi">Delhi-North</SelectItem>
-              <SelectItem value="Mumbai">Mumbai-West</SelectItem>
-              <SelectItem value="Bangalore">Bangalore-South</SelectItem>
-              <SelectItem value="Chennai">Chennai-South</SelectItem>
-              <SelectItem value="Kolkata">Kolkata-East</SelectItem>
+              <SelectItem value="New York">New York</SelectItem>
+              <SelectItem value="Chicago">Chicago</SelectItem>
+              <SelectItem value="Los Angeles">Los Angeles</SelectItem>
+              <SelectItem value="Dallas">Dallas</SelectItem>
+              <SelectItem value="Miami">Miami</SelectItem>
             </SelectContent>
           </Select>
           

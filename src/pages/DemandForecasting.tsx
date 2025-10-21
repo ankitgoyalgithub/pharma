@@ -3001,19 +3001,19 @@ const DemandForecasting = () => {
                     <div className="mt-4 pt-3 border-t space-y-2">
                       <div className="flex justify-between">
                         <span className="text-xs">Q1 2024</span>
-                        <span className="text-xs font-medium">₹21.2M</span>
+                        <span className="text-xs font-medium">$21.2M</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-xs">Q2 2024</span>
-                        <span className="text-xs font-medium">₹22.1M</span>
+                        <span className="text-xs font-medium">$22.1M</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-xs">Q3 2024</span>
-                        <span className="text-xs font-medium">₹20.8M</span>
+                        <span className="text-xs font-medium">$20.8M</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-xs">Q4 2024</span>
-                        <span className="text-xs font-medium">₹20.5M</span>
+                        <span className="text-xs font-medium">$20.5M</span>
                       </div>
                     </div>
                   </div>
@@ -3042,19 +3042,19 @@ const DemandForecasting = () => {
                     <div className="text-xs font-medium">Revenue by Channel</div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Direct Sales</span>
-                      <span className="text-sm font-medium">₹29.6M</span>
+                      <span className="text-sm font-medium">$29.6M</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Online</span>
-                      <span className="text-sm font-medium">₹23.7M</span>
+                      <span className="text-sm font-medium">$23.7M</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Retail</span>
-                      <span className="text-sm font-medium">₹21.2M</span>
+                      <span className="text-sm font-medium">$21.2M</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">B2B</span>
-                      <span className="text-sm font-medium">₹10.1M</span>
+                      <span className="text-sm font-medium">$10.1M</span>
                     </div>
                     <div className="mt-4 pt-3 border-t">
                       <div className="text-xs font-medium mb-2">Variability Metrics</div>
