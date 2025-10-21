@@ -6,10 +6,9 @@ import { DataQualityIssue } from "@/data/demandForecasting/dataQualityIssues";
 
 interface DataQualityIssuesTableProps {
   issues: DataQualityIssue[];
-  onAutoFix?: () => void;
 }
 
-export const DataQualityIssuesTable = ({ issues, onAutoFix }: DataQualityIssuesTableProps) => {
+export const DataQualityIssuesTable = ({ issues }: DataQualityIssuesTableProps) => {
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
       case 'high':
@@ -39,22 +38,10 @@ export const DataQualityIssuesTable = ({ issues, onAutoFix }: DataQualityIssuesT
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Data Quality Issues Detected</CardTitle>
-            <CardDescription>
-              {issues.length} issues found across {new Set(issues.map(i => i.file)).size} files
-            </CardDescription>
-          </div>
-          {onAutoFix && (
-            <Button onClick={onAutoFix} className="gap-2">
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              Auto-Fix with AI
-            </Button>
-          )}
-        </div>
+        <CardTitle>Data Quality Issues Detected</CardTitle>
+        <CardDescription>
+          {issues.length} issues found across {new Set(issues.map(i => i.file)).size} files
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
