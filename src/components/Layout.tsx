@@ -77,11 +77,11 @@ const AppSidebar = () => {
                     className={cn(
                       "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300",
                       "hover:bg-primary-hover-subtle hover:scale-105",
-                      isActive(item.href) && "bg-gradient-primary text-primary-foreground shadow-glow"
+                      isActive(item.href) && "bg-primary-hover-subtle border-l-4 border-primary font-semibold"
                     )}
                   >
                     <NavLink to={item.href}>
-                      <item.icon className={cn("h-5 w-5 mr-3", !isActive(item.href) && item.iconColor)} />
+                      <item.icon className={cn("h-5 w-5 mr-3", item.iconColor)} />
                       <span>{item.name}</span>
                     </NavLink>
                   </SidebarMenuButton>
