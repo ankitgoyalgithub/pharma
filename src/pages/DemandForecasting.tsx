@@ -2151,7 +2151,7 @@ const DemandForecasting = () => {
             <ForecastCard
               title="Forecast Snapshot"
               value="94.2%"
-              subtitle="ML-Powered Accuracy • ₹48.2M Revenue • 125K+ Units
+              subtitle="ML-Powered Accuracy • $48.2M Revenue • 125K+ Units
                         12-Month Horizon • 5 Active SKUs • 4 Channels"
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
@@ -2419,7 +2419,7 @@ const DemandForecasting = () => {
                           <div className="text-xs text-muted-foreground">Volume Impact</div>
                         </div>
                         <div className="text-center p-3 bg-primary/10 rounded-lg">
-                          <div className="text-lg font-bold text-primary">+₹4.2M</div>
+                          <div className="text-lg font-bold text-primary">+$4.2M</div>
                           <div className="text-xs text-muted-foreground">Revenue Impact</div>
                         </div>
                       </div>
@@ -2736,7 +2736,7 @@ const DemandForecasting = () => {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-medium text-sm">Optimization Opportunity</span>
-                          <Badge variant="outline" className="text-xs bg-info/10 text-info border-info/20">₹2.1M Potential</Badge>
+                          <Badge variant="outline" className="text-xs bg-info/10 text-info border-info/20">$2.1M Potential</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground">
                           Channel reallocation suggested: Shift 15% from Retail to Online for improved margins.
@@ -2957,7 +2957,7 @@ const DemandForecasting = () => {
                       <Badge variant="secondary" className="bg-muted/10 text-muted-foreground">10%</Badge>
                     </div>
                     <div className="mt-4 pt-3 border-t">
-                      <div className="text-2xl font-bold text-primary">₹84.6M</div>
+                      <div className="text-2xl font-bold text-primary">$84.6M</div>
                       <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
                     </div>
                   </div>
