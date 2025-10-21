@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import pptx from "pptxgenjs";
 import * as XLSX from "xlsx";
@@ -56,6 +57,8 @@ import {
   Target,
   ZoomIn,
   ZoomOut,
+  Box,
+  MapPin,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -1619,40 +1622,30 @@ const DemandForecasting = () => {
     },
   };
 
-  // ---- Step 3 - Review Data ----
+  // ---- Step 3 - Configuration ----
   const renderStep3 = () => (
     <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
       {/* Fixed Header */}
       <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
-        <h2 className="text-xl font-semibold text-foreground mb-1">Review Data</h2>
-        <p className="text-sm text-muted-foreground">Review your processed data and configure forecast settings.</p>
+        <h2 className="text-xl font-semibold text-foreground mb-1">Configuration</h2>
+        <p className="text-sm text-muted-foreground">Configure forecast model parameters and review data specifications.</p>
       </div>
       
       {/* Scrollable Content */}
       <div className="flex-1 overflow-auto">
         <div className="space-y-6 p-6">
 
-      {/* Data Quality Summary - Same as Step 2 */}
+      {/* Data Configuration Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-success/20 to-transparent rounded-bl-full" />
+        <Card className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 hover:shadow-lg transition-shadow">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/20 to-transparent rounded-bl-full" />
           <CardContent className="p-4 relative">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-success" />
-              <div className="text-xs text-muted-foreground">Completeness</div>
+              <Calendar className="w-4 h-4 text-primary" />
+              <div className="text-xs text-muted-foreground">Data Period</div>
             </div>
-            <div className="text-2xl font-bold text-success">97.4%</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-warning/20 to-transparent rounded-bl-full" />
-          <CardContent className="p-4 relative">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-4 h-4 text-warning" />
-              <div className="text-xs text-muted-foreground">Missing Values</div>
-            </div>
-            <div className="text-2xl font-bold text-warning">1</div>
+            <div className="text-lg font-bold text-primary">Jan 2022 - Dec 2024</div>
+            <div className="text-xs text-muted-foreground mt-1">36 months</div>
           </CardContent>
         </Card>
         
@@ -1660,24 +1653,347 @@ const DemandForecasting = () => {
           <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-accent/20 to-transparent rounded-bl-full" />
           <CardContent className="p-4 relative">
             <div className="flex items-center gap-2 mb-2">
-              <Copy className="w-4 h-4 text-accent" />
-              <div className="text-xs text-muted-foreground">Duplicates</div>
+              <Database className="w-4 h-4 text-accent" />
+              <div className="text-xs text-muted-foreground">Total Records</div>
             </div>
-            <div className="text-2xl font-bold text-accent">2</div>
+            <div className="text-2xl font-bold text-accent">847,592</div>
+            <div className="text-xs text-muted-foreground mt-1">Across all sources</div>
           </CardContent>
         </Card>
         
-        <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-destructive/20 to-transparent rounded-bl-full" />
+        <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-success/20 to-transparent rounded-bl-full" />
           <CardContent className="p-4 relative">
             <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="w-4 h-4 text-destructive" />
-              <div className="text-xs text-muted-foreground">Outliers</div>
+              <Box className="w-4 h-4 text-success" />
+              <div className="text-xs text-muted-foreground">SKUs/Products</div>
             </div>
-            <div className="text-2xl font-bold text-destructive">4</div>
+            <div className="text-2xl font-bold text-success">2,847</div>
+            <div className="text-xs text-muted-foreground mt-1">Unique items</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-warning/20 to-transparent rounded-bl-full" />
+          <CardContent className="p-4 relative">
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="w-4 h-4 text-warning" />
+              <div className="text-xs text-muted-foreground">Locations</div>
+            </div>
+            <div className="text-2xl font-bold text-warning">127</div>
+            <div className="text-xs text-muted-foreground mt-1">Geographic points</div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Model Configuration - Elevated */}
+      <Card className="border-primary/20 shadow-lg">
+        <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 border-b">
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-lg">Model Configuration</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Configure the AI forecast model parameters including time horizon, data granularity, seasonality detection, and advanced model settings.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1">Define how the AI model should process and forecast your data</p>
+        </CardHeader>
+        <CardContent className="space-y-6 pt-6">
+          {/* Primary Settings */}
+          <div>
+            <h4 className="text-sm font-semibold mb-3 text-foreground">Primary Settings</h4>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="forecast-horizon">Forecast Horizon</Label>
+                <Select value={forecastHorizon} onValueChange={setForecastHorizon}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3">3 Months</SelectItem>
+                    <SelectItem value="6">6 Months</SelectItem>
+                    <SelectItem value="12">12 Months</SelectItem>
+                    <SelectItem value="18">18 Months</SelectItem>
+                    <SelectItem value="24">24 Months</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="granularity">Data Granularity</Label>
+                <Select value={modelGranularity} onValueChange={setModelGranularity}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Daily">Daily</SelectItem>
+                    <SelectItem value="Weekly">Weekly</SelectItem>
+                    <SelectItem value="Monthly">Monthly</SelectItem>
+                    <SelectItem value="Quarterly">Quarterly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="seasonality">Seasonality Detection</Label>
+                <Select value={seasonality} onValueChange={setSeasonality}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Auto-detect">Auto-detect</SelectItem>
+                    <SelectItem value="None">None</SelectItem>
+                    <SelectItem value="Weekly">Weekly</SelectItem>
+                    <SelectItem value="Monthly">Monthly</SelectItem>
+                    <SelectItem value="Quarterly">Quarterly</SelectItem>
+                    <SelectItem value="Yearly">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="confidence-level">Confidence Level</Label>
+                <Select value={confidenceLevel} onValueChange={setConfidenceLevel}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="80">80%</SelectItem>
+                    <SelectItem value="85">85%</SelectItem>
+                    <SelectItem value="90">90%</SelectItem>
+                    <SelectItem value="95">95%</SelectItem>
+                    <SelectItem value="99">99%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Advanced Model Settings */}
+          <div>
+            <h4 className="text-sm font-semibold mb-3 text-foreground">Advanced Model Settings</h4>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="validation-split">Validation Split</Label>
+                <Select value={validationSplit} onValueChange={setValidationSplit}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10%</SelectItem>
+                    <SelectItem value="15">15%</SelectItem>
+                    <SelectItem value="20">20%</SelectItem>
+                    <SelectItem value="25">25%</SelectItem>
+                    <SelectItem value="30">30%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="trend-method">Trend Method</Label>
+                <Select value="auto" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto-detect</SelectItem>
+                    <SelectItem value="linear">Linear</SelectItem>
+                    <SelectItem value="exponential">Exponential</SelectItem>
+                    <SelectItem value="damped">Damped</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="error-method">Error Method</Label>
+                <Select value="auto" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto-select</SelectItem>
+                    <SelectItem value="additive">Additive</SelectItem>
+                    <SelectItem value="multiplicative">Multiplicative</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="outlier-treatment">Outlier Treatment</Label>
+                <Select value="auto" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto-handle</SelectItem>
+                    <SelectItem value="remove">Remove</SelectItem>
+                    <SelectItem value="cap">Cap values</SelectItem>
+                    <SelectItem value="interpolate">Interpolate</SelectItem>
+                    <SelectItem value="ignore">Ignore</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="model-ensemble">Ensemble Method</Label>
+                <Select value="weighted" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="weighted">Weighted Average</SelectItem>
+                    <SelectItem value="best">Best Model Only</SelectItem>
+                    <SelectItem value="median">Median Ensemble</SelectItem>
+                    <SelectItem value="stacking">Stacking</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cross-validation">Cross Validation</Label>
+                <Select value="timeseries" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="timeseries">Time Series CV</SelectItem>
+                    <SelectItem value="walk-forward">Walk Forward</SelectItem>
+                    <SelectItem value="blocked">Blocked CV</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="missing-data">Missing Data Strategy</Label>
+                <Select value="interpolation" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="interpolation">Interpolation</SelectItem>
+                    <SelectItem value="forward-fill">Forward Fill</SelectItem>
+                    <SelectItem value="backward-fill">Backward Fill</SelectItem>
+                    <SelectItem value="mean">Mean Imputation</SelectItem>
+                    <SelectItem value="median">Median Imputation</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="feature-engineering">Feature Engineering</Label>
+                <Select value="auto" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto-generate</SelectItem>
+                    <SelectItem value="lags">Lags Only</SelectItem>
+                    <SelectItem value="rolling">Rolling Stats</SelectItem>
+                    <SelectItem value="all">All Features</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="normalization">Data Normalization</Label>
+                <Select value="standard" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="standard">Standard Scaling</SelectItem>
+                    <SelectItem value="minmax">Min-Max Scaling</SelectItem>
+                    <SelectItem value="robust">Robust Scaling</SelectItem>
+                    <SelectItem value="log">Log Transform</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Algorithm Selection */}
+          <div>
+            <h4 className="text-sm font-semibold mb-3 text-foreground">Algorithm Selection</h4>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="primary-algorithm">Primary Algorithm</Label>
+                <Select value="auto" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto-select Best</SelectItem>
+                    <SelectItem value="prophet">Prophet</SelectItem>
+                    <SelectItem value="arima">ARIMA</SelectItem>
+                    <SelectItem value="lstm">LSTM Neural Network</SelectItem>
+                    <SelectItem value="xgboost">XGBoost</SelectItem>
+                    <SelectItem value="lightgbm">LightGBM</SelectItem>
+                    <SelectItem value="exponential">Exponential Smoothing</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="optimization-metric">Optimization Metric</Label>
+                <Select value="mape" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mape">MAPE</SelectItem>
+                    <SelectItem value="rmse">RMSE</SelectItem>
+                    <SelectItem value="mae">MAE</SelectItem>
+                    <SelectItem value="smape">sMAPE</SelectItem>
+                    <SelectItem value="mase">MASE</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="hyperparameter-tuning">Hyperparameter Tuning</Label>
+                <Select value="bayesian" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bayesian">Bayesian Optimization</SelectItem>
+                    <SelectItem value="grid">Grid Search</SelectItem>
+                    <SelectItem value="random">Random Search</SelectItem>
+                    <SelectItem value="none">Use Defaults</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="training-iterations">Training Iterations</Label>
+                <Select value="100" onValueChange={() => {}}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="50">50 (Fast)</SelectItem>
+                    <SelectItem value="100">100 (Balanced)</SelectItem>
+                    <SelectItem value="200">200 (Thorough)</SelectItem>
+                    <SelectItem value="500">500 (Maximum)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Data Sources Preview */}
       <Card>
@@ -1810,216 +2126,40 @@ const DemandForecasting = () => {
         </CardContent>
       </Card>
 
-      {/* Configuration and External Drivers */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-base">External Drivers</CardTitle>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info className="w-4 h-4 text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>External factors selected in Step 1 that will be included in the forecast model to improve accuracy.</p>
-                </TooltipContent>
-              </Tooltip>
+      {/* External Drivers */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base">External Drivers</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>External factors selected in Step 1 that will be included in the forecast model to improve accuracy.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1">Active external factors influencing the forecast</p>
+        </CardHeader>
+        <CardContent>
+          {selectedDrivers.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {selectedDrivers.map((driver) => (
+                <div key={driver} className="flex items-center justify-between p-3 bg-muted/30 rounded border">
+                  <span className="text-sm font-medium">{driver}</span>
+                  <Badge variant="outline" className="text-xs ml-2">Active</Badge>
+                </div>
+              ))}
             </div>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {selectedDrivers.map((driver) => (
-              <div key={driver} className="flex items-center justify-between p-2 bg-muted/30 rounded">
-                <span className="text-sm">{driver}</span>
-                <Badge variant="outline" className="text-xs">Active</Badge>
-              </div>
-            ))}
-            {selectedDrivers.length === 0 && (
+          ) : (
+            <div className="text-center py-6">
               <p className="text-sm text-muted-foreground">No external drivers selected</p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-base">Model Configuration</CardTitle>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info className="w-4 h-4 text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Configure the AI forecast model parameters including time horizon, data granularity, seasonality detection, and confidence intervals.</p>
-                </TooltipContent>
-              </Tooltip>
+              <p className="text-xs text-muted-foreground mt-1">Add external factors in Step 1 to improve forecast accuracy</p>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="forecast-horizon">Forecast Horizon (Months)</Label>
-                <Select value={forecastHorizon} onValueChange={setForecastHorizon}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="3">3 Months</SelectItem>
-                    <SelectItem value="6">6 Months</SelectItem>
-                    <SelectItem value="12">12 Months</SelectItem>
-                    <SelectItem value="18">18 Months</SelectItem>
-                    <SelectItem value="24">24 Months</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="granularity">Granularity</Label>
-                <Select value={modelGranularity} onValueChange={setModelGranularity}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Daily">Daily</SelectItem>
-                    <SelectItem value="Weekly">Weekly</SelectItem>
-                    <SelectItem value="Monthly">Monthly</SelectItem>
-                    <SelectItem value="Quarterly">Quarterly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="seasonality">Seasonality</Label>
-                <Select value={seasonality} onValueChange={setSeasonality}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Auto-detect">Auto-detect</SelectItem>
-                    <SelectItem value="None">None</SelectItem>
-                    <SelectItem value="Weekly">Weekly</SelectItem>
-                    <SelectItem value="Monthly">Monthly</SelectItem>
-                    <SelectItem value="Quarterly">Quarterly</SelectItem>
-                    <SelectItem value="Yearly">Yearly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="confidence-level">Confidence Level (%)</Label>
-                <Select value={confidenceLevel} onValueChange={setConfidenceLevel}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="80">80%</SelectItem>
-                    <SelectItem value="85">85%</SelectItem>
-                    <SelectItem value="90">90%</SelectItem>
-                    <SelectItem value="95">95%</SelectItem>
-                    <SelectItem value="99">99%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="validation-split">Validation Split (%)</Label>
-                <Select value={validationSplit} onValueChange={setValidationSplit}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10%</SelectItem>
-                    <SelectItem value="15">15%</SelectItem>
-                    <SelectItem value="20">20%</SelectItem>
-                    <SelectItem value="25">25%</SelectItem>
-                    <SelectItem value="30">30%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="trend-method">Trend Method</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-detect</SelectItem>
-                    <SelectItem value="linear">Linear</SelectItem>
-                    <SelectItem value="damped">Damped</SelectItem>
-                    <SelectItem value="none">None</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="error-method">Error Method</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-select</SelectItem>
-                    <SelectItem value="additive">Additive</SelectItem>
-                    <SelectItem value="multiplicative">Multiplicative</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="outlier-treatment">Outlier Treatment</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-handle</SelectItem>
-                    <SelectItem value="remove">Remove</SelectItem>
-                    <SelectItem value="cap">Cap values</SelectItem>
-                    <SelectItem value="ignore">Ignore</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="model-ensemble">Ensemble Method</Label>
-                <Select value="weighted" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="weighted">Weighted Average</SelectItem>
-                    <SelectItem value="best">Best Model Only</SelectItem>
-                    <SelectItem value="median">Median Ensemble</SelectItem>
-                    <SelectItem value="stacking">Stacking</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="cross-validation">Cross Validation</Label>
-                <Select value="timeseries" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="timeseries">Time Series CV</SelectItem>
-                    <SelectItem value="walk-forward">Walk Forward</SelectItem>
-                    <SelectItem value="blocked">Blocked CV</SelectItem>
-                    <SelectItem value="none">None</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </CardContent>
+      </Card>
 
         <div className="flex justify-between pt-4">
           <Button size="sm" variant="outline" onClick={() => setCurrentStep(2)}>
