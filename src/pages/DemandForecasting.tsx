@@ -2137,11 +2137,11 @@ const DemandForecasting = () => {
 
   // ---- Step 4 - Results ----
   const renderStep4 = () => (
-    <div className="relative flex h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden bg-background">
+    <div className="relative flex h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden bg-gradient-to-br from-background via-background to-muted/10">
       {/* Left Sidebar - Canva-style compact panel */}
-      <div className="w-[280px] shrink-0 h-full bg-card border-r flex flex-col overflow-hidden">
-        <div className="flex-none px-4 py-3 border-b bg-card sticky top-0 z-10">
-          <h2 className="text-xl font-semibold text-foreground">Results</h2>
+      <div className="w-[280px] shrink-0 h-full bg-card/80 backdrop-blur-sm border-r border-border/50 flex flex-col overflow-hidden shadow-lg">
+        <div className="flex-none px-4 py-4 border-b border-border/50 bg-gradient-to-b from-card/90 to-card/70 sticky top-0 z-10">
+          <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">Results</h2>
         </div>
 
         {/* Scrollable Metric Cards */}
@@ -2253,8 +2253,8 @@ const DemandForecasting = () => {
       {/* Main Content Area - Canva-style workspace */}
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
         {/* Header Bar - Sticky */}
-        <div className="flex-none flex items-center justify-between px-4 py-2 border-b bg-card/50 sticky top-0 z-10">
-          <h1 className="text-xl font-semibold text-foreground animate-fade-in">
+        <div className="flex-none flex items-center justify-between px-6 py-3 border-b border-border/50 bg-card/95 backdrop-blur-xl sticky top-0 z-10 shadow-sm">
+          <h1 className="text-xl font-bold tracking-tight text-foreground animate-fade-in">
             {selectedScenario ? `Scenario Analysis: ${scenarios.find(s => s.id === selectedScenario)?.name}` : 
              activeTab === "overview" ? "Forecast Overview" :
              activeTab === "insights" ? "Demand Insights" :
@@ -2309,9 +2309,9 @@ const DemandForecasting = () => {
         </div>
 
         {/* Main Workspace */}
-        <div className="flex-1 min-w-0 flex flex-col overflow-hidden bg-background">
+        <div className="flex-1 min-w-0 flex flex-col overflow-hidden bg-gradient-to-br from-background via-background to-muted/5">
           {/* Scrollable Content Area */}
-          <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4">
+          <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-6">
         {/* Content based on active tab or selected scenario */}
         {selectedScenario ? (
           <>
@@ -2327,9 +2327,9 @@ const DemandForecasting = () => {
               </div>
               
               <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-6">
-                <Card className="shadow-card border-0">
-                  <CardHeader>
-                    <CardTitle>Scenario vs Baseline Trend</CardTitle>
+                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg font-semibold">Scenario vs Baseline Trend</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="h-[300px]">
@@ -2407,20 +2407,20 @@ const DemandForecasting = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="shadow-card border-0">
-                  <CardHeader>
-                    <CardTitle>Impact Analysis</CardTitle>
+                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg font-semibold">Impact Analysis</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="text-center p-3 bg-success/10 rounded-lg">
-                          <div className="text-lg font-bold text-success">+8.5%</div>
-                          <div className="text-xs text-muted-foreground">Volume Impact</div>
+                        <div className="text-center p-4 bg-success/10 rounded-xl border border-success/20 shadow-sm">
+                          <div className="text-2xl font-bold text-success">+8.5%</div>
+                          <div className="text-xs text-muted-foreground font-medium mt-1">Volume Impact</div>
                         </div>
-                        <div className="text-center p-3 bg-primary/10 rounded-lg">
-                          <div className="text-lg font-bold text-primary">+$4.2M</div>
-                          <div className="text-xs text-muted-foreground">Revenue Impact</div>
+                        <div className="text-center p-4 bg-primary/10 rounded-xl border border-primary/20 shadow-sm">
+                          <div className="text-2xl font-bold text-primary">+$4.2M</div>
+                          <div className="text-xs text-muted-foreground font-medium mt-1">Revenue Impact</div>
                         </div>
                       </div>
                       
@@ -2449,9 +2449,9 @@ const DemandForecasting = () => {
 
               {/* Additional Insights Row */}
               <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
-                <Card className="shadow-card border-0">
-                  <CardHeader>
-                    <CardTitle className="text-sm">Channel Performance</CardTitle>
+                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-semibold">Channel Performance</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex justify-between items-center">
@@ -2484,9 +2484,9 @@ const DemandForecasting = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="shadow-card border-0">
-                  <CardHeader>
-                    <CardTitle className="text-sm">Regional Impact</CardTitle>
+                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-semibold">Regional Impact</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex justify-between items-center">
@@ -2508,9 +2508,9 @@ const DemandForecasting = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="shadow-card border-0">
-                  <CardHeader>
-                    <CardTitle className="text-sm">Key Factors</CardTitle>
+                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-semibold">Key Factors</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="text-xs">
@@ -2548,10 +2548,10 @@ const DemandForecasting = () => {
         ) : activeTab === "overview" && (
           <div className="animate-fade-in">
             {/* Demand Analysis Chart with controls */}
-            <Card className="shadow-card border-0 mb-4 flex-1 bg-gradient-to-br from-card via-card to-muted/20">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="shadow-elevated border border-border/40 mb-6 flex-1 bg-gradient-to-br from-card via-card to-card/50 hover:shadow-glow transition-all duration-300">
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
                 <div className="flex items-center gap-2">
-                  <CardTitle className="text-lg">Demand Analysis</CardTitle>
+                  <CardTitle className="text-lg font-semibold">Demand Analysis</CardTitle>
                   <Tooltip>
                     <TooltipTrigger>
                       <Info className="w-4 h-4 text-muted-foreground" />
@@ -2652,7 +2652,7 @@ const DemandForecasting = () => {
             </Card>
             
             {/* Top KPI Row - 3 Cards */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2 mb-3">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3 mb-4">
               <CompactMetricCard
                 value={filterValues.businessUnits === 'enterprise' ? '7.2%' : '8.7%'}
                 label="MAPE"
@@ -2684,61 +2684,61 @@ const DemandForecasting = () => {
             </div>
 
             {/* Enhanced Forecast Snapshot - Logility & Kinexis Inspired */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 mb-4">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5 mb-5">
               {/* AI Insights & Recommendations */}
-              <Card className="shadow-card border-0 lg:col-span-2">
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300 lg:col-span-2">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <Sparkles className="w-5 h-5 text-primary" />
+                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                      <Sparkles className="w-5 h-5 text-primary animate-pulse" />
                       AI-Powered Insights & Recommendations
                     </CardTitle>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary">
+                    <Badge variant="secondary" className="bg-primary/15 text-primary border border-primary/20 shadow-sm">
                       <Brain className="w-3 h-3 mr-1" />
                       ML Enhanced
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="p-3 rounded-lg bg-success/5 border border-success/20">
-                    <div className="flex items-start gap-2">
-                      <TrendingUp className="w-4 h-4 text-success mt-0.5" />
+                  <div className="p-4 rounded-xl bg-success/10 border border-success/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <TrendingUp className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">High Confidence Forecast Detected</span>
-                          <Badge variant="outline" className="text-xs bg-success/10 text-success border-success/20">+12% Uplift</Badge>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">High Confidence Forecast Detected</span>
+                          <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">+12% Uplift</Badge>
                         </div>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground leading-relaxed">
                           SKU001 & SKU002 showing strong correlation with marketing events. Confidence: 94%
                         </p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="p-3 rounded-lg bg-warning/5 border border-warning/20">
-                    <div className="flex items-start gap-2">
-                      <AlertTriangle className="w-4 h-4 text-warning mt-0.5" />
+                  <div className="p-4 rounded-xl bg-warning/10 border border-warning/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">Exception Alert: SKU003</span>
-                          <Badge variant="outline" className="text-xs bg-warning/10 text-warning border-warning/20">Review Needed</Badge>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">Exception Alert: SKU003</span>
+                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Review Needed</Badge>
                         </div>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground leading-relaxed">
                           Demand volatility increased by 23%. Consider safety stock adjustment for weeks 6-8.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-lg bg-info/5 border border-info/20">
-                    <div className="flex items-start gap-2">
-                      <Zap className="w-4 h-4 text-info mt-0.5" />
+                  <div className="p-4 rounded-xl bg-info/10 border border-info/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <Zap className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">Optimization Opportunity</span>
-                          <Badge variant="outline" className="text-xs bg-info/10 text-info border-info/20">$2.1M Potential</Badge>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">Optimization Opportunity</span>
+                          <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">$2.1M Potential</Badge>
                         </div>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground leading-relaxed">
                           Channel reallocation suggested: Shift 15% from Retail to Online for improved margins.
                         </p>
                       </div>
@@ -2748,10 +2748,10 @@ const DemandForecasting = () => {
               </Card>
 
               {/* Forecast Value Added (FVA) */}
-              <Card className="shadow-card border-0">
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="text-base">Forecast Value Added</CardTitle>
+                    <CardTitle className="text-base font-semibold">Forecast Value Added</CardTitle>
                     <Tooltip>
                       <TooltipTrigger>
                         <Info className="w-4 h-4 text-muted-foreground" />
@@ -2812,11 +2812,11 @@ const DemandForecasting = () => {
             </div>
 
             {/* Forecast Accuracy Trend & Exceptions */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <Card className="shadow-card border-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <Activity className="w-5 h-5" />
+                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                    <Activity className="w-5 h-5 text-primary" />
                     Accuracy Trend (Rolling 12 Weeks)
                   </CardTitle>
                 </CardHeader>
