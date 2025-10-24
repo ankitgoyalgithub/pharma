@@ -7,43 +7,44 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Zap, BarChart3, Brain } from "lucide-react";
-import { authApi, LoginData } from "@/services/authApi";
+import { authApi, RegisterData } from "@/services/authApi";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Register = () => {
+  const [formData, setFormData] = useState<RegisterData>({
+    name: "",
+    email: "",
+    company: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const loginData: LoginData = { email, password };
-      const response = await authApi.login(loginData);
+      const response = await authApi.register(formData);
       
-      if (response.success && response.token) {
-        localStorage.setItem("authToken", response.token);
-        localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("userEmail", email);
-        
-        if (response.user) {
-          localStorage.setItem("userName", response.user.name);
-          localStorage.setItem("userCompany", response.user.company);
-        }
-
+      if (response.success) {
         toast({
-          title: "Login Successful",
-          description: "Welcome back!",
+          title: "Registration Successful",
+          description: "Your account has been created. Please sign in.",
         });
-        navigate("/");
+        navigate("/login");
       }
     } catch (error: any) {
       toast({
-        title: "Login Failed",
-        description: error.message || "Invalid email or password",
+        title: "Registration Failed",
+        description: error.message || "An error occurred during registration",
         variant: "destructive",
       });
     } finally {
@@ -55,15 +56,12 @@ const Login = () => {
     <div className="min-h-screen flex bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Floating Geometric Shapes */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-l from-primary/15 to-secondary/10 rounded-full blur-3xl animate-pulse [animation-delay:1s]" />
         <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-gradient-to-t from-accent/10 to-primary/5 rounded-full blur-2xl animate-pulse [animation-delay:2s]" />
         
-        {/* Moving Grid Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] animate-[move-grid_20s_ease-in-out_infinite]" />
         
-        {/* Floating Icons */}
         <div className="absolute top-1/4 left-1/4 animate-float">
           <Zap className="w-8 h-8 text-primary/20" />
         </div>
@@ -88,15 +86,15 @@ const Login = () => {
               </div>
               
               <h1 className="text-5xl font-bold text-foreground leading-tight">
-                Transform Data Into
+                Join the Future of
                 <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  Intelligent Decisions
+                  Data-Driven Decisions
                 </span>
               </h1>
               
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Harness the power of AI-driven analytics to unlock insights, 
-                optimize operations, and make data-driven decisions at scale.
+                Create your account and start leveraging AI-powered analytics 
+                to transform your business operations.
               </p>
             </div>
             
@@ -119,7 +117,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Right Login Section */}
+          {/* Right Register Section */}
           <div className="flex justify-center lg:justify-end">
             <Card className="w-full max-w-md backdrop-blur-xl bg-card/80 border-border/50 shadow-2xl">
               <CardHeader className="text-center pb-6">
@@ -132,12 +130,12 @@ const Login = () => {
                   </CardTitle>
                 </div>
                 <CardDescription className="text-base">
-                  Welcome back! Please sign in to continue
+                  Create your account to get started
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="space-y-6">
-                {/* Social Login Options */}
+                {/* Social Register Options */}
                 <div className="space-y-3">
                   <Button variant="outline" className="w-full h-12 text-base hover:bg-accent/5" type="button">
                     <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
@@ -162,42 +160,64 @@ const Login = () => {
                   </div>
                   <div className="relative flex justify-center text-sm uppercase">
                     <span className="bg-card px-4 text-muted-foreground font-medium">
-                      Or continue with email
+                      Or register with email
                     </span>
                   </div>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form onSubmit={handleRegister} className="space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium">Email address</Label>
+                    <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
                     <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={formData.name}
+                      onChange={handleChange}
                       className="h-12 text-base"
                       required
                     />
                   </div>
+                  
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                      <Button 
-                        variant="link" 
-                        className="px-0 font-normal text-sm text-primary hover:underline"
-                        type="button"
-                      >
-                        Forgot password?
-                      </Button>
-                    </div>
+                    <Label htmlFor="email" className="text-sm font-medium">Email address</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="h-12 text-base"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="company" className="text-sm font-medium">Company</Label>
+                    <Input
+                      id="company"
+                      name="company"
+                      type="text"
+                      placeholder="Enter your company name"
+                      value={formData.company}
+                      onChange={handleChange}
+                      className="h-12 text-base"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-sm font-medium">Password</Label>
                     <div className="relative">
                       <Input
                         id="password"
+                        name="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Create a strong password"
+                        value={formData.password}
+                        onChange={handleChange}
                         className="h-12 text-base pr-12"
                         required
                       />
@@ -216,22 +236,23 @@ const Login = () => {
                       </Button>
                     </div>
                   </div>
+
                   <Button type="submit" className="w-full h-12 text-base font-medium" disabled={isLoading}>
                     {isLoading ? (
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                        Signing in...
+                        Creating account...
                       </div>
                     ) : (
-                      "Sign In"
+                      "Create Account"
                     )}
                   </Button>
                 </form>
 
                 <div className="text-center text-sm">
-                  <span className="text-muted-foreground">Don't have an account? </span>
-                  <Link to="/register" className="text-primary hover:underline font-medium">
-                    Sign up
+                  <span className="text-muted-foreground">Already have an account? </span>
+                  <Link to="/login" className="text-primary hover:underline font-medium">
+                    Sign in
                   </Link>
                 </div>
               </CardContent>
@@ -243,4 +264,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

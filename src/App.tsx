@@ -29,6 +29,7 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Billing from "./pages/Billing";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import ProductionPlanning from "./pages/ProductionPlanning";
 import RawMaterialPlanning from "./pages/RawMaterialPlanning";
@@ -48,6 +49,7 @@ const App = () => (
         <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Analytics />} />
             <Route path="study" element={<Dashboard />} />
