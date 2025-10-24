@@ -1,7 +1,7 @@
 // Authentication API service
 // Update these endpoint URLs with your actual API endpoints
 
-const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
 export interface RegisterData {
   name: string;
