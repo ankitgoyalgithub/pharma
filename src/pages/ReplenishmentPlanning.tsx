@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScientificLoader } from "@/components/ScientificLoader";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import {
   FileText, Download, BarChart3, TrendingUp, ArrowUpDown, ArrowUp, ArrowDown,
   Package, DollarSign, Award, Share, AlertTriangle, AlertCircle, Zap, CheckCircle,
-  X, Database, Upload, Info, Trash2, Shield, Sparkles, Target, Box, MapPin, Truck, Activity
+  X, Database, Upload, Info, Trash2, Shield, Sparkles, Target, Box, MapPin, Truck, Activity,
+  Settings, Percent, CalendarIcon
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -20,6 +24,7 @@ import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
+import { ModernStepper } from "@/components/ModernStepper";
 import { gapData } from '@/data/replenishment/gapData';
 import { dataQualityIssues, dataQualitySummary } from '@/data/replenishment/dataQualityIssues';
 import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
@@ -34,8 +39,12 @@ import { planMetrics } from "@/data/replenishment/planMetrics";
 import { replenishmentOrders } from "@/data/replenishment/replenishmentOrders";
 import { getFoundryObjectData } from "@/data/foundry";
 import { EnhancedTable } from "@/components/ui/enhanced-table";
+import { baseItems, forwardDays, ItemRow } from "@/data/replenishment/baseItems";
+import { getExternalDrivers } from "@/data/replenishment/externalDrivers";
+import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, ChartTooltip, ChartLegend, Filler, Title);
+
 const forwardDemandBySku: Record<string, number[]> = baseItems.reduce((acc, it) => {
   const series: number[] = [];
   for (let d = 0; d < forwardDays; d++) {
