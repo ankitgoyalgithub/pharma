@@ -192,6 +192,7 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
 // -------------------- Component --------------------
   const ReplenishmentPlanning: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Step 1: add data preview - align with DemandForecasting flow
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -517,6 +518,8 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
         </CardContent>
       </Card>
 
+      {renderPreviewPanel()}
+
       <ExternalDriversSection
         title="External Drivers"
         description="Select external factors that could impact your replenishment planning."
@@ -525,8 +528,6 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
         onToggleDriver={toggleDriver}
         driversLoading={driversLoading}
       />
-
-      {renderPreviewPanel()}
 
       <div className="flex justify-between pt-4">
         <Button size="sm" variant="outline" onClick={() => window.history.back()}>← Back</Button>
@@ -1115,15 +1116,19 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
   );
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <ModernStepper steps={stepperSteps} title="Replenishment Planning" />
-      <div className="p-8">
-        {currentStep === 1 && renderStep1()}
-        {currentStep === 2 && renderStep2()}
-        {currentStep === 3 && renderStep3()}
-        {currentStep === 4 && renderStep4()}
+    <TooltipProvider>
+      <div className="h-screen bg-gradient-subtle overflow-hidden">
+        <div className="h-full px-4 py-0 overflow-hidden">
+          <div className="h-full w-full overflow-hidden">
+            {currentStep === 1 && renderStep1()}
+            {currentStep === 2 && renderStep2()}
+            {currentStep === 3 && renderStep3()}
+            {currentStep === 4 && renderStep4()}
+          </div>
+        </div>
       </div>
-    </div>
+      {isLoading && <ScientificLoader message={`Processing Step ${currentStep}...`} size="lg" />}
+    </TooltipProvider>
   );
 };
 
