@@ -136,7 +136,7 @@ const TopBar = ({ topbarRef }: { topbarRef: React.RefObject<HTMLDivElement> }) =
   return (
     <div ref={topbarRef} className="fixed top-0 left-0 right-0 z-40 h-16 border-b border-border bg-card flex items-center justify-between px-4">
       {/* Left side - Hamburger + Stepper */}
-      <div className="flex items-center gap-4 flex-1">
+      <div className="flex items-center gap-4 justify-start">
         <Button
           variant="ghost"
           size="sm"
