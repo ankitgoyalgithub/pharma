@@ -24,7 +24,6 @@ import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
-import { ModernStepper } from "@/components/ModernStepper";
 import { gapData } from '@/data/replenishment/gapData';
 import { dataQualityIssues, dataQualitySummary } from '@/data/replenishment/dataQualityIssues';
 import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
@@ -194,6 +193,34 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Stepper configuration
+  const stepperSteps = [
+    { id: 1, title: "Add Data", status: currentStep === 1 ? ("active" as const) : currentStep > 1 ? ("completed" as const) : ("pending" as const) },
+    { id: 2, title: "Data Gaps", status: currentStep === 2 ? ("active" as const) : currentStep > 2 ? ("completed" as const) : ("pending" as const) },
+    { id: 3, title: "Configuration", status: currentStep === 3 ? ("active" as const) : currentStep > 3 ? ("completed" as const) : ("pending" as const) },
+    { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
+  ];
+  
+  const stepperHook = useStepper({
+    steps: stepperSteps,
+    title: "Replenishment Planning",
+    initialStep: currentStep
+  });
+
+  const { setOnStepClick } = useStepperContext();
+
+  // Set up step click handler
+  const handleStepClick = React.useCallback((stepId: number) => {
+    const targetStep = stepperSteps.find(s => s.id === stepId);
+    if (targetStep && (targetStep.status === 'completed' || stepId === currentStep + 1 || stepId === currentStep)) {
+      setCurrentStep(stepId);
+    }
+  }, [currentStep, stepperSteps]);
+
+  React.useEffect(() => {
+    setOnStepClick(() => handleStepClick);
+  }, [handleStepClick, setOnStepClick]);
+
   // Step 1: add data preview - align with DemandForecasting flow
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [foundryObjects, setFoundryObjects] = useState<Array<{name: string; type: 'master' | 'timeseries' | 'featureStore', fromDate?: Date, toDate?: Date}>>([]);
@@ -222,13 +249,6 @@ function WorkbookTable({ rows, pageSize = 8 }: { rows: ComputedRow[], pageSize?:
 
   const scenario = useMemo(() => ({ safetyMult, moqMult, leadTimeDelta }), [safetyMult, moqMult, leadTimeDelta]);
   const computed = useMemo(() => computeRows(baseItems, scenario), [scenario]);
-
-  const stepperSteps = [
-    { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
-    { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
-    { id: 3, title: "Review Data", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
-    { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
-  ];
 
   // External drivers logic
   const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
