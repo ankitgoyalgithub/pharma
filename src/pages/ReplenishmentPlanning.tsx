@@ -1,103 +1,41 @@
-
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ScientificLoader } from "@/components/ScientificLoader";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ModernStepper } from "@/components/ModernStepper";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import {
+  FileText, Download, BarChart3, TrendingUp, ArrowUpDown, ArrowUp, ArrowDown,
+  Package, DollarSign, Award, Share, AlertTriangle, AlertCircle, Zap, CheckCircle,
+  X, Database, Upload, Info, Trash2, Shield, Sparkles, Target, Box, MapPin, Truck, Activity
+} from "lucide-react";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useStepper } from "@/hooks/useStepper";
+import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
-import {
-  Download,
-  Upload,
-  Database,
-  FileText,
-  AlertCircle,
-  AlertTriangle,
-  Calendar as CalendarIcon,
-  CheckCircle,
-  Package,
-  TrendingUp,
-  BarChart3,
-  Percent,
-  Share,
-  Settings,
-  X,
-  Info,
-} from "lucide-react";
-import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
-import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { format } from "date-fns";
+import { gapData } from '@/data/replenishment/gapData';
+import { dataQualityIssues, dataQualitySummary } from '@/data/replenishment/dataQualityIssues';
+import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
+import { AutoFixDialog } from '@/components/AutoFixDialog';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Tooltip as ChartTooltip, Legend as ChartLegend, Filler, Title } from "chart.js";
+import { Line, Bar, Pie } from "react-chartjs-2";
+import { CompactMetricCard } from "@/components/CompactMetricCard";
+import { CompactProjectionCard } from "@/components/CompactProjectionCard";
+import { replenishmentRequiredFiles } from "@/data/replenishment/foundryObjects";
+import { normDataPreview, networkDataPreview, demandDataPreview } from "@/data/replenishment/dataPreviewSample";
+import { planMetrics } from "@/data/replenishment/planMetrics";
+import { replenishmentOrders } from "@/data/replenishment/replenishmentOrders";
+import { getFoundryObjectData } from "@/data/foundry";
+import { EnhancedTable } from "@/components/ui/enhanced-table";
 
-// ---- Chart.js imports ----
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Tooltip as ChartTooltip,
-  Legend as ChartLegend,
-  Filler,
-  Title,
-} from "chart.js";
-import { Line, Bar } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  ChartTooltip,
-  ChartLegend,
-  Filler,
-  Title
-);
-
-// -------------------- Mock Data --------------------
-type ItemRow = {
-  sku: string;
-  description: string;
-  location: string;
-  supplier: string;
-  uom: string;
-  current_stock: number;
-  on_order: number;
-  safety_stock: number;
-  lead_time_days: number;
-  moq: number;
-  lot_size: number;
-  avg_daily_demand: number;
-  demand_cv: number; // coefficient of variation
-};
-
-const baseItems: ItemRow[] = [
-  { sku: "SKU-1001", description: "Premium Widget A", location: "Delhi-DC", supplier: "Alpha Co", uom: "EA", current_stock: 820, on_order: 0, safety_stock: 300, lead_time_days: 10, moq: 200, lot_size: 100, avg_daily_demand: 95, demand_cv: 0.25 },
-  { sku: "SKU-1002", description: "Premium Widget B", location: "Mumbai-DC", supplier: "Alpha Co", uom: "EA", current_stock: 260, on_order: 150, safety_stock: 180, lead_time_days: 7, moq: 150, lot_size: 50, avg_daily_demand: 60, demand_cv: 0.32 },
-  { sku: "SKU-1003", description: "Gadget Pro X", location: "Bengaluru-DC", supplier: "Bravo Supplies", uom: "EA", current_stock: 120, on_order: 0, safety_stock: 200, lead_time_days: 14, moq: 250, lot_size: 50, avg_daily_demand: 55, demand_cv: 0.40 },
-  { sku: "SKU-1004", description: "Gadget Pro Y", location: "Chennai-DC", supplier: "Bravo Supplies", uom: "EA", current_stock: 980, on_order: 0, safety_stock: 220, lead_time_days: 9, moq: 100, lot_size: 100, avg_daily_demand: 80, demand_cv: 0.22 },
-  { sku: "SKU-2001", description: "Spare Part K", location: "Delhi-DC", supplier: "Cobalt Ltd", uom: "EA", current_stock: 45, on_order: 0, safety_stock: 80, lead_time_days: 21, moq: 120, lot_size: 20, avg_daily_demand: 8, demand_cv: 0.60 },
-  { sku: "SKU-2002", description: "Spare Part L", location: "Mumbai-DC", supplier: "Cobalt Ltd", uom: "EA", current_stock: 400, on_order: 200, safety_stock: 300, lead_time_days: 30, moq: 300, lot_size: 100, avg_daily_demand: 40, demand_cv: 0.55 },
-  { sku: "SKU-3001", description: "Accessory M1", location: "Delhi-DC", supplier: "Delta Traders", uom: "EA", current_stock: 150, on_order: 0, safety_stock: 120, lead_time_days: 5, moq: 50, lot_size: 25, avg_daily_demand: 30, demand_cv: 0.28 },
-  { sku: "SKU-3002", description: "Accessory M2", location: "Bengaluru-DC", supplier: "Delta Traders", uom: "EA", current_stock: 60, on_order: 0, safety_stock: 100, lead_time_days: 6, moq: 80, lot_size: 20, avg_daily_demand: 18, demand_cv: 0.35 },
-  { sku: "SKU-3003", description: "Accessory M3", location: "Chennai-DC", supplier: "Delta Traders", uom: "EA", current_stock: 380, on_order: 0, safety_stock: 200, lead_time_days: 12, moq: 150, lot_size: 50, avg_daily_demand: 42, demand_cv: 0.30 },
-  { sku: "SKU-4001", description: "Consumable C1", location: "Mumbai-DC", supplier: "Echo Global", uom: "EA", current_stock: 90, on_order: 0, safety_stock: 160, lead_time_days: 8, moq: 120, lot_size: 20, avg_daily_demand: 25, demand_cv: 0.45 },
-  { sku: "SKU-4002", description: "Consumable C2", location: "Delhi-DC", supplier: "Echo Global", uom: "EA", current_stock: 510, on_order: 0, safety_stock: 200, lead_time_days: 10, moq: 100, lot_size: 25, avg_daily_demand: 52, demand_cv: 0.33 },
-  { sku: "SKU-5001", description: "Bundle Z", location: "Bengaluru-DC", supplier: "Foxtrot Parts", uom: "EA", current_stock: 35, on_order: 0, safety_stock: 120, lead_time_days: 18, moq: 150, lot_size: 50, avg_daily_demand: 12, demand_cv: 0.70 },
-];
-
-// forward demand series used for a quick coverage plot
-const forwardDays = 30;
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, ChartTooltip, ChartLegend, Filler, Title);
 const forwardDemandBySku: Record<string, number[]> = baseItems.reduce((acc, it) => {
   const series: number[] = [];
   for (let d = 0; d < forwardDays; d++) {
