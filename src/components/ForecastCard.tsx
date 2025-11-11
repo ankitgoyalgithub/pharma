@@ -60,7 +60,7 @@ export const ForecastCard: React.FC<ForecastCardProps> = ({
             <p className="text-2xl font-bold text-foreground leading-tight mb-1.5 truncate">
               {value}
             </p>
-            <p className="text-sm text-muted-foreground leading-snug break-words">
+            <p className="text-sm text-muted-foreground leading-snug break-words line-clamp-3">
               {subtitle}
             </p>
           </div>

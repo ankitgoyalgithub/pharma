@@ -2150,9 +2150,9 @@ const DemandForecasting = () => {
             <div className="flex justify-center">
             <ForecastCard
               title="Forecast Snapshot"
-              value="94.2%"
-              subtitle="ML-Powered Accuracy • $48.2M Revenue • 125K+ Units
-                        12-Month Horizon • 5 Active SKUs • 4 Channels"
+              value="82%"
+              subtitle="Backtested Accuracy • $6.8M Value • 120,756 Units
+                        12-Week Horizon • 5 Active SKUs • 4 Channels"
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
               onClick={() => {
