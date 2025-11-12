@@ -635,23 +635,40 @@ export default function Foundry() {
       : "Submitted";
 
   const Stepper = () => (
-    <div className="flex items-center gap-3 text-sm">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <div key={s} className="flex items-center gap-3">
-          <div
-            className={cn(
-              "h-8 w-8 rounded-full grid place-items-center text-xs font-medium",
-              s <= step ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-            )}
-          >
-            {s}
+    <div className="relative">
+      {/* Progress Bar Background */}
+      <div className="absolute top-5 left-0 right-0 h-0.5 bg-border">
+        <div 
+          className="h-full bg-primary transition-all duration-500"
+          style={{ width: `${((step - 1) / 4) * 100}%` }}
+        />
+      </div>
+      
+      {/* Steps */}
+      <div className="relative flex items-start justify-between">
+        {[1, 2, 3, 4, 5].map((s) => (
+          <div key={s} className="flex flex-col items-center gap-2 flex-1">
+            <div
+              className={cn(
+                "h-10 w-10 rounded-full grid place-items-center text-sm font-semibold transition-all duration-300 border-2 z-10 bg-background",
+                s < step ? "bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20" :
+                s === step ? "border-primary bg-primary text-primary-foreground ring-4 ring-primary/20 shadow-lg" : 
+                "border-border bg-background text-muted-foreground"
+              )}
+            >
+              {s < step ? <CheckCircle2 className="h-5 w-5" /> : s}
+            </div>
+            <div className="flex flex-col items-center text-center max-w-[120px]">
+              <span className={cn(
+                "text-xs font-medium transition-colors",
+                s === step ? "text-foreground" : s < step ? "text-primary" : "text-muted-foreground"
+              )}>
+                {stepLabel(s as StepType)}
+              </span>
+            </div>
           </div>
-          <span className={cn("hidden sm:block", s === step ? "text-foreground font-medium" : "text-muted-foreground")}>
-            {stepLabel(s as StepType)}
-          </span>
-          {s !== 5 && <Separator orientation="vertical" className="h-8" />}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 
@@ -670,12 +687,17 @@ export default function Foundry() {
         softResetPreview();
       }}
       className={cn(
-        "flex items-center gap-2 px-3 py-2 rounded-xl border hover:shadow-sm transition",
-        source === value ? "border-primary ring-2 ring-primary/20" : "border-border"
+        "flex items-center gap-3 px-4 py-3 rounded-xl border-2 hover:shadow-md transition-all duration-200",
+        source === value 
+          ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm" 
+          : "border-border hover:border-primary/50 bg-background"
       )}
     >
-      <img src={icon} alt={label} className="h-4 w-4" />
-      <span className="text-sm">{label}</span>
+      <img src={icon} alt={label} className="h-5 w-5" />
+      <span className={cn(
+        "text-sm font-medium",
+        source === value ? "text-primary" : "text-foreground"
+      )}>{label}</span>
     </button>
   );
 
@@ -709,7 +731,7 @@ export default function Foundry() {
               <Label>Salesforce Object</Label>
               <Select value={sfObject ?? ""} onValueChange={(v) => { setSfObject(v); softResetPreview(); }}>
                 <SelectTrigger><SelectValue placeholder="Select object" /></SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background z-50">
                   {Object.keys(salesforceObjects).map((obj) => (
                     <SelectItem key={obj} value={obj}>{obj}</SelectItem>
                   ))}
@@ -750,7 +772,7 @@ export default function Foundry() {
                   <div className="col-span-4">
                     <Select value={f.field} onValueChange={(v) => updateSfFilter(i, { field: v })}>
                       <SelectTrigger><SelectValue placeholder="Field" /></SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background z-50">
                         {(sfObject ? salesforceObjects[sfObject] : commonColumns).map((c) => (
                           <SelectItem key={c} value={c}>{c}</SelectItem>
                         ))}
@@ -760,7 +782,7 @@ export default function Foundry() {
                   <div className="col-span-2">
                     <Select value={f.op} onValueChange={(v) => updateSfFilter(i, { op: v })}>
                       <SelectTrigger><SelectValue placeholder="Op" /></SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background z-50">
                         {["=", "!=", ">", "<", ">=", "<=", "contains", "startsWith"].map((op) => (
                           <SelectItem key={op} value={op}>{op}</SelectItem>
                         ))}
@@ -797,7 +819,7 @@ export default function Foundry() {
               <Label>File</Label>
               <Select value={gdFile ?? ""} onValueChange={(v) => { setGdFile(v); softResetPreview(); }}>
                 <SelectTrigger><SelectValue placeholder="Select file" /></SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background z-50">
                   {sampleGDriveFiles.map((f) => (
                     <SelectItem key={f} value={f}>{f}</SelectItem>
                   ))}
@@ -837,7 +859,7 @@ export default function Foundry() {
                   <div className="col-span-4">
                     <Select value={f.column} onValueChange={(v) => updateGdFilter(i, { column: v })}>
                       <SelectTrigger><SelectValue placeholder="Column" /></SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background z-50">
                         {commonColumns.map((c) => (
                           <SelectItem key={c} value={c}>{c}</SelectItem>
                         ))}
@@ -847,7 +869,7 @@ export default function Foundry() {
                   <div className="col-span-2">
                     <Select value={f.op} onValueChange={(v) => updateGdFilter(i, { op: v })}>
                       <SelectTrigger><SelectValue placeholder="Op" /></SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background z-50">
                         {["=", "!=", ">", "<", ">=", "<=", "contains", "startsWith"].map((op) => (
                           <SelectItem key={op} value={op}>{op}</SelectItem>
                         ))}
@@ -957,7 +979,7 @@ export default function Foundry() {
                   <div className="col-span-4">
                     <Select value={f.column} onValueChange={(v) => updateFileFilter(i, { column: v })}>
                       <SelectTrigger><SelectValue placeholder="Column" /></SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background z-50">
                         {commonColumns.map((c) => (
                           <SelectItem key={c} value={c}>{c}</SelectItem>
                         ))}
@@ -967,7 +989,7 @@ export default function Foundry() {
                   <div className="col-span-2">
                     <Select value={f.op} onValueChange={(v) => updateFileFilter(i, { op: v })}>
                       <SelectTrigger><SelectValue placeholder="Op" /></SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background z-50">
                         {["=", "!=", ">", "<", ">=", "<=", "contains", "startsWith"].map((op) => (
                           <SelectItem key={op} value={op}>{op}</SelectItem>
                         ))}
@@ -1208,7 +1230,7 @@ export default function Foundry() {
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background z-50">
                   <SelectItem value="7d">Last 7 Days</SelectItem>
                   <SelectItem value="30d">Last 30 Days</SelectItem>
                   <SelectItem value="90d">Last 90 Days</SelectItem>
@@ -1218,7 +1240,7 @@ export default function Foundry() {
                 <SelectTrigger className="w-64">
                   <SelectValue placeholder="Select Entity" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background z-50">
                   <SelectItem value="all">All Entities</SelectItem>
                   <Separator />
                   {allEntities.filter(e => e !== "all").map(entity => (
@@ -1674,295 +1696,343 @@ export default function Foundry() {
 
       {/* ---------- Create Entity Wizard (Dialog) ---------- */}
       <Dialog open={openWizard} onOpenChange={(v) => (v ? setOpenWizard(true) : closeWizard())}>
-        <DialogContent className="max-w-5xl">
-          <DialogHeader>
-            <DialogTitle>Create Entity</DialogTitle>
-            <DialogDescription>
-              Multi‑step wizard to configure your data source, query/filters, fields and review before submitting a job.
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader className="space-y-3 pb-4 border-b">
+            <DialogTitle className="text-2xl font-bold">Create New Entity</DialogTitle>
+            <DialogDescription className="text-base">
+              Configure your data source, query filters, field mappings, and review before creating the entity.
             </DialogDescription>
           </DialogHeader>
 
           {/* Stepper */}
-          <div className="flex items-center justify-between">
+          <div className="py-6 px-2">
             <Stepper />
-            <div className="text-xs text-muted-foreground">Step {step} of 5</div>
           </div>
 
-          <Separator />
+          <Separator className="mb-4" />
 
-          {/* Steps */}
-          {step === 1 && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="col-span-1 space-y-2">
-                  <Label>Entity Name</Label>
-                  <Input
-                    placeholder="e.g., product_master"
-                    value={entityName}
-                    onChange={(e) => setEntityName(e.target.value)}
-                  />
-                </div>
-                <div className="col-span-1 space-y-2">
-                  <Label>Type</Label>
-                  <Select value={entityType} onValueChange={(v: EntityType) => setEntityType(v)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="master">Master</SelectItem>
-                      <SelectItem value="timeseries">Timeseries</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="col-span-1 flex items-end gap-3">
-                  <div className="space-y-1">
-                    <Label className="block">Snapshot Enabled</Label>
-                    <div className="flex items-center gap-2">
-                      <Switch checked={snapshotEnabled} onCheckedChange={setSnapshotEnabled} />
-                      <span className="text-sm text-muted-foreground">
-                        Keep historical snapshots
-                      </span>
+          {/* Steps Content - Scrollable */}
+          <div className="flex-1 overflow-y-auto px-1 pb-4">
+            {step === 1 && (
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Basic Configuration</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Entity Name</Label>
+                      <Input
+                        placeholder="e.g., product_master"
+                        value={entityName}
+                        onChange={(e) => setEntityName(e.target.value)}
+                        className="h-11"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Type</Label>
+                      <Select value={entityType} onValueChange={(v: EntityType) => setEntityType(v)}>
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background z-50">
+                          <SelectItem value="master">Master</SelectItem>
+                          <SelectItem value="timeseries">Timeseries</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Snapshot Enabled</Label>
+                      <div className="flex items-center h-11 gap-3 px-3 border rounded-md bg-muted/20">
+                        <Switch checked={snapshotEnabled} onCheckedChange={setSnapshotEnabled} />
+                        <span className="text-sm">
+                          Keep historical snapshots
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-3">
-                <Label>Source</Label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                  <SourcePill value="s3" label="Amazon S3" icon={sourceTypeIcon.s3} />
-                  <SourcePill value="oracle" label="Oracle" icon={sourceTypeIcon.oracle} />
-                  <SourcePill value="snowflake" label="Snowflake" icon={sourceTypeIcon.snowflake} />
-                  <SourcePill value="salesforce" label="Salesforce" icon={sourceTypeIcon.salesforce} />
-                  <SourcePill value="sap" label="SAP" icon={sourceTypeIcon.sap} />
-                  <SourcePill value="csv" label="CSV (Path)" icon={sourceTypeIcon.csv} />
-                  <SourcePill value="upload_csv" label="Upload CSV" icon={sourceTypeIcon.upload_csv} />
-                  <SourcePill value="gdrive" label="Google Drive" icon={sourceTypeIcon.gdrive} />
-                </div>
-              </div>
-            </div>
-          )}
+                <Separator />
 
-          {step === 2 && renderQueryStep()}
-
-          {step === 3 && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-base font-semibold">Field Mapping</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Rename columns, change data types, or add computed (formula) fields.
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={addFormulaField}>
-                    + Add Formula Field
-                  </Button>
-                </div>
-              </div>
-
-              <div className="rounded-md border overflow-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted sticky top-16">
-                    <tr>
-                      <th className="text-left px-3 py-2 font-medium w-[18%]">Source Column</th>
-                      <th className="text-left px-3 py-2 font-medium w-[22%]">New Name</th>
-                      <th className="text-left px-3 py-2 font-medium w-[18%]">Data Type</th>
-                      <th className="text-left px-3 py-2 font-medium">Sample</th>
-                      <th className="text-left px-3 py-2 font-medium w-[28%]">Formula (for new)</th>
-                      <th className="px-3 py-2"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {fields.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} className="px-3 py-6 text-center text-muted-foreground text-sm">
-                          Run a preview in Step 2 to infer fields, or add formula fields manually.
-                        </td>
-                      </tr>
-                    ) : (
-                      fields.map((f, i) => (
-                        <tr key={i} className="border-t align-top">
-                          <td className="px-3 py-2">
-                            <Input
-                              value={f.sourceName}
-                              onChange={(e) => updateField(i, { sourceName: e.target.value })}
-                              disabled={!f.isNew}
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <Input
-                              value={f.newName}
-                              onChange={(e) => updateField(i, { newName: e.target.value })}
-                            />
-                          </td>
-                          <td className="px-3 py-2">
-                            <Select
-                              value={f.dataType}
-                              onValueChange={(v) => updateField(i, { dataType: v })}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="string">string</SelectItem>
-                                <SelectItem value="number">number</SelectItem>
-                                <SelectItem value="integer">integer</SelectItem>
-                                <SelectItem value="boolean">boolean</SelectItem>
-                                <SelectItem value="date">date</SelectItem>
-                                <SelectItem value="timestamp">timestamp</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </td>
-                          <td className="px-3 py-2 text-muted-foreground">
-                            {f.sample === null ? <em>—</em> : String(f.sample)}
-                          </td>
-                          <td className="px-3 py-2">
-                            {f.isNew ? (
-                              <Textarea
-                                value={f.expression || ""}
-                                onChange={(e) => updateField(i, { expression: e.target.value })}
-                                placeholder="e.g., price * 1.18 or concat(product_id, '-', uom)"
-                                className="min-h-[40px] font-mono text-xs"
-                              />
-                            ) : (
-                              <span className="text-muted-foreground">—</span>
-                            )}
-                          </td>
-                          <td className="px-3 py-2 text-right">
-                            <Button size="sm" variant="ghost" onClick={() => removeField(i)}>
-                              Remove
-                            </Button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-base font-semibold">Review</h3>
-                <p className="text-sm text-muted-foreground">
-                  Confirm details before creating the entity and scheduling the ingest job.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Basics</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm space-y-1">
-                    <div><span className="text-muted-foreground">Name:</span> {reviewSummary.name}</div>
-                    <div><span className="text-muted-foreground">Type:</span> {reviewSummary.type}</div>
-                    <div><span className="text-muted-foreground">Source:</span> {String(reviewSummary.source)}</div>
-                    <div><span className="text-muted-foreground">Snapshot:</span> {reviewSummary.snapshot ? "Enabled" : "Disabled"}</div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Schema</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm space-y-1">
-                    <div><span className="text-muted-foreground">Fields:</span> {reviewSummary.fieldCount}</div>
-                    <div><span className="text-muted-foreground">New/Formula:</span> {reviewSummary.newFields}</div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Query / Filters</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto whitespace-pre-wrap">{reviewSummary.query}</pre>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {hasPreview && (
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Sample Rows</h4>
-                  <div className="rounded-md border overflow-auto">
-                    <table className="w-full text-sm">
-                      <thead className="bg-muted sticky top-16">
-                        <tr>
-                          {Object.keys(previewRows[0] || {}).map((k) => (
-                            <th key={k} className="text-left px-3 py-2 font-medium">
-                              {k}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {previewRows.map((r, idx) => (
-                          <tr key={idx} className="border-t">
-                            {Object.keys(previewRows[0] || {}).map((k) => (
-                              <td key={k} className="px-3 py-2 whitespace-nowrap">
-                                {String(r[k] ?? "")}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-lg font-semibold">Select Data Source</Label>
+                    <p className="text-sm text-muted-foreground mt-1">Choose where your data will be ingested from</p>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <SourcePill value="s3" label="Amazon S3" icon={sourceTypeIcon.s3} />
+                    <SourcePill value="oracle" label="Oracle" icon={sourceTypeIcon.oracle} />
+                    <SourcePill value="snowflake" label="Snowflake" icon={sourceTypeIcon.snowflake} />
+                    <SourcePill value="salesforce" label="Salesforce" icon={sourceTypeIcon.salesforce} />
+                    <SourcePill value="sap" label="SAP" icon={sourceTypeIcon.sap} />
+                    <SourcePill value="csv" label="CSV (Path)" icon={sourceTypeIcon.csv} />
+                    <SourcePill value="upload_csv" label="Upload CSV" icon={sourceTypeIcon.upload_csv} />
+                    <SourcePill value="gdrive" label="Google Drive" icon={sourceTypeIcon.gdrive} />
                   </div>
                 </div>
-              )}
-            </div>
-          )}
-
-          {step === 5 && (
-            <div className="py-8 flex flex-col items-center text-center gap-3">
-              <CheckCircle2 className="h-12 w-12 text-green-600" />
-              <h3 className="text-lg font-semibold">Create Job Submitted</h3>
-              <p className="text-sm text-muted-foreground max-w-md">
-                Your entity creation job has been submitted. You can track progress in the Jobs page,
-                or continue configuring more entities.
-              </p>
-              <div className="flex gap-3 mt-2">
-                <Button onClick={() => navigate("/data-jobs")}>
-                  <ListChecks className="h-4 w-4 mr-2" />
-                  View Jobs
-                </Button>
-                <DialogClose asChild>
-                  <Button variant="outline" onClick={closeWizard}>
-                    Close
-                  </Button>
-                </DialogClose>
               </div>
-            </div>
-          )}
+            )}
+
+            {step === 2 && renderQueryStep()}
+
+            {step === 3 && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">Field Mapping</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Rename columns, change data types, or add computed (formula) fields.
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={addFormulaField} className="gap-2">
+                      <PlusCircle className="h-4 w-4" />
+                      Add Formula Field
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border overflow-auto bg-background shadow-sm">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/50 sticky top-0 z-10">
+                      <tr className="border-b">
+                        <th className="text-left px-4 py-3 font-semibold w-[18%]">Source Column</th>
+                        <th className="text-left px-4 py-3 font-semibold w-[22%]">New Name</th>
+                        <th className="text-left px-4 py-3 font-semibold w-[18%]">Data Type</th>
+                        <th className="text-left px-4 py-3 font-semibold">Sample</th>
+                        <th className="text-left px-4 py-3 font-semibold w-[28%]">Formula (for new)</th>
+                        <th className="px-4 py-3"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {fields.length === 0 ? (
+                        <tr>
+                          <td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">
+                            <div className="flex flex-col items-center gap-2">
+                              <Database className="h-8 w-8 text-muted-foreground/50" />
+                              <p>Run a preview in Step 2 to infer fields, or add formula fields manually.</p>
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        fields.map((f, i) => (
+                          <tr key={i} className="border-b hover:bg-muted/20 transition-colors align-top">
+                            <td className="px-4 py-3">
+                              <Input
+                                value={f.sourceName}
+                                onChange={(e) => updateField(i, { sourceName: e.target.value })}
+                                disabled={!f.isNew}
+                                className="h-10"
+                              />
+                            </td>
+                            <td className="px-4 py-3">
+                              <Input
+                                value={f.newName}
+                                onChange={(e) => updateField(i, { newName: e.target.value })}
+                                className="h-10"
+                              />
+                            </td>
+                            <td className="px-4 py-3">
+                              <Select
+                                value={f.dataType}
+                                onValueChange={(v) => updateField(i, { dataType: v })}
+                              >
+                                <SelectTrigger className="h-10">
+                                  <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-background z-50">
+                                  <SelectItem value="string">string</SelectItem>
+                                  <SelectItem value="number">number</SelectItem>
+                                  <SelectItem value="integer">integer</SelectItem>
+                                  <SelectItem value="boolean">boolean</SelectItem>
+                                  <SelectItem value="date">date</SelectItem>
+                                  <SelectItem value="timestamp">timestamp</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-4 py-3 text-muted-foreground">
+                              {f.sample === null ? <em>—</em> : String(f.sample)}
+                            </td>
+                            <td className="px-4 py-3">
+                              {f.isNew ? (
+                                <Textarea
+                                  value={f.expression || ""}
+                                  onChange={(e) => updateField(i, { expression: e.target.value })}
+                                  placeholder="e.g., price * 1.18 or concat(product_id, '-', uom)"
+                                  className="min-h-[60px] font-mono text-xs"
+                                />
+                              ) : (
+                                <span className="text-muted-foreground">—</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <Button size="sm" variant="ghost" onClick={() => removeField(i)} className="hover:bg-destructive/10 hover:text-destructive">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {step === 4 && (
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-lg font-semibold">Review & Confirm</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Verify all details before creating the entity and scheduling the ingest job.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Card className="shadow-sm border-2">
+                    <CardHeader className="pb-3 bg-muted/20">
+                      <CardTitle className="text-base font-semibold flex items-center gap-2">
+                        <Database className="h-4 w-4 text-primary" />
+                        Basics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm space-y-3 pt-4">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Name:</span>
+                        <span className="font-medium">{reviewSummary.name}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Type:</span>
+                        <Badge variant="outline">{reviewSummary.type}</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Source:</span>
+                        <span className="font-medium">{String(reviewSummary.source)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Snapshot:</span>
+                        <Badge variant={reviewSummary.snapshot ? "default" : "secondary"}>
+                          {reviewSummary.snapshot ? "Enabled" : "Disabled"}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="shadow-sm border-2">
+                    <CardHeader className="pb-3 bg-muted/20">
+                      <CardTitle className="text-base font-semibold flex items-center gap-2">
+                        <ListChecks className="h-4 w-4 text-primary" />
+                        Schema
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm space-y-3 pt-4">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Total Fields:</span>
+                        <span className="font-medium text-lg">{reviewSummary.fieldCount}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Formula Fields:</span>
+                        <span className="font-medium text-lg">{reviewSummary.newFields}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="shadow-sm border-2">
+                    <CardHeader className="pb-3 bg-muted/20">
+                      <CardTitle className="text-base font-semibold flex items-center gap-2">
+                        <Filter className="h-4 w-4 text-primary" />
+                        Query
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-4">
+                      <pre className="text-xs bg-muted/50 p-4 rounded-md overflow-x-auto whitespace-pre-wrap font-mono border">{reviewSummary.query}</pre>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {hasPreview && (
+                  <div>
+                    <h4 className="text-base font-semibold mb-3">Sample Data Preview</h4>
+                    <div className="rounded-lg border overflow-auto bg-background shadow-sm">
+                      <table className="w-full text-sm">
+                        <thead className="bg-muted/50 sticky top-0">
+                          <tr className="border-b">
+                            {Object.keys(previewRows[0] || {}).map((k) => (
+                              <th key={k} className="text-left px-4 py-3 font-semibold">
+                                {k}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {previewRows.map((r, idx) => (
+                            <tr key={idx} className="border-b hover:bg-muted/20 transition-colors">
+                              {Object.keys(previewRows[0] || {}).map((k) => (
+                                <td key={k} className="px-4 py-3 whitespace-nowrap">
+                                  {String(r[k] ?? "")}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {step === 5 && (
+              <div className="py-12 flex flex-col items-center text-center gap-4">
+                <div className="rounded-full bg-green-100 p-4 mb-2">
+                  <CheckCircle2 className="h-16 w-16 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold">Entity Creation Submitted!</h3>
+                <p className="text-base text-muted-foreground max-w-lg">
+                  Your entity creation job has been successfully submitted. You can track the progress in the Jobs page,
+                  or continue configuring more entities.
+                </p>
+                <div className="flex gap-3 mt-4">
+                  <Button onClick={() => navigate("/data-jobs")} size="lg" className="gap-2">
+                    <ListChecks className="h-5 w-5" />
+                    View Jobs
+                  </Button>
+                  <DialogClose asChild>
+                    <Button variant="outline" onClick={closeWizard} size="lg">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Footer Actions */}
           {step !== 5 && (
-            <DialogFooter className="flex items-center justify-between gap-2">
-              <div className="text-xs text-muted-foreground">
-                {step === 2 ? "You can update filters and re-run preview as needed." : "Use Back/Next to navigate."}
+            <DialogFooter className="flex items-center justify-between gap-3 pt-4 border-t mt-4 bg-muted/20 rounded-b-lg px-6 py-4">
+              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                {step === 2 && <span>💡 Update filters and re-run preview as needed</span>}
+                {step !== 2 && <span>Use Back/Next to navigate between steps</span>}
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={gotoPrev} disabled={step === 1}>
-                  <ChevronLeft className="h-4 w-4 mr-1" />
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={gotoPrev} disabled={step === 1} size="lg" className="gap-2">
+                  <ChevronLeft className="h-4 w-4" />
                   Back
                 </Button>
                 {step < 4 && (
                   <Button
                     onClick={gotoNext}
                     disabled={(step === 1 && !source) || (step === 2 && !hasPreview)}
+                    size="lg"
+                    className="gap-2"
                   >
                     Next
-                    <ChevronRight className="h-4 w-4 ml-1" />
+                    <ChevronRight className="h-4 w-4" />
                   </Button>
                 )}
                 {step === 4 && (
-                  <Button onClick={submitJob}>
-                    Submit
-                    <ChevronRight className="h-4 w-4 ml-1" />
+                  <Button onClick={submitJob} size="lg" className="gap-2 bg-gradient-to-r from-primary to-primary-glow">
+                    <CheckCircle2 className="h-4 w-4" />
+                    Submit Entity
                   </Button>
                 )}
               </div>
