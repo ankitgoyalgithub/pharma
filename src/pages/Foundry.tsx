@@ -1,6 +1,8 @@
 // Foundry.tsx — Popup Create Entity (5-step) + Inline Data Health page (no popup) + source-specific Query step
 import React, { useMemo, useState } from "react";
 import { AppendDataDialog } from "@/components/AppendDataDialog";
+import { AutoFixSuggestionsPanel } from "@/components/AutoFixSuggestionsPanel";
+import { SynqAIAssistant } from "@/components/SynqAIAssistant";
 import {
   Card,
   CardHeader,
@@ -1504,6 +1506,9 @@ export default function Foundry() {
             </CardContent>
           </Card>
 
+          {/* AutoFix Suggestions Panel */}
+          <AutoFixSuggestionsPanel />
+
           {/* Schema Changes History */}
           <Card>
             <CardHeader>
@@ -1564,12 +1569,17 @@ export default function Foundry() {
             </CardContent>
           </Card>
         </div>
+        
+        {/* SynqAI Assistant */}
+        <SynqAIAssistant />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
+      {/* SynqAI Assistant */}
+      <SynqAIAssistant />
       {/* Header */}
       <div className="border-b border-border bg-gradient-to-br from-card via-card to-background relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,transparent,black)]" />
