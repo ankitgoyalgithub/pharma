@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetOverlay, SheetPortal } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sparkles, Send, Wrench, GitBranch } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -92,8 +92,10 @@ export const SynqAIAssistant: React.FC = () => {
 
       {/* Chat Drawer */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent side="right" className="w-full sm:w-[480px] flex flex-col p-0">
-          <SheetHeader className="px-6 py-4 border-b border-border bg-gradient-to-r from-primary/5 to-primary/10">
+        <SheetPortal>
+          <SheetOverlay className="bg-black/60 backdrop-blur-sm" />
+          <SheetContent side="right" className="w-full sm:w-[480px] flex flex-col p-0">
+            <SheetHeader className="px-6 py-4 border-b border-border bg-gradient-to-r from-primary/5 to-primary/10">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary-foreground" />
@@ -197,7 +199,8 @@ export const SynqAIAssistant: React.FC = () => {
               </Button>
             </div>
           </div>
-        </SheetContent>
+          </SheetContent>
+        </SheetPortal>
       </Sheet>
     </>
   );
