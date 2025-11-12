@@ -10,7 +10,7 @@ import {
   Upload, FileText, CheckCircle2, AlertTriangle, TrendingUp, 
   Package, Store, BarChart3, Settings, Play, Eye, Download,
   ArrowRight, Sparkles, Brain, Database, Target, ShoppingBag,
-  Maximize, DollarSign, X, Zap, Info, CheckCircle, AlertCircle, Copy
+  Maximize, DollarSign, X, Zap, Info, CheckCircle, AlertCircle, Copy, Activity
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AirtableStyleTable } from '@/components/AirtableStyleTable';
@@ -83,13 +83,13 @@ const AssortmentPlanning = () => {
     lowSeverity: dataQualityIssues.filter(i => i.severity === 'low').length,
   };
 
-  // Stepper configuration
-  const stepperSteps = [
+  // Stepper configuration - memoized to prevent infinite loop
+  const stepperSteps = React.useMemo(() => [
     { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
     { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
     { id: 3, title: "Configuration", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
     { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
-  ];
+  ], [currentStep]);
   
   const stepperHook = useStepper({
     steps: stepperSteps,
@@ -890,6 +890,114 @@ const AssortmentPlanning = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Optimization Value Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-base font-semibold">Optimization Value Added</CardTitle>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-xs">Breakdown of value contribution from different optimization components</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-center p-4 bg-gradient-to-br from-success/5 to-success/10 rounded-lg border border-success/20">
+              <div className="text-3xl font-bold text-success">+$4.2M</div>
+              <div className="text-xs text-muted-foreground mt-1">Total Value Added</div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">SKU Rationalization</span>
+                <div className="flex items-center gap-1">
+                  <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div className="w-3/4 h-full bg-primary"></div>
+                  </div>
+                  <span className="font-medium">+$1.8M</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Store Allocation</span>
+                <div className="flex items-center gap-1">
+                  <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div className="w-5/6 h-full bg-success"></div>
+                  </div>
+                  <span className="font-medium">+$1.6M</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Category Mix</span>
+                <div className="flex items-center gap-1">
+                  <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div className="w-1/2 h-full bg-info"></div>
+                  </div>
+                  <span className="font-medium">+$0.8M</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t">
+              <div className="flex justify-between text-xs mb-1">
+                <span className="text-muted-foreground">Implementation Progress</span>
+                <span className="font-medium">42%</span>
+              </div>
+              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                <div className="w-[42%] h-full bg-gradient-to-r from-primary to-success"></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-semibold flex items-center gap-2">
+              <Activity className="w-5 h-5 text-primary" />
+              Performance by Category
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {[
+                { category: 'Apparel', performance: 94, color: 'bg-success' },
+                { category: 'Footwear', performance: 89, color: 'bg-success' },
+                { category: 'Accessories', performance: 86, color: 'bg-warning' },
+                { category: 'Activewear', performance: 92, color: 'bg-success' },
+                { category: 'Outerwear', performance: 81, color: 'bg-warning' },
+              ].map((item, idx) => (
+                <div key={idx} className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{item.category}</span>
+                    <span className="text-xs font-semibold">{item.performance}%</span>
+                  </div>
+                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full ${item.color} rounded-full transition-all`}
+                      style={{ width: `${item.performance}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-between mt-4 pt-3 border-t">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-success"></div>
+                <span className="text-xs text-muted-foreground">≥85% (Strong)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-warning"></div>
+                <span className="text-xs text-muted-foreground">&lt;85% (Review)</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Assortment Recommendations Table */}
       <Card>
