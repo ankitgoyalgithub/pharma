@@ -1614,34 +1614,34 @@ export default function Foundry() {
       {/* Tabs + Search */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="master" className="w-full">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-            <TabsList className="grid w-auto grid-cols-3 bg-gradient-to-r from-card to-card/50 border-2 border-border/50 shadow-lg h-11">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
+            <TabsList className="bg-muted/60 border border-border/50 h-11">
               <TabsTrigger 
                 value="master" 
-                className="text-sm font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
               >
                 Master ({masterEntities.length})
               </TabsTrigger>
               <TabsTrigger 
                 value="timeseries" 
-                className="text-sm font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
               >
                 Timeseries ({timeseriesEntities.length})
               </TabsTrigger>
               <TabsTrigger 
                 value="featurestore" 
-                className="text-sm font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
               >
                 Feature Store ({featureStoreEntities.length})
               </TabsTrigger>
             </TabsList>
-            <div className="relative w-full sm:w-96">
+            <div className="relative w-full max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by name or description..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-11 bg-card border-border/50 shadow-md hover:shadow-lg focus:shadow-lg transition-all"
+                className="pl-10 h-11 bg-card border-border/50 shadow-sm"
               />
             </div>
           </div>
