@@ -10,12 +10,13 @@ import {
   Upload, FileText, CheckCircle2, AlertTriangle, TrendingUp, 
   Package, Store, BarChart3, Settings, Play, Eye, Download,
   ArrowRight, Sparkles, Brain, Database, Target, ShoppingBag,
-  Maximize, DollarSign, X, Zap, Info, CheckCircle, AlertCircle, Copy, Activity
+  Maximize, DollarSign, X, Zap, Info, CheckCircle, AlertCircle, Copy, Activity, Share
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AirtableStyleTable } from '@/components/AirtableStyleTable';
 import { ExternalDriversSection } from '@/components/ExternalDriversSection';
 import { CompactMetricCard } from '@/components/CompactMetricCard';
+import { CompactProjectionCard } from '@/components/CompactProjectionCard';
 import { ForecastCard } from '@/components/ForecastCard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScientificLoader } from '@/components/ScientificLoader';
@@ -25,6 +26,12 @@ import { useStepper } from '@/hooks/useStepper';
 import { useStepperContext } from '@/contexts/StepperContext';
 import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
 import { AutoFixDialog } from '@/components/AutoFixDialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 // Import data
 import { assortmentRequiredFiles } from '@/data/assortmentPlanning/foundryObjects';
@@ -748,80 +755,234 @@ const AssortmentPlanning = () => {
     </div>
   );
 
-  // Step 3: Preview
+  // Step 3: Configuration
   const renderStep3 = () => (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
+      {/* Header with Run Button */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-xl font-semibold text-foreground mb-1">Optimization Configuration</h2>
+          <p className="text-sm text-muted-foreground">Review and adjust settings before running assortment optimization</p>
+        </div>
+        <Button 
+          size="sm" 
+          className="gap-2"
+          onClick={handleRunStudy}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <div className="animate-spin rounded-full h-3 w-3 border-2 border-background border-t-transparent" />
+              Optimizing...
+            </>
+          ) : (
+            <>
+              <Play className="w-3 h-3" />
+              Run Optimization
+            </>
+          )}
+        </Button>
+      </div>
+
+      {/* Data Summary */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5" />
-            Optimization Configuration
-          </CardTitle>
-          <CardDescription>
-            Review settings before running assortment optimization
-          </CardDescription>
+          <CardTitle className="text-base">Data Summary</CardTitle>
+          <CardDescription>Overview of input data sources</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Configuration Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-muted/30 rounded-lg">
-              <p className="text-sm font-medium text-muted-foreground mb-2">Data Sources</p>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 bg-muted/30 rounded-lg border border-border">
+              <div className="flex items-center gap-2 mb-2">
+                <Package className="w-4 h-4 text-primary" />
+                <p className="text-sm font-medium text-muted-foreground">Product Data</p>
+              </div>
               <div className="space-y-1">
                 <p className="text-sm">✓ 524 SKUs across 8 categories</p>
-                <p className="text-sm">✓ 82 stores in 4 clusters</p>
-                <p className="text-sm">✓ 24 months sales history</p>
+                <p className="text-sm">✓ 142 brands</p>
+                <p className="text-sm">✓ 18 sub-categories</p>
               </div>
             </div>
             
-            <div className="p-4 bg-muted/30 rounded-lg">
-              <p className="text-sm font-medium text-muted-foreground mb-2">External Drivers</p>
+            <div className="p-4 bg-muted/30 rounded-lg border border-border">
+              <div className="flex items-center gap-2 mb-2">
+                <Store className="w-4 h-4 text-primary" />
+                <p className="text-sm font-medium text-muted-foreground">Store Data</p>
+              </div>
               <div className="space-y-1">
+                <p className="text-sm">✓ 82 stores in 4 clusters</p>
+                <p className="text-sm">✓ 15 geographic regions</p>
+                <p className="text-sm">✓ Store size: 2K-10K sq ft</p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-muted/30 rounded-lg border border-border">
+              <div className="flex items-center gap-2 mb-2">
+                <TrendingUp className="w-4 h-4 text-primary" />
+                <p className="text-sm font-medium text-muted-foreground">Sales History</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm">✓ 24 months of data</p>
+                <p className="text-sm">✓ Weekly granularity</p>
+                <p className="text-sm">✓ $84.6M total revenue</p>
+              </div>
+            </div>
+          </div>
+
+          {selectedDrivers.length > 0 && (
+            <div className="mt-4 p-4 bg-muted/20 rounded-lg border border-border">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="w-4 h-4 text-primary" />
+                <p className="text-sm font-medium text-muted-foreground">External Drivers ({selectedDrivers.length})</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
                 {selectedDrivers.map(driver => (
-                  <p key={driver} className="text-sm">✓ {driver}</p>
+                  <Badge key={driver} variant="secondary" className="text-xs">
+                    {driver}
+                  </Badge>
                 ))}
               </div>
             </div>
-          </div>
+          )}
+        </CardContent>
+      </Card>
 
-          {/* Optimization Objectives */}
-          <div className="space-y-3">
-            <p className="font-medium">Optimization Objectives</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="flex items-center gap-2 p-3 bg-primary/5 border border-primary/20 rounded-lg">
-                <DollarSign className="w-5 h-5 text-primary" />
-                <span className="text-sm">Maximize Revenue</span>
+      {/* Optimization Objectives */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Optimization Objectives</CardTitle>
+          <CardDescription>Select primary goals for the assortment optimization</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="flex items-start gap-3 p-4 bg-primary/5 border border-primary/20 rounded-lg hover:shadow-md transition-shadow cursor-pointer">
+              <DollarSign className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <div>
+                <div className="font-medium text-sm mb-1">Maximize Revenue</div>
+                <p className="text-xs text-muted-foreground">Focus on high-revenue products and store placements</p>
               </div>
-              <div className="flex items-center gap-2 p-3 bg-primary/5 border border-primary/20 rounded-lg">
-                <Target className="w-5 h-5 text-primary" />
-                <span className="text-sm">Optimize Margins</span>
+            </div>
+            <div className="flex items-start gap-3 p-4 bg-primary/5 border border-primary/20 rounded-lg hover:shadow-md transition-shadow cursor-pointer">
+              <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <div>
+                <div className="font-medium text-sm mb-1">Optimize Margins</div>
+                <p className="text-xs text-muted-foreground">Balance revenue with profitability targets</p>
               </div>
-              <div className="flex items-center gap-2 p-3 bg-primary/5 border border-primary/20 rounded-lg">
-                <Maximize className="w-5 h-5 text-primary" />
-                <span className="text-sm">Maximize Coverage</span>
+            </div>
+            <div className="flex items-start gap-3 p-4 bg-primary/5 border border-primary/20 rounded-lg hover:shadow-md transition-shadow cursor-pointer">
+              <Maximize className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <div>
+                <div className="font-medium text-sm mb-1">Maximize Coverage</div>
+                <p className="text-xs text-muted-foreground">Ensure broad product variety across stores</p>
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
 
-          {/* Run Study Button */}
-          <div className="pt-4 border-t">
-            <Button 
-              size="lg" 
-              className="w-full gap-2"
-              onClick={handleRunStudy}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-background border-t-transparent" />
-                  Optimizing Assortment...
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4" />
-                  Run Optimization Study
-                </>
-              )}
-            </Button>
+      {/* Constraints */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Constraints & Rules</CardTitle>
+          <CardDescription>Business rules and operational constraints</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Minimum SKUs per Store</label>
+              <Input type="number" defaultValue="50" className="max-w-xs" />
+              <p className="text-xs text-muted-foreground">Each store must carry at least this many SKUs</p>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Maximum SKUs per Store</label>
+              <Input type="number" defaultValue="200" className="max-w-xs" />
+              <p className="text-xs text-muted-foreground">Upper limit on SKUs per store based on space</p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Minimum Margin Threshold</label>
+              <Input type="number" defaultValue="25" className="max-w-xs" />
+              <p className="text-xs text-muted-foreground">Products below this margin % are excluded</p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Category Coverage</label>
+              <Input type="number" defaultValue="75" className="max-w-xs" />
+              <p className="text-xs text-muted-foreground">% of categories that must be present in each store</p>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t space-y-3">
+            <p className="text-sm font-medium">Business Rules</p>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" defaultChecked className="rounded" />
+                <span className="text-sm">Maintain brand variety (min 3 brands per category)</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" defaultChecked className="rounded" />
+                <span className="text-sm">Respect exclusive store agreements</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" defaultChecked className="rounded" />
+                <span className="text-sm">Consider seasonal factors</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="rounded" />
+                <span className="text-sm">Allow cannibalization between similar SKUs</span>
+              </label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Model Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Brain className="w-4 h-4" />
+            Model Settings
+          </CardTitle>
+          <CardDescription>Advanced optimization parameters</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Optimization Algorithm</label>
+              <select className="w-full p-2 rounded-md border border-border bg-background text-sm">
+                <option>Mixed Integer Linear Programming (MILP)</option>
+                <option>Genetic Algorithm</option>
+                <option>Simulated Annealing</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Planning Horizon</label>
+              <select className="w-full p-2 rounded-md border border-border bg-background text-sm">
+                <option>3 Months</option>
+                <option selected>6 Months</option>
+                <option>12 Months</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Confidence Level</label>
+              <select className="w-full p-2 rounded-md border border-border bg-background text-sm">
+                <option>90%</option>
+                <option selected>95%</option>
+                <option>99%</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Re-optimization Frequency</label>
+              <select className="w-full p-2 rounded-md border border-border bg-background text-sm">
+                <option>Weekly</option>
+                <option selected>Monthly</option>
+                <option>Quarterly</option>
+              </select>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -837,11 +998,33 @@ const AssortmentPlanning = () => {
 
   // Step 4: Results
   const renderStep4 = () => (
-    <div className="space-y-6">
-      {/* Overview Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div className="space-y-6 p-6">
+      {/* Header with Actions */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-xl font-semibold text-foreground mb-1">Optimization Results</h2>
+          <p className="text-sm text-muted-foreground">Review recommended assortment changes and projected impact</p>
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" className="gap-2">
+            <Share className="w-3 h-3" />
+            Share
+          </Button>
+          <Button size="sm" variant="outline" className="gap-2">
+            <Download className="w-3 h-3" />
+            Export
+          </Button>
+          <Button size="sm" className="gap-2">
+            <CheckCircle2 className="w-3 h-3" />
+            Approve Plan
+          </Button>
+        </div>
+      </div>
+
+      {/* Top KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {assortmentMetrics.map((metric, index) => (
-          <Card key={index} className="shadow-elevated">
+          <Card key={index} className="shadow-elevated hover:shadow-glow transition-shadow">
             <CardContent className="p-4">
               <div className="text-sm font-medium text-muted-foreground mb-1">
                 {metric.label}
@@ -860,16 +1043,70 @@ const AssortmentPlanning = () => {
         ))}
       </div>
 
+      {/* Projection Cards */}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+        <CompactProjectionCard
+          title="Q1 2025"
+          value="$22.4M"
+          subtitle="Projected Revenue"
+          tooltip="Revenue projection for Q1 2025 based on optimized assortment"
+        />
+        <CompactProjectionCard
+          title="Q2 2025"
+          value="$24.1M"
+          subtitle="Projected Revenue"
+          tooltip="Revenue projection for Q2 2025 based on optimized assortment"
+        />
+        <CompactProjectionCard
+          title="Q3 2025"
+          value="$23.8M"
+          subtitle="Projected Revenue"
+          tooltip="Revenue projection for Q3 2025 based on optimized assortment"
+        />
+        <CompactProjectionCard
+          title="Q4 2025"
+          value="$26.2M"
+          subtitle="Projected Revenue"
+          tooltip="Revenue projection for Q4 2025 based on optimized assortment"
+        />
+      </div>
+
       {/* Assortment Plan Metrics */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Package className="w-5 h-5" />
-            Optimized Assortment Plan
-          </CardTitle>
-          <CardDescription>
-            Comprehensive view of recommended assortment changes
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="w-5 h-5" />
+                Optimized Assortment Plan
+              </CardTitle>
+              <CardDescription>
+                Comprehensive view of recommended assortment changes
+              </CardDescription>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Settings className="w-3 h-3" />
+                  Options
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <Eye className="w-3 h-3 mr-2" />
+                  View Details
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Download className="w-3 h-3 mr-2" />
+                  Export to Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Download className="w-3 h-3 mr-2" />
+                  Export to PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
