@@ -91,7 +91,7 @@ export const SynqAIAssistant: React.FC = () => {
       </Button>
 
       {/* Chat Drawer */}
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
         <SheetContent side="right" className="w-full sm:w-[480px] flex flex-col p-0">
             <SheetHeader className="px-6 py-4 border-b border-border bg-gradient-to-r from-primary/5 to-primary/10">
             <div className="flex items-center gap-3">
