@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { 
   Upload, FileText, CheckCircle2, AlertTriangle, TrendingUp, 
   Package, Store, BarChart3, Settings, Play, Eye, Download,
   ArrowRight, Sparkles, Brain, Database, Target, ShoppingBag,
-  Maximize, DollarSign
+  Maximize, DollarSign, X, Zap, Info
 } from 'lucide-react';
 import { useStepper } from '@/hooks/useStepper';
+import { useStepperContext } from '@/contexts/StepperContext';
 import { toast } from 'sonner';
 import { AirtableStyleTable } from '@/components/AirtableStyleTable';
 import { ExternalDriversSection } from '@/components/ExternalDriversSection';
@@ -18,6 +21,8 @@ import { CompactMetricCard } from '@/components/CompactMetricCard';
 import { ForecastCard } from '@/components/ForecastCard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScientificLoader } from '@/components/ScientificLoader';
+import { MapFromFoundryDialog } from '@/components/MapFromFoundryDialog';
+import { getFoundryObjectData } from '@/data/foundry';
 
 // Import data
 import { assortmentRequiredFiles } from '@/data/assortmentPlanning/foundryObjects';
@@ -35,28 +40,96 @@ import { assortmentRecommendations } from '@/data/assortmentPlanning/assortmentR
 const AssortmentPlanning = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<Record<string, boolean>>({});
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'transactional', fromDate?: Date, toDate?: Date}>>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedScenario, setSelectedScenario] = useState<number | null>(null);
+  const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
+  const [driversLoading, setDriversLoading] = useState(false);
 
-  // Initialize stepper for topbar display
-  const stepperConfig = {
-    steps: [
-      { id: 1, title: 'Data Setup', status: 'active' as const },
-      { id: 2, title: 'Configure', status: 'pending' as const },
-      { id: 3, title: 'Preview', status: 'pending' as const },
-      { id: 4, title: 'Results', status: 'pending' as const },
-    ],
-    title: 'Assortment Planning Study',
-    initialStep: 1
+  // Map external driver display names to Foundry object keys
+  const driverToFoundryKey: Record<string, string> = {
+    "Holiday Calendar": "Holiday_Calendar",
+    "Customer Demographics": "Customer_Master",
+    "Weather Data": "Weather_Data",
+    "Market Trends": "Market_Trends",
   };
 
-  useStepper(stepperConfig);
+  // Stepper configuration
+  const stepperSteps = [
+    { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
+    { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
+    { id: 3, title: "Configuration", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
+    { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
+  ];
+  
+  const stepperHook = useStepper({
+    steps: stepperSteps,
+    title: "Assortment Planning",
+    initialStep: currentStep
+  });
 
-  const handleFileUpload = (fileName: string) => {
-    setUploadedFiles(prev => ({ ...prev, [fileName]: true }));
-    toast.success(`${fileName} uploaded successfully`);
+  const { setOnStepClick } = useStepperContext();
+
+  // Set up step click handler
+  const handleStepClick = React.useCallback((stepId: number) => {
+    const targetStep = stepperSteps.find(s => s.id === stepId);
+    if (targetStep && (targetStep.status === 'completed' || stepId === currentStep + 1 || stepId === currentStep)) {
+      setCurrentStep(stepId);
+    }
+  }, [currentStep, stepperSteps]);
+
+  useEffect(() => {
+    setOnStepClick(() => handleStepClick);
+  }, [handleStepClick, setOnStepClick]);
+
+  // Auto-select drivers when data sources are added
+  useEffect(() => {
+    const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
+    if (hasData && selectedDrivers.length === 0) {
+      setDriversLoading(true);
+      setTimeout(() => {
+        const driversToSelect = getExternalDrivers('assortment', true)
+          .filter(d => d.autoSelected)
+          .map(d => d.name);
+        setSelectedDrivers(driversToSelect);
+        setDriversLoading(false);
+      }, 500);
+    }
+  }, [uploadedFiles.length, foundryObjects.length]);
+
+  // Collapse sidebar on mount
+  useEffect(() => {
+    const event = new CustomEvent("collapseSidebar");
+    window.dispatchEvent(event);
+  }, []);
+
+  const handleFoundrySubmit = (data: {
+    selectedObjects: string[];
+    selectedDataType: 'master' | 'timeseries' | 'featureStore';
+    fromDate?: Date;
+    toDate?: Date;
+  }) => {
+    const newObjects = data.selectedObjects.map(objName => ({
+      name: objName,
+      type: data.selectedDataType === 'timeseries' ? 'transactional' as const : 'master' as const,
+      ...(data.selectedDataType === 'timeseries' && { fromDate: data.fromDate, toDate: data.toDate })
+    }));
+    
+    setFoundryObjects(prev => [...prev, ...newObjects]);
+    
+    if (data.selectedObjects.length > 0) {
+      setSelectedPreview(data.selectedObjects[0]);
+      setPreviewLoading(true);
+      setTimeout(() => setPreviewLoading(false), 700);
+    }
+  };
+
+  const toggleDriver = (driver: string) => {
+    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
   };
 
   const handleStepTransition = (nextStep: number) => {
@@ -65,14 +138,6 @@ const AssortmentPlanning = () => {
       setCurrentStep(nextStep);
       setIsLoading(false);
     }, 1500);
-  };
-
-  const handleDriverToggle = (driverName: string) => {
-    setSelectedDrivers(prev =>
-      prev.includes(driverName)
-        ? prev.filter(d => d !== driverName)
-        : [...prev, driverName]
-    );
   };
 
   const handleRunStudy = () => {
@@ -87,228 +152,374 @@ const AssortmentPlanning = () => {
     }, 3000);
   };
 
-  const allFilesUploaded = assortmentRequiredFiles
-    .filter(f => f.required)
-    .every(f => uploadedFiles[f.name]);
+  // Get external drivers
+  const externalDrivers = getExternalDrivers('assortment', true);
 
-  // Step 1: Data Setup
-  const renderStep1 = () => (
-    <div className="space-y-6">
-      {/* Upload Data Files Card */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Upload className="w-5 h-5" />
-                Upload Data Files
-              </CardTitle>
-              <CardDescription>
-                Connect your product catalog, store attributes, and sales performance data
-              </CardDescription>
-            </div>
-            <Badge variant={allFilesUploaded ? "default" : "secondary"}>
-              {Object.keys(uploadedFiles).length} / {assortmentRequiredFiles.filter(f => f.required).length} Required
-            </Badge>
-          </div>
+  // Step 1: Add Data
+  const renderStep1 = () => {
+    return (
+      <div className="space-y-6 pb-8">
+        <div className="space-y-6">
+        <Card className="border border-border bg-background shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-medium text-foreground">Upload Your Data</CardTitle>
+          <p className="text-sm text-muted-foreground mt-1">
+            Upload CSV or Excel files, or{" "}
+            <Button
+              variant="link"
+              className="p-0 h-auto text-primary"
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.download = 'assortment-data-template.xlsx';
+                link.click();
+              }}
+            >
+              Download input template
+            </Button>
+          </p>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {assortmentRequiredFiles.map((file) => (
-              <Card 
-                key={file.name}
-                className={`border-2 transition-all ${
-                  uploadedFiles[file.name]
-                    ? 'border-primary bg-primary/5'
-                    : 'border-dashed border-border hover:border-primary/50'
-                }`}
-              >
-                <CardContent className="p-4">
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    {uploadedFiles[file.name] ? (
-                      <CheckCircle2 className="w-10 h-10 text-primary" />
-                    ) : (
-                      <FileText className="w-10 h-10 text-muted-foreground" />
-                    )}
-                    <div>
-                      <p className="font-medium text-sm">{file.label}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {file.description}
-                      </p>
-                    </div>
-                    {!uploadedFiles[file.name] ? (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleFileUpload(file.name)}
-                      >
-                        <Upload className="w-3 h-3 mr-1" />
-                        Upload
-                      </Button>
-                    ) : (
-                      <Badge variant="default">Uploaded</Badge>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+        <CardContent className="space-y-4">
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="flex-1" onClick={() => document.getElementById('file-upload')?.click()}>
+              <Upload className="h-4 w-4 mr-2" />
+              Upload Multiple Files
+            </Button>
+            <Dialog open={isFoundryModalOpen} onOpenChange={setIsFoundryModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="flex-1">
+                  <Database className="h-4 w-4 mr-2" />
+                  Map from Foundry
+                </Button>
+              </DialogTrigger>
+            </Dialog>
           </div>
+          
+          <Input
+            id="file-upload"
+            type="file"
+            multiple
+            accept=".csv,.xlsx,.xls"
+            className="hidden"
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              if (files.length > 0) {
+                setUploadedFiles(prev => [...prev, ...files]);
+                setSelectedPreview(files[0].name);
+                setPreviewLoading(true);
+                setTimeout(() => setPreviewLoading(false), 700);
+              }
+            }}
+          />
 
-          {/* Quick Demo Button */}
-          {!allFilesUploaded && (
-            <div className="mt-4 flex justify-end">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  const allFiles: Record<string, boolean> = {};
-                  assortmentRequiredFiles.forEach(file => {
-                    allFiles[file.name] = true;
-                  });
-                  setUploadedFiles(allFiles);
-                  toast.success('All files uploaded!');
-                }}
-                className="gap-2"
-              >
-                <Sparkles className="w-3 h-3" />
-                Quick Demo - Upload All
-              </Button>
-            </div>
-          )}
-
-          {allFilesUploaded && (
-            <div className="mt-6 p-4 bg-success/10 border border-success/20 rounded-lg">
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-success mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium text-success mb-2">All Required Files Uploaded</p>
-                  <p className="text-sm text-muted-foreground whitespace-pre-line">
-                    {aiResponses.dataMapping}
-                  </p>
+          {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Data Sources:</h4>
+              
+              {uploadedFiles.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Uploaded Files</h5>
+                  <div className="space-y-1">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs flex-1">
+                          <FileText className="h-3 w-3 text-blue-600" />
+                          <span className="text-foreground">{file.name}</span>
+                          <Badge variant="secondary" className="text-xs ml-auto">
+                            {productDataPreview.length} rows
+                          </Badge>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 ml-2"
+                          onClick={() => {
+                            setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === file.name) {
+                              const remaining = uploadedFiles.filter((_, i) => i !== index);
+                              setSelectedPreview(remaining.length > 0 ? remaining[0].name : null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {foundryObjects.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-muted-foreground">Foundry Objects</h5>
+                  <div className="space-y-1">
+                    {foundryObjects.map((obj, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 rounded border bg-card">
+                        <div className="flex items-center gap-2 text-xs">
+                          <Database className="h-3 w-3 text-green-600" />
+                          <span className="text-foreground">{obj.name}</span>
+                          <Badge variant="secondary" className="text-xs">
+                            {obj.type}
+                          </Badge>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => {
+                            setFoundryObjects(prev => prev.filter((_, i) => i !== index));
+                            if (selectedPreview === obj.name) {
+                              const allSources = [...uploadedFiles.map(f => f.name), ...foundryObjects.filter((_, i) => i !== index).map(o => o.name)];
+                              setSelectedPreview(allSources.length > 0 ? allSources[0] : null);
+                            }
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Data Preview */}
-      {allFilesUploaded && (
-        <Card>
+      {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
+        <Card className="border border-border bg-muted/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Eye className="w-5 h-5" />
-              Data Preview
-            </CardTitle>
-            <CardDescription>
-              Review your uploaded data across all sources
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="products" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-4">
-                <TabsTrigger value="products">Product Catalog</TabsTrigger>
-                <TabsTrigger value="stores">Store Attributes</TabsTrigger>
-                <TabsTrigger value="sales">Sales Performance</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="products">
-                <AirtableStyleTable 
-                  data={productDataPreview}
-                  showToolbar={false}
-                />
-              </TabsContent>
-              
-              <TabsContent value="stores">
-                <AirtableStyleTable 
-                  data={storeDataPreview}
-                  showToolbar={false}
-                />
-              </TabsContent>
-              
-              <TabsContent value="sales">
-                <AirtableStyleTable 
-                  data={salesDataPreview}
-                  showToolbar={false}
-                />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* External Drivers */}
-      {allFilesUploaded && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5" />
-              External Drivers
-            </CardTitle>
-            <CardDescription>
-              Select external factors that influence assortment performance
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ExternalDriversSection
-              drivers={getExternalDrivers('assortment', true)}
-              selectedDrivers={selectedDrivers}
-              onToggleDriver={handleDriverToggle}
-            />
-            
-            {/* Quick Demo Button */}
-            {selectedDrivers.length === 0 && (
-              <div className="mt-3 flex justify-end">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => {
-                    const autoDrivers = getExternalDrivers('assortment', true)
-                      .filter(d => d.autoSelected)
-                      .map(d => d.name);
-                    setSelectedDrivers(autoDrivers);
-                    toast.success('External drivers selected!');
-                  }}
-                  className="gap-2"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  Auto-Select Drivers
-                </Button>
-              </div>
-            )}
-            
-            {selectedDrivers.length > 0 && (
-              <div className="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                <div className="flex items-start gap-3">
-                  <Brain className="w-5 h-5 text-primary mt-0.5" />
-                  <div className="flex-1">
-                    <p className="font-medium text-primary mb-2">Driver Analysis</p>
-                    <p className="text-sm text-muted-foreground whitespace-pre-line">
-                      {aiResponses.driverAnalysis}
-                    </p>
-                  </div>
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-foreground">Preview</h3>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  {uploadedFiles.map((file) => (
+                    <Button
+                      key={file.name}
+                      size="sm"
+                      variant={selectedPreview === file.name ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(file.name);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
+                    >
+                      <FileText className="h-3 w-3 mr-1" />
+                      {file.name.split('.')[0]}
+                    </Button>
+                  ))}
+                  {foundryObjects.map((obj) => (
+                    <Button
+                      key={obj.name}
+                      size="sm"
+                      variant={selectedPreview === obj.name ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(obj.name);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
+                    >
+                      <Database className="h-3 w-3 mr-1" />
+                      {obj.name.split('_')[0]}
+                    </Button>
+                  ))}
+                  {selectedDrivers.map((driver) => (
+                    <Button
+                      key={driver}
+                      size="sm"
+                      variant={selectedPreview === driver ? "default" : "outline"}
+                      onClick={() => {
+                        setSelectedPreview(driver);
+                        setPreviewLoading(true);
+                        setTimeout(() => setPreviewLoading(false), 500);
+                      }}
+                    >
+                      <Zap className="h-3 w-3 mr-1" />
+                      {driver}
+                    </Button>
+                  ))}
                 </div>
               </div>
+            </div>
+          </CardHeader>
+          <CardContent className="overflow-x-auto">
+            {previewLoading ? (
+              <div className="flex items-center justify-center h-32">
+                <div className="h-8 w-8 rounded-full border-2 border-border border-t-transparent animate-spin" aria-label="Loading preview" />
+              </div>
+            ) : (
+              <>
+                {selectedPreview ? (
+                  <>
+                    <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
+                      {selectedDrivers.includes(selectedPreview) ? (
+                        <Zap className="h-3 w-3" />
+                      ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                        <Database className="h-3 w-3" />
+                      ) : (
+                        <FileText className="h-3 w-3" />
+                      )}
+                      {selectedPreview}
+                    </p>
+                      {selectedDrivers.includes(selectedPreview) ? (
+                       <div className="space-y-4">
+                         {(() => {
+                           const foundryKey = driverToFoundryKey[selectedPreview] || selectedPreview.replace(/ /g, '_');
+                           const driverData = getFoundryObjectData(foundryKey) as any[];
+                           if (!driverData || driverData.length === 0) {
+                             return <p className="text-sm text-muted-foreground">No data available for this driver.</p>;
+                           }
+                           
+                           const columns = Object.keys(driverData[0]);
+                          
+                          return (
+                            <div className="grid grid-cols-1 gap-4">
+                              <div>
+                                <h4 className="text-sm font-medium mb-2">Sample Data Points</h4>
+                                <table className="min-w-full text-xs border border-border rounded">
+                                  <thead className="bg-muted text-muted-foreground">
+                                    <tr>
+                                      {columns.map((col) => (
+                                        <th key={col} className="text-left px-3 py-2 capitalize">
+                                          {col.replace(/_/g, ' ')}
+                                        </th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {driverData.slice(0, 3).map((row, idx) => (
+                                      <tr key={idx} className="hover:bg-muted/20">
+                                        {columns.map((col) => (
+                                          <td key={col} className="px-3 py-2">
+                                            {String((row as any)[col])}
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className="text-xs text-muted-foreground space-y-2">
+                                <div><strong>Data Points:</strong> {driverData.length} records</div>
+                                <div><strong>Source:</strong> Foundry Feature Store</div>
+                                <div><strong>Update Frequency:</strong> Real-time</div>
+                                <div><strong>Historical Coverage:</strong> 5+ years</div>
+                                <div><strong>Reliability:</strong> High (99.5% uptime)</div>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                        (() => {
+                          const data = getFoundryObjectData(selectedPreview as string) as any[];
+                          const columns = data.length > 0 ? Object.keys(data[0]) : [];
+                          return (
+                            <table className="min-w-full text-xs border border-border rounded">
+                              <thead className="bg-muted text-muted-foreground">
+                                <tr>
+                                  {columns.map((col) => (
+                                    <th key={col} className="text-left px-3 py-2 capitalize">{col.replace(/_/g, ' ')}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {data.slice(0, 10).map((row, idx) => (
+                                  <tr key={idx} className="hover:bg-muted/20">
+                                    {columns.map((col) => (
+                                      <td key={col} className="px-3 py-2">{String((row as any)[col])}</td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          );
+                        })()
+                      ) : (
+                        <table className="min-w-full text-xs border border-border rounded">
+                          <thead className="bg-muted text-muted-foreground">
+                            <tr>
+                              <th className="text-left px-3 py-2">SKU</th>
+                              <th className="text-left px-3 py-2">Product</th>
+                              <th className="text-left px-3 py-2">Category</th>
+                              <th className="text-left px-3 py-2">Brand</th>
+                              <th className="text-left px-3 py-2">Price</th>
+                              <th className="text-left px-3 py-2">Margin %</th>
+                              <th className="text-left px-3 py-2">Rating</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {productDataPreview.slice(0, 10).map((row, idx) => (
+                              <tr key={idx} className="hover:bg-muted/20 border-t">
+                                <td className="px-3 py-2 font-mono">{row.sku}</td>
+                                <td className="px-3 py-2 font-medium">{row.product_name}</td>
+                                <td className="px-3 py-2">{row.category}</td>
+                                <td className="px-3 py-2">{row.brand}</td>
+                                <td className="px-3 py-2 text-success font-medium">${row.price}</td>
+                                <td className="px-3 py-2">{row.margin_pct}%</td>
+                                <td className="px-3 py-2 font-medium">{row.avg_rating}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Select a file or driver to preview.</p>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
       )}
 
-      {/* Navigation */}
-      <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => window.history.back()}>
-          ← Back
-        </Button>
-        <Button 
-          size="sm" 
-          onClick={() => handleStepTransition(2)}
-          disabled={!allFilesUploaded || selectedDrivers.length === 0}
-        >
-          Continue to Configure →
-        </Button>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base">External Drivers</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Select external factors that may influence assortment performance.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            External factors that may influence assortment performance. Select drivers to include in the model.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <ExternalDriversSection
+            drivers={externalDrivers}
+            selectedDrivers={selectedDrivers}
+            driversLoading={driversLoading}
+            onToggleDriver={toggleDriver}
+            showManualControls={false}
+          />
+        </CardContent>
+      </Card>
+
+        <div className="flex justify-between pt-4">
+          <Button size="sm" variant="outline" onClick={() => window.history.back()}>
+            ← Back
+          </Button>
+          <Button size="sm" onClick={() => handleStepTransition(2)}>
+            Continue to Data Gaps →
+          </Button>
+        </div>
+
+        <MapFromFoundryDialog
+          isOpen={isFoundryModalOpen}
+          onClose={() => setIsFoundryModalOpen(false)}
+          onSubmit={handleFoundrySubmit}
+        />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Step 2: Configure
   const renderStep2 = () => (
