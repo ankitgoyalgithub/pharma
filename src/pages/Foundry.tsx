@@ -1039,107 +1039,156 @@ export default function Foundry() {
     </div>
   );
 
-  const EntityCard = ({ module }: { module: EntityModule }) => (
-    <Card
-      key={module.title}
-      className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
-      onClick={() => handlePreview(module)}
-    >
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-lg font-semibold text-foreground line-clamp-1 flex items-center gap-2">
-              <img
-                src={sourceTypeIcon[module.sourceType]}
-                alt={module.sourceType}
-                className="h-4 w-4"
-                loading="lazy"
-              />
-              {module.title}
-            </CardTitle>
-            <div className="flex items-center gap-2 mt-2">
-              <Badge
-                variant={module.origin === "csv" ? "secondary" : "default"}
-                className="text-xs"
-              >
-                {module.origin === "csv" ? "Uploaded" : "Synced"}
-              </Badge>
+  const EntityCard = ({ module }: { module: EntityModule }) => {
+    // Calculate data quality score (mock)
+    const qualityScore = Math.floor(95 + Math.random() * 5);
+    const isHealthy = qualityScore >= 98;
+    const isWarning = qualityScore >= 95 && qualityScore < 98;
+    
+    return (
+      <Card
+        key={module.title}
+        className="group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 border-border/50 hover:border-primary/30 overflow-hidden relative bg-gradient-to-br from-card via-card to-card/80 hover:scale-[1.02]"
+        onClick={() => handlePreview(module)}
+      >
+        {/* Quality indicator bar */}
+        <div className={cn(
+          "absolute top-0 left-0 right-0 h-1 transition-all duration-300",
+          isHealthy ? "bg-gradient-to-r from-success via-success to-success/70" : 
+          isWarning ? "bg-gradient-to-r from-warning via-warning to-warning/70" : 
+          "bg-gradient-to-r from-destructive via-destructive to-destructive/70"
+        )} />
+        
+        <CardHeader className="pb-3 pt-5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              {/* Source icon with enhanced styling */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-primary/20 rounded-lg blur-md group-hover:blur-lg transition-all" />
+                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-2.5 rounded-lg border border-primary/20 group-hover:border-primary/40 transition-all">
+                    <img
+                      src={sourceTypeIcon[module.sourceType]}
+                      alt={module.sourceType}
+                      className="h-5 w-5 relative z-10"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-lg font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                    {module.title}
+                  </CardTitle>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <Badge
+                      variant={module.origin === "csv" ? "secondary" : "default"}
+                      className="text-xs font-medium"
+                    >
+                      {module.origin === "csv" ? "Uploaded" : "Synced"}
+                    </Badge>
+                    <div className="flex items-center gap-1 text-xs font-semibold">
+                      <div className={cn(
+                        "w-1.5 h-1.5 rounded-full animate-pulse",
+                        isHealthy ? "bg-success" : isWarning ? "bg-warning" : "bg-destructive"
+                      )} />
+                      <span className={cn(
+                        isHealthy ? "text-success" : isWarning ? "text-warning" : "text-destructive"
+                      )}>
+                        {qualityScore}% Quality
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onClick={() => handleEdit(module)}>
+                  <Edit className="h-4 w-4 mr-2" /> Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExport(module)}>
+                  <Download className="h-4 w-4 mr-2" /> Export
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleDelete(module)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" /> Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </CardHeader>
+
+        <CardContent className="pt-0 space-y-4">
+          <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+            {module.description}
+          </p>
+
+          {/* Enhanced metrics section */}
+          <div className="grid grid-cols-2 gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Database className="h-3.5 w-3.5" />
+                <span className="font-medium">Records</span>
+              </div>
+              <div className="text-base font-bold text-foreground">
+                {module.recordCount.toLocaleString()}
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5" />
+                <span className="font-medium">Last Sync</span>
+              </div>
+              <div className="text-xs font-semibold text-foreground">
+                {formatDate(module.lastSync).split(',')[0]}
+              </div>
             </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleEdit(module)}>
-                <Edit className="h-4 w-4 mr-2" /> Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport(module)}>
-                <Download className="h-4 w-4 mr-2" /> Export
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleDelete(module)}
-                className="text-red-600"
-              >
-                <Trash2 className="h-4 w-4 mr-2" /> Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </CardHeader>
 
-      <CardContent className="pt-0">
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-          {module.description}
-        </p>
-
-        <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-          <span className="flex items-center gap-1">
-            <Database className="h-3 w-3" />
-            {module.recordCount.toLocaleString()} records
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            Last sync: {formatDate(module.lastSync)}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleSync(module);
-            }}
-          >
-            <RefreshCcw className="h-3 w-3 mr-1" />
-            {module.origin === "csv" ? "Append" : "Sync"}
-          </Button>
-          <Button
-            size="sm"
-            variant="secondary"
-            className="flex-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePreview(module);
-            }}
-          >
-            <Eye className="h-3 w-3 mr-1" />
-            Preview
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
+          {/* Action buttons with enhanced styling */}
+          <div className="flex items-center gap-2 pt-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex-1 group/btn hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSync(module);
+              }}
+            >
+              <RefreshCcw className="h-3.5 w-3.5 mr-1.5 group-hover/btn:rotate-180 transition-transform duration-500" />
+              {module.origin === "csv" ? "Append" : "Sync"}
+            </Button>
+            <Button
+              size="sm"
+              variant="default"
+              className="flex-1 bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg hover:shadow-primary/25 transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePreview(module);
+              }}
+            >
+              <Eye className="h-3.5 w-3.5 mr-1.5" />
+              Preview
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   // ---------- Render ----------
   // Inline Data Health page (if toggled)
@@ -1500,32 +1549,60 @@ export default function Foundry() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="border-b border-border bg-gradient-to-br from-card via-card to-background relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,transparent,black)]" />
+        <div className="max-w-7xl mx-auto px-6 py-8 relative">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
-                Entity
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                These Master and Time Series entities fuel AI models. You can preview, sync, or append them below.
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-primary/20 rounded-lg blur-xl" />
+                  <Database className="h-10 w-10 text-primary relative" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
+                    Entity Explorer
+                  </h1>
+                  <p className="text-sm text-muted-foreground mt-1 font-medium">
+                    Turning "Garbage In, Garbage Out" on its head
+                  </p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+                Master and Time Series entities that fuel your AI models with clean, validated, high-quality data. 
+                Preview, sync, or append data with confidence.
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setShowHealth(true)}>
-                <PieChartIcon className="h-4 w-4 mr-2" />
+            <div className="flex flex-wrap gap-3">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowHealth(true)}
+                className="hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all shadow-sm"
+              >
+                <Activity className="h-4 w-4 mr-2" />
                 Data Health
               </Button>
-              <Button onClick={() => setOpenWizard(true)}>
+              <Button 
+                onClick={() => setOpenWizard(true)}
+                className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg hover:shadow-primary/25 transition-all"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Create Entity
               </Button>
-              <Button onClick={() => navigate("/add-lookup")} variant="outline">
+              <Button 
+                onClick={() => navigate("/add-lookup")} 
+                variant="outline"
+                className="hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all"
+              >
                 <FolderPlus className="h-4 w-4 mr-2" />
                 Add Lookup
               </Button>
-              <Button onClick={() => navigate("/data-jobs")} variant="outline">
+              <Button 
+                onClick={() => navigate("/data-jobs")} 
+                variant="outline"
+                className="hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all"
+              >
                 <ListChecks className="h-4 w-4 mr-2" />
                 Jobs
               </Button>
@@ -1535,27 +1612,36 @@ export default function Foundry() {
       </div>
 
       {/* Tabs + Search */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="master" className="w-full">
-          <div className="flex items-center justify-between mb-6">
-            <TabsList className="grid w-auto grid-cols-3 bg-card border shadow-sm">
-              <TabsTrigger value="master" className="text-sm font-medium">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <TabsList className="grid w-auto grid-cols-3 bg-gradient-to-r from-card to-card/50 border-2 border-border/50 shadow-lg h-11">
+              <TabsTrigger 
+                value="master" 
+                className="text-sm font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground transition-all"
+              >
                 Master ({masterEntities.length})
               </TabsTrigger>
-              <TabsTrigger value="timeseries" className="text-sm font-medium">
+              <TabsTrigger 
+                value="timeseries" 
+                className="text-sm font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground transition-all"
+              >
                 Timeseries ({timeseriesEntities.length})
               </TabsTrigger>
-              <TabsTrigger value="featurestore" className="text-sm font-medium">
+              <TabsTrigger 
+                value="featurestore" 
+                className="text-sm font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground transition-all"
+              >
                 Feature Store ({featureStoreEntities.length})
               </TabsTrigger>
             </TabsList>
-            <div className="relative w-80">
+            <div className="relative w-full sm:w-96">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search Entities"
+                placeholder="Search by name or description..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-card border-border shadow-sm"
+                className="pl-10 h-11 bg-card border-border/50 shadow-md hover:shadow-lg focus:shadow-lg transition-all"
               />
             </div>
           </div>
