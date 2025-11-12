@@ -150,6 +150,28 @@ const AssortmentPlanning = () => {
             ))}
           </div>
 
+          {/* Quick Demo Button */}
+          {!allFilesUploaded && (
+            <div className="mt-4 flex justify-end">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  const allFiles: Record<string, boolean> = {};
+                  assortmentRequiredFiles.forEach(file => {
+                    allFiles[file.name] = true;
+                  });
+                  setUploadedFiles(allFiles);
+                  toast.success('All files uploaded!');
+                }}
+                className="gap-2"
+              >
+                <Sparkles className="w-3 h-3" />
+                Quick Demo - Upload All
+              </Button>
+            </div>
+          )}
+
           {allFilesUploaded && (
             <div className="mt-6 p-4 bg-success/10 border border-success/20 rounded-lg">
               <div className="flex items-start gap-3">
@@ -230,6 +252,27 @@ const AssortmentPlanning = () => {
               onToggleDriver={handleDriverToggle}
             />
             
+            {/* Quick Demo Button */}
+            {selectedDrivers.length === 0 && (
+              <div className="mt-3 flex justify-end">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const autoDrivers = getExternalDrivers('assortment', true)
+                      .filter(d => d.autoSelected)
+                      .map(d => d.name);
+                    setSelectedDrivers(autoDrivers);
+                    toast.success('External drivers selected!');
+                  }}
+                  className="gap-2"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Auto-Select Drivers
+                </Button>
+              </div>
+            )}
+            
             {selectedDrivers.length > 0 && (
               <div className="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                 <div className="flex items-start gap-3">
@@ -248,11 +291,19 @@ const AssortmentPlanning = () => {
       )}
 
       {/* Navigation */}
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <div className="text-sm text-muted-foreground">
+          {!allFilesUploaded && "Upload all required files to continue"}
+          {allFilesUploaded && selectedDrivers.length === 0 && "Select at least one external driver"}
+        </div>
         <Button
           onClick={() => {
-            markStepCompleted(1);
-            nextStep();
+            if (allFilesUploaded && selectedDrivers.length > 0) {
+              markStepCompleted(1);
+              nextStep();
+            } else {
+              toast.error("Please upload all required files and select external drivers");
+            }
           }}
           disabled={!allFilesUploaded || selectedDrivers.length === 0}
           className="gap-2"
@@ -354,12 +405,15 @@ const AssortmentPlanning = () => {
 
       {/* Navigation */}
       <div className="flex justify-between">
-        <Button variant="outline" onClick={prevStep}>
-          Back
+        <Button variant="outline" onClick={() => {
+          prevStep();
+        }}>
+          Back to Data Setup
         </Button>
         <Button onClick={() => {
           markStepCompleted(2);
           nextStep();
+          toast.success("Configuration validated");
         }} className="gap-2">
           Continue to Preview
           <ArrowRight className="w-4 h-4" />
@@ -448,8 +502,10 @@ const AssortmentPlanning = () => {
 
       {/* Navigation */}
       <div className="flex justify-between">
-        <Button variant="outline" onClick={prevStep}>
-          Back
+        <Button variant="outline" onClick={() => {
+          prevStep();
+        }}>
+          Back to Configure
         </Button>
       </div>
     </div>
