@@ -107,7 +107,7 @@ const Reports = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
@@ -205,7 +205,7 @@ const Reports = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="px-6 py-6">
         <Tabs defaultValue="gallery" className="space-y-6">
           <TabsList>
             <TabsTrigger value="gallery">Reports Gallery</TabsTrigger>

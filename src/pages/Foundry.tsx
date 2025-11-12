@@ -1220,7 +1220,7 @@ export default function Foundry() {
     return (
       <div className="min-h-screen bg-background">
         <div className="border-b border-border bg-card">
-          <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+          <div className="px-6 py-6 flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
                 Data Health Dashboard
@@ -1261,7 +1261,7 @@ export default function Foundry() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+        <div className="px-6 py-6 space-y-6">
           {/* KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {kpis.map((kpi) => (
@@ -1506,7 +1506,7 @@ export default function Foundry() {
       {/* Header */}
       <div className="border-b border-border bg-gradient-to-br from-card via-card to-background relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,transparent,black)]" />
-        <div className="max-w-7xl mx-auto px-6 py-8 relative">
+        <div className="px-6 py-8 relative">
           <div className="flex items-center justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
@@ -1567,7 +1567,7 @@ export default function Foundry() {
       </div>
 
       {/* Tabs + Search */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="px-6 py-8">
         <Tabs defaultValue="master" className="w-full">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
             <TabsList className="bg-muted/60 border border-border/50 h-11">

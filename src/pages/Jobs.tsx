@@ -136,7 +136,7 @@ const JobsPage = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
@@ -157,7 +157,7 @@ const JobsPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+      <div className="px-6 py-6 space-y-6">
         {/* Search and filters */}
         <div className="flex items-center gap-4">
           <div className="relative flex-1 max-w-md">
