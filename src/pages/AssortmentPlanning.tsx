@@ -12,8 +12,6 @@ import {
   ArrowRight, Sparkles, Brain, Database, Target, ShoppingBag,
   Maximize, DollarSign, X, Zap, Info
 } from 'lucide-react';
-import { useStepper } from '@/hooks/useStepper';
-import { useStepperContext } from '@/contexts/StepperContext';
 import { toast } from 'sonner';
 import { AirtableStyleTable } from '@/components/AirtableStyleTable';
 import { ExternalDriversSection } from '@/components/ExternalDriversSection';
@@ -59,32 +57,6 @@ const AssortmentPlanning = () => {
   };
 
   // Stepper configuration
-  const stepperSteps = [
-    { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
-    { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
-    { id: 3, title: "Configuration", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
-    { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
-  ];
-  
-  const stepperHook = useStepper({
-    steps: stepperSteps,
-    title: "Assortment Planning",
-    initialStep: currentStep
-  });
-
-  const { setOnStepClick } = useStepperContext();
-
-  // Set up step click handler
-  const handleStepClick = React.useCallback((stepId: number) => {
-    const targetStep = stepperSteps.find(s => s.id === stepId);
-    if (targetStep && (targetStep.status === 'completed' || stepId === currentStep + 1 || stepId === currentStep)) {
-      setCurrentStep(stepId);
-    }
-  }, [currentStep, stepperSteps]);
-
-  useEffect(() => {
-    setOnStepClick(() => handleStepClick);
-  }, [handleStepClick, setOnStepClick]);
 
   // Auto-select drivers when data sources are added
   useEffect(() => {
@@ -521,102 +493,113 @@ const AssortmentPlanning = () => {
     );
   };
 
-  // Step 2: Configure
+  // Step 2: Data Gaps
   const renderStep2 = () => (
-    <div className="space-y-6">
-      {/* Data Quality Review */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" />
-                Data Quality Assessment
-              </CardTitle>
-              <CardDescription>
-                Review data completeness and quality metrics
-              </CardDescription>
-            </div>
-            <Badge variant="default" className="bg-success/10 text-success">
-              Overall Quality: 94/100
-            </Badge>
+    <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
+      {/* Header */}
+      <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
+            <p className="text-sm text-muted-foreground">Review completeness and quality before proceeding.</p>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-            <div className="flex items-start gap-3">
-              <Brain className="w-5 h-5 text-primary mt-0.5" />
-              <div className="flex-1">
-                <p className="font-medium text-primary mb-2">AI Quality Analysis</p>
-                <p className="text-sm text-muted-foreground whitespace-pre-line">
-                  {aiResponses.qualityCheck}
-                </p>
-              </div>
-            </div>
-          </div>
+        </div>
+      </div>
 
-          <div className="mt-4 flex gap-3">
-            <Button variant="outline" className="gap-2">
-              <Settings className="w-4 h-4" />
-              View Details
-            </Button>
-            <Button className="gap-2">
-              <CheckCircle2 className="w-4 h-4" />
-              Apply Auto-Fixes
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-auto">
+        <div className="space-y-6 p-6">
 
-      {/* Data Gaps */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Database className="w-5 h-5" />
-            Data Coverage Analysis
-          </CardTitle>
-          <CardDescription>
-            Assess completeness of input data sources
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {gapData.map((item, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{item.name}</span>
-                  <div className="flex items-center gap-3">
-                    <Badge variant={
-                      item.status === 'complete' ? 'default' :
-                      item.status === 'partial' ? 'secondary' : 'destructive'
-                    }>
-                      {item.status}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground w-16 text-right">
-                      {item.coverage}
-                    </span>
-                  </div>
+          {/* Quick metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20">
+              <CardContent className="p-4">
+                <div className="text-xs text-muted-foreground mb-1">Complete Datasets</div>
+                <div className="text-2xl font-bold text-success">
+                  {gapData.filter(g => g.status === 'complete').length}
                 </div>
-                <div className="flex items-center gap-3">
-                  <Progress value={item.quality} className="flex-1" />
-                  <span className="text-sm font-medium w-12 text-right">
-                    {item.quality}%
-                  </span>
+              </CardContent>
+            </Card>
+            <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20">
+              <CardContent className="p-4">
+                <div className="text-xs text-muted-foreground mb-1">Partial Datasets</div>
+                <div className="text-2xl font-bold text-warning">
+                  {gapData.filter(g => g.status === 'partial').length}
                 </div>
-              </div>
-            ))}
+              </CardContent>
+            </Card>
+            <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20">
+              <CardContent className="p-4">
+                <div className="text-xs text-muted-foreground mb-1">Missing Datasets</div>
+                <div className="text-2xl font-bold text-destructive">
+                  {gapData.filter(g => g.status === 'missing').length}
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+              <CardContent className="p-4">
+                <div className="text-xs text-muted-foreground mb-1">Avg. Quality</div>
+                <div className="text-2xl font-bold text-primary">
+                  {Math.round(gapData.reduce((acc, g) => acc + g.quality, 0) / gapData.length)}%
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Navigation */}
-      <div className="flex justify-between pt-4">
-        <Button size="sm" variant="outline" onClick={() => setCurrentStep(1)}>
-          ← Back
-        </Button>
-        <Button size="sm" onClick={() => handleStepTransition(3)}>
-          Continue to Preview →
-        </Button>
+          {/* Coverage table */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Data Coverage Analysis</CardTitle>
+              <CardDescription>Assess completeness of input data sources</CardDescription>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border text-muted-foreground">
+                    <th className="text-left py-2 px-3 font-medium">Dataset</th>
+                    <th className="text-left py-2 px-3 font-medium">Status</th>
+                    <th className="text-left py-2 px-3 font-medium">Coverage</th>
+                    <th className="text-left py-2 px-3 font-medium">Quality</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gapData.map((item, idx) => (
+                    <tr key={idx} className="border-b border-border/50 hover:bg-muted/40">
+                      <td className="py-2 px-3 font-medium">{item.name}</td>
+                      <td className="py-2 px-3">
+                        <Badge variant={
+                          item.status === 'complete' ? 'default' :
+                          item.status === 'partial' ? 'secondary' : 'destructive'
+                        }>
+                          {item.status}
+                        </Badge>
+                      </td>
+                      <td className="py-2 px-3 text-muted-foreground">{item.coverage}</td>
+                      <td className="py-2 px-3">
+                        <div className="flex items-center gap-3">
+                          <Progress value={item.quality} className="flex-1" />
+                          <span className="text-sm font-medium w-12 text-right">{item.quality}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Sticky footer */}
+      <div className="flex-shrink-0 sticky bottom-0 w-full bg-background border-t px-6 py-4">
+        <div className="flex items-center justify-between">
+          <Button size="sm" variant="outline" onClick={() => setCurrentStep(1)}>
+            ← Back
+          </Button>
+          <Button size="sm" onClick={() => handleStepTransition(3)}>
+            Continue to Configuration →
+          </Button>
+        </div>
       </div>
     </div>
   );
