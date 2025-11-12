@@ -64,7 +64,7 @@ export default function EntityPreview() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate(-1)} className="w-full">
+            <Button onClick={() => navigate('/foundry')} className="w-full">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Go Back
             </Button>
@@ -141,7 +141,7 @@ export default function EntityPreview() {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate('/foundry')}
                   className="h-8 w-8 p-0"
                 >
                   <ArrowLeft className="w-4 h-4" />
