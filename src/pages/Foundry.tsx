@@ -1033,7 +1033,7 @@ export default function Foundry() {
           ) : (
             <div className="w-full overflow-auto">
               <table className="w-full text-sm">
-                <thead className="bg-muted sticky top-16">
+                <thead className="bg-muted sticky top-0">
                   <tr>
                     {Object.keys(previewRows[0] || {}).map((k) => (
                       <th key={k} className="text-left px-3 py-2 font-medium">

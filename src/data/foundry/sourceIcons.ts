@@ -6,6 +6,7 @@ import hdfsIcon from "@/assets/hdfs.svg";
 import s3Icon from "@/assets/s3.svg";
 import snowflakeIcon from "@/assets/snowflake.svg";
 import gdriveIcon from "@/assets/gdrive.png";
+import salesforceIcon from "@/assets/salesforce-logo.png";
 
 export const sourceTypeIcon: Record<SourceType, string> = {
   csv: csvIcon,
@@ -14,7 +15,7 @@ export const sourceTypeIcon: Record<SourceType, string> = {
   snowflake: snowflakeIcon,
   gdrive: gdriveIcon,
   oracle: hdfsIcon, // placeholder
-  salesforce: gdriveIcon, // placeholder
+  salesforce: salesforceIcon,
   sap: hdfsIcon, // placeholder
   upload_csv: csvIcon,
 };
