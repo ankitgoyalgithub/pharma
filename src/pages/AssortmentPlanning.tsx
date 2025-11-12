@@ -130,16 +130,36 @@ const AssortmentPlanning = () => {
   // Step 1: Add Data
   const renderStep1 = () => {
     return (
-      <div className="space-y-6 pb-8">
-        <div className="space-y-6">
-        <Card className="border border-border bg-background shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base font-medium text-foreground">Upload Your Data</CardTitle>
-          <p className="text-sm text-muted-foreground mt-1">
-            Upload CSV or Excel files, or{" "}
-            <Button
-              variant="link"
-              className="p-0 h-auto text-primary"
+      <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 px-6 py-6 border-b bg-background sticky top-0 z-10">
+          <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
+          <p className="text-sm text-muted-foreground">Upload all your data files at once. You can also select external factors to include in the model.</p>
+        </div>
+        
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-auto">
+          <div className="space-y-6 p-6">
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base">Upload Data Files</CardTitle>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Upload your product, store, and sales data. Supported formats: CSV, Excel.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Upload multiple files at once. Supported formats: CSV, Excel. {" "}
+            <Button 
+              variant="link" 
+              size="sm" 
+              className="p-0 h-auto text-sm text-primary underline"
               onClick={() => {
                 const link = document.createElement('a');
                 link.href = '#';
@@ -455,12 +475,12 @@ const AssortmentPlanning = () => {
                 <Info className="w-4 h-4 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Select external factors that may influence assortment performance.</p>
+                <p>Select external factors that may influence assortment patterns in your planning model.</p>
               </TooltipContent>
             </Tooltip>
           </div>
           <p className="text-sm text-muted-foreground">
-            External factors that may influence assortment performance. Select drivers to include in the model.
+            External factors that may influence assortment patterns. Select drivers to include in the model.
           </p>
         </CardHeader>
         <CardContent>
@@ -474,7 +494,17 @@ const AssortmentPlanning = () => {
         </CardContent>
       </Card>
 
-        <div className="flex justify-between pt-4">
+        <MapFromFoundryDialog
+          isOpen={isFoundryModalOpen}
+          onClose={() => setIsFoundryModalOpen(false)}
+          onSubmit={handleFoundrySubmit}
+        />
+          </div>
+        </div>
+      
+      {/* Sticky Footer */}
+      <div className="flex-shrink-0 px-6 py-4 border-t bg-background sticky bottom-0 z-10">
+        <div className="flex justify-between">
           <Button size="sm" variant="outline" onClick={() => window.history.back()}>
             ← Back
           </Button>
@@ -482,15 +512,9 @@ const AssortmentPlanning = () => {
             Continue to Data Gaps →
           </Button>
         </div>
-
-        <MapFromFoundryDialog
-          isOpen={isFoundryModalOpen}
-          onClose={() => setIsFoundryModalOpen(false)}
-          onSubmit={handleFoundrySubmit}
-        />
-        </div>
       </div>
-    );
+    </div>
+  );
   };
 
   // Step 2: Data Gaps
