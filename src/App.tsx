@@ -11,6 +11,7 @@ import Analytics from "./pages/Analytics";
 import DemandForecasting from "./pages/DemandForecasting";
 import InventoryOptimization from "./pages/InventoryOptimization";
 import ReplenishmentPlanning from "./pages/ReplenishmentPlanning";
+import AssortmentPlanning from "./pages/AssortmentPlanning";
 import OpexPlanning from "./pages/OpexPlanning";
 import Foundry from "./pages/Foundry";
 import Jobs from "./pages/Jobs";
@@ -60,6 +61,7 @@ const App = () => (
             <Route path="/add-lookup" element={<AddLookupPage />} />
             <Route path="/entity-preview/:entityName" element={<EntityPreview />} />
             <Route path="demand-forecasting" element={<DemandForecasting />} />
+            <Route path="assortment-planning" element={<AssortmentPlanning />} />
             <Route path="inventory-optimization" element={<InventoryOptimization />} />
             <Route path="replenishment-planning" element={<ReplenishmentPlanning />} />
             <Route path="production-planning" element={<ProductionPlanning />} />

@@ -95,6 +95,14 @@ const supplyChainModules = [
     route: "/replenishment-planning"
   },
   {
+    title: "Assortment Planning",
+    description: "Optimize product assortment and SKU mix by store cluster",
+    icon: <ShoppingCart className="w-6 h-6" />,
+    category: "Operations" as const,
+    recentlyUsed: false,
+    route: "/assortment-planning"
+  },
+  {
     title: "Production Planning",
     description: "Convert demand to feasible production volumes", 
     icon: <Factory className="w-6 h-6" />,
