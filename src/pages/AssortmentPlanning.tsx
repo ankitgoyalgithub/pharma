@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +17,7 @@ import { ExternalDriversSection } from '@/components/ExternalDriversSection';
 import { CompactMetricCard } from '@/components/CompactMetricCard';
 import { ForecastCard } from '@/components/ForecastCard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ScientificLoader } from '@/components/ScientificLoader';
 
 // Import data
 import { assortmentRequiredFiles } from '@/data/assortmentPlanning/foundryObjects';
@@ -32,12 +33,14 @@ import { assortmentMetrics, planMetrics } from '@/data/assortmentPlanning/assort
 import { assortmentRecommendations } from '@/data/assortmentPlanning/assortmentRecommendations';
 
 const AssortmentPlanning = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, boolean>>({});
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedScenario, setSelectedScenario] = useState<number | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
 
+  // Initialize stepper for topbar display
   const stepperConfig = {
     steps: [
       { id: 1, title: 'Data Setup', status: 'active' as const },
@@ -49,17 +52,19 @@ const AssortmentPlanning = () => {
     initialStep: 1
   };
 
-  const { 
-    currentStep, 
-    nextStep, 
-    prevStep, 
-    goToStep,
-    markStepCompleted 
-  } = useStepper(stepperConfig);
+  useStepper(stepperConfig);
 
   const handleFileUpload = (fileName: string) => {
     setUploadedFiles(prev => ({ ...prev, [fileName]: true }));
     toast.success(`${fileName} uploaded successfully`);
+  };
+
+  const handleStepTransition = (nextStep: number) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setCurrentStep(nextStep);
+      setIsLoading(false);
+    }, 1500);
   };
 
   const handleDriverToggle = (driverName: string) => {
@@ -71,15 +76,14 @@ const AssortmentPlanning = () => {
   };
 
   const handleRunStudy = () => {
-    setIsProcessing(true);
+    setIsLoading(true);
     toast.loading('Optimizing assortment strategy...');
     
     setTimeout(() => {
-      setIsProcessing(false);
+      setIsLoading(false);
       toast.dismiss();
       toast.success('Assortment optimization complete!');
-      markStepCompleted(3);
-      goToStep(4);
+      setCurrentStep(4);
     }, 3000);
   };
 
@@ -291,25 +295,16 @@ const AssortmentPlanning = () => {
       )}
 
       {/* Navigation */}
-      <div className="flex justify-between">
-        <div className="text-sm text-muted-foreground">
-          {!allFilesUploaded && "Upload all required files to continue"}
-          {allFilesUploaded && selectedDrivers.length === 0 && "Select at least one external driver"}
-        </div>
-        <Button
-          onClick={() => {
-            if (allFilesUploaded && selectedDrivers.length > 0) {
-              markStepCompleted(1);
-              nextStep();
-            } else {
-              toast.error("Please upload all required files and select external drivers");
-            }
-          }}
+      <div className="flex justify-between pt-4">
+        <Button size="sm" variant="outline" onClick={() => window.history.back()}>
+          ← Back
+        </Button>
+        <Button 
+          size="sm" 
+          onClick={() => handleStepTransition(2)}
           disabled={!allFilesUploaded || selectedDrivers.length === 0}
-          className="gap-2"
         >
-          Continue to Configure
-          <ArrowRight className="w-4 h-4" />
+          Continue to Configure →
         </Button>
       </div>
     </div>
@@ -404,19 +399,12 @@ const AssortmentPlanning = () => {
       </Card>
 
       {/* Navigation */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={() => {
-          prevStep();
-        }}>
-          Back to Data Setup
+      <div className="flex justify-between pt-4">
+        <Button size="sm" variant="outline" onClick={() => setCurrentStep(1)}>
+          ← Back
         </Button>
-        <Button onClick={() => {
-          markStepCompleted(2);
-          nextStep();
-          toast.success("Configuration validated");
-        }} className="gap-2">
-          Continue to Preview
-          <ArrowRight className="w-4 h-4" />
+        <Button size="sm" onClick={() => handleStepTransition(3)}>
+          Continue to Preview →
         </Button>
       </div>
     </div>
@@ -482,9 +470,9 @@ const AssortmentPlanning = () => {
               size="lg" 
               className="w-full gap-2"
               onClick={handleRunStudy}
-              disabled={isProcessing}
+              disabled={isLoading}
             >
-              {isProcessing ? (
+              {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-background border-t-transparent" />
                   Optimizing Assortment...
@@ -501,11 +489,9 @@ const AssortmentPlanning = () => {
       </Card>
 
       {/* Navigation */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={() => {
-          prevStep();
-        }}>
-          Back to Configure
+      <div className="flex justify-between pt-4">
+        <Button size="sm" variant="outline" onClick={() => setCurrentStep(2)}>
+          ← Back
         </Button>
       </div>
     </div>
@@ -649,16 +635,16 @@ const AssortmentPlanning = () => {
       </Card>
 
       {/* Action Buttons */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={prevStep}>
-          Back to Preview
+      <div className="flex justify-between pt-4">
+        <Button size="sm" variant="outline" onClick={() => setCurrentStep(3)}>
+          ← Back
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline" className="gap-2">
+          <Button size="sm" variant="outline" className="gap-2">
             <Download className="w-4 h-4" />
             Export Results
           </Button>
-          <Button className="gap-2">
+          <Button size="sm" className="gap-2">
             <CheckCircle2 className="w-4 h-4" />
             Approve Plan
           </Button>
@@ -668,12 +654,24 @@ const AssortmentPlanning = () => {
   );
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-7xl">
-      {currentStep === 1 && renderStep1()}
-      {currentStep === 2 && renderStep2()}
-      {currentStep === 3 && renderStep3()}
-      {currentStep === 4 && renderStep4()}
-    </div>
+    <TooltipProvider>
+      <div className="h-screen bg-gradient-subtle overflow-hidden">
+        <div className="h-full px-4 py-0 overflow-hidden">
+          <div className="h-full w-full overflow-hidden">
+            {currentStep === 1 && renderStep1()}
+            {currentStep === 2 && renderStep2()}
+            {currentStep === 3 && renderStep3()}
+            {currentStep === 4 && renderStep4()}
+          </div>
+        </div>
+      </div>
+      {isLoading && (
+        <ScientificLoader 
+          message={`Processing Step ${currentStep + 1}...`}
+          size="lg"
+        />
+      )}
+    </TooltipProvider>
   );
 };
 
