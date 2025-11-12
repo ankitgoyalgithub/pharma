@@ -10,7 +10,7 @@ import {
   Upload, FileText, CheckCircle2, AlertTriangle, TrendingUp, 
   Package, Store, BarChart3, Settings, Play, Eye, Download,
   ArrowRight, Sparkles, Brain, Database, Target, ShoppingBag,
-  Maximize, DollarSign, X, Zap, Info
+  Maximize, DollarSign, X, Zap, Info, CheckCircle, AlertCircle, Copy
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AirtableStyleTable } from '@/components/AirtableStyleTable';
@@ -21,6 +21,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ScientificLoader } from '@/components/ScientificLoader';
 import { MapFromFoundryDialog } from '@/components/MapFromFoundryDialog';
 import { getFoundryObjectData } from '@/data/foundry';
+import { useStepper } from '@/hooks/useStepper';
+import { useStepperContext } from '@/contexts/StepperContext';
+import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
+import { AutoFixDialog } from '@/components/AutoFixDialog';
 
 // Import data
 import { assortmentRequiredFiles } from '@/data/assortmentPlanning/foundryObjects';
@@ -34,6 +38,7 @@ import {
 import { aiResponses } from '@/data/assortmentPlanning/aiResponses';
 import { assortmentMetrics, planMetrics } from '@/data/assortmentPlanning/assortmentMetrics';
 import { assortmentRecommendations } from '@/data/assortmentPlanning/assortmentRecommendations';
+import { dataQualityIssues as rawDataQualityIssues } from '@/data/assortmentPlanning/dataQualityIssues';
 
 const AssortmentPlanning = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -47,6 +52,7 @@ const AssortmentPlanning = () => {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
   const [driversLoading, setDriversLoading] = useState(false);
+  const [showAutoFixDialog, setShowAutoFixDialog] = useState(false);
 
   // Map external driver display names to Foundry object keys
   const driverToFoundryKey: Record<string, string> = {
@@ -56,7 +62,54 @@ const AssortmentPlanning = () => {
     "Market Trends": "Market_Trends",
   };
 
+  // Transform data quality issues to match expected format
+  const dataQualityIssues = rawDataQualityIssues.map((issue, idx) => ({
+    id: `dq_assort_${idx + 1}`,
+    file: 'Assortment Data',
+    rowNumber: idx * 50 + 100,
+    column: issue.category.toLowerCase().replace(/ /g, '_'),
+    issueType: issue.category,
+    severity: issue.severity as 'high' | 'medium' | 'low',
+    currentValue: null,
+    suggestedFix: issue.recommendation,
+    explanation: `${issue.issue}. Affected: ${issue.affected}`,
+    impactScore: issue.severity === 'high' ? 8.5 : issue.severity === 'medium' ? 6.0 : 3.5
+  }));
+
+  const dataQualitySummary = {
+    totalIssues: dataQualityIssues.length,
+    highSeverity: dataQualityIssues.filter(i => i.severity === 'high').length,
+    mediumSeverity: dataQualityIssues.filter(i => i.severity === 'medium').length,
+    lowSeverity: dataQualityIssues.filter(i => i.severity === 'low').length,
+  };
+
   // Stepper configuration
+  const stepperSteps = [
+    { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
+    { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
+    { id: 3, title: "Configuration", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
+    { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
+  ];
+  
+  const stepperHook = useStepper({
+    steps: stepperSteps,
+    title: "Assortment Planning",
+    initialStep: currentStep
+  });
+
+  const { setOnStepClick } = useStepperContext();
+
+  // Set up step click handler
+  const handleStepClick = React.useCallback((stepId: number) => {
+    const targetStep = stepperSteps.find(s => s.id === stepId);
+    if (targetStep && (targetStep.status === 'completed' || stepId === currentStep + 1 || stepId === currentStep)) {
+      setCurrentStep(stepId);
+    }
+  }, [currentStep, stepperSteps]);
+
+  useEffect(() => {
+    setOnStepClick(() => handleStepClick);
+  }, [handleStepClick, setOnStepClick]);
 
   // Auto-select drivers when data sources are added
   useEffect(() => {
@@ -525,7 +578,19 @@ const AssortmentPlanning = () => {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
-            <p className="text-sm text-muted-foreground">Review completeness and quality before proceeding.</p>
+            <p className="text-sm text-muted-foreground">AI detected missing data and suggested imputed values.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <div className="text-sm font-medium">{dataQualitySummary.totalIssues} Issues Detected</div>
+              <div className="text-xs text-muted-foreground">
+                {dataQualitySummary.highSeverity} high · {dataQualitySummary.mediumSeverity} medium · {dataQualitySummary.lowSeverity} low
+              </div>
+            </div>
+            <Button size="sm" onClick={() => setShowAutoFixDialog(true)}>
+              <Sparkles className="w-4 h-4 mr-2" />
+              Auto Fix with AI
+            </Button>
           </div>
         </div>
       </div>
@@ -534,47 +599,93 @@ const AssortmentPlanning = () => {
       <div className="flex-1 overflow-auto">
         <div className="space-y-6 p-6">
 
-          {/* Quick metrics */}
+          {/* Enterprise metrics grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20">
-              <CardContent className="p-4">
-                <div className="text-xs text-muted-foreground mb-1">Complete Datasets</div>
-                <div className="text-2xl font-bold text-success">
-                  {gapData.filter(g => g.status === 'complete').length}
+            <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-success/20 to-transparent rounded-bl-full" />
+              <CardContent className="p-4 relative">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle className="w-4 h-4 text-success" />
+                  <div className="text-xs text-muted-foreground">Completeness</div>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-3 h-3 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Percentage of data points that are present and valid across all products and stores.</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
+                <div className="text-2xl font-bold text-success">94.8%</div>
               </CardContent>
             </Card>
-            <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20">
-              <CardContent className="p-4">
-                <div className="text-xs text-muted-foreground mb-1">Partial Datasets</div>
-                <div className="text-2xl font-bold text-warning">
-                  {gapData.filter(g => g.status === 'partial').length}
+            
+            <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-warning/20 to-transparent rounded-bl-full" />
+              <CardContent className="p-4 relative">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertTriangle className="w-4 h-4 text-warning" />
+                  <div className="text-xs text-muted-foreground">Missing Values</div>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-3 h-3 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Number of missing data points that need to be imputed or filled using AI algorithms.</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
+                <div className="text-2xl font-bold text-warning">12</div>
               </CardContent>
             </Card>
-            <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20">
-              <CardContent className="p-4">
-                <div className="text-xs text-muted-foreground mb-1">Missing Datasets</div>
-                <div className="text-2xl font-bold text-destructive">
-                  {gapData.filter(g => g.status === 'missing').length}
+            
+            <Card className="relative overflow-hidden bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20 hover:shadow-lg transition-shadow">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-accent/20 to-transparent rounded-bl-full" />
+              <CardContent className="p-4 relative">
+                <div className="flex items-center gap-2 mb-2">
+                  <Copy className="w-4 h-4 text-accent" />
+                  <div className="text-xs text-muted-foreground">Duplicates</div>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-3 h-3 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Number of duplicate records found in the dataset that may need to be cleaned or merged.</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
+                <div className="text-2xl font-bold text-accent">0</div>
               </CardContent>
             </Card>
-            <Card className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-              <CardContent className="p-4">
-                <div className="text-xs text-muted-foreground mb-1">Avg. Quality</div>
-                <div className="text-2xl font-bold text-primary">
-                  {Math.round(gapData.reduce((acc, g) => acc + g.quality, 0) / gapData.length)}%
+            
+            <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-destructive/20 to-transparent rounded-bl-full" />
+              <CardContent className="p-4 relative">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertCircle className="w-4 h-4 text-destructive" />
+                  <div className="text-xs text-muted-foreground">Outliers</div>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-3 h-3 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Statistical outliers that deviate significantly from normal patterns and may indicate data quality issues.</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
+                <div className="text-2xl font-bold text-destructive">1</div>
               </CardContent>
             </Card>
           </div>
+
+          {/* Data Quality Issues Table */}
+          <DataQualityIssuesTable issues={dataQualityIssues} />
 
           {/* Coverage table */}
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Data Coverage Analysis</CardTitle>
-              <CardDescription>Assess completeness of input data sources</CardDescription>
+              <CardDescription>Detailed assessment of input data sources completeness</CardDescription>
             </CardHeader>
             <CardContent className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -625,6 +736,15 @@ const AssortmentPlanning = () => {
           </Button>
         </div>
       </div>
+
+      <AutoFixDialog
+        open={showAutoFixDialog}
+        onOpenChange={setShowAutoFixDialog}
+        issues={dataQualityIssues}
+        onApplyFixes={() => {
+          toast.success('Data quality issues have been automatically fixed!');
+        }}
+      />
     </div>
   );
 
