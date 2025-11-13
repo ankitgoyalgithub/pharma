@@ -11,6 +11,15 @@ export const featureStoreEntities: EntityModule[] = [
     sourceType: "oracle",
   },
   {
+    title: "Complete India and USA Event Calendar",
+    description: "Comprehensive calendar of events, holidays, and celebrations for India and USA",
+    origin: "third-party",
+    route: "/entity-preview/complete-india-usa-event-calendar",
+    recordCount: 8920,
+    lastSync: "2025-07-21T08:30:00Z",
+    sourceType: "snowflake",
+  },
+  {
     title: "Crude Oil Prices",
     description: "Global crude oil pricing and trends",
     origin: "third-party",
@@ -101,15 +110,6 @@ export const featureStoreEntities: EntityModule[] = [
     sourceType: "oracle",
   },
   {
-    title: "Energy Costs",
-    description: "Energy pricing and utility rate data",
-    origin: "third-party",
-    route: "/entity-preview/energy-costs",
-    recordCount: 6780,
-    lastSync: "2025-07-21T08:00:00Z",
-    sourceType: "gdrive",
-  },
-  {
     title: "Supply Chain Events",
     description: "Global supply chain disruptions and logistics events",
     origin: "third-party",
@@ -117,15 +117,6 @@ export const featureStoreEntities: EntityModule[] = [
     recordCount: 3450,
     lastSync: "2025-07-21T09:30:00Z",
     sourceType: "snowflake",
-  },
-  {
-    title: "Technology Trends",
-    description: "Emerging technology adoption and innovation metrics",
-    origin: "third-party",
-    route: "/entity-preview/technology-trends",
-    recordCount: 5680,
-    lastSync: "2025-07-21T10:15:00Z",
-    sourceType: "hdfs",
   },
   {
     title: "Regulatory Changes",

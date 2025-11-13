@@ -29,6 +29,138 @@ export const externalDriversData = {
       businessClosure: true
     }
   ],
+  "Complete_India_USA_Event_Calendar": [
+    {
+      date: "2024-01-01",
+      event: "New Year's Day",
+      type: "National Holiday",
+      country: "USA & India",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "New Year celebration"
+    },
+    {
+      date: "2024-01-26",
+      event: "Republic Day",
+      type: "National Holiday",
+      country: "India",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "Indian Republic Day celebration"
+    },
+    {
+      date: "2024-02-14",
+      event: "Valentine's Day",
+      type: "Commercial Event",
+      country: "USA & India",
+      region: "All",
+      impact: "High",
+      businessClosure: false,
+      description: "Valentine's Day retail event"
+    },
+    {
+      date: "2024-03-08",
+      event: "Holi",
+      type: "National Holiday",
+      country: "India",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "Festival of Colors"
+    },
+    {
+      date: "2024-03-29",
+      event: "Good Friday",
+      type: "National Holiday",
+      country: "India",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "Christian holiday"
+    },
+    {
+      date: "2024-05-27",
+      event: "Memorial Day",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "US Memorial Day"
+    },
+    {
+      date: "2024-07-04",
+      event: "Independence Day",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "US Independence Day"
+    },
+    {
+      date: "2024-08-15",
+      event: "Independence Day",
+      type: "National Holiday",
+      country: "India",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "Indian Independence Day"
+    },
+    {
+      date: "2024-10-02",
+      event: "Gandhi Jayanti",
+      type: "National Holiday",
+      country: "India",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "Mahatma Gandhi's Birthday"
+    },
+    {
+      date: "2024-10-31",
+      event: "Diwali",
+      type: "National Holiday",
+      country: "India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: true,
+      description: "Festival of Lights"
+    },
+    {
+      date: "2024-11-28",
+      event: "Thanksgiving",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "Very High",
+      businessClosure: true,
+      description: "US Thanksgiving Day"
+    },
+    {
+      date: "2024-11-29",
+      event: "Black Friday",
+      type: "Commercial Event",
+      country: "USA & India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: false,
+      description: "Major retail shopping event"
+    },
+    {
+      date: "2024-12-25",
+      event: "Christmas",
+      type: "National Holiday",
+      country: "USA & India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: true,
+      description: "Christmas celebration"
+    }
+  ],
   "Ad_Spend": [
     {
       date: "2024-01-01",
@@ -416,28 +548,6 @@ export const externalDriversData = {
       sector: "All"
     }
   ],
-  "Energy_Costs": [
-    {
-      date: "2024-01-01",
-      energyType: "Electricity",
-      price: 0.142,
-      currency: "USD",
-      unit: "kWh",
-      change: 0.002,
-      changePercent: 1.43,
-      region: "USA"
-    },
-    {
-      date: "2024-01-02",
-      energyType: "Electricity",
-      price: 0.145,
-      currency: "USD",
-      unit: "kWh",
-      change: 0.003,
-      changePercent: 2.11,
-      region: "USA"
-    }
-  ],
   "Supply_Chain_Events": [
     {
       date: "2024-01-01",
@@ -456,26 +566,6 @@ export const externalDriversData = {
       impactedRoutes: "Asia-Europe",
       delayDays: 1,
       status: "Resolved"
-    }
-  ],
-  "Technology_Trends": [
-    {
-      date: "2024-01-01",
-      technology: "AI/Machine Learning",
-      adoptionRate: 68,
-      growthRate: 12.5,
-      industry: "Technology",
-      investmentMillions: 450,
-      maturityLevel: "Growing"
-    },
-    {
-      date: "2024-01-01",
-      technology: "Cloud Computing",
-      adoptionRate: 85,
-      growthRate: 8.2,
-      industry: "Technology",
-      investmentMillions: 620,
-      maturityLevel: "Mature"
     }
   ],
   "Regulatory_Changes": [
@@ -505,6 +595,7 @@ export const getExternalDriverData = (driverName: string) => {
   // Map driver display names to data keys - aligned with Feature Store entities
   const driverKeyMap: Record<string, string> = {
     "Holiday Calendar": "Holiday_Calendar",
+    "Complete India and USA Event Calendar": "Complete_India_USA_Event_Calendar",
     "Crude Oil Prices": "Crude_Oil_Prices",
     "NSE Index": "NSE_Index",
     "NASDAQ Index": "NASDAQ_Index",
@@ -515,9 +606,7 @@ export const getExternalDriverData = (driverName: string) => {
     "GDP Growth": "GDP_Growth",
     "Commodity Prices": "Commodity_Prices",
     "Labor Market Data": "Labor_Market_Data",
-    "Energy Costs": "Energy_Costs",
     "Supply Chain Events": "Supply_Chain_Events",
-    "Technology Trends": "Technology_Trends",
     "Regulatory Changes": "Regulatory_Changes",
   };
   

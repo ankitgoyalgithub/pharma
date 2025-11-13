@@ -3,6 +3,7 @@ export const getExternalDrivers = (studyType: string, hasData: boolean = false) 
   // Common feature store drivers available for all study types
   const featureStoreDrivers = [
     { name: "Holiday Calendar", autoSelected: hasData, icon: "Calendar" },
+    { name: "Complete India and USA Event Calendar", autoSelected: false, icon: "CalendarDays" },
     { name: "Crude Oil Prices", autoSelected: false, icon: "Fuel" },
     { name: "NSE Index", autoSelected: false, icon: "TrendingUp" },
     { name: "NASDAQ Index", autoSelected: false, icon: "LineChart" },
@@ -13,9 +14,7 @@ export const getExternalDrivers = (studyType: string, hasData: boolean = false) 
     { name: "GDP Growth", autoSelected: false, icon: "TrendingUp" },
     { name: "Commodity Prices", autoSelected: false, icon: "Package" },
     { name: "Labor Market Data", autoSelected: hasData, icon: "Users" },
-    { name: "Energy Costs", autoSelected: false, icon: "Zap" },
     { name: "Supply Chain Events", autoSelected: false, icon: "Truck" },
-    { name: "Technology Trends", autoSelected: false, icon: "Cpu" },
     { name: "Regulatory Changes", autoSelected: false, icon: "FileText" },
   ];
 
