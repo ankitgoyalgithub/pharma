@@ -110,6 +110,7 @@ import {
   masterEntities, 
   timeseriesEntities, 
   featureStoreEntities,
+  entityPreviewData,
   sourceTypeIcon
 } from "@/data/foundry";
 
@@ -1068,6 +1069,11 @@ export default function Foundry() {
     const qualityScore = Math.floor(95 + Math.random() * 5);
     const isHealthy = qualityScore >= 98;
     const isWarning = qualityScore >= 95 && qualityScore < 98;
+
+    // Derive actual count from preview data when available
+    const routeKey = module.route.split('/').pop() || '';
+    const preview = (entityPreviewData as any)[routeKey];
+    const displayCount = (preview?.rows?.length ?? module.recordCount);
     
     return (
       <Card
@@ -1168,7 +1174,7 @@ export default function Foundry() {
                 <span className="font-medium">Records</span>
               </div>
               <div className="text-base font-bold text-foreground">
-                {module.recordCount.toLocaleString()}
+                {displayCount.toLocaleString()}
               </div>
             </div>
             <div className="space-y-1">
