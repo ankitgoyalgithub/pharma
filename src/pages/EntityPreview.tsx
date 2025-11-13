@@ -49,7 +49,7 @@ export default function EntityPreview() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
 
   const entityData = entityPreviewData[entityName || "product"];
   
@@ -281,6 +281,7 @@ export default function EntityPreview() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="15">15</SelectItem>
                       <SelectItem value="25">25</SelectItem>
                       <SelectItem value="50">50</SelectItem>
                       <SelectItem value="100">100</SelectItem>
