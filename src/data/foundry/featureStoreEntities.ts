@@ -101,15 +101,6 @@ export const featureStoreEntities: EntityModule[] = [
     sourceType: "hdfs",
   },
   {
-    title: "Labor Market Data",
-    description: "Employment statistics and workforce trends",
-    origin: "third-party",
-    route: "/entity-preview/labor-market-data",
-    recordCount: 8920,
-    lastSync: "2025-07-21T07:45:00Z",
-    sourceType: "oracle",
-  },
-  {
     title: "Supply Chain Events",
     description: "Global supply chain disruptions and logistics events",
     origin: "third-party",
