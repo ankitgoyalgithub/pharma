@@ -8,7 +8,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
   Select,
@@ -17,6 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -39,10 +45,16 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  X,
 } from "lucide-react";
 
 import { entityPreviewData } from "@/data/foundry";
+
+type SortDirection = "asc" | "desc" | null;
 
 export default function EntityPreview() {
   const { entityName } = useParams();
@@ -50,6 +62,9 @@ export default function EntityPreview() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(15);
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
 
   const entityData = entityPreviewData[entityName || "product"];
   
@@ -104,15 +119,89 @@ export default function EntityPreview() {
     }
   };
 
-  // Filter and paginate data
+  // Handle column sorting
+  const handleSort = (columnKey: string) => {
+    if (sortColumn === columnKey) {
+      // Cycle through: asc -> desc -> null
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortColumn(null);
+        setSortDirection(null);
+      }
+    } else {
+      setSortColumn(columnKey);
+      setSortDirection("asc");
+    }
+    setCurrentPage(1);
+  };
+
+  // Handle column filter
+  const handleColumnFilter = (columnKey: string, value: string) => {
+    setColumnFilters(prev => {
+      const newFilters = { ...prev };
+      if (value === "") {
+        delete newFilters[columnKey];
+      } else {
+        newFilters[columnKey] = value;
+      }
+      return newFilters;
+    });
+    setCurrentPage(1);
+  };
+
+  // Clear all column filters
+  const clearAllFilters = () => {
+    setColumnFilters({});
+    setCurrentPage(1);
+  };
+
+  // Filter, sort and paginate data
   const filteredData = useMemo(() => {
-    if (!searchTerm) return rows;
-    return rows.filter(row =>
-      Object.values(row).some(val =>
-        String(val).toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [rows, searchTerm]);
+    let data = rows;
+    
+    // Apply global search
+    if (searchTerm) {
+      data = data.filter(row =>
+        Object.values(row).some(val =>
+          String(val).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+    
+    // Apply column filters
+    Object.entries(columnFilters).forEach(([columnKey, filterValue]) => {
+      data = data.filter(row =>
+        String(row[columnKey]).toLowerCase().includes(filterValue.toLowerCase())
+      );
+    });
+    
+    // Apply sorting
+    if (sortColumn && sortDirection) {
+      data = [...data].sort((a, b) => {
+        const aVal = a[sortColumn];
+        const bVal = b[sortColumn];
+        
+        // Handle numbers
+        const aNum = Number(aVal);
+        const bNum = Number(bVal);
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          return sortDirection === "asc" ? aNum - bNum : bNum - aNum;
+        }
+        
+        // Handle strings
+        const aStr = String(aVal).toLowerCase();
+        const bStr = String(bVal).toLowerCase();
+        if (sortDirection === "asc") {
+          return aStr.localeCompare(bStr);
+        } else {
+          return bStr.localeCompare(aStr);
+        }
+      });
+    }
+    
+    return data;
+  }, [rows, searchTerm, columnFilters, sortColumn, sortDirection]);
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
@@ -207,9 +296,9 @@ export default function EntityPreview() {
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="mt-6 max-w-md">
-            <div className="relative">
+          {/* Search Bar and Filters */}
+          <div className="mt-6 flex items-center gap-3">
+            <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search within entity data..."
@@ -218,6 +307,17 @@ export default function EntityPreview() {
                 className="pl-9 h-9 bg-background"
               />
             </div>
+            {Object.keys(columnFilters).length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearAllFilters}
+                className="h-9"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Clear Filters ({Object.keys(columnFilters).length})
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -232,7 +332,69 @@ export default function EntityPreview() {
                   <TableRow>
                     {columns.map((column) => (
                       <TableHead key={column.accessorKey} className="whitespace-nowrap">
-                        {column.header}
+                        <div className="flex items-center gap-2">
+                          {/* Column Header with Sort */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleSort(column.accessorKey)}
+                            className="h-8 px-2 hover:bg-muted/50 font-semibold"
+                          >
+                            {column.header}
+                            {sortColumn === column.accessorKey ? (
+                              sortDirection === "asc" ? (
+                                <ArrowUp className="ml-1 h-3 w-3" />
+                              ) : (
+                                <ArrowDown className="ml-1 h-3 w-3" />
+                              )
+                            ) : (
+                              <ArrowUpDown className="ml-1 h-3 w-3 opacity-40" />
+                            )}
+                          </Button>
+                          
+                          {/* Column Filter */}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className={`h-7 w-7 p-0 ${
+                                  columnFilters[column.accessorKey]
+                                    ? "bg-primary/10 text-primary"
+                                    : "hover:bg-muted/50"
+                                }`}
+                              >
+                                <Filter className="h-3 w-3" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-64 p-3 bg-background z-50" align="start">
+                              <div className="space-y-2">
+                                <label className="text-xs font-medium text-muted-foreground">
+                                  Filter {column.header}
+                                </label>
+                                <Input
+                                  placeholder={`Filter ${column.header}...`}
+                                  value={columnFilters[column.accessorKey] || ""}
+                                  onChange={(e) =>
+                                    handleColumnFilter(column.accessorKey, e.target.value)
+                                  }
+                                  className="h-8"
+                                />
+                                {columnFilters[column.accessorKey] && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleColumnFilter(column.accessorKey, "")}
+                                    className="h-7 w-full"
+                                  >
+                                    <X className="w-3 h-3 mr-1" />
+                                    Clear
+                                  </Button>
+                                )}
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
                       </TableHead>
                     ))}
                   </TableRow>
