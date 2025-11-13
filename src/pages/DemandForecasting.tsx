@@ -105,6 +105,7 @@ import { CompactMetricCard } from "@/components/CompactMetricCard";
 import { CompactProjectionCard } from "@/components/CompactProjectionCard";
 import { DemandAnalysisChart } from "@/components/DemandAnalysisChart";
 import { ABCXYZMatrix } from "@/components/ABCXYZMatrix";
+import { ModelConfigurationCard } from "@/components/ModelConfigurationCard";
 
 // Data imports
 import { workbookData } from "@/data/demandForecasting/workbookData";
@@ -197,6 +198,15 @@ const DemandForecasting = () => {
   const [seasonality, setSeasonality] = useState("Auto-detect");
   const [confidenceLevel, setConfidenceLevel] = useState("95");
   const [validationSplit, setValidationSplit] = useState("20");
+  
+  // Classification threshold state
+  const [classificationBasis, setClassificationBasis] = useState("value");
+  const [abcThresholdA, setAbcThresholdA] = useState("80");
+  const [abcThresholdB, setAbcThresholdB] = useState("15");
+  const [xyzThresholdX, setXyzThresholdX] = useState("20");
+  const [xyzThresholdY, setXyzThresholdY] = useState("50");
+  const [fmrThresholdF, setFmrThresholdF] = useState("80");
+  const [fmrThresholdM, setFmrThresholdM] = useState("40");
 
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -1684,312 +1694,32 @@ const DemandForecasting = () => {
       </div>
 
       {/* Model Configuration - Elevated */}
-      <Card className="border-primary/20">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-base">Model Configuration</CardTitle>
-            <Tooltip>
-              <TooltipTrigger>
-                <Info className="w-4 h-4 text-muted-foreground" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Configure the AI forecast model parameters including time horizon, data granularity, seasonality detection, and advanced model settings.</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Primary Settings */}
-          <div>
-            <h4 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">Primary Settings</h4>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="forecast-horizon">Forecast Horizon</Label>
-                <Select value={forecastHorizon} onValueChange={setForecastHorizon}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="3">3 Months</SelectItem>
-                    <SelectItem value="6">6 Months</SelectItem>
-                    <SelectItem value="12">12 Months</SelectItem>
-                    <SelectItem value="18">18 Months</SelectItem>
-                    <SelectItem value="24">24 Months</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="granularity">Data Granularity</Label>
-                <Select value={modelGranularity} onValueChange={setModelGranularity}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Daily">Daily</SelectItem>
-                    <SelectItem value="Weekly">Weekly</SelectItem>
-                    <SelectItem value="Monthly">Monthly</SelectItem>
-                    <SelectItem value="Quarterly">Quarterly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="seasonality">Seasonality Detection</Label>
-                <Select value={seasonality} onValueChange={setSeasonality}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Auto-detect">Auto-detect</SelectItem>
-                    <SelectItem value="None">None</SelectItem>
-                    <SelectItem value="Weekly">Weekly</SelectItem>
-                    <SelectItem value="Monthly">Monthly</SelectItem>
-                    <SelectItem value="Quarterly">Quarterly</SelectItem>
-                    <SelectItem value="Yearly">Yearly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="confidence-level">Confidence Level</Label>
-                <Select value={confidenceLevel} onValueChange={setConfidenceLevel}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="80">80%</SelectItem>
-                    <SelectItem value="85">85%</SelectItem>
-                    <SelectItem value="90">90%</SelectItem>
-                    <SelectItem value="95">95%</SelectItem>
-                    <SelectItem value="99">99%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <Separator className="my-3" />
-
-          {/* Advanced Model Settings */}
-          <div>
-            <h4 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">Advanced Model Settings</h4>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="validation-split">Validation Split</Label>
-                <Select value={validationSplit} onValueChange={setValidationSplit}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10%</SelectItem>
-                    <SelectItem value="15">15%</SelectItem>
-                    <SelectItem value="20">20%</SelectItem>
-                    <SelectItem value="25">25%</SelectItem>
-                    <SelectItem value="30">30%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="trend-method">Trend Method</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-detect</SelectItem>
-                    <SelectItem value="linear">Linear</SelectItem>
-                    <SelectItem value="exponential">Exponential</SelectItem>
-                    <SelectItem value="damped">Damped</SelectItem>
-                    <SelectItem value="none">None</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="error-method">Error Method</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-select</SelectItem>
-                    <SelectItem value="additive">Additive</SelectItem>
-                    <SelectItem value="multiplicative">Multiplicative</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="outlier-treatment">Outlier Treatment</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-handle</SelectItem>
-                    <SelectItem value="remove">Remove</SelectItem>
-                    <SelectItem value="cap">Cap values</SelectItem>
-                    <SelectItem value="interpolate">Interpolate</SelectItem>
-                    <SelectItem value="ignore">Ignore</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="model-ensemble">Ensemble Method</Label>
-                <Select value="weighted" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="weighted">Weighted Average</SelectItem>
-                    <SelectItem value="best">Best Model Only</SelectItem>
-                    <SelectItem value="median">Median Ensemble</SelectItem>
-                    <SelectItem value="stacking">Stacking</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="cross-validation">Cross Validation</Label>
-                <Select value="timeseries" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="timeseries">Time Series CV</SelectItem>
-                    <SelectItem value="walk-forward">Walk Forward</SelectItem>
-                    <SelectItem value="blocked">Blocked CV</SelectItem>
-                    <SelectItem value="none">None</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="missing-data">Missing Data Strategy</Label>
-                <Select value="interpolation" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="interpolation">Interpolation</SelectItem>
-                    <SelectItem value="forward-fill">Forward Fill</SelectItem>
-                    <SelectItem value="backward-fill">Backward Fill</SelectItem>
-                    <SelectItem value="mean">Mean Imputation</SelectItem>
-                    <SelectItem value="median">Median Imputation</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="feature-engineering">Feature Engineering</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-generate</SelectItem>
-                    <SelectItem value="lags">Lags Only</SelectItem>
-                    <SelectItem value="rolling">Rolling Stats</SelectItem>
-                    <SelectItem value="all">All Features</SelectItem>
-                    <SelectItem value="none">None</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="normalization">Data Normalization</Label>
-                <Select value="standard" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="standard">Standard Scaling</SelectItem>
-                    <SelectItem value="minmax">Min-Max Scaling</SelectItem>
-                    <SelectItem value="robust">Robust Scaling</SelectItem>
-                    <SelectItem value="log">Log Transform</SelectItem>
-                    <SelectItem value="none">None</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <Separator className="my-3" />
-
-          {/* Algorithm Selection */}
-          <div>
-            <h4 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">Algorithm Selection</h4>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="primary-algorithm">Primary Algorithm</Label>
-                <Select value="auto" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="auto">Auto-select Best</SelectItem>
-                    <SelectItem value="prophet">Prophet</SelectItem>
-                    <SelectItem value="arima">ARIMA</SelectItem>
-                    <SelectItem value="lstm">LSTM Neural Network</SelectItem>
-                    <SelectItem value="xgboost">XGBoost</SelectItem>
-                    <SelectItem value="lightgbm">LightGBM</SelectItem>
-                    <SelectItem value="exponential">Exponential Smoothing</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="optimization-metric">Optimization Metric</Label>
-                <Select value="mape" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mape">MAPE</SelectItem>
-                    <SelectItem value="rmse">RMSE</SelectItem>
-                    <SelectItem value="mae">MAE</SelectItem>
-                    <SelectItem value="smape">sMAPE</SelectItem>
-                    <SelectItem value="mase">MASE</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="hyperparameter-tuning">Hyperparameter Tuning</Label>
-                <Select value="bayesian" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bayesian">Bayesian Optimization</SelectItem>
-                    <SelectItem value="grid">Grid Search</SelectItem>
-                    <SelectItem value="random">Random Search</SelectItem>
-                    <SelectItem value="none">Use Defaults</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="training-iterations">Training Iterations</Label>
-                <Select value="100" onValueChange={() => {}}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="50">50 (Fast)</SelectItem>
-                    <SelectItem value="100">100 (Balanced)</SelectItem>
-                    <SelectItem value="200">200 (Thorough)</SelectItem>
-                    <SelectItem value="500">500 (Maximum)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <ModelConfigurationCard
+        forecastHorizon={forecastHorizon}
+        setForecastHorizon={setForecastHorizon}
+        modelGranularity={modelGranularity}
+        setModelGranularity={setModelGranularity}
+        seasonality={seasonality}
+        setSeasonality={setSeasonality}
+        confidenceLevel={confidenceLevel}
+        setConfidenceLevel={setConfidenceLevel}
+        validationSplit={validationSplit}
+        setValidationSplit={setValidationSplit}
+        abcThresholdA={abcThresholdA}
+        setAbcThresholdA={setAbcThresholdA}
+        abcThresholdB={abcThresholdB}
+        setAbcThresholdB={setAbcThresholdB}
+        xyzThresholdX={xyzThresholdX}
+        setXyzThresholdX={setXyzThresholdX}
+        xyzThresholdY={xyzThresholdY}
+        setXyzThresholdY={setXyzThresholdY}
+        fmrThresholdF={fmrThresholdF}
+        setFmrThresholdF={setFmrThresholdF}
+        fmrThresholdM={fmrThresholdM}
+        setFmrThresholdM={setFmrThresholdM}
+        classificationBasis={classificationBasis}
+        setClassificationBasis={setClassificationBasis}
+      />
 
       {/* Data Sources Preview */}
       <Card>
