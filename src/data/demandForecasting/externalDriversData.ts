@@ -1,34 +1,5 @@
 // External drivers data in Foundry Feature Store format
 export const externalDriversData = {
-  "Holiday_Calendar": [
-    {
-      date: "2024-01-01",
-      holiday: "New Year's Day",
-      type: "National",
-      country: "USA",
-      region: "All",
-      impact: "High",
-      businessClosure: true
-    },
-    {
-      date: "2024-02-14",
-      holiday: "Valentine's Day",
-      type: "Commercial",
-      country: "USA",
-      region: "All",
-      impact: "High",
-      businessClosure: false
-    },
-    {
-      date: "2024-07-04",
-      holiday: "Independence Day",
-      type: "National",
-      country: "USA",
-      region: "All",
-      impact: "High",
-      businessClosure: true
-    }
-  ],
   "Event_Calendar": [
     {
       date: "2024-01-01",
@@ -965,7 +936,6 @@ export const externalDriversData = {
 export const getExternalDriverData = (driverName: string) => {
   // Map driver display names to data keys - aligned with Feature Store entities
   const driverKeyMap: Record<string, string> = {
-    "Holiday Calendar": "Holiday_Calendar",
     "Event Calendar": "Event_Calendar",
     "Crude Oil Prices": "Crude_Oil_Prices",
     "NSE Index": "NSE_Index",
