@@ -104,6 +104,7 @@ import { Line, Bar, Pie, Scatter } from "react-chartjs-2";
 import { CompactMetricCard } from "@/components/CompactMetricCard";
 import { CompactProjectionCard } from "@/components/CompactProjectionCard";
 import { DemandAnalysisChart } from "@/components/DemandAnalysisChart";
+import { ABCXYZMatrix } from "@/components/ABCXYZMatrix";
 
 // Data imports
 import { workbookData } from "@/data/demandForecasting/workbookData";
@@ -2909,8 +2910,11 @@ const DemandForecasting = () => {
 
         {activeTab === "insights" && (
           <div className="space-y-6 animate-fade-in">
-            {/* Top Row - Channel Distribution and ABC Classification */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* ABC-XYZ Segmentation Matrix - Full Width */}
+            <ABCXYZMatrix />
+
+            {/* Bottom Row - Channel Distribution and Classifications */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <Card className="shadow-card border-0">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm">
@@ -2930,7 +2934,7 @@ const DemandForecasting = () => {
                   <div className="flex items-center gap-2">
                     <CardTitle className="flex items-center gap-2 text-sm">
                       <BarChart3 className="w-4 h-4" />
-                      ABC Classification
+                      ABC Analysis
                     </CardTitle>
                     <Tooltip>
                       <TooltipTrigger>
@@ -2963,16 +2967,13 @@ const DemandForecasting = () => {
                   </div>
                 </CardContent>
               </Card>
-            </div>
 
-            {/* Bottom Row - Combined Value & Variability Analysis */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Card className="shadow-card border-0">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <CardTitle className="flex items-center gap-2 text-sm">
                       <BarChart3 className="w-4 h-4" />
-                      XYZ Classification
+                      XYZ Analysis
                     </CardTitle>
                     <Tooltip>
                       <TooltipTrigger>
@@ -2998,82 +2999,9 @@ const DemandForecasting = () => {
                       <span className="text-sm">Z (High Variability)</span>
                       <Badge variant="secondary" className="bg-destructive/10 text-destructive">25%</Badge>
                     </div>
-                    <div className="mt-4 pt-3 border-t space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-xs">Q1 2024</span>
-                        <span className="text-xs font-medium">$21.2M</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-xs">Q2 2024</span>
-                        <span className="text-xs font-medium">$22.1M</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-xs">Q3 2024</span>
-                        <span className="text-xs font-medium">$20.8M</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-xs">Q4 2024</span>
-                        <span className="text-xs font-medium">$20.5M</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-card border-0">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-sm">
-                      <TrendingUp className="w-4 h-4" />
-                      Combined Value & Variability Analysis
-                    </CardTitle>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Revenue breakdown by channel with statistical measures of demand patterns and forecast reliability.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="text-xs font-medium">Revenue by Channel</div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Direct Sales</span>
-                      <span className="text-sm font-medium">$29.6M</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Online</span>
-                      <span className="text-sm font-medium">$23.7M</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Retail</span>
-                      <span className="text-sm font-medium">$21.2M</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">B2B</span>
-                      <span className="text-sm font-medium">$10.1M</span>
-                    </div>
                     <div className="mt-4 pt-3 border-t">
-                      <div className="text-xs font-medium mb-2">Variability Metrics</div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted-foreground">Standard Deviation</span>
-                        <span className="text-xs font-medium">12.4%</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted-foreground">Coefficient of Variation</span>
-                        <span className="text-xs font-medium">15.8%</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted-foreground">Seasonal Index</span>
-                        <span className="text-xs font-medium">1.23</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted-foreground">Channel Efficiency</span>
-                        <span className="text-xs font-medium text-primary">85.2%</span>
-                      </div>
+                      <div className="text-2xl font-bold text-primary">1,501 SKUs</div>
+                      <p className="text-xs text-muted-foreground">Total Items Analyzed</p>
                     </div>
                   </div>
                 </CardContent>
