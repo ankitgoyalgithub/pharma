@@ -1627,7 +1627,7 @@ export default function Foundry() {
           </div>
 
           <TabsContent value="master" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredModules(masterEntities).map((module) => (
                 <EntityCard key={module.title} module={module} />
               ))}
@@ -1635,7 +1635,7 @@ export default function Foundry() {
           </TabsContent>
 
           <TabsContent value="timeseries" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredModules(timeseriesEntities).map((module) => (
                 <EntityCard key={module.title} module={module} />
               ))}
@@ -1643,7 +1643,7 @@ export default function Foundry() {
           </TabsContent>
 
           <TabsContent value="featurestore" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredModules(featureStoreEntities).map((module) => (
                 <EntityCard key={module.title} module={module} />
               ))}
