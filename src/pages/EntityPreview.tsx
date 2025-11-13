@@ -134,7 +134,7 @@ export default function EntityPreview() {
     <div className="min-h-screen bg-gradient-subtle">
       {/* Enhanced Header */}
       <div className="bg-card border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="px-6 py-6">
           <div className="flex items-start justify-between">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -223,7 +223,7 @@ export default function EntityPreview() {
       </div>
 
       {/* Enhanced Table Container */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="px-6 py-6">
         <Card className="shadow-sm border bg-card">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
