@@ -23,6 +23,7 @@ import { useTheme } from "next-themes";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { TopbarStepper } from "@/components/ModernStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
+import upsynqLogo from "@/assets/upsynq-logo.png";
 import {
   Sidebar,
   SidebarContent,
@@ -56,13 +57,24 @@ const AppSidebar = () => {
   return (
     <Sidebar className="border-r border-border w-56" collapsible="offcanvas">
       {/* Logo Header */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-border">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">U</span>
-          </div>
-          <span className="font-semibold text-lg text-foreground">UpSynq</span>
-        </div>
+      <div className="flex h-16 items-center justify-center px-4 border-b border-border">
+        <img 
+          src={upsynqLogo} 
+          alt="UpSynQ" 
+          className="h-10 w-auto object-contain"
+          onError={(e) => {
+            // Fallback to text if image fails to load
+            e.currentTarget.style.display = 'none';
+            const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+            if (fallback) fallback.style.display = 'block';
+          }}
+        />
+        <span 
+          className="font-bold text-2xl hidden"
+          style={{ color: '#E6B800', letterSpacing: '0.5px' }}
+        >
+          UpSynQ
+        </span>
       </div>
 
       <SidebarContent className="px-3 py-6">
