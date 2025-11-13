@@ -158,6 +158,7 @@ const DemandForecasting = () => {
     "NSE Index": "NSE_Index",
     "NASDAQ Index": "NASDAQ_Index",
     "Weather Data": "Weather_Data",
+    "Search Trends (Google Trends)": "Search_Trends",
   };
 
   // Stepper configuration
