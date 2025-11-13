@@ -49,6 +49,11 @@ export const foundryDataMapper = {
     { date: "2024-07-01", index: "NASDAQ", value: 18200, change: 85.2 },
     { date: "2024-07-02", index: "NASDAQ", value: 18150, change: -50.0 }
   ],
+  "Search_Trends": [
+    { date: "2023-01-01", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 38 },
+    { date: "2023-01-08", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 42 },
+    { date: "2023-01-15", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 50 }
+  ],
   
   // External Drivers Data (matching Foundry format)
   ...Object.fromEntries(

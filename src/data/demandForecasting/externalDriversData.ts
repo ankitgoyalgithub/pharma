@@ -929,6 +929,44 @@ export const externalDriversData = {
       complianceDeadline: "2025-06-30",
       status: "Active"
     }
+  ],
+  "Search_Trends": [
+    { date: "2023-01-01", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 38 },
+    { date: "2023-01-01", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 22 },
+    { date: "2023-01-01", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 41 },
+    { date: "2023-01-08", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 42 },
+    { date: "2023-01-08", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 25 },
+    { date: "2023-01-08", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 47 },
+    { date: "2023-01-15", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 45 },
+    { date: "2023-01-15", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 29 },
+    { date: "2023-01-15", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 50 },
+    { date: "2023-01-22", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 52 },
+    { date: "2023-01-22", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 35 },
+    { date: "2023-01-22", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 58 },
+    { date: "2023-01-29", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 57 },
+    { date: "2023-01-29", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 39 },
+    { date: "2023-01-29", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 61 },
+    { date: "2023-02-05", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 61 },
+    { date: "2023-02-05", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 45 },
+    { date: "2023-02-05", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 66 },
+    { date: "2023-02-12", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 68 },
+    { date: "2023-02-12", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 51 },
+    { date: "2023-02-12", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 72 },
+    { date: "2023-02-19", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 72 },
+    { date: "2023-02-19", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 57 },
+    { date: "2023-02-19", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 75 },
+    { date: "2023-02-26", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 76 },
+    { date: "2023-02-26", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 63 },
+    { date: "2023-02-26", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 78 },
+    { date: "2023-03-05", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 82 },
+    { date: "2023-03-05", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 71 },
+    { date: "2023-03-05", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 83 },
+    { date: "2023-03-12", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 88 },
+    { date: "2023-03-12", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 78 },
+    { date: "2023-03-12", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 89 },
+    { date: "2023-03-19", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 94 },
+    { date: "2023-03-19", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 84 },
+    { date: "2023-03-19", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 93 }
   ]
 };
 
@@ -948,6 +986,7 @@ export const getExternalDriverData = (driverName: string) => {
     "Commodity Prices": "Commodity_Prices",
     "Supply Chain Events": "Supply_Chain_Events",
     "Regulatory Changes": "Regulatory_Changes",
+    "Search Trends (Google Trends)": "Search_Trends",
   };
   
   const dataKey = driverKeyMap[driverName];

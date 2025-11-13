@@ -14,6 +14,7 @@ export const getExternalDrivers = (studyType: string, hasData: boolean = false) 
     { name: "Commodity Prices", autoSelected: false, icon: "Package" },
     { name: "Supply Chain Events", autoSelected: false, icon: "Truck" },
     { name: "Regulatory Changes", autoSelected: false, icon: "FileText" },
+    { name: "Search Trends (Google Trends)", autoSelected: false, icon: "TrendingUp" },
   ];
 
   // Return feature store drivers for all study types to maintain consistency
