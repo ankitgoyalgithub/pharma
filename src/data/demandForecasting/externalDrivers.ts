@@ -3,7 +3,7 @@ export const getExternalDrivers = (studyType: string, hasData: boolean = false) 
   // Common feature store drivers available for all study types
   const featureStoreDrivers = [
     { name: "Holiday Calendar", autoSelected: hasData, icon: "Calendar" },
-    { name: "Complete India and USA Event Calendar", autoSelected: false, icon: "CalendarDays" },
+    { name: "Event Calendar", autoSelected: false, icon: "CalendarDays" },
     { name: "Crude Oil Prices", autoSelected: false, icon: "Fuel" },
     { name: "NSE Index", autoSelected: false, icon: "TrendingUp" },
     { name: "NASDAQ Index", autoSelected: false, icon: "LineChart" },
