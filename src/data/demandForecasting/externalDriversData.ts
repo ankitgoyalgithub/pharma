@@ -29,7 +29,7 @@ export const externalDriversData = {
       businessClosure: true
     }
   ],
-  "Complete_India_USA_Event_Calendar": [
+  "Event_Calendar": [
     {
       date: "2024-01-01",
       event: "New Year's Day",
@@ -159,6 +159,296 @@ export const externalDriversData = {
       impact: "Very High",
       businessClosure: true,
       description: "Christmas celebration"
+    },
+    {
+      date: "2024-01-15",
+      event: "Martin Luther King Jr. Day",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "US Federal Holiday"
+    },
+    {
+      date: "2024-02-19",
+      event: "Presidents Day",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "US Federal Holiday"
+    },
+    {
+      date: "2024-03-29",
+      event: "Ram Navami",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "Medium",
+      businessClosure: false,
+      description: "Hindu festival"
+    },
+    {
+      date: "2024-04-11",
+      event: "Eid al-Fitr",
+      type: "Religious Holiday",
+      country: "India & USA",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "End of Ramadan"
+    },
+    {
+      date: "2024-04-14",
+      event: "Ambedkar Jayanti",
+      type: "National Holiday",
+      country: "India",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "Dr. B.R. Ambedkar's Birthday"
+    },
+    {
+      date: "2024-04-21",
+      event: "Easter Sunday",
+      type: "Religious Holiday",
+      country: "USA & India",
+      region: "All",
+      impact: "High",
+      businessClosure: false,
+      description: "Christian holiday"
+    },
+    {
+      date: "2024-05-01",
+      event: "May Day",
+      type: "National Holiday",
+      country: "India",
+      region: "Select States",
+      impact: "Medium",
+      businessClosure: true,
+      description: "International Workers' Day"
+    },
+    {
+      date: "2024-05-23",
+      event: "Buddha Purnima",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "Buddha's Birthday"
+    },
+    {
+      date: "2024-06-17",
+      event: "Eid al-Adha",
+      type: "Religious Holiday",
+      country: "India & USA",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "Festival of Sacrifice"
+    },
+    {
+      date: "2024-06-19",
+      event: "Juneteenth",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "US Federal Holiday"
+    },
+    {
+      date: "2024-07-04",
+      event: "Guru Purnima",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "Low",
+      businessClosure: false,
+      description: "Hindu festival honoring teachers"
+    },
+    {
+      date: "2024-07-17",
+      event: "Muharram",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "Islamic New Year"
+    },
+    {
+      date: "2024-08-15",
+      event: "Raksha Bandhan",
+      type: "Cultural Event",
+      country: "India",
+      region: "All",
+      impact: "Medium",
+      businessClosure: false,
+      description: "Hindu festival celebrating sibling bonds"
+    },
+    {
+      date: "2024-08-26",
+      event: "Janmashtami",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "Lord Krishna's Birthday"
+    },
+    {
+      date: "2024-09-02",
+      event: "Labor Day",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "US Federal Holiday"
+    },
+    {
+      date: "2024-09-07",
+      event: "Ganesh Chaturthi",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: true,
+      description: "Hindu festival celebrating Lord Ganesha"
+    },
+    {
+      date: "2024-09-16",
+      event: "Milad un-Nabi",
+      type: "Religious Holiday",
+      country: "India",
+      region: "Select States",
+      impact: "Medium",
+      businessClosure: true,
+      description: "Prophet Muhammad's Birthday"
+    },
+    {
+      date: "2024-10-12",
+      event: "Dussehra",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: true,
+      description: "Victory of good over evil"
+    },
+    {
+      date: "2024-10-14",
+      event: "Columbus Day",
+      type: "National Holiday",
+      country: "USA",
+      region: "Federal",
+      impact: "Low",
+      businessClosure: true,
+      description: "US Federal Holiday"
+    },
+    {
+      date: "2024-10-20",
+      event: "Karva Chauth",
+      type: "Cultural Event",
+      country: "India",
+      region: "North India",
+      impact: "Low",
+      businessClosure: false,
+      description: "Hindu festival observed by married women"
+    },
+    {
+      date: "2024-11-01",
+      event: "Diwali",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: true,
+      description: "Festival of Lights - Main Day"
+    },
+    {
+      date: "2024-11-02",
+      event: "Govardhan Puja",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "High",
+      businessClosure: false,
+      description: "Day after Diwali"
+    },
+    {
+      date: "2024-11-03",
+      event: "Bhai Dooj",
+      type: "Cultural Event",
+      country: "India",
+      region: "All",
+      impact: "Medium",
+      businessClosure: false,
+      description: "Celebrating sibling bonds"
+    },
+    {
+      date: "2024-11-11",
+      event: "Veterans Day",
+      type: "National Holiday",
+      country: "USA",
+      region: "All",
+      impact: "Medium",
+      businessClosure: true,
+      description: "US Federal Holiday"
+    },
+    {
+      date: "2024-11-15",
+      event: "Guru Nanak Jayanti",
+      type: "Religious Holiday",
+      country: "India",
+      region: "All",
+      impact: "High",
+      businessClosure: true,
+      description: "Sikh festival celebrating Guru Nanak's Birthday"
+    },
+    {
+      date: "2024-12-02",
+      event: "Cyber Monday",
+      type: "Commercial Event",
+      country: "USA & India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: false,
+      description: "Online shopping event"
+    },
+    {
+      date: "2024-12-24",
+      event: "Christmas Eve",
+      type: "Religious Holiday",
+      country: "USA & India",
+      region: "All",
+      impact: "High",
+      businessClosure: false,
+      description: "Day before Christmas"
+    },
+    {
+      date: "2024-12-26",
+      event: "Boxing Day",
+      type: "Commercial Event",
+      country: "USA & India",
+      region: "All",
+      impact: "High",
+      businessClosure: false,
+      description: "Post-Christmas shopping event"
+    },
+    {
+      date: "2024-12-31",
+      event: "New Year's Eve",
+      type: "Cultural Event",
+      country: "USA & India",
+      region: "All",
+      impact: "Very High",
+      businessClosure: false,
+      description: "Year-end celebration"
     }
   ],
   "Ad_Spend": [
@@ -595,7 +885,7 @@ export const getExternalDriverData = (driverName: string) => {
   // Map driver display names to data keys - aligned with Feature Store entities
   const driverKeyMap: Record<string, string> = {
     "Holiday Calendar": "Holiday_Calendar",
-    "Complete India and USA Event Calendar": "Complete_India_USA_Event_Calendar",
+    "Event Calendar": "Event_Calendar",
     "Crude Oil Prices": "Crude_Oil_Prices",
     "NSE Index": "NSE_Index",
     "NASDAQ Index": "NASDAQ_Index",
