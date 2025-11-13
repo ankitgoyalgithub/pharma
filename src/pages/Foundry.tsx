@@ -47,6 +47,7 @@ import {
   Sparkles,
   X,
   PlusCircle,
+  GitBranch,
 } from "lucide-react";
 
 // shadcn/ui extras
@@ -113,6 +114,7 @@ import {
   entityPreviewData,
   sourceTypeIcon
 } from "@/data/foundry";
+import { DataLineageDialog } from "@/components/DataLineageDialog";
 
 // ---------- Create Entity Wizard Types ----------
 interface SourcePreviewRow {
@@ -171,6 +173,10 @@ export default function Foundry() {
     } else {
       console.log("Sync", module.title);
     }
+  };
+  const handleLineage = (module: EntityModule, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLineageDialog({ open: true, entity: module });
   };
   const handleEdit = (module: EntityModule) => console.log("Edit", module.title);
   const handleDelete = (module: EntityModule) => console.log("Delete", module.title);
@@ -446,6 +452,10 @@ export default function Foundry() {
   const [openWizard, setOpenWizard] = useState(false);
   const [openAppendDialog, setOpenAppendDialog] = useState(false);
   const [selectedAppendEntity, setSelectedAppendEntity] = useState<string>("");
+  const [lineageDialog, setLineageDialog] = useState<{ open: boolean; entity: EntityModule | null }>({ 
+    open: false, 
+    entity: null 
+  });
   type StepType = 1 | 2 | 3 | 4 | 5;
   const [step, setStep] = useState<StepType>(1);
 
@@ -1190,6 +1200,15 @@ export default function Foundry() {
 
           {/* Action buttons with enhanced styling */}
           <div className="flex items-center gap-2 pt-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all border border-transparent"
+              onClick={(e) => handleLineage(module, e)}
+              title="View Data Lineage"
+            >
+              <GitBranch className="h-3.5 w-3.5" />
+            </Button>
             <Button
               size="sm"
               variant="outline"
@@ -1986,6 +2005,20 @@ export default function Foundry() {
         onOpenChange={setOpenAppendDialog}
         entityName={selectedAppendEntity}
       />
+
+      {/* Data Lineage Dialog */}
+      {lineageDialog.entity && (
+        <DataLineageDialog
+          open={lineageDialog.open}
+          onOpenChange={(open) => setLineageDialog({ open, entity: null })}
+          entityTitle={lineageDialog.entity.title}
+          entityType={
+            masterEntities.includes(lineageDialog.entity) ? "master" :
+            timeseriesEntities.includes(lineageDialog.entity) ? "timeseries" :
+            "featurestore"
+          }
+        />
+      )}
     </div>
   );
 }
