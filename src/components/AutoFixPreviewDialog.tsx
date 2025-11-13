@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,14 +7,15 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Eye, CheckCircle2, ArrowRight } from "lucide-react";
+import { Eye, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface DefectiveRow {
   rowNumber: number;
-  defectiveValue: string | null;
+  column: string;
+  currentValue: string | null;
   correctedValue?: string;
-  context?: Record<string, string | number>;
 }
 
 interface AutoFixPreviewDialogProps {
@@ -29,49 +30,36 @@ interface AutoFixPreviewDialogProps {
 
 // Mock defective rows data
 const generateDefectiveRows = (issueType: string, count: number, isApproved: boolean): DefectiveRow[] => {
-  const sampleCount = Math.min(count, 10);
   const rows: DefectiveRow[] = [];
   
-  for (let i = 0; i < sampleCount; i++) {
-    const rowNumber = Math.floor(Math.random() * 1000) + 1;
+  for (let i = 0; i < count; i++) {
+    const rowNumber = Math.floor(Math.random() * 10000) + 1;
     
     switch (issueType) {
       case "Missing Values":
         rows.push({
           rowNumber,
-          defectiveValue: null,
+          column: "product_id",
+          currentValue: null,
           correctedValue: isApproved ? `AUTO_${String(rowNumber).padStart(5, '0')}` : undefined,
-          context: {
-            sku: `SKU-${rowNumber}`,
-            product_name: `Product ${rowNumber}`,
-            category: "Electronics",
-          },
         });
         break;
       
       case "Duplicates":
         rows.push({
           rowNumber,
-          defectiveValue: `user${i % 3}@example.com`,
-          correctedValue: isApproved ? `user${i % 3}@example.com (merged)` : undefined,
-          context: {
-            email: `user${i % 3}@example.com`,
-            name: `John Doe ${i}`,
-            created_at: "2024-01-15",
-          },
+          column: "email",
+          currentValue: `user${i % 3}@example.com`,
+          correctedValue: isApproved ? `user${i % 3}_merged@example.com` : undefined,
         });
         break;
       
       case "Data Format":
         rows.push({
           rowNumber,
-          defectiveValue: `CAT-${Math.floor(Math.random() * 999)}`,
+          column: "category_code",
+          currentValue: `CAT-${Math.floor(Math.random() * 999)}`,
           correctedValue: isApproved ? `CATEGORY_${String(i + 1).padStart(2, '0')}` : undefined,
-          context: {
-            original_code: `CAT-${Math.floor(Math.random() * 999)}`,
-            product_id: `P-${rowNumber}`,
-            status: "active",
-          },
         });
         break;
       
@@ -79,51 +67,36 @@ const generateDefectiveRows = (issueType: string, count: number, isApproved: boo
         const outlierValue = Math.random() > 0.5 ? 999999 : 0.01;
         rows.push({
           rowNumber,
-          defectiveValue: `$${outlierValue.toFixed(2)}`,
+          column: "price",
+          currentValue: `$${outlierValue.toFixed(2)}`,
           correctedValue: isApproved ? `$${(Math.random() * 100 + 50).toFixed(2)}` : undefined,
-          context: {
-            price: outlierValue,
-            product_id: `P-${rowNumber}`,
-            avg_market_price: "$75.00",
-          },
         });
         break;
       
       case "Stale Data":
         rows.push({
           rowNumber,
-          defectiveValue: "2020-03-15",
+          column: "last_updated",
+          currentValue: "2020-03-15",
           correctedValue: isApproved ? "Archived" : undefined,
-          context: {
-            record_id: `REC-${rowNumber}`,
-            last_updated: "2020-03-15",
-            status: "inactive",
-          },
         });
         break;
       
       case "Data Integrity":
         rows.push({
           rowNumber,
-          defectiveValue: `-${Math.floor(Math.random() * 50) + 1}`,
+          column: "quantity",
+          currentValue: `-${Math.floor(Math.random() * 50) + 1}`,
           correctedValue: isApproved ? String(Math.floor(Math.random() * 50) + 1) : undefined,
-          context: {
-            quantity: -Math.floor(Math.random() * 50) + 1,
-            product_id: `P-${rowNumber}`,
-            warehouse: "WH-01",
-          },
         });
         break;
       
       default:
         rows.push({
           rowNumber,
-          defectiveValue: "invalid_data",
+          column: "field",
+          currentValue: "invalid_data",
           correctedValue: isApproved ? "valid_data" : undefined,
-          context: {
-            field1: "value1",
-            field2: "value2",
-          },
         });
     }
   }
@@ -140,7 +113,19 @@ export const AutoFixPreviewDialog: React.FC<AutoFixPreviewDialogProps> = ({
   affectedRows,
   isApproved = false,
 }) => {
-  const defectiveRows = generateDefectiveRows(issueType, affectedRows, isApproved);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
+  
+  const defectiveRows = useMemo(
+    () => generateDefectiveRows(issueType, affectedRows, isApproved),
+    [issueType, affectedRows, isApproved]
+  );
+
+  const totalPages = Math.ceil(defectiveRows.length / itemsPerPage);
+  const paginatedRows = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return defectiveRows.slice(start, start + itemsPerPage);
+  }, [defectiveRows, currentPage]);
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -150,16 +135,14 @@ export const AutoFixPreviewDialog: React.FC<AutoFixPreviewDialogProps> = ({
             <div className="p-2 rounded-lg bg-primary/10">
               <Eye className="h-5 w-5 text-primary" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                Defective Rows Preview
-                {isApproved && (
-                  <Badge className="bg-green-500 gap-1">
-                    <CheckCircle2 className="h-3 w-3" />
-                    Fixed
-                  </Badge>
-                )}
-              </div>
+            <div className="flex items-center gap-2">
+              Defective Rows Preview
+              {isApproved && (
+                <Badge className="bg-green-500 gap-1">
+                  <CheckCircle2 className="h-3 w-3" />
+                  Fixed
+                </Badge>
+              )}
             </div>
           </DialogTitle>
           <DialogDescription>
@@ -167,69 +150,78 @@ export const AutoFixPreviewDialog: React.FC<AutoFixPreviewDialogProps> = ({
               <p><strong>Issue:</strong> {issue}</p>
               <p><strong>Type:</strong> {issueType}</p>
               <p><strong>Suggested Fix:</strong> {suggestedFix}</p>
-              <p className="text-sm text-muted-foreground">
-                Showing {Math.min(10, affectedRows)} of {affectedRows} affected rows
-              </p>
             </div>
           </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="flex-1 -mx-6 px-6">
-          <div className="space-y-3 pb-4">
-            {defectiveRows.map((row, index) => (
-              <div
-                key={index}
-                className="border rounded-lg p-4 bg-card hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <Badge variant="outline" className="font-mono text-xs">
-                    Row #{row.rowNumber}
-                  </Badge>
-                </div>
-
-                {/* Context Information */}
-                {row.context && (
-                  <div className="grid grid-cols-3 gap-3 mb-3 p-3 bg-muted/30 rounded-md">
-                    {Object.entries(row.context).map(([key, value]) => (
-                      <div key={key} className="text-sm">
-                        <span className="text-muted-foreground font-medium">{key}:</span>{" "}
-                        <span className="font-mono">{String(value)}</span>
+          <div className="border rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50 sticky top-0">
+                <tr className="border-b">
+                  <th className="text-left px-4 py-3 font-semibold">Row #</th>
+                  <th className="text-left px-4 py-3 font-semibold">Column</th>
+                  <th className="text-left px-4 py-3 font-semibold">Current Value</th>
+                  {isApproved && (
+                    <th className="text-left px-4 py-3 font-semibold">Corrected Value</th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedRows.map((row, index) => (
+                  <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-3 font-mono text-muted-foreground">
+                      {row.rowNumber}
+                    </td>
+                    <td className="px-4 py-3 font-medium">{row.column}</td>
+                    <td className="px-4 py-3">
+                      <div className="font-mono text-sm">
+                        {row.currentValue || (
+                          <span className="italic text-muted-foreground">null</span>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Defective vs Corrected Values */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <p className="text-xs font-medium text-muted-foreground mb-1">
-                      Defective Value
-                    </p>
-                    <div className="p-2 bg-destructive/10 border border-destructive/30 rounded text-sm font-mono">
-                      {row.defectiveValue || (
-                        <span className="italic text-muted-foreground">null</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {isApproved && row.correctedValue && (
-                    <>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-6" />
-                      <div className="flex-1">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">
-                          Corrected Value
-                        </p>
-                        <div className="p-2 bg-green-50 dark:bg-green-950/30 border border-green-500/30 rounded text-sm font-mono">
+                    </td>
+                    {isApproved && (
+                      <td className="px-4 py-3">
+                        <div className="font-mono text-sm text-green-600 dark:text-green-400">
                           {row.correctedValue}
                         </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </ScrollArea>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-between pt-4 border-t">
+          <div className="text-sm text-muted-foreground">
+            Showing {Math.min((currentPage - 1) * itemsPerPage + 1, defectiveRows.length)} - {Math.min(currentPage * itemsPerPage, defectiveRows.length)} of {defectiveRows.length} rows
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
