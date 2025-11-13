@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, XCircle, Sparkles, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, Search, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { AutoFixPreviewDialog } from "@/components/AutoFixPreviewDialog";
 
 interface AutoFixSuggestion {
   id: string;
@@ -161,6 +162,10 @@ export const AutoFixSuggestionsPanel: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [issueTypeFilter, setIssueTypeFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [previewDialog, setPreviewDialog] = useState<{
+    open: boolean;
+    suggestion: AutoFixSuggestion | null;
+  }>({ open: false, suggestion: null });
   const itemsPerPage = 10;
   const { toast } = useToast();
 
@@ -252,6 +257,7 @@ export const AutoFixSuggestionsPanel: React.FC = () => {
                 <th className="text-left px-3 py-2 font-medium text-muted-foreground">Suggested Fix</th>
                 <th className="text-left px-3 py-2 font-medium text-muted-foreground">Detected</th>
                 <th className="text-left px-3 py-2 font-medium text-muted-foreground">Confidence</th>
+                <th className="text-left px-3 py-2 font-medium text-muted-foreground">Preview</th>
                 <th className="text-left px-3 py-2 font-medium text-muted-foreground">Action</th>
               </tr>
             </thead>
@@ -289,6 +295,17 @@ export const AutoFixSuggestionsPanel: React.FC = () => {
                     >
                       {(suggestion.confidence * 100).toFixed(0)}%
                     </Badge>
+                  </td>
+                  <td className="px-3 py-3">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setPreviewDialog({ open: true, suggestion })}
+                      className="h-8 w-8 p-0"
+                      title="Preview defective rows"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
                   </td>
                   <td className="px-3 py-3">
                     {!suggestion.status ? (
@@ -363,6 +380,19 @@ export const AutoFixSuggestionsPanel: React.FC = () => {
           💡 Auto-apply if confidence ≥ 0.85. All fixes are versioned and reversible.
         </div>
       </CardContent>
+
+      {/* Preview Dialog */}
+      {previewDialog.suggestion && (
+        <AutoFixPreviewDialog
+          open={previewDialog.open}
+          onOpenChange={(open) => setPreviewDialog({ open, suggestion: null })}
+          issue={previewDialog.suggestion.issue}
+          issueType={previewDialog.suggestion.issueType}
+          suggestedFix={previewDialog.suggestion.suggestedFix}
+          affectedRows={previewDialog.suggestion.affectedRows}
+          isApproved={previewDialog.suggestion.status === "approved"}
+        />
+      )}
     </Card>
   );
 };
