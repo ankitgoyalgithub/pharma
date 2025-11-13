@@ -2194,7 +2194,7 @@ const DemandForecasting = () => {
             />
             </div>
 
-            <div>
+            <div className="flex justify-center">
             <ForecastCard
               title="Impact Analysis"
               value="10K"
