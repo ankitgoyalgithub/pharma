@@ -42,9 +42,39 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: "PRD017", sku: "SWT-Q-017", name: "Smart Switch Q", category: "Electronics", subcategory: "Switches", brand: "SmartHome", manufacturer: "SmartHome Technologies", unit: "units", unitCost: 22.00, price: 39.99, margin: 45.0, leadTime: 12, moq: 250, weight: 0.3, dimensions: "10x8x3", status: "Active" },
       { id: "PRD018", sku: "RST-R-018", name: "Rust Inhibitor R", category: "Chemicals", subcategory: "Coatings", brand: "ChemShield", manufacturer: "ChemShield Products", unit: "liters", unitCost: 12.50, price: 21.99, margin: 43.2, leadTime: 8, moq: 400, weight: 1.2, dimensions: "12x10x28", status: "Active" },
       { id: "PRD019", sku: "LBL-S-019", name: "Industrial Label S", category: "Packaging", subcategory: "Labels", brand: "LabelPro", manufacturer: "LabelPro Solutions", unit: "rolls", unitCost: 15.80, price: 27.50, margin: 42.5, leadTime: 5, moq: 1000, weight: 0.5, dimensions: "20x10x10", status: "Active" },
-      { id: "PRD020", sku: "SPR-T-020", name: "Compression Spring T", category: "Hardware", subcategory: "Springs", brand: "SpringTech", manufacturer: "SpringTech Manufacturing", unit: "pieces", unitCost: 1.25, price: 2.15, margin: 41.9, leadTime: 10, moq: 5000, weight: 0.05, dimensions: "5x1x1", status: "Active" }
+      { id: "PRD020", sku: "SPR-T-020", name: "Compression Spring T", category: "Hardware", subcategory: "Springs", brand: "SpringTech", manufacturer: "SpringTech Manufacturing", unit: "pieces", unitCost: 1.25, price: 2.15, margin: 41.9, leadTime: 10, moq: 5000, weight: 0.05, dimensions: "5x1x1", status: "Active" },
+      { id: "PRD021", sku: "CIR-U-021", name: "Circuit Board U", category: "Electronics", subcategory: "PCB", brand: "CircuitPro", manufacturer: "CircuitPro Manufacturing", unit: "pieces", unitCost: 35.00, price: 59.99, margin: 41.7, leadTime: 16, moq: 150, weight: 0.4, dimensions: "12x10x0.5", status: "Active" },
+      { id: "PRD022", sku: "CAB-V-022", name: "Power Cable V", category: "Electronics", subcategory: "Cables", brand: "CableTech", manufacturer: "CableTech Industries", unit: "meters", unitCost: 2.50, price: 4.25, margin: 41.2, leadTime: 7, moq: 2000, weight: 0.15, dimensions: "N/A", status: "Active" },
+      { id: "PRD023", sku: "FLT-W-023", name: "Air Filter W", category: "Industrial", subcategory: "Filters", brand: "FilterPro", manufacturer: "FilterPro Systems", unit: "units", unitCost: 18.00, price: 31.50, margin: 42.9, leadTime: 11, moq: 300, weight: 0.7, dimensions: "20x15x5", status: "Active" },
+      { id: "PRD024", sku: "GAS-X-024", name: "Gasket Set X", category: "Hardware", subcategory: "Seals", brand: "SealTech", manufacturer: "SealTech Solutions", unit: "sets", unitCost: 8.50, price: 14.99, margin: 43.3, leadTime: 9, moq: 500, weight: 0.25, dimensions: "15x12x2", status: "Active" },
+      { id: "PRD025", sku: "INS-Y-025", name: "Thermal Insulation Y", category: "Raw Materials", subcategory: "Insulation", brand: "InsulateCorp", manufacturer: "InsulateCorp Industries", unit: "sqm", unitCost: 12.00, price: 20.50, margin: 41.5, leadTime: 12, moq: 500, weight: 0.8, dimensions: "100x50x2", status: "Active" },
+      { id: "PRD026", sku: "LUB-Z-026", name: "Industrial Lubricant Z", category: "Chemicals", subcategory: "Lubricants", brand: "LubeTech", manufacturer: "LubeTech Products", unit: "liters", unitCost: 15.50, price: 26.99, margin: 42.4, leadTime: 8, moq: 400, weight: 1.0, dimensions: "15x10x25", status: "Active" },
+      { id: "PRD027", sku: "REL-AA-027", name: "Safety Relay AA", category: "Electronics", subcategory: "Relays", brand: "SafetyTech", manufacturer: "SafetyTech Systems", unit: "pieces", unitCost: 45.50, price: 78.99, margin: 42.4, leadTime: 18, moq: 100, weight: 0.5, dimensions: "10x8x6", status: "Active" },
+      { id: "PRD028", sku: "DRL-AB-028", name: "Drill Bit Set AB", category: "Industrial", subcategory: "Tools", brand: "DrillMaster", manufacturer: "DrillMaster Tools", unit: "sets", unitCost: 28.00, price: 48.50, margin: 42.3, leadTime: 10, moq: 200, weight: 1.5, dimensions: "30x15x5", status: "Active" },
+      { id: "PRD029", sku: "THM-AC-029", name: "Thermostat AC", category: "Electronics", subcategory: "Controls", brand: "TempControl", manufacturer: "TempControl Systems", unit: "units", unitCost: 55.00, price: 95.99, margin: 42.7, leadTime: 15, moq: 80, weight: 0.6, dimensions: "12x10x4", status: "Active" },
+      { id: "PRD030", sku: "PMP-AD-030", name: "Water Pump AD", category: "Industrial", subcategory: "Pumps", brand: "FlowPro", manufacturer: "FlowPro Engineering", unit: "units", unitCost: 185.00, price: 319.99, margin: 42.2, leadTime: 25, moq: 40, weight: 8.5, dimensions: "35x30x25", status: "Active" },
+      { id: "PRD031", sku: "LED-AE-031", name: "LED Strip AE", category: "Electronics", subcategory: "Lighting", brand: "LightTech", manufacturer: "LightTech Solutions", unit: "meters", unitCost: 8.50, price: 14.99, margin: 43.3, leadTime: 7, moq: 1000, weight: 0.1, dimensions: "N/A", status: "Active" },
+      { id: "PRD032", sku: "GLV-AF-032", name: "Safety Gloves AF", category: "Industrial", subcategory: "PPE", brand: "SafetyFirst", manufacturer: "SafetyFirst Products", unit: "pairs", unitCost: 4.50, price: 7.99, margin: 43.7, leadTime: 5, moq: 2000, weight: 0.15, dimensions: "N/A", status: "Active" },
+      { id: "PRD033", sku: "ANT-AG-033", name: "Antenna AG", category: "Electronics", subcategory: "RF Components", brand: "SignalPro", manufacturer: "SignalPro Technologies", unit: "pieces", unitCost: 62.00, price: 107.99, margin: 42.6, leadTime: 20, moq: 75, weight: 0.8, dimensions: "25x5x5", status: "Active" },
+      { id: "PRD034", sku: "BAT-AH-034", name: "Battery Pack AH", category: "Electronics", subcategory: "Power", brand: "PowerCell", manufacturer: "PowerCell Industries", unit: "units", unitCost: 38.00, price: 65.99, margin: 42.4, leadTime: 14, moq: 150, weight: 1.2, dimensions: "15x10x8", status: "Active" },
+      { id: "PRD035", sku: "CLM-AI-035", name: "Clamp Set AI", category: "Hardware", subcategory: "Fasteners", brand: "ClampMaster", manufacturer: "ClampMaster Tools", unit: "sets", unitCost: 12.50, price: 21.99, margin: 43.1, leadTime: 8, moq: 400, weight: 0.9, dimensions: "20x15x10", status: "Active" },
+      { id: "PRD036", sku: "DSP-AJ-036", name: "Display Panel AJ", category: "Electronics", subcategory: "Displays", brand: "ViewTech", manufacturer: "ViewTech Electronics", unit: "pieces", unitCost: 95.00, price: 164.99, margin: 42.4, leadTime: 22, moq: 50, weight: 2.5, dimensions: "30x20x3", status: "Active" },
+      { id: "PRD037", sku: "ENC-AK-037", name: "Encoder AK", category: "Electronics", subcategory: "Sensors", brand: "EncodePro", manufacturer: "EncodePro Systems", unit: "units", unitCost: 52.00, price: 89.99, margin: 42.2, leadTime: 17, moq: 100, weight: 0.4, dimensions: "10x8x6", status: "Active" },
+      { id: "PRD038", sku: "FAN-AL-038", name: "Cooling Fan AL", category: "Hardware", subcategory: "Cooling", brand: "CoolFlow", manufacturer: "CoolFlow Technologies", unit: "pieces", unitCost: 22.00, price: 38.50, margin: 42.9, leadTime: 10, moq: 250, weight: 0.7, dimensions: "15x15x5", status: "Active" },
+      { id: "PRD039", sku: "GEN-AM-039", name: "Generator AM", category: "Industrial", subcategory: "Power Generation", brand: "GenPower", manufacturer: "GenPower Systems", unit: "units", unitCost: 850.00, price: 1475.00, margin: 42.4, leadTime: 45, moq: 10, weight: 85.0, dimensions: "100x60x80", status: "Active" },
+      { id: "PRD040", sku: "HOS-AN-040", name: "Hydraulic Hose AN", category: "Industrial", subcategory: "Hoses", brand: "HoseTech", manufacturer: "HoseTech Products", unit: "meters", unitCost: 18.00, price: 31.50, margin: 42.9, leadTime: 9, moq: 300, weight: 0.6, dimensions: "N/A", status: "Active" },
+      { id: "PRD041", sku: "INV-AO-041", name: "Power Inverter AO", category: "Electronics", subcategory: "Power", brand: "InvertPro", manufacturer: "InvertPro Systems", unit: "units", unitCost: 145.00, price: 252.00, margin: 42.5, leadTime: 20, moq: 50, weight: 4.5, dimensions: "30x25x15", status: "Active" },
+      { id: "PRD042", sku: "JNT-AP-042", name: "Pipe Joint AP", category: "Hardware", subcategory: "Plumbing", brand: "PipePro", manufacturer: "PipePro Solutions", unit: "pieces", unitCost: 6.50, price: 11.50, margin: 43.5, leadTime: 7, moq: 800, weight: 0.35, dimensions: "8x6x6", status: "Active" },
+      { id: "PRD043", sku: "KIT-AQ-043", name: "Maintenance Kit AQ", category: "Industrial", subcategory: "Kits", brand: "MaintainPro", manufacturer: "MaintainPro Products", unit: "kits", unitCost: 65.00, price: 112.99, margin: 42.4, leadTime: 12, moq: 75, weight: 2.8, dimensions: "35x25x15", status: "Active" },
+      { id: "PRD044", sku: "LCK-AR-044", name: "Industrial Lock AR", category: "Hardware", subcategory: "Security", brand: "SecureLock", manufacturer: "SecureLock Industries", unit: "units", unitCost: 28.00, price: 48.99, margin: 42.9, leadTime: 10, moq: 200, weight: 1.2, dimensions: "12x8x8", status: "Active" },
+      { id: "PRD045", sku: "MEM-AS-045", name: "Memory Module AS", category: "Electronics", subcategory: "Computer Parts", brand: "MemTech", manufacturer: "MemTech Electronics", unit: "pieces", unitCost: 42.00, price: 72.99, margin: 42.5, leadTime: 15, moq: 125, weight: 0.05, dimensions: "15x3x1", status: "Active" },
+      { id: "PRD046", sku: "NUT-AT-046", name: "Hex Nut Set AT", category: "Hardware", subcategory: "Fasteners", brand: "FastenPro", manufacturer: "FastenPro Manufacturing", unit: "sets", unitCost: 3.50, price: 6.25, margin: 44.0, leadTime: 5, moq: 3000, weight: 0.2, dimensions: "10x8x3", status: "Active" },
+      { id: "PRD047", sku: "OPT-AU-047", name: "Optical Sensor AU", category: "Electronics", subcategory: "Sensors", brand: "OptiSense", manufacturer: "OptiSense Technologies", unit: "units", unitCost: 58.00, price: 100.50, margin: 42.3, leadTime: 18, moq: 90, weight: 0.3, dimensions: "8x6x4", status: "Active" },
+      { id: "PRD048", sku: "PLG-AV-048", name: "Power Plug AV", category: "Electronics", subcategory: "Connectors", brand: "PlugTech", manufacturer: "PlugTech Solutions", unit: "pieces", unitCost: 5.50, price: 9.75, margin: 43.6, leadTime: 6, moq: 1500, weight: 0.1, dimensions: "6x5x4", status: "Active" },
+      { id: "PRD049", sku: "RAD-AW-049", name: "Radiator AW", category: "Industrial", subcategory: "Cooling", brand: "CoolCore", manufacturer: "CoolCore Systems", unit: "units", unitCost: 125.00, price: 217.00, margin: 42.4, leadTime: 22, moq: 40, weight: 8.0, dimensions: "50x40x10", status: "Active" },
+      { id: "PRD050", sku: "SCW-AX-050", name: "Screw Set AX", category: "Hardware", subcategory: "Fasteners", brand: "ScrewMaster", manufacturer: "ScrewMaster Products", unit: "sets", unitCost: 4.00, price: 7.15, margin: 44.1, leadTime: 5, moq: 2500, weight: 0.3, dimensions: "12x10x4", status: "Active" }
     ],
-    stats: { totalRecords: 2847, lastSync: "2025-07-21 15:20", source: "Snowflake" }
+    stats: { totalRecords: 50, lastSync: "2025-07-21 15:20", source: "Snowflake" }
   },
   "location": {
     title: "Location Master",
@@ -82,7 +112,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: "LOC014", name: "San Diego Coastal Warehouse", type: "Warehouse", region: "West", city: "San Diego", state: "CA", zipCode: "92101", capacity: 88000, utilization: 85.9, manager: "Maria Rodriguez", employees: 72, operatingHours: "Mon-Fri 7am-7pm", temperature: "Standard", status: "Active" },
       { id: "LOC015", name: "Detroit Auto Parts Hub", type: "Fulfillment", region: "Midwest", city: "Detroit", state: "MI", zipCode: "48201", capacity: 115000, utilization: 88.2, manager: "Thomas White", employees: 98, operatingHours: "24/7", temperature: "Standard", status: "Active" }
     ],
-    stats: { totalRecords: 487, lastSync: "2025-07-18 09:45", source: "CSV Upload" }
+    stats: { totalRecords: 15, lastSync: "2025-07-18 09:45", source: "CSV Upload" }
   },
   "customer": {
     title: "Customer Master",
@@ -121,7 +151,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: "CUST014", name: "Financial Services Group", type: "Enterprise", industry: "Finance", segment: "Strategic", country: "USA", region: "Northeast", accountManager: "Maria Rodriguez", creditLimit: 650000, outstandingBalance: 185000, paymentTerms: "Net 45", annualRevenue: 1850000, customerSince: "2017-08-17", lifetimeValue: 13150000, status: "Active" },
       { id: "CUST015", name: "Automotive Parts Wholesale", type: "Mid-Market", industry: "Automotive", segment: "Growth", country: "USA", region: "Midwest", accountManager: "Thomas White", creditLimit: 320000, outstandingBalance: 89000, paymentTerms: "Net 30", annualRevenue: 745000, customerSince: "2020-01-25", lifetimeValue: 3580000, status: "Active" }
     ],
-    stats: { totalRecords: 1256, lastSync: "2025-07-20 14:30", source: "Salesforce" }
+    stats: { totalRecords: 15, lastSync: "2025-07-20 14:30", source: "Salesforce" }
   },
   "sales-history": {
     title: "Sales History",
@@ -163,7 +193,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { transactionId: "TXN20240705002", date: "2024-07-05", time: "12:08:44", productId: "PRD012", product: "Carbon Fiber Sheet L", customerId: "CUST002", customer: "Global Tech Solutions", locationId: "LOC014", location: "San Diego Coastal Warehouse", quantity: 220, unitPrice: 75.00, discount: 9, revenue: 15015.00, cost: 9900.00, profit: 5115.00, channel: "Direct Sales", paymentMethod: "Net 45", salesRep: "Maria Rodriguez" },
       { transactionId: "TXN20240705003", date: "2024-07-05", time: "16:33:51", productId: "PRD016", product: "Heavy-Duty Bearing P", customerId: "CUST015", customer: "Automotive Parts Wholesale", locationId: "LOC015", location: "Detroit Auto Parts Hub", quantity: 600, unitPrice: 32.50, discount: 7, revenue: 18135.00, cost: 11250.00, profit: 6885.00, channel: "B2B", paymentMethod: "Net 30", salesRep: "Thomas White" }
     ],
-    stats: { totalRecords: 18542, lastSync: "2025-07-19 18:15", source: "HDFS" }
+    stats: { totalRecords: 15, lastSync: "2025-07-19 18:15", source: "HDFS" }
   },
   "copper-prices": {
     title: "Copper Prices",
@@ -201,7 +231,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: 14, date: "2024-01-25", time: "16:00", commodity: "Copper", exchange: "LME", contractMonth: "Apr-24", unit: "USD/MT", openPrice: 8865.25, highPrice: 8945.00, lowPrice: 8860.00, closePrice: 8925.00, volume: 162340, openInterest: 367450, change: 59.75, changePercent: 0.7 },
       { id: 15, date: "2024-01-26", time: "16:00", commodity: "Copper", exchange: "LME", contractMonth: "Apr-24", unit: "USD/MT", openPrice: 8925.00, highPrice: 8950.75, lowPrice: 8885.50, closePrice: 8910.25, volume: 151230, openInterest: 369870, change: -14.75, changePercent: -0.2 }
     ],
-    stats: { totalRecords: 15846, lastSync: "2025-07-20 22:00", source: "Google Drive" }
+    stats: { totalRecords: 15, lastSync: "2025-07-20 22:00", source: "Google Drive" }
   },
   "holiday-calendar": {
     title: "Holiday Calendar",
@@ -241,7 +271,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: 19, date: "2024-11-29", holiday: "Black Friday", country: "USA", region: "National", type: "Commercial", category: "Retail", businessClosed: "No", banksClosed: "No", impact: "Low", demandTrend: "Extreme", notes: "Largest retail sales day, holiday shopping starts" },
       { id: 20, date: "2024-12-25", holiday: "Christmas Day", country: "Global", region: "Christian Majority", type: "Religious", category: "Christian", businessClosed: "Yes", banksClosed: "Yes", impact: "Very High", demandTrend: "Extreme", notes: "Complete business closure, peak retail season" }
     ],
-    stats: { totalRecords: 3456, lastSync: "2025-07-21 07:00", source: "Oracle" }
+    stats: { totalRecords: 20, lastSync: "2025-07-21 07:00", source: "Oracle" }
   },
   "crude-oil-prices": {
     title: "Crude Oil Prices",
@@ -278,7 +308,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: 14, date: "2024-02-01", time: "16:00", benchmark: "Dubai Crude", exchange: "DME", contractMonth: "Apr-24", openPrice: 79.85, highPrice: 80.65, lowPrice: 79.75, closePrice: 80.35, volume: 892, openInterest: 180450, change: 0.50, changePercent: 0.6 },
       { id: 15, date: "2024-02-02", time: "16:00", benchmark: "Brent Crude", exchange: "ICE", contractMonth: "May-24", openPrice: 84.95, highPrice: 85.85, lowPrice: 84.55, closePrice: 85.45, volume: 2512, openInterest: 469580, change: 0.50, changePercent: 0.6 }
     ],
-    stats: { totalRecords: 22825, lastSync: "2025-07-21 06:15", source: "Google Drive" }
+    stats: { totalRecords: 15, lastSync: "2025-07-21 06:15", source: "Google Drive" }
   },
   "nse-index": {
     title: "NSE Index",
@@ -315,7 +345,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: 14, date: "2024-02-01", time: "15:30", index: "NIFTY Infrastructure", openValue: 6789.45, highValue: 6845.67, lowValue: 6756.78, closeValue: 6812.34, change: 22.89, changePercent: 0.34, volume: 78.90, turnover: 8901.23, pe: 24.6, pb: 3.2 },
       { id: 15, date: "2024-02-02", time: "15:30", index: "NIFTY Commodities", openValue: 7456.78, highValue: 7523.45, lowValue: 7434.56, closeValue: 7489.23, change: 32.45, changePercent: 0.44, volume: 56.78, turnover: 6789.45, pe: 16.8, pb: 2.1 }
     ],
-    stats: { totalRecords: 18650, lastSync: "2025-07-21 09:45", source: "Snowflake" }
+    stats: { totalRecords: 15, lastSync: "2025-07-21 09:45", source: "Snowflake" }
   },
   "nasdaq-index": {
     title: "NASDAQ Index",
@@ -351,7 +381,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: 14, date: "2024-02-01", time: "16:00", index: "NASDAQ Composite", openValue: 15356.78, highValue: 15489.45, lowValue: 15334.23, closeValue: 15445.67, change: 88.89, changePercent: 0.58, volume: 4.67, advancers: 2234, decliners: 1745 },
       { id: 15, date: "2024-02-02", time: "16:00", index: "NASDAQ 100", openValue: 17989.56, highValue: 18123.45, lowValue: 17945.78, closeValue: 18067.89, change: 78.33, changePercent: 0.44, volume: 4.12, advancers: 2089, decliners: 1889 }
     ],
-    stats: { totalRecords: 24380, lastSync: "2025-07-21 10:30", source: "Oracle" }
+    stats: { totalRecords: 15, lastSync: "2025-07-21 10:30", source: "Oracle" }
   },
   "weather-data": {
     title: "Weather Data",
@@ -391,6 +421,6 @@ export const entityPreviewData: EntityPreviewMap = {
       { id: 14, date: "2024-07-01", time: "16:00", locationId: "LOC009", location: "Atlanta, GA", latitude: 33.7490, longitude: -84.3880, temperature: 91, feelsLike: 98, humidity: 58, pressure: 1010, windSpeed: 8, windDirection: "SE", precipitation: 0.0, visibility: 10, uvIndex: 9, weatherCondition: "Hot & Humid" },
       { id: 15, date: "2024-07-01", time: "16:00", locationId: "LOC010", location: "Denver, CO", latitude: 39.7392, longitude: -104.9903, temperature: 85, feelsLike: 83, humidity: 28, pressure: 1014, windSpeed: 15, windDirection: "W", precipitation: 0.0, visibility: 10, uvIndex: 10, weatherCondition: "Sunny & Dry" }
     ],
-    stats: { totalRecords: 54750, lastSync: "2025-07-21 08:20", source: "HDFS" }
+    stats: { totalRecords: 15, lastSync: "2025-07-21 08:20", source: "HDFS" }
   }
 };
