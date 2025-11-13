@@ -818,26 +818,6 @@ export const externalDriversData = {
       exchange: "COMEX"
     }
   ],
-  "Labor_Market_Data": [
-    {
-      date: "2024-01-01",
-      country: "USA",
-      unemploymentRate: 3.7,
-      laborForceParticipation: 62.5,
-      avgHourlyEarnings: 34.25,
-      change: 0.15,
-      sector: "All"
-    },
-    {
-      date: "2024-02-01",
-      country: "USA",
-      unemploymentRate: 3.8,
-      laborForceParticipation: 62.6,
-      avgHourlyEarnings: 34.50,
-      change: 0.25,
-      sector: "All"
-    }
-  ],
   "Supply_Chain_Events": [
     {
       date: "2024-01-01",
@@ -895,7 +875,6 @@ export const getExternalDriverData = (driverName: string) => {
     "Inflation Data": "Inflation_Data",
     "GDP Growth": "GDP_Growth",
     "Commodity Prices": "Commodity_Prices",
-    "Labor Market Data": "Labor_Market_Data",
     "Supply Chain Events": "Supply_Chain_Events",
     "Regulatory Changes": "Regulatory_Changes",
   };

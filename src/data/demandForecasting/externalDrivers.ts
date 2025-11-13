@@ -13,7 +13,6 @@ export const getExternalDrivers = (studyType: string, hasData: boolean = false) 
     { name: "Inflation Data", autoSelected: false, icon: "BarChart3" },
     { name: "GDP Growth", autoSelected: false, icon: "TrendingUp" },
     { name: "Commodity Prices", autoSelected: false, icon: "Package" },
-    { name: "Labor Market Data", autoSelected: hasData, icon: "Users" },
     { name: "Supply Chain Events", autoSelected: false, icon: "Truck" },
     { name: "Regulatory Changes", autoSelected: false, icon: "FileText" },
   ];
