@@ -2017,6 +2017,10 @@ export default function Foundry() {
             timeseriesEntities.includes(lineageDialog.entity) ? "timeseries" :
             "featurestore"
           }
+          sourceName={
+            entityPreviewData[lineageDialog.entity.route]?.stats?.source || 
+            lineageDialog.entity.sourceType.toUpperCase()
+          }
         />
       )}
     </div>

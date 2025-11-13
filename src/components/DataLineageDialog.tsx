@@ -16,12 +16,13 @@ interface DataLineageDialogProps {
   onOpenChange: (open: boolean) => void;
   entityTitle: string;
   entityType: 'master' | 'timeseries' | 'featurestore';
+  sourceName: string;
 }
 
 // Generate lineage data based on entity
-const generateLineageData = (entityTitle: string, entityType: string) => {
+const generateLineageData = (entityTitle: string, entityType: string, sourceName: string) => {
   const nodes: Node[] = [
-    // Source systems (left side)
+    // Source system (left side)
     {
       id: 'source-1',
       type: 'input',
@@ -32,46 +33,20 @@ const generateLineageData = (entityTitle: string, entityType: string) => {
               <Database className="h-6 w-6 text-primary" />
             </div>
             <div className="text-center">
-              <div className="text-sm font-bold text-foreground">ERP System</div>
+              <div className="text-sm font-bold text-foreground">{sourceName}</div>
               <Badge variant="secondary" className="text-[10px] px-2 py-0.5 mt-1">Source</Badge>
             </div>
           </div>
         )
       },
-      position: { x: 50, y: 50 },
+      position: { x: 50, y: 140 },
       style: { 
         background: 'hsl(var(--card))', 
         border: '2px solid hsl(var(--primary) / 0.5)',
         borderRadius: '16px',
         padding: '4px',
-        width: '160px',
+        width: '180px',
         boxShadow: '0 4px 12px hsl(var(--primary) / 0.15)'
-      },
-    },
-    {
-      id: 'source-2',
-      type: 'input',
-      data: { 
-        label: (
-          <div className="flex flex-col items-center gap-2 px-4 py-3">
-            <div className="p-2 rounded-lg bg-accent/10">
-              <FileText className="h-6 w-6 text-accent" />
-            </div>
-            <div className="text-center">
-              <div className="text-sm font-bold text-foreground">CSV Files</div>
-              <Badge variant="secondary" className="text-[10px] px-2 py-0.5 mt-1">Source</Badge>
-            </div>
-          </div>
-        )
-      },
-      position: { x: 50, y: 280 },
-      style: { 
-        background: 'hsl(var(--card))', 
-        border: '2px solid hsl(var(--accent) / 0.5)',
-        borderRadius: '16px',
-        padding: '4px',
-        width: '160px',
-        boxShadow: '0 4px 12px hsl(var(--accent) / 0.15)'
       },
     },
     
@@ -85,49 +60,24 @@ const generateLineageData = (entityTitle: string, entityType: string) => {
               <GitBranch className="h-6 w-6 text-secondary-foreground" />
             </div>
             <div className="text-center">
-              <div className="text-sm font-bold text-foreground">Data Cleaning</div>
+              <div className="text-sm font-bold text-foreground">Data Pipeline</div>
               <Badge variant="outline" className="text-[10px] px-2 py-0.5 mt-1">Transform</Badge>
             </div>
           </div>
         )
       },
-      position: { x: 350, y: 50 },
+      position: { x: 350, y: 140 },
       style: { 
         background: 'hsl(var(--card))', 
         border: '2px solid hsl(var(--secondary) / 0.5)',
         borderRadius: '16px',
         padding: '4px',
-        width: '160px',
-        boxShadow: '0 4px 12px hsl(var(--secondary) / 0.15)'
-      },
-    },
-    {
-      id: 'transform-2',
-      data: { 
-        label: (
-          <div className="flex flex-col items-center gap-2 px-4 py-3">
-            <div className="p-2 rounded-lg bg-secondary/10">
-              <Package className="h-6 w-6 text-secondary-foreground" />
-            </div>
-            <div className="text-center">
-              <div className="text-sm font-bold text-foreground">Data Enrichment</div>
-              <Badge variant="outline" className="text-[10px] px-2 py-0.5 mt-1">Transform</Badge>
-            </div>
-          </div>
-        )
-      },
-      position: { x: 350, y: 280 },
-      style: { 
-        background: 'hsl(var(--card))', 
-        border: '2px solid hsl(var(--secondary) / 0.5)',
-        borderRadius: '16px',
-        padding: '4px',
-        width: '160px',
+        width: '180px',
         boxShadow: '0 4px 12px hsl(var(--secondary) / 0.15)'
       },
     },
     
-    // Target entity (center)
+    // Target entity (right side)
     {
       id: 'target',
       data: { 
@@ -149,62 +99,8 @@ const generateLineageData = (entityTitle: string, entityType: string) => {
         border: '3px solid hsl(var(--primary) / 0.6)',
         borderRadius: '20px',
         padding: '8px',
-        width: '200px',
+        width: '220px',
         boxShadow: '0 8px 24px hsl(var(--primary) / 0.25)'
-      },
-    },
-    
-    // Downstream consumers (right side)
-    {
-      id: 'consumer-1',
-      type: 'output',
-      data: { 
-        label: (
-          <div className="flex flex-col items-center gap-2 px-4 py-3">
-            <div className="p-2 rounded-lg bg-success/10">
-              <BarChart3 className="h-6 w-6 text-success" />
-            </div>
-            <div className="text-center">
-              <div className="text-sm font-bold text-foreground">Analytics</div>
-              <Badge variant="secondary" className="text-[10px] px-2 py-0.5 mt-1">Consumer</Badge>
-            </div>
-          </div>
-        )
-      },
-      position: { x: 950, y: 50 },
-      style: { 
-        background: 'hsl(var(--card))', 
-        border: '2px solid hsl(var(--success) / 0.5)',
-        borderRadius: '16px',
-        padding: '4px',
-        width: '160px',
-        boxShadow: '0 4px 12px hsl(var(--success) / 0.15)'
-      },
-    },
-    {
-      id: 'consumer-2',
-      type: 'output',
-      data: { 
-        label: (
-          <div className="flex flex-col items-center gap-2 px-4 py-3">
-            <div className="p-2 rounded-lg bg-success/10">
-              <Sparkles className="h-6 w-6 text-success" />
-            </div>
-            <div className="text-center">
-              <div className="text-sm font-bold text-foreground">ML Pipeline</div>
-              <Badge variant="secondary" className="text-[10px] px-2 py-0.5 mt-1">Consumer</Badge>
-            </div>
-          </div>
-        )
-      },
-      position: { x: 950, y: 280 },
-      style: { 
-        background: 'hsl(var(--card))', 
-        border: '2px solid hsl(var(--success) / 0.5)',
-        borderRadius: '16px',
-        padding: '4px',
-        width: '160px',
-        boxShadow: '0 4px 12px hsl(var(--success) / 0.15)'
       },
     },
   ];
@@ -220,15 +116,6 @@ const generateLineageData = (entityTitle: string, entityType: string) => {
       markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--primary))' },
     },
     {
-      id: 'e-source2-transform2',
-      source: 'source-2',
-      target: 'transform-2',
-      type: 'smoothstep',
-      animated: true,
-      style: { stroke: 'hsl(var(--accent))', strokeWidth: 3 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--accent))' },
-    },
-    {
       id: 'e-transform1-target',
       source: 'transform-1',
       target: 'target',
@@ -236,33 +123,6 @@ const generateLineageData = (entityTitle: string, entityType: string) => {
       animated: true,
       style: { stroke: 'hsl(var(--primary))', strokeWidth: 3 },
       markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--primary))' },
-    },
-    {
-      id: 'e-transform2-target',
-      source: 'transform-2',
-      target: 'target',
-      type: 'smoothstep',
-      animated: true,
-      style: { stroke: 'hsl(var(--accent))', strokeWidth: 3 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--accent))' },
-    },
-    {
-      id: 'e-target-consumer1',
-      source: 'target',
-      target: 'consumer-1',
-      type: 'smoothstep',
-      animated: true,
-      style: { stroke: 'hsl(var(--success))', strokeWidth: 3 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--success))' },
-    },
-    {
-      id: 'e-target-consumer2',
-      source: 'target',
-      target: 'consumer-2',
-      type: 'smoothstep',
-      animated: true,
-      style: { stroke: 'hsl(var(--success))', strokeWidth: 3 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--success))' },
     },
   ];
 
@@ -274,10 +134,11 @@ export const DataLineageDialog: React.FC<DataLineageDialogProps> = ({
   onOpenChange,
   entityTitle,
   entityType,
+  sourceName,
 }) => {
   const { nodes, edges } = useMemo(() => 
-    generateLineageData(entityTitle, entityType), 
-    [entityTitle, entityType]
+    generateLineageData(entityTitle, entityType, sourceName), 
+    [entityTitle, entityType, sourceName]
   );
 
   return (
