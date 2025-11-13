@@ -695,24 +695,125 @@ export const externalDriversData = {
     }
   ],
   "Weather_Data": [
-    {
-      date: "2024-01-01",
-      location: "US Regions",
-      avgTemperature: 65.5,
-      precipitation: 0.15,
-      humidity: 65,
-      windSpeed: 8,
-      condition: "Partly Cloudy"
-    },
-    {
-      date: "2024-01-02",
-      location: "US Regions",
-      avgTemperature: 67.2,
-      precipitation: 0.0,
-      humidity: 58,
-      windSpeed: 6,
-      condition: "Clear"
-    }
+    // New York - January 2024
+    { date: "2024-01-01", location: "New York", temperature: 32, humidity: 68, precipitation: 0.0, windSpeed: 12, weatherCondition: "Clear", visibility: 10, pressure: 30.22, uvIndex: 2 },
+    { date: "2024-01-02", location: "New York", temperature: 30, humidity: 71, precipitation: 0.05, windSpeed: 14, weatherCondition: "Cloudy", visibility: 9, pressure: 30.18, uvIndex: 1 },
+    { date: "2024-01-03", location: "New York", temperature: 28, humidity: 75, precipitation: 0.20, windSpeed: 16, weatherCondition: "Snow", visibility: 6, pressure: 30.10, uvIndex: 1 },
+    { date: "2024-01-04", location: "New York", temperature: 26, humidity: 72, precipitation: 0.10, windSpeed: 15, weatherCondition: "Snowy", visibility: 7, pressure: 30.15, uvIndex: 1 },
+    { date: "2024-01-05", location: "New York", temperature: 29, humidity: 69, precipitation: 0.0, windSpeed: 13, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.20, uvIndex: 2 },
+    { date: "2024-01-06", location: "New York", temperature: 33, humidity: 66, precipitation: 0.0, windSpeed: 11, weatherCondition: "Clear", visibility: 10, pressure: 30.24, uvIndex: 2 },
+    { date: "2024-01-07", location: "New York", temperature: 35, humidity: 64, precipitation: 0.0, windSpeed: 10, weatherCondition: "Sunny", visibility: 10, pressure: 30.26, uvIndex: 3 },
+    { date: "2024-01-08", location: "New York", temperature: 31, humidity: 70, precipitation: 0.08, windSpeed: 13, weatherCondition: "Showers", visibility: 8, pressure: 30.18, uvIndex: 2 },
+    { date: "2024-01-09", location: "New York", temperature: 34, humidity: 67, precipitation: 0.0, windSpeed: 12, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.22, uvIndex: 2 },
+    { date: "2024-01-10", location: "New York", temperature: 36, humidity: 65, precipitation: 0.0, windSpeed: 10, weatherCondition: "Clear", visibility: 10, pressure: 30.25, uvIndex: 3 },
+    
+    // Chicago - January 2024
+    { date: "2024-01-01", location: "Chicago", temperature: 25, humidity: 72, precipitation: 0.10, windSpeed: 18, weatherCondition: "Snow", visibility: 7, pressure: 30.15, uvIndex: 1 },
+    { date: "2024-01-02", location: "Chicago", temperature: 22, humidity: 76, precipitation: 0.15, windSpeed: 20, weatherCondition: "Snowy", visibility: 5, pressure: 30.10, uvIndex: 1 },
+    { date: "2024-01-03", location: "Chicago", temperature: 20, humidity: 78, precipitation: 0.25, windSpeed: 22, weatherCondition: "Heavy Snow", visibility: 4, pressure: 30.05, uvIndex: 0 },
+    { date: "2024-01-04", location: "Chicago", temperature: 24, humidity: 74, precipitation: 0.05, windSpeed: 17, weatherCondition: "Cloudy", visibility: 8, pressure: 30.12, uvIndex: 1 },
+    { date: "2024-01-05", location: "Chicago", temperature: 27, humidity: 70, precipitation: 0.0, windSpeed: 15, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.18, uvIndex: 2 },
+    { date: "2024-01-06", location: "Chicago", temperature: 29, humidity: 68, precipitation: 0.0, windSpeed: 14, weatherCondition: "Clear", visibility: 10, pressure: 30.20, uvIndex: 2 },
+    { date: "2024-01-07", location: "Chicago", temperature: 26, humidity: 71, precipitation: 0.08, windSpeed: 16, weatherCondition: "Showers", visibility: 8, pressure: 30.14, uvIndex: 1 },
+    { date: "2024-01-08", location: "Chicago", temperature: 23, humidity: 75, precipitation: 0.18, windSpeed: 19, weatherCondition: "Snow", visibility: 6, pressure: 30.08, uvIndex: 1 },
+    { date: "2024-01-09", location: "Chicago", temperature: 28, humidity: 69, precipitation: 0.0, windSpeed: 14, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.16, uvIndex: 2 },
+    { date: "2024-01-10", location: "Chicago", temperature: 30, humidity: 67, precipitation: 0.0, windSpeed: 13, weatherCondition: "Clear", visibility: 10, pressure: 30.22, uvIndex: 2 },
+    
+    // Los Angeles - January 2024
+    { date: "2024-01-01", location: "Los Angeles", temperature: 65, humidity: 52, precipitation: 0.0, windSpeed: 6, weatherCondition: "Sunny", visibility: 10, pressure: 30.08, uvIndex: 5 },
+    { date: "2024-01-02", location: "Los Angeles", temperature: 67, humidity: 50, precipitation: 0.0, windSpeed: 5, weatherCondition: "Clear", visibility: 10, pressure: 30.10, uvIndex: 5 },
+    { date: "2024-01-03", location: "Los Angeles", temperature: 68, humidity: 48, precipitation: 0.0, windSpeed: 6, weatherCondition: "Sunny", visibility: 10, pressure: 30.12, uvIndex: 6 },
+    { date: "2024-01-04", location: "Los Angeles", temperature: 66, humidity: 54, precipitation: 0.05, windSpeed: 8, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.06, uvIndex: 4 },
+    { date: "2024-01-05", location: "Los Angeles", temperature: 64, humidity: 58, precipitation: 0.12, windSpeed: 10, weatherCondition: "Rainy", visibility: 8, pressure: 30.02, uvIndex: 3 },
+    { date: "2024-01-06", location: "Los Angeles", temperature: 63, humidity: 60, precipitation: 0.15, windSpeed: 11, weatherCondition: "Showers", visibility: 7, pressure: 30.00, uvIndex: 3 },
+    { date: "2024-01-07", location: "Los Angeles", temperature: 65, humidity: 55, precipitation: 0.0, windSpeed: 7, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.08, uvIndex: 5 },
+    { date: "2024-01-08", location: "Los Angeles", temperature: 69, humidity: 49, precipitation: 0.0, windSpeed: 5, weatherCondition: "Sunny", visibility: 10, pressure: 30.12, uvIndex: 6 },
+    { date: "2024-01-09", location: "Los Angeles", temperature: 70, humidity: 47, precipitation: 0.0, windSpeed: 6, weatherCondition: "Clear", visibility: 10, pressure: 30.14, uvIndex: 6 },
+    { date: "2024-01-10", location: "Los Angeles", temperature: 68, humidity: 51, precipitation: 0.0, windSpeed: 6, weatherCondition: "Sunny", visibility: 10, pressure: 30.11, uvIndex: 5 },
+    
+    // Dallas - January 2024
+    { date: "2024-01-01", location: "Dallas", temperature: 48, humidity: 62, precipitation: 0.0, windSpeed: 12, weatherCondition: "Clear", visibility: 10, pressure: 30.15, uvIndex: 3 },
+    { date: "2024-01-02", location: "Dallas", temperature: 52, humidity: 58, precipitation: 0.0, windSpeed: 10, weatherCondition: "Sunny", visibility: 10, pressure: 30.18, uvIndex: 4 },
+    { date: "2024-01-03", location: "Dallas", temperature: 55, humidity: 56, precipitation: 0.0, windSpeed: 9, weatherCondition: "Clear", visibility: 10, pressure: 30.20, uvIndex: 4 },
+    { date: "2024-01-04", location: "Dallas", temperature: 50, humidity: 65, precipitation: 0.18, windSpeed: 14, weatherCondition: "Thunderstorms", visibility: 7, pressure: 30.10, uvIndex: 2 },
+    { date: "2024-01-05", location: "Dallas", temperature: 46, humidity: 68, precipitation: 0.10, windSpeed: 13, weatherCondition: "Rainy", visibility: 8, pressure: 30.12, uvIndex: 2 },
+    { date: "2024-01-06", location: "Dallas", temperature: 49, humidity: 64, precipitation: 0.0, windSpeed: 11, weatherCondition: "Cloudy", visibility: 9, pressure: 30.16, uvIndex: 3 },
+    { date: "2024-01-07", location: "Dallas", temperature: 53, humidity: 60, precipitation: 0.0, windSpeed: 10, weatherCondition: "Partly Cloudy", visibility: 10, pressure: 30.19, uvIndex: 4 },
+    { date: "2024-01-08", location: "Dallas", temperature: 56, humidity: 57, precipitation: 0.0, windSpeed: 9, weatherCondition: "Sunny", visibility: 10, pressure: 30.21, uvIndex: 4 },
+    { date: "2024-01-09", location: "Dallas", temperature: 54, humidity: 59, precipitation: 0.0, windSpeed: 10, weatherCondition: "Clear", visibility: 10, pressure: 30.18, uvIndex: 4 },
+    { date: "2024-01-10", location: "Dallas", temperature: 51, humidity: 61, precipitation: 0.0, windSpeed: 11, weatherCondition: "Partly Cloudy", visibility: 10, pressure: 30.16, uvIndex: 3 },
+    
+    // Miami - January 2024
+    { date: "2024-01-01", location: "Miami", temperature: 72, humidity: 68, precipitation: 0.0, windSpeed: 11, weatherCondition: "Partly Cloudy", visibility: 10, pressure: 30.10, uvIndex: 6 },
+    { date: "2024-01-02", location: "Miami", temperature: 75, humidity: 65, precipitation: 0.0, windSpeed: 10, weatherCondition: "Sunny", visibility: 10, pressure: 30.12, uvIndex: 7 },
+    { date: "2024-01-03", location: "Miami", temperature: 76, humidity: 64, precipitation: 0.0, windSpeed: 9, weatherCondition: "Clear", visibility: 10, pressure: 30.14, uvIndex: 7 },
+    { date: "2024-01-04", location: "Miami", temperature: 74, humidity: 70, precipitation: 0.12, windSpeed: 13, weatherCondition: "Showers", visibility: 8, pressure: 30.08, uvIndex: 5 },
+    { date: "2024-01-05", location: "Miami", temperature: 73, humidity: 72, precipitation: 0.18, windSpeed: 14, weatherCondition: "Thunderstorms", visibility: 7, pressure: 30.05, uvIndex: 4 },
+    { date: "2024-01-06", location: "Miami", temperature: 75, humidity: 68, precipitation: 0.05, windSpeed: 11, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.10, uvIndex: 6 },
+    { date: "2024-01-07", location: "Miami", temperature: 77, humidity: 66, precipitation: 0.0, windSpeed: 10, weatherCondition: "Sunny", visibility: 10, pressure: 30.13, uvIndex: 7 },
+    { date: "2024-01-08", location: "Miami", temperature: 78, humidity: 64, precipitation: 0.0, windSpeed: 9, weatherCondition: "Clear", visibility: 10, pressure: 30.15, uvIndex: 7 },
+    { date: "2024-01-09", location: "Miami", temperature: 76, humidity: 67, precipitation: 0.0, windSpeed: 10, weatherCondition: "Sunny", visibility: 10, pressure: 30.12, uvIndex: 6 },
+    { date: "2024-01-10", location: "Miami", temperature: 75, humidity: 69, precipitation: 0.08, windSpeed: 12, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.09, uvIndex: 6 },
+    
+    // San Francisco - January 2024
+    { date: "2024-01-01", location: "San Francisco", temperature: 56, humidity: 65, precipitation: 0.08, windSpeed: 14, weatherCondition: "Rainy", visibility: 8, pressure: 30.05, uvIndex: 3 },
+    { date: "2024-01-02", location: "San Francisco", temperature: 54, humidity: 68, precipitation: 0.15, windSpeed: 16, weatherCondition: "Showers", visibility: 7, pressure: 30.02, uvIndex: 2 },
+    { date: "2024-01-03", location: "San Francisco", temperature: 58, humidity: 62, precipitation: 0.0, windSpeed: 12, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.08, uvIndex: 4 },
+    { date: "2024-01-04", location: "San Francisco", temperature: 60, humidity: 60, precipitation: 0.0, windSpeed: 10, weatherCondition: "Clear", visibility: 10, pressure: 30.12, uvIndex: 4 },
+    { date: "2024-01-05", location: "San Francisco", temperature: 59, humidity: 63, precipitation: 0.05, windSpeed: 13, weatherCondition: "Cloudy", visibility: 9, pressure: 30.06, uvIndex: 3 },
+    { date: "2024-01-06", location: "San Francisco", temperature: 57, humidity: 66, precipitation: 0.12, windSpeed: 15, weatherCondition: "Rainy", visibility: 7, pressure: 30.03, uvIndex: 2 },
+    { date: "2024-01-07", location: "San Francisco", temperature: 61, humidity: 61, precipitation: 0.0, windSpeed: 11, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.10, uvIndex: 4 },
+    { date: "2024-01-08", location: "San Francisco", temperature: 62, humidity: 59, precipitation: 0.0, windSpeed: 10, weatherCondition: "Sunny", visibility: 10, pressure: 30.13, uvIndex: 5 },
+    { date: "2024-01-09", location: "San Francisco", temperature: 60, humidity: 62, precipitation: 0.0, windSpeed: 11, weatherCondition: "Clear", visibility: 10, pressure: 30.11, uvIndex: 4 },
+    { date: "2024-01-10", location: "San Francisco", temperature: 58, humidity: 64, precipitation: 0.10, windSpeed: 14, weatherCondition: "Showers", visibility: 8, pressure: 30.05, uvIndex: 3 },
+    
+    // Seattle - January 2024
+    { date: "2024-01-01", location: "Seattle", temperature: 45, humidity: 78, precipitation: 0.20, windSpeed: 12, weatherCondition: "Rainy", visibility: 6, pressure: 30.00, uvIndex: 1 },
+    { date: "2024-01-02", location: "Seattle", temperature: 43, humidity: 82, precipitation: 0.25, windSpeed: 14, weatherCondition: "Heavy Rain", visibility: 5, pressure: 29.96, uvIndex: 1 },
+    { date: "2024-01-03", location: "Seattle", temperature: 46, humidity: 76, precipitation: 0.15, windSpeed: 11, weatherCondition: "Showers", visibility: 7, pressure: 30.02, uvIndex: 2 },
+    { date: "2024-01-04", location: "Seattle", temperature: 48, humidity: 74, precipitation: 0.10, windSpeed: 10, weatherCondition: "Cloudy", visibility: 8, pressure: 30.06, uvIndex: 2 },
+    { date: "2024-01-05", location: "Seattle", temperature: 47, humidity: 77, precipitation: 0.18, windSpeed: 13, weatherCondition: "Rainy", visibility: 6, pressure: 30.01, uvIndex: 1 },
+    { date: "2024-01-06", location: "Seattle", temperature: 44, humidity: 80, precipitation: 0.22, windSpeed: 15, weatherCondition: "Heavy Rain", visibility: 5, pressure: 29.98, uvIndex: 1 },
+    { date: "2024-01-07", location: "Seattle", temperature: 49, humidity: 73, precipitation: 0.05, windSpeed: 9, weatherCondition: "Partly Cloudy", visibility: 8, pressure: 30.08, uvIndex: 2 },
+    { date: "2024-01-08", location: "Seattle", temperature: 50, humidity: 71, precipitation: 0.0, windSpeed: 8, weatherCondition: "Cloudy", visibility: 9, pressure: 30.10, uvIndex: 3 },
+    { date: "2024-01-09", location: "Seattle", temperature: 48, humidity: 75, precipitation: 0.12, windSpeed: 11, weatherCondition: "Showers", visibility: 7, pressure: 30.04, uvIndex: 2 },
+    { date: "2024-01-10", location: "Seattle", temperature: 46, humidity: 78, precipitation: 0.16, windSpeed: 13, weatherCondition: "Rainy", visibility: 6, pressure: 30.00, uvIndex: 1 },
+    
+    // Boston - January 2024
+    { date: "2024-01-01", location: "Boston", temperature: 30, humidity: 70, precipitation: 0.08, windSpeed: 15, weatherCondition: "Snow", visibility: 7, pressure: 30.18, uvIndex: 1 },
+    { date: "2024-01-02", location: "Boston", temperature: 28, humidity: 73, precipitation: 0.15, windSpeed: 18, weatherCondition: "Snowy", visibility: 5, pressure: 30.12, uvIndex: 1 },
+    { date: "2024-01-03", location: "Boston", temperature: 26, humidity: 76, precipitation: 0.20, windSpeed: 20, weatherCondition: "Heavy Snow", visibility: 4, pressure: 30.08, uvIndex: 0 },
+    { date: "2024-01-04", location: "Boston", temperature: 29, humidity: 72, precipitation: 0.05, windSpeed: 16, weatherCondition: "Cloudy", visibility: 8, pressure: 30.15, uvIndex: 1 },
+    { date: "2024-01-05", location: "Boston", temperature: 32, humidity: 68, precipitation: 0.0, windSpeed: 14, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.20, uvIndex: 2 },
+    { date: "2024-01-06", location: "Boston", temperature: 34, humidity: 66, precipitation: 0.0, windSpeed: 12, weatherCondition: "Clear", visibility: 10, pressure: 30.24, uvIndex: 2 },
+    { date: "2024-01-07", location: "Boston", temperature: 31, humidity: 69, precipitation: 0.10, windSpeed: 15, weatherCondition: "Snow", visibility: 7, pressure: 30.16, uvIndex: 1 },
+    { date: "2024-01-08", location: "Boston", temperature: 27, humidity: 74, precipitation: 0.18, windSpeed: 19, weatherCondition: "Snowy", visibility: 5, pressure: 30.10, uvIndex: 1 },
+    { date: "2024-01-09", location: "Boston", temperature: 33, humidity: 67, precipitation: 0.0, windSpeed: 13, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 30.22, uvIndex: 2 },
+    { date: "2024-01-10", location: "Boston", temperature: 35, humidity: 65, precipitation: 0.0, windSpeed: 11, weatherCondition: "Clear", visibility: 10, pressure: 30.26, uvIndex: 2 },
+    
+    // Phoenix - January 2024
+    { date: "2024-01-01", location: "Phoenix", temperature: 62, humidity: 35, precipitation: 0.0, windSpeed: 7, weatherCondition: "Sunny", visibility: 10, pressure: 30.10, uvIndex: 5 },
+    { date: "2024-01-02", location: "Phoenix", temperature: 65, humidity: 32, precipitation: 0.0, windSpeed: 6, weatherCondition: "Clear", visibility: 10, pressure: 30.12, uvIndex: 6 },
+    { date: "2024-01-03", location: "Phoenix", temperature: 67, humidity: 30, precipitation: 0.0, windSpeed: 5, weatherCondition: "Sunny", visibility: 10, pressure: 30.14, uvIndex: 6 },
+    { date: "2024-01-04", location: "Phoenix", temperature: 64, humidity: 38, precipitation: 0.0, windSpeed: 8, weatherCondition: "Partly Cloudy", visibility: 10, pressure: 30.08, uvIndex: 5 },
+    { date: "2024-01-05", location: "Phoenix", temperature: 66, humidity: 34, precipitation: 0.0, windSpeed: 6, weatherCondition: "Clear", visibility: 10, pressure: 30.11, uvIndex: 6 },
+    { date: "2024-01-06", location: "Phoenix", temperature: 68, humidity: 31, precipitation: 0.0, windSpeed: 5, weatherCondition: "Sunny", visibility: 10, pressure: 30.13, uvIndex: 6 },
+    { date: "2024-01-07", location: "Phoenix", temperature: 70, humidity: 29, precipitation: 0.0, windSpeed: 6, weatherCondition: "Clear", visibility: 10, pressure: 30.15, uvIndex: 7 },
+    { date: "2024-01-08", location: "Phoenix", temperature: 66, humidity: 36, precipitation: 0.0, windSpeed: 8, weatherCondition: "Partly Cloudy", visibility: 10, pressure: 30.09, uvIndex: 5 },
+    { date: "2024-01-09", location: "Phoenix", temperature: 69, humidity: 33, precipitation: 0.0, windSpeed: 6, weatherCondition: "Sunny", visibility: 10, pressure: 30.12, uvIndex: 6 },
+    { date: "2024-01-10", location: "Phoenix", temperature: 71, humidity: 30, precipitation: 0.0, windSpeed: 5, weatherCondition: "Clear", visibility: 10, pressure: 30.14, uvIndex: 7 },
+    
+    // Denver - January 2024
+    { date: "2024-01-01", location: "Denver", temperature: 38, humidity: 42, precipitation: 0.0, windSpeed: 10, weatherCondition: "Clear", visibility: 10, pressure: 24.95, uvIndex: 3 },
+    { date: "2024-01-02", location: "Denver", temperature: 40, humidity: 40, precipitation: 0.0, windSpeed: 9, weatherCondition: "Sunny", visibility: 10, pressure: 24.98, uvIndex: 4 },
+    { date: "2024-01-03", location: "Denver", temperature: 35, humidity: 48, precipitation: 0.10, windSpeed: 13, weatherCondition: "Snow", visibility: 7, pressure: 24.88, uvIndex: 2 },
+    { date: "2024-01-04", location: "Denver", temperature: 32, humidity: 52, precipitation: 0.15, windSpeed: 15, weatherCondition: "Snowy", visibility: 6, pressure: 24.85, uvIndex: 1 },
+    { date: "2024-01-05", location: "Denver", temperature: 37, humidity: 45, precipitation: 0.0, windSpeed: 11, weatherCondition: "Partly Cloudy", visibility: 9, pressure: 24.92, uvIndex: 3 },
+    { date: "2024-01-06", location: "Denver", temperature: 42, humidity: 38, precipitation: 0.0, windSpeed: 8, weatherCondition: "Clear", visibility: 10, pressure: 25.00, uvIndex: 4 },
+    { date: "2024-01-07", location: "Denver", temperature: 44, humidity: 36, precipitation: 0.0, windSpeed: 7, weatherCondition: "Sunny", visibility: 10, pressure: 25.02, uvIndex: 4 },
+    { date: "2024-01-08", location: "Denver", temperature: 39, humidity: 43, precipitation: 0.05, windSpeed: 12, weatherCondition: "Cloudy", visibility: 9, pressure: 24.90, uvIndex: 3 },
+    { date: "2024-01-09", location: "Denver", temperature: 41, humidity: 41, precipitation: 0.0, windSpeed: 9, weatherCondition: "Partly Cloudy", visibility: 10, pressure: 24.96, uvIndex: 3 },
+    { date: "2024-01-10", location: "Denver", temperature: 43, humidity: 39, precipitation: 0.0, windSpeed: 8, weatherCondition: "Clear", visibility: 10, pressure: 24.99, uvIndex: 4 }
   ],
   "Exchange_Rates": [
     {
