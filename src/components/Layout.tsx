@@ -57,21 +57,10 @@ const AppSidebar = () => {
   return (
     <Sidebar className="border-r border-border w-56" collapsible="offcanvas">
       {/* Logo Header */}
-      <div className="flex h-16 items-center justify-center px-4 border-b border-border">
-        <img 
-          src={upsynqLogo} 
-          alt="UpSynQ" 
-          className="h-10 w-auto object-contain"
-          onError={(e) => {
-            // Fallback to text if image fails to load
-            e.currentTarget.style.display = 'none';
-            const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-            if (fallback) fallback.style.display = 'block';
-          }}
-        />
+      <div className="flex h-16 items-center justify-center px-4 border-b border-border bg-background">
         <span 
-          className="font-bold text-2xl hidden"
-          style={{ color: '#E6B800', letterSpacing: '0.5px' }}
+          className="font-bold text-3xl tracking-wide"
+          style={{ color: '#E6B800' }}
         >
           UpSynQ
         </span>
