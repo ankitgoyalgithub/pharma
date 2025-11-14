@@ -106,6 +106,7 @@ import { CompactProjectionCard } from "@/components/CompactProjectionCard";
 import { DemandAnalysisChart } from "@/components/DemandAnalysisChart";
 import { ABCXYZMatrix } from "@/components/ABCXYZMatrix";
 import { ModelConfigurationCard } from "@/components/ModelConfigurationCard";
+import { getStoreMetrics, getABCRevenueImpact, getFMRUnits } from "@/lib/storeMetrics";
 
 // Data imports
 import { workbookData } from "@/data/demandForecasting/workbookData";
@@ -2008,35 +2009,11 @@ const DemandForecasting = () => {
             <ForecastCard
               title="Forecast Snapshot"
               value="82%"
-              subtitle={`Backtested Accuracy • ${appliedFilters.store === 'all' ? '$6.8M' : 
-                appliedFilters.store === 'L001' ? '$5.2M' :
-                appliedFilters.store === 'L002' ? '$7.8M' :
-                appliedFilters.store === 'L003' ? '$8.5M' :
-                appliedFilters.store === 'L004' ? '$4.5M' :
-                appliedFilters.store === 'L005' ? '$9.2M' :
-                appliedFilters.store === 'L006' ? '$6.1M' :
-                appliedFilters.store === 'L007' ? '$5.8M' :
-                appliedFilters.store === 'L008' ? '$7.3M' :
-                appliedFilters.store === 'L009' ? '$6.9M' :
-                appliedFilters.store === 'L010' ? '$5.9M' :
-                appliedFilters.store === 'L015' ? '$7.9M' :
-                appliedFilters.store === 'L020' ? '$8.2M' :
-                appliedFilters.store === 'L030' ? '$5.0M' : '$6.8M'} Value • ${
-                appliedFilters.store === 'all' ? '120,756' :
-                appliedFilters.store === 'L001' ? '87,420' :
-                appliedFilters.store === 'L002' ? '138,567' :
-                appliedFilters.store === 'L003' ? '152,340' :
-                appliedFilters.store === 'L004' ? '65,890' :
-                appliedFilters.store === 'L005' ? '165,423' :
-                appliedFilters.store === 'L006' ? '98,234' :
-                appliedFilters.store === 'L007' ? '92,567' :
-                appliedFilters.store === 'L008' ? '125,890' :
-                appliedFilters.store === 'L009' ? '112,345' :
-                appliedFilters.store === 'L010' ? '95,678' :
-                appliedFilters.store === 'L015' ? '135,890' :
-                appliedFilters.store === 'L020' ? '145,678' :
-                appliedFilters.store === 'L030' ? '78,456' : '120,756'} Units
-                        12-Week Horizon • ${appliedFilters.store === 'all' ? '5' : '1'} Active SKUs • 4 Channels`}
+              subtitle={(() => {
+                const metrics = getStoreMetrics(appliedFilters.store);
+                return `Backtested Accuracy • $${metrics.revenueFormatted}M Value • ${metrics.unitsFormatted} Units
+                        12-Week Horizon • ${appliedFilters.store === 'all' ? '45' : '1'} Active Store${appliedFilters.store === 'all' ? 's' : ''} • 4 Channels`;
+              })()}
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
               onClick={() => {
@@ -2846,20 +2823,7 @@ const DemandForecasting = () => {
                     </div>
                     <div className="mt-4 pt-3 border-t">
                       <div className="text-2xl font-bold text-primary">
-                        ${appliedFilters.store === 'all' ? '12.3M' :
-                          appliedFilters.store === 'L001' ? '8.9M' :
-                          appliedFilters.store === 'L002' ? '14.2M' :
-                          appliedFilters.store === 'L003' ? '15.8M' :
-                          appliedFilters.store === 'L004' ? '7.2M' :
-                          appliedFilters.store === 'L005' ? '16.9M' :
-                          appliedFilters.store === 'L006' ? '10.5M' :
-                          appliedFilters.store === 'L007' ? '9.8M' :
-                          appliedFilters.store === 'L008' ? '13.6M' :
-                          appliedFilters.store === 'L009' ? '12.1M' :
-                          appliedFilters.store === 'L010' ? '10.2M' :
-                          appliedFilters.store === 'L015' ? '14.8M' :
-                          appliedFilters.store === 'L020' ? '15.5M' :
-                          appliedFilters.store === 'L030' ? '8.4M' : '12.3M'}
+                        {getABCRevenueImpact(appliedFilters.store).formatted}
                       </div>
                       <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
                     </div>
@@ -2939,20 +2903,7 @@ const DemandForecasting = () => {
                     </div>
                     <div className="mt-4 pt-3 border-t">
                       <div className="text-2xl font-bold text-success">
-                        {appliedFilters.store === 'all' ? '89.2K' :
-                          appliedFilters.store === 'L001' ? '62.5K' :
-                          appliedFilters.store === 'L002' ? '105.3K' :
-                          appliedFilters.store === 'L003' ? '118.7K' :
-                          appliedFilters.store === 'L004' ? '48.2K' :
-                          appliedFilters.store === 'L005' ? '128.9K' :
-                          appliedFilters.store === 'L006' ? '73.4K' :
-                          appliedFilters.store === 'L007' ? '68.1K' :
-                          appliedFilters.store === 'L008' ? '95.7K' :
-                          appliedFilters.store === 'L009' ? '86.3K' :
-                          appliedFilters.store === 'L010' ? '71.8K' :
-                          appliedFilters.store === 'L015' ? '102.4K' :
-                          appliedFilters.store === 'L020' ? '112.5K' :
-                          appliedFilters.store === 'L030' ? '58.9K' : '89.2K'}
+                        {getFMRUnits(appliedFilters.store).formatted}
                       </div>
                       <p className="text-xs text-muted-foreground">Fast-Moving Units</p>
                     </div>

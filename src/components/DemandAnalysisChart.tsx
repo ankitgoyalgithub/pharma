@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import { getStoreMetrics, getChartMultiplier } from '@/lib/storeMetrics';
 
 interface DemandAnalysisChartProps {
   granularity: 'weekly' | 'monthly' | 'quarterly';
@@ -41,21 +42,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
 
     // Generate data based on granularity - split into historical and forecast periods
     const generateData = () => {
-      // Store-specific multipliers for variation
-      const storeMultiplier = storeFilter === 'all' ? 1.0 : 
-        storeFilter === 'L001' ? 0.85 :
-        storeFilter === 'L002' ? 1.15 :
-        storeFilter === 'L003' ? 1.25 :
-        storeFilter === 'L004' ? 0.75 :
-        storeFilter === 'L005' ? 1.35 :
-        storeFilter === 'L006' ? 0.95 :
-        storeFilter === 'L007' ? 0.88 :
-        storeFilter === 'L008' ? 1.10 :
-        storeFilter === 'L009' ? 1.05 :
-        storeFilter === 'L010' ? 0.92 :
-        storeFilter === 'L015' ? 1.18 :
-        storeFilter === 'L020' ? 1.22 :
-        storeFilter === 'L030' ? 0.80 : 1.0;
+      // Store-specific multipliers based on actual store sizes
+      const storeMultiplier = getChartMultiplier(storeFilter);
 
       switch (chartGranularity) {
         case 'daily':
@@ -296,36 +284,10 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('fill', mutedForeground)
       .text('Next 12 Weeks Value Projection');
 
-    // Dynamic value based on store
-    const projectedValue = storeFilter === 'all' ? '6.8' :
-      storeFilter === 'L001' ? '5.2' :
-      storeFilter === 'L002' ? '7.8' :
-      storeFilter === 'L003' ? '8.5' :
-      storeFilter === 'L004' ? '4.5' :
-      storeFilter === 'L005' ? '9.2' :
-      storeFilter === 'L006' ? '6.1' :
-      storeFilter === 'L007' ? '5.8' :
-      storeFilter === 'L008' ? '7.3' :
-      storeFilter === 'L009' ? '6.9' :
-      storeFilter === 'L010' ? '5.9' :
-      storeFilter === 'L015' ? '7.9' :
-      storeFilter === 'L020' ? '8.2' :
-      storeFilter === 'L030' ? '5.0' : '6.8';
-
-    const projectedVolume = storeFilter === 'all' ? '120,756' :
-      storeFilter === 'L001' ? '87,420' :
-      storeFilter === 'L002' ? '138,567' :
-      storeFilter === 'L003' ? '152,340' :
-      storeFilter === 'L004' ? '65,890' :
-      storeFilter === 'L005' ? '165,423' :
-      storeFilter === 'L006' ? '98,234' :
-      storeFilter === 'L007' ? '92,567' :
-      storeFilter === 'L008' ? '125,890' :
-      storeFilter === 'L009' ? '112,345' :
-      storeFilter === 'L010' ? '95,678' :
-      storeFilter === 'L015' ? '135,890' :
-      storeFilter === 'L020' ? '145,678' :
-      storeFilter === 'L030' ? '78,456' : '120,756';
+    // Dynamic value based on store - using proper reconciliation
+    const metrics = getStoreMetrics(storeFilter);
+    const projectedValue = metrics.revenueFormatted;
+    const projectedVolume = metrics.unitsFormatted;
 
     topGroup.append('text')
       .attr('x', containerWidth - 20)
