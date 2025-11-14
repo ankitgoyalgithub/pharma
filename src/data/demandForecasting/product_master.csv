@@ -1,0 +1,101 @@
+product_id,product_name,category,subcategory,brand,base_mrp,uom,status
+P0001,ComfortWear Sports Shoes P0001,Footwear,Sports Shoes,ComfortWear,1394,PCS,Active
+P0002,StreetLine Scarf P0002,Accessories,Scarf,StreetLine,765,PCS,Active
+P0003,MetroStyle Frock P0003,Kidswear,Frock,MetroStyle,429,PCS,Active
+P0004,PrimeBasics Cap P0004,Accessories,Cap,PrimeBasics,2732,PCS,Active
+P0005,UrbanEdge Sports Shoes P0005,Footwear,Sports Shoes,UrbanEdge,758,PCS,Active
+P0006,PrimeBasics Kurti P0006,Womenswear,Kurti,PrimeBasics,773,PCS,Active
+P0007,StreetLine Frock P0007,Kidswear,Frock,StreetLine,2346,PCS,Active
+P0008,ComfortWear Flip Flops P0008,Footwear,Flip Flops,ComfortWear,2198,PCS,Active
+P0009,UrbanEdge Flip Flops P0009,Footwear,Flip Flops,UrbanEdge,945,PCS,Active
+P0010,StreetLine Belt P0010,Accessories,Belt,StreetLine,2734,PCS,Active
+P0011,StreetLine Chinos P0011,Menswear,Chinos,StreetLine,2340,PCS,Active
+P0012,MetroStyle Shirt P0012,Menswear,Shirt,MetroStyle,1662,PCS,Active
+P0013,PrimeBasics Sandals P0013,Footwear,Sandals,PrimeBasics,1777,PCS,Active
+P0014,ComfortWear Sports Shoes P0014,Footwear,Sports Shoes,ComfortWear,2552,PCS,Active
+P0015,StreetLine Chinos P0015,Menswear,Chinos,StreetLine,1320,PCS,Active
+P0016,MetroStyle Jeans P0016,Womenswear,Jeans,MetroStyle,1001,PCS,Active
+P0017,PrimeBasics Dress P0017,Womenswear,Dress,PrimeBasics,460,PCS,Active
+P0018,PrimeBasics Jeans P0018,Womenswear,Jeans,PrimeBasics,1315,PCS,Active
+P0019,StreetLine Scarf P0019,Accessories,Scarf,StreetLine,1177,PCS,Active
+P0020,UrbanEdge Cap P0020,Accessories,Cap,UrbanEdge,1062,PCS,Active
+P0021,MetroStyle Flip Flops P0021,Footwear,Flip Flops,MetroStyle,1479,PCS,Active
+P0022,UrbanEdge Belt P0022,Accessories,Belt,UrbanEdge,2867,PCS,Active
+P0023,ComfortWear Chinos P0023,Menswear,Chinos,ComfortWear,1821,PCS,Active
+P0024,ComfortWear Jeans P0024,Menswear,Jeans,ComfortWear,2635,PCS,Active
+P0025,StreetLine T-Shirt P0025,Kidswear,T-Shirt,StreetLine,2577,PCS,Active
+P0026,PrimeBasics Top P0026,Womenswear,Top,PrimeBasics,2481,PCS,Active
+P0027,StreetLine Chinos P0027,Menswear,Chinos,StreetLine,801,PCS,Active
+P0028,PrimeBasics Wallet P0028,Accessories,Wallet,PrimeBasics,2194,PCS,Active
+P0029,UrbanEdge Frock P0029,Kidswear,Frock,UrbanEdge,2959,PCS,Active
+P0030,MetroStyle T-Shirt P0030,Kidswear,T-Shirt,MetroStyle,801,PCS,Active
+P0031,StreetLine T-Shirt P0031,Kidswear,T-Shirt,StreetLine,1783,PCS,Active
+P0032,UrbanEdge Frock P0032,Kidswear,Frock,UrbanEdge,862,PCS,Active
+P0033,MetroStyle Handbag P0033,Accessories,Handbag,MetroStyle,2577,PCS,Active
+P0034,MetroStyle Wallet P0034,Accessories,Wallet,MetroStyle,1358,PCS,Active
+P0035,ComfortWear Wallet P0035,Accessories,Wallet,ComfortWear,2118,PCS,Active
+P0036,MetroStyle Dress P0036,Womenswear,Dress,MetroStyle,1896,PCS,Active
+P0037,PrimeBasics Jacket P0037,Menswear,Jacket,PrimeBasics,1350,PCS,Active
+P0038,PrimeBasics Flip Flops P0038,Footwear,Flip Flops,PrimeBasics,2280,PCS,Active
+P0039,StreetLine Jeans P0039,Kidswear,Jeans,StreetLine,2337,PCS,Active
+P0040,UrbanEdge Sports Shoes P0040,Footwear,Sports Shoes,UrbanEdge,1707,PCS,Active
+P0041,UrbanEdge Jeans P0041,Menswear,Jeans,UrbanEdge,2974,PCS,Active
+P0042,ComfortWear Belt P0042,Accessories,Belt,ComfortWear,1008,PCS,Active
+P0043,MetroStyle T-Shirt P0043,Kidswear,T-Shirt,MetroStyle,1556,PCS,Active
+P0044,ComfortWear Flip Flops P0044,Footwear,Flip Flops,ComfortWear,1930,PCS,Active
+P0045,UrbanEdge Chinos P0045,Menswear,Chinos,UrbanEdge,2152,PCS,Active
+P0046,PrimeBasics Shirt P0046,Menswear,Shirt,PrimeBasics,1590,PCS,Active
+P0047,UrbanEdge Skirt P0047,Womenswear,Skirt,UrbanEdge,1935,PCS,Active
+P0048,ComfortWear T-Shirt P0048,Menswear,T-Shirt,ComfortWear,2459,PCS,Active
+P0049,PrimeBasics Dress P0049,Womenswear,Dress,PrimeBasics,1888,PCS,Active
+P0050,UrbanEdge Belt P0050,Accessories,Belt,UrbanEdge,1960,PCS,Active
+P0051,PrimeBasics Kurti P0051,Womenswear,Kurti,PrimeBasics,1994,PCS,Active
+P0052,ComfortWear Sandals P0052,Footwear,Sandals,ComfortWear,421,PCS,Active
+P0053,PrimeBasics Jacket P0053,Menswear,Jacket,PrimeBasics,496,PCS,Active
+P0054,UrbanEdge Frock P0054,Kidswear,Frock,UrbanEdge,1446,PCS,Active
+P0055,MetroStyle Shorts P0055,Kidswear,Shorts,MetroStyle,2093,PCS,Active
+P0056,ComfortWear Flip Flops P0056,Footwear,Flip Flops,ComfortWear,2254,PCS,Active
+P0057,ComfortWear Shorts P0057,Kidswear,Shorts,ComfortWear,1833,PCS,Active
+P0058,PrimeBasics Jeans P0058,Kidswear,Jeans,PrimeBasics,787,PCS,Active
+P0059,UrbanEdge Shirt P0059,Menswear,Shirt,UrbanEdge,2101,PCS,Active
+P0060,UrbanEdge Sports Shoes P0060,Footwear,Sports Shoes,UrbanEdge,2268,PCS,Active
+P0061,PrimeBasics Skirt P0061,Womenswear,Skirt,PrimeBasics,2490,PCS,Active
+P0062,PrimeBasics Top P0062,Womenswear,Top,PrimeBasics,1179,PCS,Active
+P0063,PrimeBasics Top P0063,Womenswear,Top,PrimeBasics,751,PCS,Active
+P0064,UrbanEdge Wallet P0064,Accessories,Wallet,UrbanEdge,1981,PCS,Active
+P0065,UrbanEdge Jeans P0065,Kidswear,Jeans,UrbanEdge,926,PCS,Active
+P0066,PrimeBasics T-Shirt P0066,Kidswear,T-Shirt,PrimeBasics,1744,PCS,Active
+P0067,ComfortWear Casual Shoes P0067,Footwear,Casual Shoes,ComfortWear,2856,PCS,Active
+P0068,UrbanEdge Jeans P0068,Menswear,Jeans,UrbanEdge,2183,PCS,Active
+P0069,StreetLine Dress P0069,Womenswear,Dress,StreetLine,1255,PCS,Active
+P0070,UrbanEdge Chinos P0070,Menswear,Chinos,UrbanEdge,1902,PCS,Active
+P0071,PrimeBasics Jacket P0071,Menswear,Jacket,PrimeBasics,1826,PCS,Active
+P0072,UrbanEdge T-Shirt P0072,Kidswear,T-Shirt,UrbanEdge,758,PCS,Active
+P0073,MetroStyle Frock P0073,Kidswear,Frock,MetroStyle,861,PCS,Active
+P0074,StreetLine Frock P0074,Kidswear,Frock,StreetLine,1096,PCS,Active
+P0075,UrbanEdge Chinos P0075,Menswear,Chinos,UrbanEdge,751,PCS,Active
+P0076,ComfortWear Sports Shoes P0076,Footwear,Sports Shoes,ComfortWear,845,PCS,Active
+P0077,PrimeBasics T-Shirt P0077,Menswear,T-Shirt,PrimeBasics,1542,PCS,Active
+P0078,ComfortWear Scarf P0078,Accessories,Scarf,ComfortWear,2067,PCS,Active
+P0079,UrbanEdge Scarf P0079,Accessories,Scarf,UrbanEdge,600,PCS,Active
+P0080,PrimeBasics Wallet P0080,Accessories,Wallet,PrimeBasics,1291,PCS,Active
+P0081,MetroStyle Sandals P0081,Footwear,Sandals,MetroStyle,1279,PCS,Active
+P0082,StreetLine Jeans P0082,Menswear,Jeans,StreetLine,2115,PCS,Active
+P0083,ComfortWear Dress P0083,Womenswear,Dress,ComfortWear,2194,PCS,Active
+P0084,ComfortWear Dress P0084,Womenswear,Dress,ComfortWear,2836,PCS,Active
+P0085,UrbanEdge Dress P0085,Womenswear,Dress,UrbanEdge,544,PCS,Active
+P0086,StreetLine Cap P0086,Accessories,Cap,StreetLine,2189,PCS,Active
+P0087,MetroStyle Top P0087,Womenswear,Top,MetroStyle,1828,PCS,Active
+P0088,MetroStyle Chinos P0088,Menswear,Chinos,MetroStyle,318,PCS,Active
+P0089,ComfortWear Chinos P0089,Menswear,Chinos,ComfortWear,2817,PCS,Active
+P0090,StreetLine Casual Shoes P0090,Footwear,Casual Shoes,StreetLine,2122,PCS,Active
+P0091,StreetLine T-Shirt P0091,Kidswear,T-Shirt,StreetLine,873,PCS,Active
+P0092,StreetLine Cap P0092,Accessories,Cap,StreetLine,2651,PCS,Active
+P0093,ComfortWear Casual Shoes P0093,Footwear,Casual Shoes,ComfortWear,2790,PCS,Active
+P0094,MetroStyle Belt P0094,Accessories,Belt,MetroStyle,1894,PCS,Active
+P0095,MetroStyle Flip Flops P0095,Footwear,Flip Flops,MetroStyle,1425,PCS,Active
+P0096,MetroStyle Casual Shoes P0096,Footwear,Casual Shoes,MetroStyle,1290,PCS,Active
+P0097,ComfortWear Casual Shoes P0097,Footwear,Casual Shoes,ComfortWear,567,PCS,Active
+P0098,StreetLine Jeans P0098,Womenswear,Jeans,StreetLine,1992,PCS,Active
+P0099,ComfortWear T-Shirt P0099,Kidswear,T-Shirt,ComfortWear,1380,PCS,Active
+P0100,StreetLine Kurti P0100,Womenswear,Kurti,StreetLine,415,PCS,Active
