@@ -63,6 +63,17 @@ const Workflows = () => {
       visibility: 'public',
       blocks: 12,
       connections: 18
+    },
+    {
+      id: 4,
+      name: 'Merchandise Planning',
+      description: 'Comprehensive merchandise planning with sales forecasting, assortment optimization, and replenishment',
+      status: 'active',
+      lastRun: '2024-07-20 11:45',
+      visibility: 'public',
+      blocks: 11,
+      connections: 10,
+      outputDashboard: 'https://zingy-cajeta-f00b6d.netlify.app/'
     }
   ];
 
