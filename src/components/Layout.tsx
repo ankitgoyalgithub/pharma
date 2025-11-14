@@ -123,7 +123,7 @@ const TopBar = ({ topbarRef }: { topbarRef: React.RefObject<HTMLDivElement> }) =
 
   const userInfo = {
     name: "Karthik V",
-    company: "Divi's Labs",
+    company: "ABC Labs",
     avatar: "KV"
   };
 
