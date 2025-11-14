@@ -1,0 +1,46 @@
+location_id,store_name,city,region,store_format,store_size_sqft,status
+L001,Pune Store L001,Pune,West,Standalone,2350,Active
+L002,Mumbai Store L002,Mumbai,West,High Street,2864,Active
+L003,Delhi Store L003,Delhi,North,Mall,1712,Active
+L004,Kolkata Store L004,Kolkata,East,Mall,1759,Active
+L005,Mumbai Store L005,Mumbai,West,High Street,4543,Active
+L006,Chennai Store L006,Chennai,South,Standalone,5999,Active
+L007,Kolkata Store L007,Kolkata,East,High Street,3494,Active
+L008,Bengaluru Store L008,Bengaluru,South,Mall,2879,Active
+L009,Bengaluru Store L009,Bengaluru,South,High Street,3944,Active
+L010,Chennai Store L010,Chennai,South,Mall,2443,Active
+L011,Chennai Store L011,Chennai,South,Standalone,3341,Active
+L012,Pune Store L012,Pune,West,Mall,4259,Active
+L013,Chennai Store L013,Chennai,South,Mall,3679,Active
+L014,Chennai Store L014,Chennai,South,Standalone,2835,Active
+L015,Mumbai Store L015,Mumbai,West,Mall,2957,Active
+L016,Chennai Store L016,Chennai,South,Standalone,4049,Active
+L017,Hyderabad Store L017,Hyderabad,South,Standalone,4930,Active
+L018,Delhi Store L018,Delhi,North,High Street,2215,Active
+L019,Chennai Store L019,Chennai,South,High Street,5811,Active
+L020,Ahmedabad Store L020,Ahmedabad,West,Standalone,5792,Active
+L021,Hyderabad Store L021,Hyderabad,South,Standalone,2051,Active
+L022,Ahmedabad Store L022,Ahmedabad,West,Mall,4946,Active
+L023,Hyderabad Store L023,Hyderabad,South,High Street,5200,Active
+L024,Chennai Store L024,Chennai,South,Standalone,4698,Active
+L025,Chennai Store L025,Chennai,South,Standalone,5113,Active
+L026,Bengaluru Store L026,Bengaluru,South,High Street,3644,Active
+L027,Hyderabad Store L027,Hyderabad,South,Standalone,4573,Active
+L028,Delhi Store L028,Delhi,North,High Street,3746,Active
+L029,Delhi Store L029,Delhi,North,Standalone,3974,Active
+L030,Mumbai Store L030,Mumbai,West,Mall,1975,Active
+L031,Chennai Store L031,Chennai,South,Mall,2825,Active
+L032,Pune Store L032,Pune,West,Mall,1314,Active
+L033,Mumbai Store L033,Mumbai,West,Standalone,4467,Active
+L034,Delhi Store L034,Delhi,North,High Street,2716,Active
+L035,Bengaluru Store L035,Bengaluru,South,High Street,1928,Active
+L036,Chennai Store L036,Chennai,South,High Street,4008,Active
+L037,Hyderabad Store L037,Hyderabad,South,Mall,3704,Active
+L038,Ahmedabad Store L038,Ahmedabad,West,Standalone,2322,Active
+L039,Ahmedabad Store L039,Ahmedabad,West,Mall,3343,Active
+L040,Ahmedabad Store L040,Ahmedabad,West,Standalone,5332,Active
+L041,Hyderabad Store L041,Hyderabad,South,High Street,4966,Active
+L042,Chennai Store L042,Chennai,South,Standalone,4114,Active
+L043,Mumbai Store L043,Mumbai,West,Mall,5152,Active
+L044,Pune Store L044,Pune,West,High Street,2565,Active
+L045,Chennai Store L045,Chennai,South,Standalone,1595,Active

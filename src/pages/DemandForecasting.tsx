@@ -211,6 +211,7 @@ const DemandForecasting = () => {
 
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [parsedCsvData, setParsedCsvData] = useState<Record<string, any[]>>({});
   
   // Foundry mapping modal states
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
@@ -691,14 +692,42 @@ const DemandForecasting = () => {
             multiple
             accept=".csv,.xlsx,.xls"
             className="hidden"
-            onChange={(e) => {
+            onChange={async (e) => {
               const files = Array.from(e.target.files || []);
               if (files.length > 0) {
                 setUploadedFiles(prev => [...prev, ...files]);
                 setSelectedPreview(files[0].name);
                 setPreviewLoading(true);
-                setTimeout(() => setPreviewLoading(false), 700);
+                
+                // Parse CSV files
+                const newParsedData: Record<string, any[]> = {};
+                for (const file of files) {
+                  if (file.name.endsWith('.csv')) {
+                    try {
+                      const text = await file.text();
+                      const rows = text.trim().split('\n');
+                      const headers = rows[0].split(',').map(h => h.trim());
+                      const data = rows.slice(1).map(row => {
+                        const values = row.split(',');
+                        const obj: any = {};
+                        headers.forEach((header, i) => {
+                          obj[header] = values[i]?.trim() || '';
+                        });
+                        return obj;
+                      });
+                      newParsedData[file.name] = data;
+                    } catch (error) {
+                      console.error(`Error parsing ${file.name}:`, error);
+                      toast.error(`Failed to parse ${file.name}`);
+                    }
+                  }
+                }
+                
+                setParsedCsvData(prev => ({ ...prev, ...newParsedData }));
+                setPreviewLoading(false);
               }
+              // Reset the input value to allow re-uploading the same files
+              e.target.value = '';
             }}
           />
 
@@ -716,7 +745,7 @@ const DemandForecasting = () => {
                           <FileText className="h-3 w-3 text-blue-600" />
                           <span className="text-foreground">{file.name}</span>
                           <Badge variant="secondary" className="text-xs ml-auto">
-                            {dataPreviewSample.length} rows
+                            {parsedCsvData[file.name]?.length || 0} rows
                           </Badge>
                         </div>
                         <Button
@@ -928,27 +957,61 @@ const DemandForecasting = () => {
                           );
                         })()
                       ) : (
-                        <table className="min-w-full text-xs border border-border rounded">
-                          <thead className="bg-muted text-muted-foreground">
-                            <tr>
-                              <th className="text-left px-3 py-2">SKU</th>
-                              <th className="text-left px-3 py-2">Product</th>
-                              <th className="text-left px-3 py-2">Location</th>
-                              <th className="text-left px-3 py-2">Channel</th>
-                              <th className="text-left px-3 py-2">Date</th>
-                              <th className="text-left px-3 py-2">Sales</th>
-                              <th className="text-left px-3 py-2">Revenue</th>
-                              <th className="text-left px-3 py-2">Stock</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {dataPreviewSample.map((row, idx) => (
-                              <tr key={idx} className="hover:bg-muted/20 border-t">
-                                <td className="px-3 py-2 font-mono">{row.sku}</td>
-                                <td className="px-3 py-2 font-medium">{row.product}</td>
-                                <td className="px-3 py-2">{row.location}</td>
-                                <td className="px-3 py-2">
-                                  <Badge variant="outline" className="text-xs">{row.channel}</Badge>
+                        (() => {
+                          // Display actual uploaded CSV data
+                          const csvData = parsedCsvData[selectedPreview || ''];
+                          if (csvData && csvData.length > 0) {
+                            const columns = Object.keys(csvData[0]);
+                            return (
+                              <div className="space-y-2">
+                                <div className="text-xs text-muted-foreground">
+                                  Showing {Math.min(10, csvData.length)} of {csvData.length} rows
+                                </div>
+                                <table className="min-w-full text-xs border border-border rounded">
+                                  <thead className="bg-muted text-muted-foreground">
+                                    <tr>
+                                      {columns.map((col) => (
+                                        <th key={col} className="text-left px-3 py-2 capitalize">{col.replace(/_/g, ' ')}</th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {csvData.slice(0, 10).map((row, idx) => (
+                                      <tr key={idx} className="hover:bg-muted/20 border-t">
+                                        {columns.map((col) => (
+                                          <td key={col} className="px-3 py-2">{String(row[col])}</td>
+                                        ))}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            );
+                          }
+                          
+                          // Fallback to sample data if no CSV data available
+                          return (
+                            <table className="min-w-full text-xs border border-border rounded">
+                              <thead className="bg-muted text-muted-foreground">
+                                <tr>
+                                  <th className="text-left px-3 py-2">SKU</th>
+                                  <th className="text-left px-3 py-2">Product</th>
+                                  <th className="text-left px-3 py-2">Location</th>
+                                  <th className="text-left px-3 py-2">Channel</th>
+                                  <th className="text-left px-3 py-2">Date</th>
+                                  <th className="text-left px-3 py-2">Sales</th>
+                                  <th className="text-left px-3 py-2">Revenue</th>
+                                  <th className="text-left px-3 py-2">Stock</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {dataPreviewSample.map((row, idx) => (
+                                  <tr key={idx} className="hover:bg-muted/20 border-t">
+                                    <td className="px-3 py-2 font-mono">{row.sku}</td>
+                                    <td className="px-3 py-2 font-medium">{row.product}</td>
+                                    <td className="px-3 py-2">{row.location}</td>
+                                    <td className="px-3 py-2">
+                                   <Badge variant="outline" className="text-xs">{row.channel}</Badge>
                                 </td>
                                 <td className="px-3 py-2 text-xs">{row.date}</td>
                                 <td className="px-3 py-2 font-medium">{row.sales}</td>
@@ -960,6 +1023,8 @@ const DemandForecasting = () => {
                             ))}
                           </tbody>
                         </table>
+                          );
+                        })()
                       )}
 
                   </>
