@@ -247,7 +247,7 @@ const WorkflowBuilder = () => {
           { 
             id: 'save-warehouse', 
             canvasId: 'save-warehouse-1', 
-            name: 'Save to Warehouse', 
+            name: 'Save to Warehouse',
             icon: Database, 
             color: 'bg-green-500', 
             x: 600, 
@@ -260,6 +260,36 @@ const WorkflowBuilder = () => {
           { id: 'c2', from: 'scheduling-1', to: 'explainability-agent-1' },
           { id: 'c3', from: 'scheduling-1', to: 'save-warehouse-1' },
           { id: 'c4', from: 'explainability-agent-1', to: 'save-warehouse-1' }
+        ]
+      };
+    } else if (workflowData?.name === 'Merchandise Planning') {
+      return {
+        blocks: [
+          { id: 'csv-1', canvasId: 'csv-1', name: 'Product Master CSV', icon: FileSpreadsheet, color: 'bg-blue-500', x: 50, y: 50, config: { name: 'Product Master CSV', description: 'Product catalog data', parameters: {} } },
+          { id: 'csv-2', canvasId: 'csv-2', name: 'Location Master CSV', icon: FileSpreadsheet, color: 'bg-blue-500', x: 50, y: 120, config: { name: 'Location Master CSV', description: 'Store location data', parameters: {} } },
+          { id: 'csv-3', canvasId: 'csv-3', name: 'Sales History CSV', icon: FileSpreadsheet, color: 'bg-blue-500', x: 50, y: 190, config: { name: 'Sales History CSV', description: 'Historical sales data', parameters: {} } },
+          { id: 'csv-4', canvasId: 'csv-4', name: 'Channel Master CSV', icon: FileSpreadsheet, color: 'bg-blue-500', x: 50, y: 260, config: { name: 'Channel Master CSV', description: 'Channel information', parameters: {} } },
+          { id: 'csv-5', canvasId: 'csv-5', name: 'Inventory Data CSV', icon: FileSpreadsheet, color: 'bg-blue-500', x: 50, y: 330, config: { name: 'Inventory Data CSV', description: 'Current inventory levels', parameters: {} } },
+          { id: 'drivers', canvasId: 'drivers-1', name: 'External Drivers', icon: Settings, color: 'bg-purple-500', x: 300, y: 190, config: { name: 'External Drivers', description: 'Holiday, Events, Google Trends', parameters: {} } },
+          { id: 'sales', canvasId: 'sales-1', name: 'Sales Plan', icon: TrendingUp, color: 'bg-cyan-500', x: 550, y: 120, config: { name: 'Sales Plan', description: 'Sales planning module', parameters: {} } },
+          { id: 'merch', canvasId: 'merch-1', name: 'Merchandise Plan', icon: Package, color: 'bg-indigo-500', x: 550, y: 190, config: { name: 'Merchandise Plan', description: 'Merchandise planning module', parameters: {} } },
+          { id: 'assort', canvasId: 'assort-1', name: 'Assortment Plan', icon: Grid3X3, color: 'bg-pink-500', x: 550, y: 260, config: { name: 'Assortment Plan', description: 'Assortment optimization', parameters: {} } },
+          { id: 'repl', canvasId: 'repl-1', name: 'Replenishment Plan', icon: RefreshCw, color: 'bg-orange-500', x: 800, y: 190, config: { name: 'Replenishment Plan', description: 'Replenishment planning', parameters: {} } },
+          { id: 'dashboard', canvasId: 'dashboard-1', name: 'Push to Dashboard', icon: BarChart3, color: 'bg-green-500', x: 1050, y: 190, config: { name: 'Push to Dashboard', description: 'Send to dashboard', parameters: {} } }
+        ],
+        connections: [
+          { id: 'c1', from: 'csv-1', to: 'drivers-1' },
+          { id: 'c2', from: 'csv-2', to: 'drivers-1' },
+          { id: 'c3', from: 'csv-3', to: 'drivers-1' },
+          { id: 'c4', from: 'csv-4', to: 'drivers-1' },
+          { id: 'c5', from: 'csv-5', to: 'drivers-1' },
+          { id: 'c6', from: 'drivers-1', to: 'sales-1' },
+          { id: 'c7', from: 'drivers-1', to: 'merch-1' },
+          { id: 'c8', from: 'drivers-1', to: 'assort-1' },
+          { id: 'c9', from: 'sales-1', to: 'repl-1' },
+          { id: 'c10', from: 'merch-1', to: 'repl-1' },
+          { id: 'c11', from: 'assort-1', to: 'repl-1' },
+          { id: 'c12', from: 'repl-1', to: 'dashboard-1' }
         ]
       };
     }
