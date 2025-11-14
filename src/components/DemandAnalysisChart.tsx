@@ -7,9 +7,10 @@ interface DemandAnalysisChartProps {
   classFilter: string;
   locationFilter: string;
   chartGranularity: 'daily' | 'weekly' | 'monthly' | 'quarterly';
+  storeFilter?: string;
 }
 
-export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity }: DemandAnalysisChartProps) => {
+export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all' }: DemandAnalysisChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -40,13 +41,29 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
 
     // Generate data based on granularity - split into historical and forecast periods
     const generateData = () => {
+      // Store-specific multipliers for variation
+      const storeMultiplier = storeFilter === 'all' ? 1.0 : 
+        storeFilter === 'L001' ? 0.85 :
+        storeFilter === 'L002' ? 1.15 :
+        storeFilter === 'L003' ? 1.25 :
+        storeFilter === 'L004' ? 0.75 :
+        storeFilter === 'L005' ? 1.35 :
+        storeFilter === 'L006' ? 0.95 :
+        storeFilter === 'L007' ? 0.88 :
+        storeFilter === 'L008' ? 1.10 :
+        storeFilter === 'L009' ? 1.05 :
+        storeFilter === 'L010' ? 0.92 :
+        storeFilter === 'L015' ? 1.18 :
+        storeFilter === 'L020' ? 1.22 :
+        storeFilter === 'L030' ? 0.80 : 1.0;
+
       switch (chartGranularity) {
         case 'daily':
           // 365 days historical + 90 days forecast (3 months)
           const dailyData = [];
           for (let i = 1; i <= 455; i++) {
-            const trendBase = 80 + (i * 0.15); // Upward trend
-            const seasonality = Math.sin(i / 30) * 8; // Monthly seasonality
+            const trendBase = (80 + (i * 0.15)) * storeMultiplier; // Upward trend with store variation
+            const seasonality = Math.sin(i / 30) * 8 * storeMultiplier; // Monthly seasonality
             const noise = (Math.random() - 0.5) * 6;
             
             if (i <= 365) {
@@ -81,8 +98,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           // 52 weeks historical + 13 weeks forecast (3 months)
           const weeklyData = [];
           for (let i = 1; i <= 65; i++) {
-            const trendBase = 85 + (i * 1.2); // Upward trend
-            const seasonality = Math.sin(i / 8) * 12;
+            const trendBase = (85 + (i * 1.2)) * storeMultiplier; // Upward trend
+            const seasonality = Math.sin(i / 8) * 12 * storeMultiplier;
             const noise = (Math.random() - 0.5) * 8;
             
             if (i <= 52) {
@@ -113,12 +130,11 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
             }
           }
           return weeklyData;
-        case 'monthly':
           // 12 months historical + 3 months forecast
           const monthlyData = [];
           for (let i = 1; i <= 15; i++) {
-            const trendBase = 320 + (i * 15); // Upward trend
-            const seasonality = Math.sin(i / 4) * 25;
+            const trendBase = (320 + (i * 15)) * storeMultiplier; // Upward trend
+            const seasonality = Math.sin(i / 4) * 25 * storeMultiplier;
             const noise = (Math.random() - 0.5) * 18;
             
             if (i <= 12) {
@@ -153,7 +169,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           // 4 quarters historical + 1 quarter forecast
           const quarterlyData = [];
           for (let i = 1; i <= 5; i++) {
-            const trendBase = 1150 + (i * 95); // Upward trend
+            const trendBase = (1150 + (i * 95)) * storeMultiplier; // Upward trend with store variation
             const noise = (Math.random() - 0.5) * 60;
             
             if (i <= 4) {
