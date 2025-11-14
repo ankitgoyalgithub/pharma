@@ -76,7 +76,7 @@ const WorkflowNode = ({ data, selected }) => {
   const getStatusStyle = () => {
     switch (status) {
       case 'running':
-        return 'border-green-500 shadow-lg shadow-green-500/30 animate-pulse';
+        return 'border-green-500 shadow-lg shadow-green-500/30';
       case 'completed':
         return 'border-green-400 shadow-lg shadow-green-400/20';
       case 'failed':
@@ -100,7 +100,7 @@ const WorkflowNode = ({ data, selected }) => {
         {/* Status indicator */}
         <div className="flex items-center justify-center h-3">
           {status === 'running' && (
-            <div className="w-1 h-1 bg-green-500 rounded-full animate-ping" />
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
           )}
           {status === 'completed' && (
             <CheckCircle className="w-2.5 h-2.5 text-green-500" />
@@ -602,7 +602,7 @@ const WorkflowRun = () => {
               status === 'paused' ? 'outline' : 
               status === 'ready' ? 'outline' : 'destructive'
             }>
-              {status === 'running' && <Activity className="h-3 w-3 mr-1 animate-pulse" />}
+              {status === 'running' && <Activity className="h-3 w-3 mr-1" />}
               {status === 'completed' && <CheckCircle className="h-3 w-3 mr-1" />}
               {status === 'paused' && <Pause className="h-3 w-3 mr-1" />}
               {status === 'ready' && <Clock className="h-3 w-3 mr-1" />}
