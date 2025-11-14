@@ -42,54 +42,139 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     const generateData = () => {
       switch (chartGranularity) {
         case 'daily':
-          // 42 days historical + 42 days forecast
+          // 365 days historical + 90 days forecast (3 months)
           const dailyData = [];
-          for (let i = 1; i <= 84; i++) {
-            const baseValue = 100 + Math.sin(i / 10) * 30;
-            if (i <= 42) {
+          for (let i = 1; i <= 455; i++) {
+            const trendBase = 80 + (i * 0.15); // Upward trend
+            const seasonality = Math.sin(i / 30) * 8; // Monthly seasonality
+            const noise = (Math.random() - 0.5) * 6;
+            
+            if (i <= 365) {
               // Historical period
               dailyData.push({
                 period: i,
-                historical: baseValue + Math.random() * 10,
+                historical: trendBase + seasonality + noise,
                 baseline: null,
                 enhanced: null,
+              });
+            } else if (i === 366) {
+              // Connection point
+              const lastValue = trendBase + seasonality + noise;
+              dailyData.push({
+                period: i,
+                historical: null,
+                baseline: lastValue,
+                enhanced: lastValue,
               });
             } else {
               // Forecast period
               dailyData.push({
                 period: i,
                 historical: null,
-                baseline: baseValue + 10 + Math.random() * 10,
-                enhanced: baseValue + 15 + Math.random() * 12,
+                baseline: trendBase + seasonality + (Math.random() - 0.5) * 4,
+                enhanced: trendBase + seasonality + 5 + (Math.random() - 0.5) * 4,
               });
             }
           }
           return dailyData;
         case 'weekly':
-          return [
-            { period: 1, historical: 90, baseline: null, enhanced: null },
-            { period: 2, historical: 95, baseline: null, enhanced: null },
-            { period: 3, historical: 140, baseline: null, enhanced: null },
-            { period: 4, historical: 150, baseline: null, enhanced: null },
-            { period: 5, historical: 160, baseline: null, enhanced: null },
-            { period: 6, historical: 165, baseline: null, enhanced: null },
-            { period: 7, historical: 195, baseline: 195, enhanced: 195 }, // Connection point
-            { period: 8, historical: null, baseline: 210, enhanced: 220 },
-            { period: 9, historical: null, baseline: 160, enhanced: 175 },
-            { period: 10, historical: null, baseline: 140, enhanced: 155 },
-            { period: 11, historical: null, baseline: 10, enhanced: 15 },
-            { period: 12, historical: null, baseline: 5, enhanced: 8 },
-          ];
+          // 52 weeks historical + 13 weeks forecast (3 months)
+          const weeklyData = [];
+          for (let i = 1; i <= 65; i++) {
+            const trendBase = 85 + (i * 1.2); // Upward trend
+            const seasonality = Math.sin(i / 8) * 12;
+            const noise = (Math.random() - 0.5) * 8;
+            
+            if (i <= 52) {
+              // Historical period
+              weeklyData.push({
+                period: i,
+                historical: trendBase + seasonality + noise,
+                baseline: null,
+                enhanced: null,
+              });
+            } else if (i === 53) {
+              // Connection point
+              const lastValue = trendBase + seasonality + noise;
+              weeklyData.push({
+                period: i,
+                historical: null,
+                baseline: lastValue,
+                enhanced: lastValue,
+              });
+            } else {
+              // Forecast period
+              weeklyData.push({
+                period: i,
+                historical: null,
+                baseline: trendBase + seasonality + (Math.random() - 0.5) * 5,
+                enhanced: trendBase + seasonality + 8 + (Math.random() - 0.5) * 5,
+              });
+            }
+          }
+          return weeklyData;
         case 'monthly':
-          return [
-            { period: 1, historical: 380, baseline: null, enhanced: null },
-            { period: 2, historical: 420, baseline: 420, enhanced: 420 }, // Connection point
-            { period: 3, historical: null, baseline: 520, enhanced: 560 },
-          ];
+          // 12 months historical + 3 months forecast
+          const monthlyData = [];
+          for (let i = 1; i <= 15; i++) {
+            const trendBase = 320 + (i * 15); // Upward trend
+            const seasonality = Math.sin(i / 4) * 25;
+            const noise = (Math.random() - 0.5) * 18;
+            
+            if (i <= 12) {
+              // Historical period
+              monthlyData.push({
+                period: i,
+                historical: trendBase + seasonality + noise,
+                baseline: null,
+                enhanced: null,
+              });
+            } else if (i === 13) {
+              // Connection point
+              const lastValue = trendBase + seasonality + noise;
+              monthlyData.push({
+                period: i,
+                historical: null,
+                baseline: lastValue,
+                enhanced: lastValue,
+              });
+            } else {
+              // Forecast period
+              monthlyData.push({
+                period: i,
+                historical: null,
+                baseline: trendBase + seasonality + (Math.random() - 0.5) * 15,
+                enhanced: trendBase + seasonality + 20 + (Math.random() - 0.5) * 15,
+              });
+            }
+          }
+          return monthlyData;
         case 'quarterly':
-          return [
-            { period: 1, historical: 1260, baseline: 1260, enhanced: 1260 }, // Connection point
-          ];
+          // 4 quarters historical + 1 quarter forecast
+          const quarterlyData = [];
+          for (let i = 1; i <= 5; i++) {
+            const trendBase = 1150 + (i * 95); // Upward trend
+            const noise = (Math.random() - 0.5) * 60;
+            
+            if (i <= 4) {
+              // Historical period
+              quarterlyData.push({
+                period: i,
+                historical: trendBase + noise,
+                baseline: null,
+                enhanced: null,
+              });
+            } else {
+              // Connection point and forecast
+              quarterlyData.push({
+                period: i,
+                historical: null,
+                baseline: trendBase + (Math.random() - 0.5) * 50,
+                enhanced: trendBase + 75 + (Math.random() - 0.5) * 50,
+              });
+            }
+          }
+          return quarterlyData;
         default:
           return [];
       }
