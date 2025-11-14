@@ -296,6 +296,37 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('fill', mutedForeground)
       .text('Next 12 Weeks Value Projection');
 
+    // Dynamic value based on store
+    const projectedValue = storeFilter === 'all' ? '6.8' :
+      storeFilter === 'L001' ? '5.2' :
+      storeFilter === 'L002' ? '7.8' :
+      storeFilter === 'L003' ? '8.5' :
+      storeFilter === 'L004' ? '4.5' :
+      storeFilter === 'L005' ? '9.2' :
+      storeFilter === 'L006' ? '6.1' :
+      storeFilter === 'L007' ? '5.8' :
+      storeFilter === 'L008' ? '7.3' :
+      storeFilter === 'L009' ? '6.9' :
+      storeFilter === 'L010' ? '5.9' :
+      storeFilter === 'L015' ? '7.9' :
+      storeFilter === 'L020' ? '8.2' :
+      storeFilter === 'L030' ? '5.0' : '6.8';
+
+    const projectedVolume = storeFilter === 'all' ? '120,756' :
+      storeFilter === 'L001' ? '87,420' :
+      storeFilter === 'L002' ? '138,567' :
+      storeFilter === 'L003' ? '152,340' :
+      storeFilter === 'L004' ? '65,890' :
+      storeFilter === 'L005' ? '165,423' :
+      storeFilter === 'L006' ? '98,234' :
+      storeFilter === 'L007' ? '92,567' :
+      storeFilter === 'L008' ? '125,890' :
+      storeFilter === 'L009' ? '112,345' :
+      storeFilter === 'L010' ? '95,678' :
+      storeFilter === 'L015' ? '135,890' :
+      storeFilter === 'L020' ? '145,678' :
+      storeFilter === 'L030' ? '78,456' : '120,756';
+
     topGroup.append('text')
       .attr('x', containerWidth - 20)
       .attr('y', 40)
@@ -303,7 +334,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('font-size', '24px')
       .attr('font-weight', 'bold')
       .attr('fill', successColor)
-      .text('6.8');
+      .text(projectedValue);
 
     topGroup.append('text')
       .attr('x', containerWidth - 20)
@@ -329,7 +360,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('font-size', '24px')
       .attr('font-weight', 'bold')
       .attr('fill', successColor)
-      .text('120,756');
+      .text(projectedVolume);
 
     topGroup.append('text')
       .attr('x', containerWidth - 20)
@@ -637,7 +668,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
         }
       });
 
-  }, [granularity, valueMode, classFilter, locationFilter, chartGranularity, renderWidth]);
+  }, [granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter, renderWidth]);
 
   return (
     <div className="relative w-full min-w-0">
