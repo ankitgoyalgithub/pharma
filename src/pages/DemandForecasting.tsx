@@ -1720,8 +1720,8 @@ const DemandForecasting = () => {
               <CalendarIcon className="w-4 h-4 text-primary" />
               <div className="text-xs font-medium text-muted-foreground">Data Period</div>
             </div>
-            <div className="text-base font-bold text-foreground">Jan 2022 - Dec 2024</div>
-            <div className="text-xs text-muted-foreground">36 months</div>
+            <div className="text-base font-bold text-foreground">Jan 2024 - Dec 2024</div>
+            <div className="text-xs text-muted-foreground">12 months</div>
           </CardContent>
         </Card>
         
@@ -1731,7 +1731,7 @@ const DemandForecasting = () => {
               <Database className="w-4 h-4 text-accent" />
               <div className="text-xs font-medium text-muted-foreground">Total Records</div>
             </div>
-            <div className="text-base font-bold text-foreground">847,592</div>
+            <div className="text-base font-bold text-foreground">82,577</div>
             <div className="text-xs text-muted-foreground">Across all sources</div>
           </CardContent>
         </Card>
@@ -1742,7 +1742,7 @@ const DemandForecasting = () => {
               <Box className="w-4 h-4 text-success" />
               <div className="text-xs font-medium text-muted-foreground">SKUs/Products</div>
             </div>
-            <div className="text-base font-bold text-foreground">2,847</div>
+            <div className="text-base font-bold text-foreground">100</div>
             <div className="text-xs text-muted-foreground">Unique items</div>
           </CardContent>
         </Card>
@@ -1753,7 +1753,7 @@ const DemandForecasting = () => {
               <MapPin className="w-4 h-4 text-warning" />
               <div className="text-xs font-medium text-muted-foreground">Locations</div>
             </div>
-            <div className="text-base font-bold text-foreground">127</div>
+            <div className="text-base font-bold text-foreground">45</div>
             <div className="text-xs text-muted-foreground">Geographic points</div>
           </CardContent>
         </Card>
@@ -1869,40 +1869,75 @@ const DemandForecasting = () => {
                         );
                       })()
                     ) : (
-                      <table className="w-full text-xs">
-                        <thead className="bg-muted/20 sticky top-0">
-                          <tr>
-                            <th className="text-left p-2 font-medium">SKU</th>
-                            <th className="text-left p-2 font-medium">Product</th>
-                            <th className="text-left p-2 font-medium">Location</th>
-                            <th className="text-left p-2 font-medium">Channel</th>
-                            <th className="text-left p-2 font-medium">Date</th>
-                            <th className="text-left p-2 font-medium">Sales</th>
-                            <th className="text-left p-2 font-medium">Revenue</th>
-                            <th className="text-left p-2 font-medium">Stock</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {dataPreviewSample.map((row, index) => (
-                            <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
-                              <td className="p-2 text-xs font-mono">{row.sku}</td>
-                              <td className="p-2 font-medium">{row.product}</td>
-                              <td className="p-2">{row.location}</td>
-                              <td className="p-2">
-                                <Badge variant="outline" className="text-xs">{row.channel}</Badge>
-                              </td>
-                              <td className="p-2 text-xs">{row.date}</td>
-                              <td className="p-2 font-medium">{row.sales}</td>
-                              <td className="p-2 font-medium text-success">{row.revenue}</td>
-                              <td className="p-2">
-                                <Badge variant="secondary" className="text-xs">
-                                  {row.stock}
-                                </Badge>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                      (() => {
+                        // Check for actual uploaded CSV data first
+                        const csvData = parsedCsvData[selectedPreview || ''];
+                        if (csvData && csvData.length > 0) {
+                          const columns = Object.keys(csvData[0]);
+                          return (
+                            <table className="w-full text-xs">
+                              <thead className="bg-muted/20 sticky top-0">
+                                <tr>
+                                  {columns.map((col) => (
+                                    <th key={col} className="text-left p-2 font-medium capitalize">
+                                      {col.replace(/_/g, ' ')}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {csvData.slice(0, 10).map((row, index) => (
+                                  <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
+                                    {columns.map((col) => (
+                                      <td key={col} className="p-2">
+                                        {String(row[col])}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          );
+                        }
+                        
+                        // Fallback to sample data
+                        return (
+                          <table className="w-full text-xs">
+                            <thead className="bg-muted/20 sticky top-0">
+                              <tr>
+                                <th className="text-left p-2 font-medium">SKU</th>
+                                <th className="text-left p-2 font-medium">Product</th>
+                                <th className="text-left p-2 font-medium">Location</th>
+                                <th className="text-left p-2 font-medium">Channel</th>
+                                <th className="text-left p-2 font-medium">Date</th>
+                                <th className="text-left p-2 font-medium">Sales</th>
+                                <th className="text-left p-2 font-medium">Revenue</th>
+                                <th className="text-left p-2 font-medium">Stock</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {dataPreviewSample.map((row, index) => (
+                                <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
+                                  <td className="p-2 text-xs font-mono">{row.sku}</td>
+                                  <td className="p-2 font-medium">{row.product}</td>
+                                  <td className="p-2">{row.location}</td>
+                                  <td className="p-2">
+                                    <Badge variant="outline" className="text-xs">{row.channel}</Badge>
+                                  </td>
+                                  <td className="p-2 text-xs">{row.date}</td>
+                                  <td className="p-2 font-medium">{row.sales}</td>
+                                  <td className="p-2 font-medium text-success">{row.revenue}</td>
+                                  <td className="p-2">
+                                    <Badge variant="secondary" className="text-xs">
+                                      {row.stock}
+                                    </Badge>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        );
+                      })()
                     )}
                   </div>
                 </div>
