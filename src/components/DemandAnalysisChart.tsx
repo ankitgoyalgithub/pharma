@@ -38,41 +38,57 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     const containerWidth = renderWidth;
     const containerHeight = 320;
 
-    // Generate data based on granularity
+    // Generate data based on granularity - split into historical and forecast periods
     const generateData = () => {
       switch (chartGranularity) {
         case 'daily':
-          return Array.from({ length: 84 }, (_, i) => ({
-            period: i + 1,
-            historical: Math.random() * 50 + 80,
-            forecast: Math.random() * 60 + 120,
-            optimized: Math.random() * 55 + 115,
-            ml: Math.random() * 65 + 125,
-          }));
+          // 42 days historical + 42 days forecast
+          const dailyData = [];
+          for (let i = 1; i <= 84; i++) {
+            const baseValue = 100 + Math.sin(i / 10) * 30;
+            if (i <= 42) {
+              // Historical period
+              dailyData.push({
+                period: i,
+                historical: baseValue + Math.random() * 10,
+                baseline: null,
+                enhanced: null,
+              });
+            } else {
+              // Forecast period
+              dailyData.push({
+                period: i,
+                historical: null,
+                baseline: baseValue + 10 + Math.random() * 10,
+                enhanced: baseValue + 15 + Math.random() * 12,
+              });
+            }
+          }
+          return dailyData;
         case 'weekly':
           return [
-            { period: 1, historical: 90, forecast: 120, optimized: 115, ml: 125 },
-            { period: 2, historical: 95, forecast: 125, optimized: 118, ml: 130 },
-            { period: 3, historical: 140, forecast: 210, optimized: 200, ml: 215 },
-            { period: 4, historical: 150, forecast: 245, optimized: 235, ml: 250 },
-            { period: 5, historical: 160, forecast: 265, optimized: 255, ml: 270 },
-            { period: 6, historical: 165, forecast: 280, optimized: 268, ml: 285 },
-            { period: 7, historical: 195, forecast: 290, optimized: 280, ml: 295 },
-            { period: 8, historical: 130, forecast: 210, optimized: 205, ml: 215 },
-            { period: 9, historical: 115, forecast: 160, optimized: 155, ml: 165 },
-            { period: 10, historical: 100, forecast: 140, optimized: 135, ml: 145 },
-            { period: 11, historical: 5, forecast: 10, optimized: 8, ml: 12 },
-            { period: 12, historical: 3, forecast: 5, optimized: 4, ml: 6 },
+            { period: 1, historical: 90, baseline: null, enhanced: null },
+            { period: 2, historical: 95, baseline: null, enhanced: null },
+            { period: 3, historical: 140, baseline: null, enhanced: null },
+            { period: 4, historical: 150, baseline: null, enhanced: null },
+            { period: 5, historical: 160, baseline: null, enhanced: null },
+            { period: 6, historical: 165, baseline: null, enhanced: null },
+            { period: 7, historical: 195, baseline: 195, enhanced: 195 }, // Connection point
+            { period: 8, historical: null, baseline: 210, enhanced: 220 },
+            { period: 9, historical: null, baseline: 160, enhanced: 175 },
+            { period: 10, historical: null, baseline: 140, enhanced: 155 },
+            { period: 11, historical: null, baseline: 10, enhanced: 15 },
+            { period: 12, historical: null, baseline: 5, enhanced: 8 },
           ];
         case 'monthly':
           return [
-            { period: 1, historical: 380, forecast: 520, optimized: 495, ml: 545 },
-            { period: 2, historical: 420, forecast: 580, optimized: 550, ml: 605 },
-            { period: 3, historical: 460, forecast: 640, optimized: 610, ml: 665 },
+            { period: 1, historical: 380, baseline: null, enhanced: null },
+            { period: 2, historical: 420, baseline: 420, enhanced: 420 }, // Connection point
+            { period: 3, historical: null, baseline: 520, enhanced: 560 },
           ];
         case 'quarterly':
           return [
-            { period: 1, historical: 1260, forecast: 1740, optimized: 1655, ml: 1815 },
+            { period: 1, historical: 1260, baseline: 1260, enhanced: 1260 }, // Connection point
           ];
         default:
           return [];
@@ -257,7 +273,11 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .domain([1, data.length])
       .range([0, chartWidth]);
 
-    const maxY = d3.max(data, d => Math.max(d.historical, d.forecast, d.optimized, d.ml)) || 400;
+    const maxY = d3.max(data, d => Math.max(
+      d.historical || 0, 
+      d.baseline || 0, 
+      d.enhanced || 0
+    )) || 400;
     const yScale = d3.scaleLinear()
       .domain([0, maxY * 1.1])
       .range([chartHeight, 0]);
@@ -310,85 +330,211 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       .attr('stroke', borderColor);
 
     // Line generators
-    const line = (key: 'historical' | 'forecast' | 'optimized' | 'ml') => 
-      d3.line<typeof data[0]>()
-        .x(d => xScale(d.period))
-        .y(d => yScale(d[key]))
-        .curve(d3.curveMonotoneX);
+    const historicalLine = d3.line<typeof data[0]>()
+      .defined(d => d.historical !== null)
+      .x(d => xScale(d.period))
+      .y(d => yScale(d.historical!))
+      .curve(d3.curveMonotoneX);
 
-    // Define line styles using theme colors for better dark/light contrast
-    const lineStyles = [
-      { key: 'ml' as const, color: successColor, width: 2.5, opacity: 1 },
-      { key: 'optimized' as const, color: accentColor, width: 2.5, opacity: 1 },
-      { key: 'historical' as const, color: foregroundColor, width: 2, opacity: 0.9 },
-      { key: 'forecast' as const, color: primaryColor, width: 2.5, opacity: 1 },
-    ];
+    const baselineLine = d3.line<typeof data[0]>()
+      .defined(d => d.baseline !== null)
+      .x(d => xScale(d.period))
+      .y(d => yScale(d.baseline!))
+      .curve(d3.curveMonotoneX);
 
-    // Draw lines
-    lineStyles.forEach(({ key, color, width, opacity = 1 }) => {
-      chartGroup.append('path')
-        .datum(data)
-        .attr('fill', 'none')
-        .attr('stroke', color)
-        .attr('stroke-width', width)
-        .attr('opacity', opacity)
-        .attr('d', line(key));
+    const enhancedLine = d3.line<typeof data[0]>()
+      .defined(d => d.enhanced !== null)
+      .x(d => xScale(d.period))
+      .y(d => yScale(d.enhanced!))
+      .curve(d3.curveMonotoneX);
 
-      // Add dots with hover tooltip
-      chartGroup.selectAll(`.dot-${key}`)
-        .data(data)
-        .enter()
-        .append('circle')
-        .attr('class', `dot-${key}`)
-        .attr('cx', d => xScale(d.period))
-        .attr('cy', d => yScale(d[key]))
-        .attr('r', 4)
-        .attr('fill', color)
-        .attr('stroke', backgroundColor)
-        .attr('stroke-width', 2)
-        .style('cursor', 'pointer')
-        .on('mouseenter', function(event, d) {
-          d3.select(this)
-            .transition()
-            .duration(200)
-            .attr('r', 6);
-          
-          if (tooltipRef.current) {
-            const tooltip = d3.select(tooltipRef.current);
-            tooltip
-              .style('opacity', 1)
-              .style('left', `${event.pageX + 10}px`)
-              .style('top', `${event.pageY - 10}px`)
-              .html(`
-                <div class="font-semibold mb-1">${getPeriodLabel(d.period)}</div>
-                <div class="text-sm">
-                  <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full" style="background-color: ${color}"></div>
-                    <span class="capitalize">${key}:</span>
-                    <span class="font-semibold">${d[key].toFixed(1)}</span>
-                  </div>
+    // Draw historical line (solid)
+    chartGroup.append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', primaryColor)
+      .attr('stroke-width', 2.5)
+      .attr('d', historicalLine);
+
+    // Draw baseline forecast line (dashed)
+    chartGroup.append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', accentColor)
+      .attr('stroke-width', 2.5)
+      .attr('stroke-dasharray', '6,4')
+      .attr('d', baselineLine);
+
+    // Draw enhanced forecast line (dashed)
+    chartGroup.append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', successColor)
+      .attr('stroke-width', 2.5)
+      .attr('stroke-dasharray', '6,4')
+      .attr('d', enhancedLine);
+
+    // Add dots for historical data
+    chartGroup.selectAll('.dot-historical')
+      .data(data.filter(d => d.historical !== null))
+      .enter()
+      .append('circle')
+      .attr('class', 'dot-historical')
+      .attr('cx', d => xScale(d.period))
+      .attr('cy', d => yScale(d.historical!))
+      .attr('r', 4)
+      .attr('fill', primaryColor)
+      .attr('stroke', backgroundColor)
+      .attr('stroke-width', 2)
+      .style('cursor', 'pointer')
+      .on('mouseenter', function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('r', 6);
+        
+        if (tooltipRef.current) {
+          const tooltip = d3.select(tooltipRef.current);
+          tooltip
+            .style('opacity', 1)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`)
+            .html(`
+              <div class="font-semibold mb-1">${getPeriodLabel(d.period)}</div>
+              <div class="text-sm">
+                <div class="flex items-center gap-2">
+                  <span style="color: ${primaryColor}">●</span>
+                  <span>Historical: ${Math.round(d.historical!)}</span>
                 </div>
-              `);
-          }
-        })
-        .on('mousemove', function(event) {
-          if (tooltipRef.current) {
-            d3.select(tooltipRef.current)
-              .style('left', `${event.pageX + 10}px`)
-              .style('top', `${event.pageY - 10}px`);
-          }
-        })
-        .on('mouseleave', function() {
-          d3.select(this)
-            .transition()
-            .duration(200)
-            .attr('r', 4);
-          
-          if (tooltipRef.current) {
-            d3.select(tooltipRef.current).style('opacity', 0);
-          }
-        });
-        });
+              </div>
+            `);
+        }
+      })
+      .on('mousemove', function(event) {
+        if (tooltipRef.current) {
+          d3.select(tooltipRef.current)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`);
+        }
+      })
+      .on('mouseleave', function() {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('r', 4);
+        
+        if (tooltipRef.current) {
+          d3.select(tooltipRef.current).style('opacity', 0);
+        }
+      });
+
+    // Add dots for baseline forecast
+    chartGroup.selectAll('.dot-baseline')
+      .data(data.filter(d => d.baseline !== null))
+      .enter()
+      .append('circle')
+      .attr('class', 'dot-baseline')
+      .attr('cx', d => xScale(d.period))
+      .attr('cy', d => yScale(d.baseline!))
+      .attr('r', 4)
+      .attr('fill', accentColor)
+      .attr('stroke', backgroundColor)
+      .attr('stroke-width', 2)
+      .style('cursor', 'pointer')
+      .on('mouseenter', function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('r', 6);
+        
+        if (tooltipRef.current) {
+          const tooltip = d3.select(tooltipRef.current);
+          tooltip
+            .style('opacity', 1)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`)
+            .html(`
+              <div class="font-semibold mb-1">${getPeriodLabel(d.period)}</div>
+              <div class="text-sm">
+                <div class="flex items-center gap-2">
+                  <span style="color: ${accentColor}">●</span>
+                  <span>Baseline: ${Math.round(d.baseline!)}</span>
+                </div>
+              </div>
+            `);
+        }
+      })
+      .on('mousemove', function(event) {
+        if (tooltipRef.current) {
+          d3.select(tooltipRef.current)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`);
+        }
+      })
+      .on('mouseleave', function() {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('r', 4);
+        
+        if (tooltipRef.current) {
+          d3.select(tooltipRef.current).style('opacity', 0);
+        }
+      });
+
+    // Add dots for enhanced forecast
+    chartGroup.selectAll('.dot-enhanced')
+      .data(data.filter(d => d.enhanced !== null))
+      .enter()
+      .append('circle')
+      .attr('class', 'dot-enhanced')
+      .attr('cx', d => xScale(d.period))
+      .attr('cy', d => yScale(d.enhanced!))
+      .attr('r', 4)
+      .attr('fill', successColor)
+      .attr('stroke', backgroundColor)
+      .attr('stroke-width', 2)
+      .style('cursor', 'pointer')
+      .on('mouseenter', function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('r', 6);
+        
+        if (tooltipRef.current) {
+          const tooltip = d3.select(tooltipRef.current);
+          tooltip
+            .style('opacity', 1)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`)
+            .html(`
+              <div class="font-semibold mb-1">${getPeriodLabel(d.period)}</div>
+              <div class="text-sm">
+                <div class="flex items-center gap-2">
+                  <span style="color: ${successColor}">●</span>
+                  <span>Enhanced: ${Math.round(d.enhanced!)}</span>
+                </div>
+              </div>
+            `);
+        }
+      })
+      .on('mousemove', function(event) {
+        if (tooltipRef.current) {
+          d3.select(tooltipRef.current)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`);
+        }
+      })
+      .on('mouseleave', function() {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('r', 4);
+        
+        if (tooltipRef.current) {
+          d3.select(tooltipRef.current).style('opacity', 0);
+        }
+      });
 
   }, [granularity, valueMode, classFilter, locationFilter, chartGranularity, renderWidth]);
 
