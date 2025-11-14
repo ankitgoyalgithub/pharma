@@ -185,9 +185,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     // Get period label
     const getPeriodLabel = (period: number) => {
       switch (chartGranularity) {
-        case 'daily': return `Day ${period}`;
-        case 'weekly': return `Week ${period}`;
-        case 'monthly': return `Month ${period}`;
+        case 'daily': return `D${period}`;
+        case 'weekly': return `W${period}`;
+        case 'monthly': return `M${period}`;
         case 'quarterly': return `Q${period}`;
         default: return `${period}`;
       }
