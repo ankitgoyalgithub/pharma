@@ -1984,8 +1984,35 @@ const DemandForecasting = () => {
             <ForecastCard
               title="Forecast Snapshot"
               value="82%"
-              subtitle="Backtested Accuracy • $6.8M Value • 120,756 Units
-                        12-Week Horizon • 5 Active SKUs • 4 Channels"
+              subtitle={`Backtested Accuracy • ${filterValues.store === 'all' ? '$6.8M' : 
+                filterValues.store === 'L001' ? '$5.2M' :
+                filterValues.store === 'L002' ? '$7.8M' :
+                filterValues.store === 'L003' ? '$8.5M' :
+                filterValues.store === 'L004' ? '$4.5M' :
+                filterValues.store === 'L005' ? '$9.2M' :
+                filterValues.store === 'L006' ? '$6.1M' :
+                filterValues.store === 'L007' ? '$5.8M' :
+                filterValues.store === 'L008' ? '$7.3M' :
+                filterValues.store === 'L009' ? '$6.9M' :
+                filterValues.store === 'L010' ? '$5.9M' :
+                filterValues.store === 'L015' ? '$7.9M' :
+                filterValues.store === 'L020' ? '$8.2M' :
+                filterValues.store === 'L030' ? '$5.0M' : '$6.8M'} Value • ${
+                filterValues.store === 'all' ? '120,756' :
+                filterValues.store === 'L001' ? '87,420' :
+                filterValues.store === 'L002' ? '138,567' :
+                filterValues.store === 'L003' ? '152,340' :
+                filterValues.store === 'L004' ? '65,890' :
+                filterValues.store === 'L005' ? '165,423' :
+                filterValues.store === 'L006' ? '98,234' :
+                filterValues.store === 'L007' ? '92,567' :
+                filterValues.store === 'L008' ? '125,890' :
+                filterValues.store === 'L009' ? '112,345' :
+                filterValues.store === 'L010' ? '95,678' :
+                filterValues.store === 'L015' ? '135,890' :
+                filterValues.store === 'L020' ? '145,678' :
+                filterValues.store === 'L030' ? '78,456' : '120,756'} Units
+                        12-Week Horizon • ${filterValues.store === 'all' ? '5' : '1'} Active SKUs • 4 Channels`}
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
               onClick={() => {
@@ -1998,10 +2025,10 @@ const DemandForecasting = () => {
             <div className="flex justify-center">
             <ForecastCard
               title="ABC, XYZ & More"
-              value="65%"
-              subtitle="from class A, 40% from class X
-                        $ sales from class A -
-                        down by x% from last cycle"
+              value={`${abcThresholdA}%`}
+              subtitle={`Class A threshold • ${xyzThresholdX}% Class X threshold
+                        FMR ${fmrThresholdF}% Fast-moving
+                        ${classificationBasis === 'value' ? 'Value-based' : 'Volume-based'} classification`}
               icon={BarChart3}
               isActive={selectedScenario === null && activeTab === "insights"}
               onClick={() => {
@@ -2747,7 +2774,7 @@ const DemandForecasting = () => {
             <ABCXYZMatrix />
 
             {/* Bottom Row - Channel Distribution and Classifications */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <Card className="shadow-card border-0">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm">
@@ -2774,7 +2801,7 @@ const DemandForecasting = () => {
                         <Info className="w-3 h-3 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Categorizes items by revenue value: A (high), B (medium), C (low). Helps prioritize forecasting efforts.</p>
+                        <p>Categorizes items by {classificationBasis === 'value' ? 'revenue value' : 'volume'}: A (high), B (medium), C (low). Helps prioritize forecasting efforts.</p>
                       </TooltipContent>
                     </Tooltip>
                   </div>
@@ -2782,19 +2809,34 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm">Class A (High Value)</span>
-                      <Badge variant="secondary" className="bg-success/10 text-success">65%</Badge>
+                      <span className="text-sm">Class A (High {classificationBasis === 'value' ? 'Value' : 'Volume'})</span>
+                      <Badge variant="secondary" className="bg-success/10 text-success">{abcThresholdA}%</Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm">Class B (Medium Value)</span>
-                      <Badge variant="secondary" className="bg-warning/10 text-warning">25%</Badge>
+                      <span className="text-sm">Class B (Medium {classificationBasis === 'value' ? 'Value' : 'Volume'})</span>
+                      <Badge variant="secondary" className="bg-warning/10 text-warning">{abcThresholdB}%</Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm">Class C (Low Value)</span>
-                      <Badge variant="secondary" className="bg-muted/10 text-muted-foreground">10%</Badge>
+                      <span className="text-sm">Class C (Low {classificationBasis === 'value' ? 'Value' : 'Volume'})</span>
+                      <Badge variant="secondary" className="bg-muted/10 text-muted-foreground">{100 - parseInt(abcThresholdA) - parseInt(abcThresholdB)}%</Badge>
                     </div>
                     <div className="mt-4 pt-3 border-t">
-                      <div className="text-2xl font-bold text-primary">$84.6M</div>
+                      <div className="text-2xl font-bold text-primary">
+                        ${filterValues.store === 'all' ? '12.3M' :
+                          filterValues.store === 'L001' ? '8.9M' :
+                          filterValues.store === 'L002' ? '14.2M' :
+                          filterValues.store === 'L003' ? '15.8M' :
+                          filterValues.store === 'L004' ? '7.2M' :
+                          filterValues.store === 'L005' ? '16.9M' :
+                          filterValues.store === 'L006' ? '10.5M' :
+                          filterValues.store === 'L007' ? '9.8M' :
+                          filterValues.store === 'L008' ? '13.6M' :
+                          filterValues.store === 'L009' ? '12.1M' :
+                          filterValues.store === 'L010' ? '10.2M' :
+                          filterValues.store === 'L015' ? '14.8M' :
+                          filterValues.store === 'L020' ? '15.5M' :
+                          filterValues.store === 'L030' ? '8.4M' : '12.3M'}
+                      </div>
                       <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
                     </div>
                   </div>
@@ -2822,19 +2864,73 @@ const DemandForecasting = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-sm">X (Low Variability)</span>
-                      <Badge variant="secondary" className="bg-success/10 text-success">40%</Badge>
+                      <Badge variant="secondary" className="bg-success/10 text-success">{xyzThresholdX}%</Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Y (Medium Variability)</span>
-                      <Badge variant="secondary" className="bg-warning/10 text-warning">35%</Badge>
+                      <Badge variant="secondary" className="bg-warning/10 text-warning">{parseInt(xyzThresholdY) - parseInt(xyzThresholdX)}%</Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Z (High Variability)</span>
-                      <Badge variant="secondary" className="bg-destructive/10 text-destructive">25%</Badge>
+                      <Badge variant="secondary" className="bg-destructive/10 text-destructive">{100 - parseInt(xyzThresholdY)}%</Badge>
                     </div>
                     <div className="mt-4 pt-3 border-t">
-                      <div className="text-2xl font-bold text-primary">1,501 SKUs</div>
-                      <p className="text-xs text-muted-foreground">Total Items Analyzed</p>
+                      <div className="text-2xl font-bold text-warning">14.2%</div>
+                      <p className="text-xs text-muted-foreground">Avg Coefficient of Variation</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-card border-0">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-sm">
+                      <Activity className="w-4 h-4" />
+                      FMR Analysis
+                    </CardTitle>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="w-3 h-3 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Fast, Medium, Rare classification based on movement frequency: F (fast-moving), M (medium), R (rare/slow-moving).</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">F (Fast Moving)</span>
+                      <Badge variant="secondary" className="bg-success/10 text-success">{fmrThresholdF}%</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">M (Medium Moving)</span>
+                      <Badge variant="secondary" className="bg-warning/10 text-warning">{parseInt(fmrThresholdM) - parseInt(fmrThresholdF)}%</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">R (Rare/Slow Moving)</span>
+                      <Badge variant="secondary" className="bg-muted/10 text-muted-foreground">{100 - parseInt(fmrThresholdM)}%</Badge>
+                    </div>
+                    <div className="mt-4 pt-3 border-t">
+                      <div className="text-2xl font-bold text-success">
+                        {filterValues.store === 'all' ? '89.2K' :
+                          filterValues.store === 'L001' ? '62.5K' :
+                          filterValues.store === 'L002' ? '105.3K' :
+                          filterValues.store === 'L003' ? '118.7K' :
+                          filterValues.store === 'L004' ? '48.2K' :
+                          filterValues.store === 'L005' ? '128.9K' :
+                          filterValues.store === 'L006' ? '73.4K' :
+                          filterValues.store === 'L007' ? '68.1K' :
+                          filterValues.store === 'L008' ? '95.7K' :
+                          filterValues.store === 'L009' ? '86.3K' :
+                          filterValues.store === 'L010' ? '71.8K' :
+                          filterValues.store === 'L015' ? '102.4K' :
+                          filterValues.store === 'L020' ? '112.5K' :
+                          filterValues.store === 'L030' ? '58.9K' : '89.2K'}
+                      </div>
+                      <p className="text-xs text-muted-foreground">Fast-Moving Units</p>
                     </div>
                   </div>
                 </CardContent>
