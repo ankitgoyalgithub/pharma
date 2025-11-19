@@ -12,11 +12,35 @@ interface Scenario {
   value: string;
   subtitle: string;
   factors?: {
+    description?: string;
+    timeHorizon?: string;
+    granularity?: string;
     priceChange: number;
     promotionIntensity: number;
     seasonality: number;
     marketGrowth: number;
-    sku: string;
+    newProductLaunch?: boolean;
+    productLifecycle?: string;
+    cannibalization?: number;
+    channelMix?: {
+      online: number;
+      retail: number;
+      b2b: number;
+    };
+    locationExpansion?: number;
+    competitorActivity?: number;
+    economicIndicator?: number;
+    weatherImpact?: number;
+    minOrderQuantity?: number;
+    maxCapacity?: number;
+    safetyStockDays?: number;
+    targetServiceLevel?: number;
+    inventoryTurnover?: number;
+    leadTime?: number;
+    sku?: string;
+    affectedProducts?: string[];
+    affectedLocations?: string[];
+    affectedChannels?: string[];
   };
 }
 

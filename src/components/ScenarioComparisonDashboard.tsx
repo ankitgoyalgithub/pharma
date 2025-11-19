@@ -7,31 +7,31 @@ import { buildChartOptions, hslVar } from '@/lib/chartTheme';
 import { TrendingUp, TrendingDown, DollarSign, Package, Target, AlertCircle, CheckCircle, Activity, BarChart3, LineChart, Sparkles } from 'lucide-react';
 
 interface ScenarioFactors {
-  description: string;
-  timeHorizon: string;
-  granularity: string;
+  description?: string;
+  timeHorizon?: string;
+  granularity?: string;
   priceChange: number;
   promotionIntensity: number;
   seasonality: number;
   marketGrowth: number;
-  newProductLaunch: boolean;
-  productLifecycle: string;
-  cannibalization: number;
-  channelMix: { online: number; retail: number; b2b: number };
-  locationExpansion: number;
-  competitorActivity: number;
-  economicIndicator: number;
-  weatherImpact: number;
-  minOrderQuantity: number;
-  maxCapacity: number;
-  safetyStockDays: number;
-  targetServiceLevel: number;
-  inventoryTurnover: number;
-  leadTime: number;
-  sku: string;
-  affectedProducts: string[];
-  affectedLocations: string[];
-  affectedChannels: string[];
+  newProductLaunch?: boolean;
+  productLifecycle?: string;
+  cannibalization?: number;
+  channelMix?: { online: number; retail: number; b2b: number };
+  locationExpansion?: number;
+  competitorActivity?: number;
+  economicIndicator?: number;
+  weatherImpact?: number;
+  minOrderQuantity?: number;
+  maxCapacity?: number;
+  safetyStockDays?: number;
+  targetServiceLevel?: number;
+  inventoryTurnover?: number;
+  leadTime?: number;
+  sku?: string;
+  affectedProducts?: string[];
+  affectedLocations?: string[];
+  affectedChannels?: string[];
 }
 
 interface Scenario {
@@ -61,14 +61,14 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
   const scenarioAccuracy = parseFloat(scenario.value);
   const accuracyDelta = scenarioAccuracy - baseline.accuracy;
   
-  // Calculate scenario metrics
+  // Calculate scenario metrics with safe defaults
   const totalImpact = 
     (factors.priceChange * -0.3) +
     (factors.promotionIntensity * 0.5) +
     (factors.seasonality * 0.3) +
     (factors.marketGrowth * 0.8) +
-    (factors.competitorActivity * -0.2) +
-    (factors.economicIndicator * 0.4);
+    ((factors.competitorActivity || 0) * -0.2) +
+    ((factors.economicIndicator || 0) * 0.4);
   
   const revenueMultiplier = 1 + (totalImpact / 100);
   const scenarioRevenue = baseline.revenue * revenueMultiplier;
@@ -101,14 +101,14 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
   const { baselineData, scenarioData } = generateWeeklyData();
   const weekLabels = Array.from({ length: 13 }, (_, i) => `Week ${i + 1}`);
 
-  // Key drivers impact breakdown
+  // Key drivers impact breakdown with safe defaults
   const driverImpacts = [
     { name: 'Price Change', value: factors.priceChange * -0.3, weight: factors.priceChange },
     { name: 'Promotions', value: factors.promotionIntensity * 0.5, weight: factors.promotionIntensity },
     { name: 'Seasonality', value: factors.seasonality * 0.3, weight: factors.seasonality },
     { name: 'Market Growth', value: factors.marketGrowth * 0.8, weight: factors.marketGrowth },
-    { name: 'Competition', value: factors.competitorActivity * -0.2, weight: factors.competitorActivity },
-    { name: 'Economic', value: factors.economicIndicator * 0.4, weight: factors.economicIndicator },
+    { name: 'Competition', value: (factors.competitorActivity || 0) * -0.2, weight: factors.competitorActivity || 0 },
+    { name: 'Economic', value: (factors.economicIndicator || 0) * 0.4, weight: factors.economicIndicator || 0 },
   ].filter(d => Math.abs(d.weight) > 0).sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
 
   return (
@@ -161,10 +161,10 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
             <div className="text-center p-4 rounded-xl bg-background/60 border">
               <div className="text-xs text-muted-foreground mb-1">Planning Horizon</div>
               <div className="text-2xl font-bold text-primary">
-                {factors.timeHorizon.split('-')[0]}
+                {factors.timeHorizon ? factors.timeHorizon.split('-')[0] : 'N/A'}
               </div>
               <div className="text-xs text-muted-foreground mt-1">
-                {factors.granularity} granularity
+                {factors.granularity || 'weekly'} granularity
               </div>
             </div>
           </div>
@@ -326,47 +326,57 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
                 </div>
               )}
 
-              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
-                <span className="text-sm text-muted-foreground">Product Lifecycle</span>
-                <Badge variant="outline" className="text-xs capitalize">{factors.productLifecycle}</Badge>
-              </div>
+              {factors.productLifecycle && (
+                <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                  <span className="text-sm text-muted-foreground">Product Lifecycle</span>
+                  <Badge variant="outline" className="text-xs capitalize">{factors.productLifecycle}</Badge>
+                </div>
+              )}
 
-              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
-                <span className="text-sm text-muted-foreground">Service Level Target</span>
-                <Badge variant="outline" className="text-xs">{factors.targetServiceLevel}%</Badge>
-              </div>
+              {factors.targetServiceLevel && (
+                <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                  <span className="text-sm text-muted-foreground">Service Level Target</span>
+                  <Badge variant="outline" className="text-xs">{factors.targetServiceLevel}%</Badge>
+                </div>
+              )}
 
-              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
-                <span className="text-sm text-muted-foreground">Safety Stock</span>
-                <Badge variant="outline" className="text-xs">{factors.safetyStockDays} days</Badge>
-              </div>
+              {factors.safetyStockDays && (
+                <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                  <span className="text-sm text-muted-foreground">Safety Stock</span>
+                  <Badge variant="outline" className="text-xs">{factors.safetyStockDays} days</Badge>
+                </div>
+              )}
 
-              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
-                <span className="text-sm text-muted-foreground">Lead Time</span>
-                <Badge variant="outline" className="text-xs">{factors.leadTime} days</Badge>
-              </div>
+              {factors.leadTime && (
+                <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                  <span className="text-sm text-muted-foreground">Lead Time</span>
+                  <Badge variant="outline" className="text-xs">{factors.leadTime} days</Badge>
+                </div>
+              )}
 
               <Separator />
 
-              <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground">Channel Mix</div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span>Online</span>
-                    <span className="font-mono">{factors.channelMix.online}%</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span>Retail</span>
-                    <span className="font-mono">{factors.channelMix.retail}%</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span>B2B</span>
-                    <span className="font-mono">{factors.channelMix.b2b}%</span>
+              {factors.channelMix && (
+                <div className="space-y-2">
+                  <div className="text-xs font-semibold text-muted-foreground">Channel Mix</div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span>Online</span>
+                      <span className="font-mono">{factors.channelMix.online}%</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span>Retail</span>
+                      <span className="font-mono">{factors.channelMix.retail}%</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span>B2B</span>
+                      <span className="font-mono">{factors.channelMix.b2b}%</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {factors.affectedProducts.length > 0 && (
+              {factors.affectedProducts && factors.affectedProducts.length > 0 && (
                 <>
                   <Separator />
                   <div>
@@ -380,7 +390,7 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
                 </>
               )}
 
-              {factors.affectedLocations.length > 0 && (
+              {factors.affectedLocations && factors.affectedLocations.length > 0 && (
                 <>
                   <Separator />
                   <div>
