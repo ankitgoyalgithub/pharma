@@ -3048,64 +3048,114 @@ const DemandForecasting = () => {
               </Card>
             </div>
 
-            {/* Summary Insights */}
+            {/* Enhanced Impact Insights */}
             <Card className="shadow-card border-0">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="w-5 h-5" />
-                  Key Impact Insights
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                    AI-Powered Impact Insights
+                  </CardTitle>
+                  <Badge variant="secondary" className="bg-primary/15 text-primary border border-primary/20">
+                    <Brain className="w-3 h-3 mr-1" />
+                    ML Enhanced
+                  </Badge>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-primary">Primary Drivers</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Price Sensitivity</span>
-                        <Badge variant="secondary" className="bg-destructive/10 text-destructive">High</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Promotion Response</span>
-                        <Badge variant="secondary" className="bg-warning/10 text-warning">Medium</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Seasonal Effect</span>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary">Medium</Badge>
+                <div className="space-y-4">
+                  {/* Insight 1: ABC Segmentation */}
+                  <div className="p-4 rounded-xl bg-success/10 border border-success/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <Target className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">ABC Revenue Concentration Alert</span>
+                          <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30">$42.3M Impact</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Class A items (PRD001, PRD002, PRD005) drive 62.2% of revenue ($42.3M) but show 15% forecast variance in Chennai and Mumbai stores. Recommend weekly review cycles and +18% safety stock buffer for Q1 2025 to prevent $1.8M stockout risk.
+                        </p>
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-success">Performance</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Forecast Accuracy</span>
-                        <span className="font-medium">89.2%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Avg. Impact</span>
-                        <span className="font-medium">+21%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Confidence</span>
-                        <Badge variant="secondary" className="bg-success/10 text-success">87%</Badge>
+
+                  {/* Insight 2: Seasonal Intelligence */}
+                  <div className="p-4 rounded-xl bg-info/10 border border-info/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">Seasonal Demand Intelligence - Festival Impact</span>
+                          <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30">+34% Surge</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Historical festival analysis reveals 34% demand surge during Diwali (Oct 24-Nov 15) and 28% spike during Holi (Mar 14-25). Widget A (PRD001) and Material E (PRD005) lead growth. Pre-position inventory 3 weeks ahead in top 5 metro stores (L002, L005, L006, L019, L020).
+                        </p>
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-info">Risk Assessment</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Prediction Interval</span>
-                        <span className="font-medium">±12%</span>
+
+                  {/* Insight 3: Channel Optimization */}
+                  <div className="p-4 rounded-xl bg-primary/10 border border-primary/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <TrendingUp className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">Channel Performance Opportunity</span>
+                          <Badge variant="outline" className="text-xs bg-primary/15 text-primary border-primary/30">+$3.2M Potential</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Online channel growing at 22% CAGR vs 8% retail. PRD001 and PRD005 show 89% online preference in Bengaluru (L008, L009, L026) and Pune (L001, L012, L032) markets. Reallocate 25% inventory from retail to e-commerce fulfillment to capture $3.2M incremental revenue.
+                        </p>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Risk Level</span>
-                        <Badge variant="secondary" className="bg-warning/10 text-warning">Medium</Badge>
+                    </div>
+                  </div>
+
+                  {/* Insight 4: Pharma Alert */}
+                  <div className="p-4 rounded-xl bg-warning/10 border border-warning/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">Pharma-Specific: Patent Cliff Impact</span>
+                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30">Q2 2025 Alert</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Atorvastatin patent expiration in Q2 2025 will trigger 45-60% volume surge in generic market. Component B (PRD002) demand expected to increase 52% in Apr-Jun period. Secure supplier capacity commitments now and increase safety stock by 40% to avoid $2.4M revenue loss.
+                        </p>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Model Bias</span>
-                        <span className="font-medium">-2.1%</span>
+                    </div>
+                  </div>
+
+                  {/* Insight 5: Store Cluster Performance */}
+                  <div className="p-4 rounded-xl bg-secondary/10 border border-secondary/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-secondary mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">Store Size Correlation & Model Optimization</span>
+                          <Badge variant="outline" className="text-xs bg-secondary/15 text-secondary border-secondary/30">-2.3 MAPE</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Large format stores (&gt;5000 sqft: L006, L019, L020, L023, L040, L043) show 18% better accuracy due to stable demand. Small stores (&lt;2000 sqft: L003, L021, L030, L032, L035, L045) exhibit 31% higher volatility. Deploy store-cluster specific models to improve MAPE by 2.3 points.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Insight 6: Promotional Effectiveness */}
+                  <div className="p-4 rounded-xl bg-accent/10 border border-accent/30 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <DollarSign className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-sm">Promotional ROI Optimization</span>
+                          <Badge variant="outline" className="text-xs bg-accent/15 text-accent border-accent/30">3.2x ROI</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Last 6 promotional events show $45K avg spend with 3.2x ROI (14% demand lift). However, PRD002 and PRD004 show diminishing returns (2.1x) when campaigns run &gt;2 weeks. Optimize: 10-14 day duration, target underperforming stores (Kolkata L004/L007, Ahmedabad L038/L039).
+                        </p>
                       </div>
                     </div>
                   </div>
