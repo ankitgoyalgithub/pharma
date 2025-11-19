@@ -928,12 +928,62 @@ export const externalDriversData = {
       impactLevel: "Medium",
       complianceDeadline: "2025-06-30",
       status: "Active"
+    },
+    {
+      date: "2024-02-01",
+      regulation: "FDA Drug Approval Standards Update",
+      country: "USA",
+      industry: "Pharmaceutical",
+      impactLevel: "High",
+      complianceDeadline: "2024-08-01",
+      status: "Active"
+    },
+    {
+      date: "2024-03-15",
+      regulation: "Good Manufacturing Practices (GMP) Revision",
+      country: "India",
+      industry: "Pharmaceutical",
+      impactLevel: "High",
+      complianceDeadline: "2024-12-31",
+      status: "Active"
+    },
+    {
+      date: "2024-04-01",
+      regulation: "EMA Biosimilar Guidelines",
+      country: "EU",
+      industry: "Pharmaceutical",
+      impactLevel: "Medium",
+      complianceDeadline: "2025-03-31",
+      status: "Proposed"
+    },
+    {
+      date: "2024-05-10",
+      regulation: "Pharmacovigilance Requirements",
+      country: "USA",
+      industry: "Pharmaceutical",
+      impactLevel: "Medium",
+      complianceDeadline: "2025-01-01",
+      status: "Active"
+    },
+    {
+      date: "2024-06-01",
+      regulation: "API Import Quality Standards",
+      country: "India",
+      industry: "Pharmaceutical",
+      impactLevel: "High",
+      complianceDeadline: "2024-11-30",
+      status: "Active"
     }
   ],
   "Search_Trends": [
     { date: "2023-01-01", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 38 },
     { date: "2023-01-01", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 22 },
     { date: "2023-01-01", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 41 },
+    { date: "2023-01-01", search_keyword: "diabetes medication", geo: "US", category: "pharmaceutical", trend_score: 67 },
+    { date: "2023-01-01", search_keyword: "blood pressure medicine", geo: "US", category: "pharmaceutical", trend_score: 72 },
+    { date: "2023-01-01", search_keyword: "pain relief tablets", geo: "IN", category: "pharmaceutical", trend_score: 58 },
+    { date: "2023-01-01", search_keyword: "vitamin supplements", geo: "US", category: "pharmaceutical", trend_score: 81 },
+    { date: "2023-01-01", search_keyword: "antibiotic medicine", geo: "IN", category: "pharmaceutical", trend_score: 53 },
     { date: "2023-01-08", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 42 },
     { date: "2023-01-08", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 25 },
     { date: "2023-01-08", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 47 },
@@ -967,6 +1017,120 @@ export const externalDriversData = {
     { date: "2023-03-19", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 94 },
     { date: "2023-03-19", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 84 },
     { date: "2023-03-19", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 93 }
+  ],
+  "Drug_Patent_Expirations": [
+    {
+      date: "2024-01-15",
+      drugName: "Lipitor (Atorvastatin)",
+      patentHolder: "Pfizer",
+      therapeuticArea: "Cardiovascular",
+      patentExpiry: "2024-01-15",
+      marketImpact: "High",
+      estimatedGenericSavings: "$2.5B",
+      affectedMarkets: "USA, EU, India"
+    },
+    {
+      date: "2024-03-20",
+      drugName: "Humira (Adalimumab)",
+      patentHolder: "AbbVie",
+      therapeuticArea: "Immunology",
+      patentExpiry: "2024-03-20",
+      marketImpact: "Very High",
+      estimatedGenericSavings: "$6.2B",
+      affectedMarkets: "USA, EU"
+    },
+    {
+      date: "2024-05-10",
+      drugName: "Enbrel (Etanercept)",
+      patentHolder: "Amgen",
+      therapeuticArea: "Rheumatoid Arthritis",
+      patentExpiry: "2024-05-10",
+      marketImpact: "High",
+      estimatedGenericSavings: "$3.8B",
+      affectedMarkets: "USA, EU, India"
+    },
+    {
+      date: "2024-07-01",
+      drugName: "Lantus (Insulin Glargine)",
+      patentHolder: "Sanofi",
+      therapeuticArea: "Diabetes",
+      patentExpiry: "2024-07-01",
+      marketImpact: "High",
+      estimatedGenericSavings: "$4.1B",
+      affectedMarkets: "Global"
+    },
+    {
+      date: "2024-09-15",
+      drugName: "Advair (Fluticasone/Salmeterol)",
+      patentHolder: "GSK",
+      therapeuticArea: "Respiratory",
+      patentExpiry: "2024-09-15",
+      marketImpact: "Medium",
+      estimatedGenericSavings: "$2.2B",
+      affectedMarkets: "USA, EU"
+    }
+  ],
+  "Clinical_Trial_Outcomes": [
+    {
+      date: "2024-01-10",
+      trialId: "NCT04523456",
+      drugName: "ABC-101",
+      sponsor: "ABC Labs",
+      phase: "Phase III",
+      indication: "Type 2 Diabetes",
+      outcome: "Positive",
+      efficacyRate: "78%",
+      adverseEvents: "Low",
+      estimatedLaunchDate: "2024-Q4"
+    },
+    {
+      date: "2024-02-15",
+      trialId: "NCT04687321",
+      drugName: "CardioMax",
+      sponsor: "PharmaTech Inc",
+      phase: "Phase III",
+      indication: "Hypertension",
+      outcome: "Positive",
+      efficacyRate: "82%",
+      adverseEvents: "Moderate",
+      estimatedLaunchDate: "2025-Q1"
+    },
+    {
+      date: "2024-03-20",
+      trialId: "NCT04892145",
+      drugName: "OncoBlock-5",
+      sponsor: "BioMed Solutions",
+      phase: "Phase II",
+      indication: "Lung Cancer",
+      outcome: "Promising",
+      efficacyRate: "65%",
+      adverseEvents: "Moderate",
+      estimatedLaunchDate: "2026-Q2"
+    },
+    {
+      date: "2024-04-12",
+      trialId: "NCT05123789",
+      drugName: "NeuroShield",
+      sponsor: "ABC Labs",
+      phase: "Phase III",
+      indication: "Alzheimer's Disease",
+      outcome: "Positive",
+      efficacyRate: "71%",
+      adverseEvents: "Low",
+      estimatedLaunchDate: "2025-Q3"
+    },
+    {
+      date: "2024-05-18",
+      trialId: "NCT05234567",
+      drugName: "ImmunoBoost-X",
+      sponsor: "Global Pharma",
+      phase: "Phase II",
+      indication: "Rheumatoid Arthritis",
+      outcome: "Positive",
+      efficacyRate: "74%",
+      adverseEvents: "Low",
+      estimatedLaunchDate: "2025-Q4"
+    }
   ]
 };
 
@@ -987,6 +1151,8 @@ export const getExternalDriverData = (driverName: string) => {
     "Supply Chain Events": "Supply_Chain_Events",
     "Regulatory Changes": "Regulatory_Changes",
     "Search Trends (Google Trends)": "Search_Trends",
+    "Drug Patent Expirations": "Drug_Patent_Expirations",
+    "Clinical Trial Outcomes": "Clinical_Trial_Outcomes",
   };
   
   const dataKey = driverKeyMap[driverName];
