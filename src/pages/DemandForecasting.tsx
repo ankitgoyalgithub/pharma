@@ -80,6 +80,7 @@ import CollaborativeForecastTable from "@/components/CollaborativeForecastTable"
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { ScenarioCreation } from "@/components/ScenarioCreation";
+import { ScenarioComparisonDashboard } from "@/components/ScenarioComparisonDashboard";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
 import { gapData } from '@/data/demandForecasting/gapData';
 import { dataQualityIssues, dataQualitySummary } from '@/data/demandForecasting/dataQualityIssues';
@@ -2178,140 +2179,19 @@ const DemandForecasting = () => {
         {/* Content based on active tab or selected scenario */}
         {selectedScenario ? (
           <>
-            {/* Scenario Comparison View */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                {selectedScenario && (
-                  <p className="text-sm text-muted-foreground">Comparison with baseline forecast</p>
-                )}
-                <Button variant="outline" onClick={() => setSelectedScenario(null)}>
-                  ← Back to Overview
-                </Button>
-              </div>
-              
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-6">
-                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg font-semibold">Scenario vs Baseline Trend</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[300px]">
-                      <Line data={{
-                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                        datasets: [
-                          {
-                            label: 'Baseline Forecast',
-                            data: [100, 110, 105, 120, 115, 125],
-                            borderColor: 'hsl(220, 13%, 69%)',
-                            backgroundColor: 'hsl(220, 13%, 69%, 0.1)',
-                            borderWidth: 2,
-                            fill: false,
-                            tension: 0.4,
-                            pointBackgroundColor: 'hsl(220, 13%, 69%)',
-                            pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2,
-                            pointRadius: 4,
-                          },
-                          {
-                            label: 'Scenario Forecast',
-                            data: [105, 118, 112, 128, 123, 133],
-                            borderColor: 'hsl(142, 76%, 36%)',
-                            backgroundColor: 'hsl(142, 76%, 36%, 0.1)',
-                            borderWidth: 3,
-                            fill: false,
-                            tension: 0.4,
-                            pointBackgroundColor: 'hsl(142, 76%, 36%)',
-                            pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2,
-                            pointRadius: 5,
-                          }
-                        ]
-                       }} options={buildChartOptions({ 
-                         animation: { duration: 0 }, // Disable animations for speed
-                         backgroundColor: hslVar('--background'),
-                         responsive: true,
-                         plugins: {
-                           legend: {
-                             position: 'top' as const,
-                             labels: {
-                               usePointStyle: true,
-                               font: {
-                                 size: 12,
-                                 weight: '500'
-                               }
-                             }
-                           }
-                         },
-                         scales: {
-                           y: {
-                             beginAtZero: false,
-                             grid: {
-                               color: 'hsl(var(--border))',
-                             },
-                             ticks: {
-                               font: {
-                                 size: 11
-                               }
-                             }
-                           },
-                           x: {
-                             grid: {
-                               color: 'hsl(var(--border))',
-                             },
-                             ticks: {
-                               font: {
-                                 size: 11
-                               }
-                             }
-                           }
-                         }
-                       })} />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg font-semibold">Impact Analysis</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="text-center p-4 bg-success/10 rounded-xl border border-success/20 shadow-sm">
-                          <div className="text-2xl font-bold text-success">+8.5%</div>
-                          <div className="text-xs text-muted-foreground font-medium mt-1">Volume Impact</div>
-                        </div>
-                        <div className="text-center p-4 bg-primary/10 rounded-xl border border-primary/20 shadow-sm">
-                          <div className="text-2xl font-bold text-primary">+$4.2M</div>
-                          <div className="text-xs text-muted-foreground font-medium mt-1">Revenue Impact</div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-3 pt-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Accuracy Change</span>
-                          <Badge variant="secondary" className="bg-info/10 text-info">+2.1%</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Risk Level</span>
-                          <Badge variant="secondary" className="bg-warning/10 text-warning">Medium</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Confidence Score</span>
-                          <Badge variant="secondary" className="bg-success/10 text-success">87%</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Time Horizon</span>
-                          <span className="text-sm font-medium">6 weeks</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Additional Insights Row */}
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+            <div className="mb-4 flex justify-end">
+              <Button variant="outline" onClick={() => setSelectedScenario(null)}>
+                ← Back to Overview
+              </Button>
+            </div>
+            <ScenarioComparisonDashboard
+              scenario={scenarios.find(s => s.id === selectedScenario)!}
+              baseline={{
+                accuracy: 94.2,
+                revenue: 1000000,
+                units: 85000
+              }}
+            />
                 <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-semibold">Channel Performance</CardTitle>
