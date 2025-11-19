@@ -151,6 +151,8 @@ const DemandForecasting = () => {
   const [foundryObjects, setFoundryObjects] = useState<Array<{name: string, type: 'master' | 'transactional', fromDate?: Date, toDate?: Date}>>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
   const [previewDriverDialog, setPreviewDriverDialog] = useState<{open: boolean, driverName: string | null}>({open: false, driverName: null});
+  const [driverFilters, setDriverFilters] = useState<Record<string, string>>({});
+  const [driverSortConfig, setDriverSortConfig] = useState<{column: string, direction: 'asc' | 'desc'} | null>(null);
 
   // Map external driver display names to Foundry object keys
   const driverToFoundryKey: Record<string, string> = {
@@ -3590,7 +3592,13 @@ const DemandForecasting = () => {
         )}
         
         {/* External Driver Preview Dialog */}
-        <Dialog open={previewDriverDialog.open} onOpenChange={(open) => setPreviewDriverDialog({open, driverName: null})}>
+        <Dialog open={previewDriverDialog.open} onOpenChange={(open) => {
+          setPreviewDriverDialog({open, driverName: null});
+          if (!open) {
+            setDriverFilters({});
+            setDriverSortConfig(null);
+          }
+        }}>
           <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
@@ -3602,7 +3610,7 @@ const DemandForecasting = () => {
               {previewDriverDialog.driverName && (() => {
                 const keyName = previewDriverDialog.driverName;
                 const foundryKey = keyName ? (driverToFoundryKey[keyName] || keyName.replace(/ /g, '_')) : '';
-                const driverData = getFoundryObjectData(foundryKey) as any[];
+                let driverData = getFoundryObjectData(foundryKey) as any[];
                 if (!driverData || driverData.length === 0) {
                   return (
                     <div className="flex flex-col items-center justify-center py-12">
@@ -3614,12 +3622,56 @@ const DemandForecasting = () => {
                 
                 const columns = Object.keys(driverData[0]);
                 
+                // Apply filters
+                let filteredData = driverData.filter((row: any) => {
+                  return columns.every((col) => {
+                    const filterValue = driverFilters[col];
+                    if (!filterValue) return true;
+                    const cellValue = String(row[col]).toLowerCase();
+                    return cellValue.includes(filterValue.toLowerCase());
+                  });
+                });
+
+                // Apply sorting
+                if (driverSortConfig) {
+                  filteredData = [...filteredData].sort((a, b) => {
+                    const aVal = a[driverSortConfig.column];
+                    const bVal = b[driverSortConfig.column];
+                    
+                    if (typeof aVal === 'number' && typeof bVal === 'number') {
+                      return driverSortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+                    }
+                    
+                    const aStr = String(aVal).toLowerCase();
+                    const bStr = String(bVal).toLowerCase();
+                    
+                    if (driverSortConfig.direction === 'asc') {
+                      return aStr < bStr ? -1 : aStr > bStr ? 1 : 0;
+                    } else {
+                      return aStr > bStr ? -1 : aStr < bStr ? 1 : 0;
+                    }
+                  });
+                }
+
+                const handleSort = (column: string) => {
+                  setDriverSortConfig((current) => {
+                    if (current?.column === column) {
+                      return current.direction === 'asc' 
+                        ? { column, direction: 'desc' }
+                        : null;
+                    }
+                    return { column, direction: 'asc' };
+                  });
+                };
+                
                 return (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div>
                         <p className="text-sm font-medium">Data Preview</p>
-                        <p className="text-xs text-muted-foreground">Showing {driverData.length} sample records from {previewDriverDialog.driverName}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Showing {filteredData.length} of {driverData.length} records from {previewDriverDialog.driverName}
+                        </p>
                       </div>
                       <Badge variant="outline" className="text-xs">
                         {columns.length} columns
@@ -3629,17 +3681,41 @@ const DemandForecasting = () => {
                     <div className="border rounded-lg overflow-hidden">
                       <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
                         <table className="w-full text-xs">
-                          <thead className="bg-muted sticky top-0">
+                          <thead className="bg-muted sticky top-0 z-10">
                             <tr>
                               {columns.map((col) => (
-                                <th key={col} className="text-left p-3 font-medium capitalize border-b">
-                                  {col.replace(/_/g, ' ')}
+                                <th key={col} className="text-left p-2 font-medium border-b">
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      onClick={() => handleSort(col)}
+                                      className="flex items-center gap-1 hover:text-primary transition-colors capitalize"
+                                    >
+                                      {col.replace(/_/g, ' ')}
+                                      {driverSortConfig?.column === col && (
+                                        driverSortConfig.direction === 'asc' ? (
+                                          <ArrowUp className="w-3 h-3" />
+                                        ) : (
+                                          <ArrowDown className="w-3 h-3" />
+                                        )
+                                      )}
+                                    </button>
+                                  </div>
+                                  <Input
+                                    placeholder="Filter..."
+                                    value={driverFilters[col] || ''}
+                                    onChange={(e) => setDriverFilters(prev => ({
+                                      ...prev,
+                                      [col]: e.target.value
+                                    }))}
+                                    className="mt-1 h-7 text-xs bg-background"
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
                                 </th>
                               ))}
                             </tr>
                           </thead>
                           <tbody>
-                            {driverData.map((row: any, index: number) => (
+                            {filteredData.map((row: any, index: number) => (
                               <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
                                 {columns.map((col) => (
                                   <td key={col} className="p-3">
