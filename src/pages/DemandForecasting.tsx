@@ -2566,14 +2566,14 @@ const DemandForecasting = () => {
                 <CardContent className="space-y-3">
                   <div className="p-4 rounded-xl bg-success/10 border border-success/30 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-start gap-3">
-                      <TrendingUp className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
+                      <Target className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">High Confidence Forecast Detected</span>
-                          <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">+12% Uplift</Badge>
+                          <span className="font-semibold text-sm">ABC Revenue Concentration Alert</span>
+                          <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">$42.3M Impact</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          SKU001 & SKU002 showing strong correlation with marketing events. Confidence: 94%
+                          Class A items (PRD001, PRD002, PRD005) drive 62.2% revenue but show 15% variance in Chennai/Mumbai. Recommend weekly cycle counts and +18% safety stock for Q1 2025 to prevent $1.8M stockout risk.
                         </p>
                       </div>
                     </div>
@@ -2581,14 +2581,14 @@ const DemandForecasting = () => {
                   
                   <div className="p-4 rounded-xl bg-warning/10 border border-warning/30 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-start gap-3">
-                      <AlertTriangle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+                      <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">Exception Alert: SKU003</span>
-                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Review Needed</Badge>
+                          <span className="font-semibold text-sm">Pharma Regulatory Impact - Proactive Action Required</span>
+                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Jan 2025 Deadline</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Demand volatility increased by 23%. Consider safety stock adjustment for weeks 6-8.
+                          New FDA labeling requirements will cause 2-3 week supply disruption for 12% of pharma SKUs. Historical impact: -18% to -25% availability. Build 6 weeks safety stock now for affected products.
                         </p>
                       </div>
                     </div>
@@ -2596,14 +2596,14 @@ const DemandForecasting = () => {
 
                   <div className="p-4 rounded-xl bg-info/10 border border-info/30 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-start gap-3">
-                      <Zap className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
+                      <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">Optimization Opportunity</span>
-                          <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">$2.1M Potential</Badge>
+                          <span className="font-semibold text-sm">Seasonal Demand Intelligence - Diwali & Holi Surge</span>
+                          <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+34% Peak</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Channel reallocation suggested: Shift 15% from Retail to Online for improved margins.
+                          Festival analysis shows 34% Diwali surge (Oct 24-Nov 15) and 28% Holi spike (Mar 14-25). PRD001 & PRD005 lead growth. Pre-position inventory 3 weeks ahead in top 5 metro stores.
                         </p>
                       </div>
                     </div>
