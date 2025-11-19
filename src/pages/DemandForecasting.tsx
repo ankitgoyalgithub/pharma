@@ -281,11 +281,35 @@ const DemandForecasting = () => {
     value: string;
     subtitle: string;
     factors?: {
+      description?: string;
+      timeHorizon?: string;
+      granularity?: string;
       priceChange: number;
       promotionIntensity: number;
       seasonality: number;
       marketGrowth: number;
-      sku: string;
+      newProductLaunch?: boolean;
+      productLifecycle?: string;
+      cannibalization?: number;
+      channelMix?: {
+        online: number;
+        retail: number;
+        b2b: number;
+      };
+      locationExpansion?: number;
+      competitorActivity?: number;
+      economicIndicator?: number;
+      weatherImpact?: number;
+      minOrderQuantity?: number;
+      maxCapacity?: number;
+      safetyStockDays?: number;
+      targetServiceLevel?: number;
+      inventoryTurnover?: number;
+      leadTime?: number;
+      sku?: string;
+      affectedProducts?: string[];
+      affectedLocations?: string[];
+      affectedChannels?: string[];
     };
   }>>([]);
   const [filterValues, setFilterValues] = useState({
@@ -2192,101 +2216,6 @@ const DemandForecasting = () => {
                 units: 85000
               }}
             />
-                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-semibold">Channel Performance</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">Online</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="w-3/4 h-full bg-success rounded-full"></div>
-                        </div>
-                        <span className="text-xs font-medium">+12%</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">Retail</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="w-1/2 h-full bg-warning rounded-full"></div>
-                        </div>
-                        <span className="text-xs font-medium">+6%</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">B2B</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="w-2/3 h-full bg-primary rounded-full"></div>
-                        </div>
-                        <span className="text-xs font-medium">+9%</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-semibold">Regional Impact</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">North</span>
-                      <Badge variant="secondary" className="bg-success/10 text-success text-xs">High +15%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">South</span>
-                      <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">Med +8%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">East</span>
-                      <Badge variant="secondary" className="bg-warning/10 text-warning text-xs">Low +3%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">West</span>
-                      <Badge variant="secondary" className="bg-info/10 text-info text-xs">Med +7%</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="shadow-elevated border border-border/40 hover:shadow-glow hover:border-border/60 transition-all duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-semibold">Key Factors</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-xs">
-                      <div className="font-medium mb-1">Primary Drivers:</div>
-                      <div className="space-y-1 text-muted-foreground">
-                        {scenarios.find(s => s.id === selectedScenario)?.factors && (
-                          <>
-                            {scenarios.find(s => s.id === selectedScenario)?.factors?.priceChange !== 0 && (
-                              <div>• Price Change: {scenarios.find(s => s.id === selectedScenario)?.factors?.priceChange}%</div>
-                            )}
-                            {scenarios.find(s => s.id === selectedScenario)?.factors?.promotionIntensity !== 0 && (
-                              <div>• Promotion: {scenarios.find(s => s.id === selectedScenario)?.factors?.promotionIntensity}%</div>
-                            )}
-                            {scenarios.find(s => s.id === selectedScenario)?.factors?.seasonality !== 0 && (
-                              <div>• Seasonality: {scenarios.find(s => s.id === selectedScenario)?.factors?.seasonality}%</div>
-                            )}
-                            {scenarios.find(s => s.id === selectedScenario)?.factors?.marketGrowth !== 0 && (
-                              <div>• Market Growth: {scenarios.find(s => s.id === selectedScenario)?.factors?.marketGrowth}%</div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <div className="pt-2 border-t">
-                      <div className="text-xs font-medium">Target SKU:</div>
-                      <div className="text-xs text-muted-foreground">
-                        {scenarios.find(s => s.id === selectedScenario)?.factors?.sku || 'All SKUs'}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
           </>
         ) : activeTab === "overview" && (
           <div className="animate-fade-in">
