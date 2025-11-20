@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
@@ -56,13 +59,14 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [scenarioName, setScenarioName] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedSku, setSelectedSku] = useState('');
-  const [factors, setFactors] = useState({
-    priceChange: 0,
-    promotionIntensity: 0,
-    seasonality: 0,
-    marketGrowth: 0
-  });
+  const [timeHorizon, setTimeHorizon] = useState('12');
+  const [granularity, setGranularity] = useState('monthly');
+  const [priceChange, setPriceChange] = useState([0]);
+  const [promotionIntensity, setPromotionIntensity] = useState([0]);
+  const [seasonalityImpact, setSeasonalityImpact] = useState([0]);
+  const [marketGrowth, setMarketGrowth] = useState([0]);
 
   const skuOptions = [
     'SKU001 - Electronics',
@@ -95,7 +99,7 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
       const targetSku = selectedSku || 'SKU001 - Electronics';
       
       // Calculate impact based on factors
-      const totalImpact = factors.priceChange + factors.promotionIntensity + factors.seasonality + factors.marketGrowth;
+      const totalImpact = priceChange[0] + promotionIntensity[0]/10 + seasonalityImpact[0] + marketGrowth[0];
       const baseAccuracy = 94.2;
       const newAccuracy = Math.max(75, Math.min(99, baseAccuracy + totalImpact));
       
@@ -105,7 +109,13 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
         value: `${newAccuracy.toFixed(1)}%`,
         subtitle: `${totalImpact > 0 ? '+' : ''}${totalImpact.toFixed(1)}% vs baseline`,
         factors: {
-          ...factors,
+          description,
+          timeHorizon,
+          granularity,
+          priceChange: priceChange[0],
+          promotionIntensity: promotionIntensity[0],
+          seasonality: seasonalityImpact[0],
+          marketGrowth: marketGrowth[0],
           sku: targetSku
         }
       };
@@ -116,13 +126,14 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
       // Reset form
       console.log('Resetting form...');
       setScenarioName('');
+      setDescription('');
       setSelectedSku('');
-      setFactors({
-        priceChange: 0,
-        promotionIntensity: 0,
-        seasonality: 0,
-        marketGrowth: 0
-      });
+      setTimeHorizon('12');
+      setGranularity('monthly');
+      setPriceChange([0]);
+      setPromotionIntensity([0]);
+      setSeasonalityImpact([0]);
+      setMarketGrowth([0]);
       setIsDialogOpen(false);
       console.log('Form reset and dialog closed');
     } catch (error) {
