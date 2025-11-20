@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -81,14 +81,14 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
   const unitsDelta = scenarioUnits - baseline.units;
   const unitsPercentChange = (unitsDelta / baseline.units) * 100;
 
-  // Generate weekly forecast data
-  const generateWeeklyData = () => {
+  // Generate weekly forecast data - memoized to prevent flickering
+  const { baselineData, scenarioData, weekLabels } = useMemo(() => {
     const weeks = 13;
     const baselineData = [];
     const scenarioData = [];
     
     for (let i = 0; i < weeks; i++) {
-      const weekBase = 1000 + Math.sin(i / 2) * 100 + Math.random() * 50;
+      const weekBase = 1000 + Math.sin(i / 2) * 100;
       const seasonalFactor = 1 + (factors.seasonality / 100) * Math.sin((i / weeks) * Math.PI * 2);
       const trendFactor = 1 + ((factors.marketGrowth / 100) * (i / weeks));
       
@@ -96,11 +96,10 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
       scenarioData.push(Math.round(weekBase * seasonalFactor * trendFactor * revenueMultiplier));
     }
     
-    return { baselineData, scenarioData };
-  };
-
-  const { baselineData, scenarioData } = generateWeeklyData();
-  const weekLabels = Array.from({ length: 13 }, (_, i) => `Week ${i + 1}`);
+    const weekLabels = Array.from({ length: 13 }, (_, i) => `Week ${i + 1}`);
+    
+    return { baselineData, scenarioData, weekLabels };
+  }, [factors.seasonality, factors.marketGrowth, revenueMultiplier]);
 
   // Key drivers impact breakdown with safe defaults
   const driverImpacts = [
