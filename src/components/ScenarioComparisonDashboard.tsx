@@ -2,9 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Line, Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { buildChartOptions, hslVar } from '@/lib/chartTheme';
 import { TrendingUp, TrendingDown, DollarSign, Package, Target, AlertCircle, CheckCircle, Activity, BarChart3, LineChart, Sparkles } from 'lucide-react';
+import { ScenarioComparisonChart } from './ScenarioComparisonChart';
 
 interface ScenarioFactors {
   description?: string;
@@ -180,74 +181,12 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
-            <Line
-              data={{
-                labels: weekLabels,
-                datasets: [
-                  {
-                    label: 'Baseline Forecast',
-                    data: baselineData,
-                    borderColor: 'hsl(220, 13%, 69%)',
-                    backgroundColor: 'hsl(220, 13%, 69%, 0.1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.4,
-                    pointBackgroundColor: 'hsl(220, 13%, 69%)',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 3,
-                  },
-                  {
-                    label: `${scenario.name} Scenario`,
-                    data: scenarioData,
-                    borderColor: 'hsl(262, 83%, 58%)',
-                    backgroundColor: 'hsl(262, 83%, 58%, 0.1)',
-                    borderWidth: 3,
-                    fill: false,
-                    tension: 0.4,
-                    pointBackgroundColor: 'hsl(262, 83%, 58%)',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                  }
-                ]
-              }}
-              options={buildChartOptions({
-                animation: { duration: 600 },
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: 'top',
-                    labels: {
-                      usePointStyle: true,
-                      padding: 15,
-                      font: { size: 12, weight: '500' }
-                    }
-                  },
-                  tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                  }
-                },
-                scales: {
-                  y: {
-                    beginAtZero: false,
-                    grid: { color: 'hsl(var(--border))' },
-                    ticks: {
-                      callback: (value) => `${(Number(value) / 1000).toFixed(1)}K`,
-                      font: { size: 11 }
-                    }
-                  },
-                  x: {
-                    grid: { color: 'hsl(var(--border))' },
-                    ticks: { font: { size: 11 } }
-                  }
-                }
-              })}
-            />
-          </div>
+          <ScenarioComparisonChart
+            baselineData={baselineData}
+            scenarioData={scenarioData}
+            labels={weekLabels}
+            scenarioName={scenario.name}
+          />
         </CardContent>
       </Card>
 
@@ -279,7 +218,7 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
                   }]
                 }}
                 options={buildChartOptions({
-                  animation: { duration: 600 },
+                  animation: false,
                   responsive: true,
                   maintainAspectRatio: false,
                   indexAxis: 'y' as const,
