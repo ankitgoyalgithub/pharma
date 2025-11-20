@@ -67,6 +67,29 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
   const [promotionIntensity, setPromotionIntensity] = useState([0]);
   const [seasonalityImpact, setSeasonalityImpact] = useState([0]);
   const [marketGrowth, setMarketGrowth] = useState([0]);
+  
+  // Supply Chain Factors
+  const [leadTime, setLeadTime] = useState([14]);
+  const [safetyStock, setSafetyStock] = useState([7]);
+  const [inventoryTurnover, setInventoryTurnover] = useState([12]);
+  const [minOrderQty, setMinOrderQty] = useState([100]);
+  const [maxCapacity, setMaxCapacity] = useState([10000]);
+  
+  // Market & Competition
+  const [competitorActivity, setCompetitorActivity] = useState([0]);
+  const [economicIndicator, setEconomicIndicator] = useState([0]);
+  const [marketShare, setMarketShare] = useState([25]);
+  const [locationExpansion, setLocationExpansion] = useState([0]);
+  
+  // Product Lifecycle
+  const [newProductLaunch, setNewProductLaunch] = useState(false);
+  const [productLifecycle, setProductLifecycle] = useState('mature');
+  const [cannibalization, setCannibalization] = useState([0]);
+  
+  // Channel & Distribution
+  const [onlineChannel, setOnlineChannel] = useState([40]);
+  const [retailChannel, setRetailChannel] = useState([50]);
+  const [b2bChannel, setB2bChannel] = useState([10]);
 
   const skuOptions = [
     'SKU001 - Electronics',
@@ -116,7 +139,27 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
           promotionIntensity: promotionIntensity[0],
           seasonality: seasonalityImpact[0],
           marketGrowth: marketGrowth[0],
-          sku: targetSku
+          sku: targetSku,
+          // Supply Chain
+          leadTime: leadTime[0],
+          safetyStockDays: safetyStock[0],
+          inventoryTurnover: inventoryTurnover[0],
+          minOrderQuantity: minOrderQty[0],
+          maxCapacity: maxCapacity[0],
+          // Market & Competition
+          competitorActivity: competitorActivity[0],
+          economicIndicator: economicIndicator[0],
+          locationExpansion: locationExpansion[0],
+          // Product Lifecycle
+          newProductLaunch,
+          productLifecycle,
+          cannibalization: cannibalization[0],
+          // Channel Mix
+          channelMix: {
+            online: onlineChannel[0],
+            retail: retailChannel[0],
+            b2b: b2bChannel[0]
+          }
         }
       };
 
@@ -134,6 +177,21 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
       setPromotionIntensity([0]);
       setSeasonalityImpact([0]);
       setMarketGrowth([0]);
+      setLeadTime([14]);
+      setSafetyStock([7]);
+      setInventoryTurnover([12]);
+      setMinOrderQty([100]);
+      setMaxCapacity([10000]);
+      setCompetitorActivity([0]);
+      setEconomicIndicator([0]);
+      setMarketShare([25]);
+      setLocationExpansion([0]);
+      setNewProductLaunch(false);
+      setProductLifecycle('mature');
+      setCannibalization([0]);
+      setOnlineChannel([40]);
+      setRetailChannel([50]);
+      setB2bChannel([10]);
       setIsDialogOpen(false);
       console.log('Form reset and dialog closed');
     } catch (error) {
@@ -235,74 +293,302 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
               </div>
             </div>
 
-            {/* Right Column - External Drivers */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-4 text-foreground">External Drivers</h3>
-                <div className="space-y-6 bg-muted/30 rounded-lg p-5">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <Label className="text-sm font-medium">Price Change</Label>
-                      <span className="text-sm font-semibold text-primary">{priceChange[0]}%</span>
-                    </div>
-                    <Slider
-                      value={priceChange}
-                      onValueChange={setPriceChange}
-                      min={-50}
-                      max={50}
-                      step={5}
-                      className="py-2"
-                    />
-                    <p className="text-xs text-muted-foreground">Impact of pricing changes on demand</p>
+            {/* Right Column - Demand Drivers & Factors (Scrollable) */}
+            <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+              <h3 className="text-lg font-semibold text-foreground sticky top-0 bg-background py-2 z-10">Demand Drivers & Factors</h3>
+              
+              {/* Core Demand Drivers */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold text-primary">Core Drivers</h4>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Price Change (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{priceChange[0]}%</span>
                   </div>
+                  <Slider
+                    value={priceChange}
+                    onValueChange={setPriceChange}
+                    min={-50}
+                    max={50}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <Label className="text-sm font-medium">Promotion Intensity</Label>
-                      <span className="text-sm font-semibold text-primary">{promotionIntensity[0]}%</span>
-                    </div>
-                    <Slider
-                      value={promotionIntensity}
-                      onValueChange={setPromotionIntensity}
-                      min={0}
-                      max={100}
-                      step={10}
-                      className="py-2"
-                    />
-                    <p className="text-xs text-muted-foreground">Marketing and promotional activity level</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Promotion Intensity</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{promotionIntensity[0]}</span>
                   </div>
+                  <Slider
+                    value={promotionIntensity}
+                    onValueChange={setPromotionIntensity}
+                    min={0}
+                    max={100}
+                    step={5}
+                    className="w-full"
+                  />
+                </div>
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <Label className="text-sm font-medium">Seasonality Impact</Label>
-                      <span className="text-sm font-semibold text-primary">{seasonalityImpact[0]}%</span>
-                    </div>
-                    <Slider
-                      value={seasonalityImpact}
-                      onValueChange={setSeasonalityImpact}
-                      min={-30}
-                      max={30}
-                      step={5}
-                      className="py-2"
-                    />
-                    <p className="text-xs text-muted-foreground">Seasonal variation adjustment</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Seasonality Impact (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{seasonalityImpact[0]}%</span>
                   </div>
+                  <Slider
+                    value={seasonalityImpact}
+                    onValueChange={setSeasonalityImpact}
+                    min={-30}
+                    max={30}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <Label className="text-sm font-medium">Market Growth</Label>
-                      <span className="text-sm font-semibold text-primary">{marketGrowth[0]}%</span>
-                    </div>
-                    <Slider
-                      value={marketGrowth}
-                      onValueChange={setMarketGrowth}
-                      min={-20}
-                      max={20}
-                      step={2}
-                      className="py-2"
-                    />
-                    <p className="text-xs text-muted-foreground">Overall market trend impact</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Market Growth (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{marketGrowth[0]}%</span>
                   </div>
+                  <Slider
+                    value={marketGrowth}
+                    onValueChange={setMarketGrowth}
+                    min={-20}
+                    max={20}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              {/* Supply Chain Factors */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="text-sm font-semibold text-primary">Supply Chain Factors</h4>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Lead Time (days)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{leadTime[0]}</span>
+                  </div>
+                  <Slider
+                    value={leadTime}
+                    onValueChange={setLeadTime}
+                    min={1}
+                    max={60}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Safety Stock (days)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{safetyStock[0]}</span>
+                  </div>
+                  <Slider
+                    value={safetyStock}
+                    onValueChange={setSafetyStock}
+                    min={0}
+                    max={30}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Inventory Turnover (times/year)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{inventoryTurnover[0]}</span>
+                  </div>
+                  <Slider
+                    value={inventoryTurnover}
+                    onValueChange={setInventoryTurnover}
+                    min={1}
+                    max={50}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Min Order Quantity</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{minOrderQty[0]}</span>
+                  </div>
+                  <Slider
+                    value={minOrderQty}
+                    onValueChange={setMinOrderQty}
+                    min={10}
+                    max={1000}
+                    step={10}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Max Capacity</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{maxCapacity[0]}</span>
+                  </div>
+                  <Slider
+                    value={maxCapacity}
+                    onValueChange={setMaxCapacity}
+                    min={1000}
+                    max={50000}
+                    step={1000}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              {/* Market & Competition */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="text-sm font-semibold text-primary">Market & Competition</h4>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Competitor Activity (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{competitorActivity[0]}%</span>
+                  </div>
+                  <Slider
+                    value={competitorActivity}
+                    onValueChange={setCompetitorActivity}
+                    min={-30}
+                    max={30}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Economic Indicator (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{economicIndicator[0]}%</span>
+                  </div>
+                  <Slider
+                    value={economicIndicator}
+                    onValueChange={setEconomicIndicator}
+                    min={-20}
+                    max={20}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Location Expansion (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{locationExpansion[0]}%</span>
+                  </div>
+                  <Slider
+                    value={locationExpansion}
+                    onValueChange={setLocationExpansion}
+                    min={0}
+                    max={100}
+                    step={5}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              {/* Product Lifecycle */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="text-sm font-semibold text-primary">Product Lifecycle</h4>
+                
+                <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
+                  <Label htmlFor="new-product-launch">New Product Launch</Label>
+                  <input
+                    id="new-product-launch"
+                    type="checkbox"
+                    checked={newProductLaunch}
+                    onChange={(e) => setNewProductLaunch(e.target.checked)}
+                    className="w-4 h-4"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="product-lifecycle">Product Lifecycle Stage</Label>
+                  <Select value={productLifecycle} onValueChange={setProductLifecycle}>
+                    <SelectTrigger id="product-lifecycle">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="introduction">Introduction</SelectItem>
+                      <SelectItem value="growth">Growth</SelectItem>
+                      <SelectItem value="mature">Mature</SelectItem>
+                      <SelectItem value="decline">Decline</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Cannibalization (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{cannibalization[0]}%</span>
+                  </div>
+                  <Slider
+                    value={cannibalization}
+                    onValueChange={setCannibalization}
+                    min={0}
+                    max={50}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              {/* Channel & Distribution */}
+              <div className="space-y-4 pt-4 border-t">
+                <h4 className="text-sm font-semibold text-primary">Channel Mix</h4>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Online (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{onlineChannel[0]}%</span>
+                  </div>
+                  <Slider
+                    value={onlineChannel}
+                    onValueChange={setOnlineChannel}
+                    min={0}
+                    max={100}
+                    step={5}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Retail (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{retailChannel[0]}%</span>
+                  </div>
+                  <Slider
+                    value={retailChannel}
+                    onValueChange={setRetailChannel}
+                    min={0}
+                    max={100}
+                    step={5}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>B2B (%)</Label>
+                    <span className="text-sm font-mono text-muted-foreground">{b2bChannel[0]}%</span>
+                  </div>
+                  <Slider
+                    value={b2bChannel}
+                    onValueChange={setB2bChannel}
+                    min={0}
+                    max={100}
+                    step={5}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="text-xs text-muted-foreground p-2 bg-muted/50 rounded">
+                  Total: {onlineChannel[0] + retailChannel[0] + b2bChannel[0]}%
                 </div>
               </div>
             </div>

@@ -3,9 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Bar } from 'react-chartjs-2';
-import { buildChartOptions, hslVar } from '@/lib/chartTheme';
-import { TrendingUp, TrendingDown, DollarSign, Package, Target, AlertCircle, CheckCircle, Activity, BarChart3, LineChart, Sparkles } from 'lucide-react';
-import { ScenarioComparisonChart } from './ScenarioComparisonChart';
+import { buildChartOptions } from '@/lib/chartTheme';
+import { TrendingUp, TrendingDown, DollarSign, Package, Target, CheckCircle, BarChart3, LineChart, Sparkles } from 'lucide-react';
+import { D3LineChart } from './D3LineChart';
 
 interface ScenarioFactors {
   description?: string;
@@ -82,23 +82,24 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
   const unitsPercentChange = (unitsDelta / baseline.units) * 100;
 
   // Generate weekly forecast data - memoized to prevent flickering
-  const { baselineData, scenarioData, weekLabels } = useMemo(() => {
+  const chartData = useMemo(() => {
     const weeks = 13;
-    const baselineData = [];
-    const scenarioData = [];
+    const data = [];
     
     for (let i = 0; i < weeks; i++) {
       const weekBase = 1000 + Math.sin(i / 2) * 100;
       const seasonalFactor = 1 + (factors.seasonality / 100) * Math.sin((i / weeks) * Math.PI * 2);
       const trendFactor = 1 + ((factors.marketGrowth / 100) * (i / weeks));
       
-      baselineData.push(Math.round(weekBase));
-      scenarioData.push(Math.round(weekBase * seasonalFactor * trendFactor * revenueMultiplier));
+      data.push({
+        period: i + 1,
+        historical: null,
+        baseline: Math.round(weekBase),
+        enhanced: Math.round(weekBase * seasonalFactor * trendFactor * revenueMultiplier),
+      });
     }
     
-    const weekLabels = Array.from({ length: 13 }, (_, i) => `Week ${i + 1}`);
-    
-    return { baselineData, scenarioData, weekLabels };
+    return data;
   }, [factors.seasonality, factors.marketGrowth, revenueMultiplier]);
 
   // Key drivers impact breakdown with safe defaults
@@ -180,12 +181,16 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ScenarioComparisonChart
-            baselineData={baselineData}
-            scenarioData={scenarioData}
-            labels={weekLabels}
-            scenarioName={scenario.name}
-          />
+          <div style={{ width: '100%', height: '280px' }}>
+            <D3LineChart 
+              data={chartData}
+              width={800}
+              height={280}
+              showLegend={true}
+              baselineLabel="Baseline"
+              enhancedLabel={scenario.name}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -254,6 +259,30 @@ export const ScenarioComparisonDashboard: React.FC<ScenarioComparisonDashboardPr
           </CardHeader>
           <CardContent>
             <div className="space-y-3 max-h-[280px] overflow-y-auto pr-2">
+              {/* Core Factors - Always display */}
+              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                <span className="text-sm text-muted-foreground">Price Change</span>
+                <Badge variant="outline" className="text-xs">{factors.priceChange > 0 ? '+' : ''}{factors.priceChange}%</Badge>
+              </div>
+              
+              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                <span className="text-sm text-muted-foreground">Promotion Intensity</span>
+                <Badge variant="outline" className="text-xs">{factors.promotionIntensity}</Badge>
+              </div>
+              
+              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                <span className="text-sm text-muted-foreground">Seasonality Impact</span>
+                <Badge variant="outline" className="text-xs">{factors.seasonality > 0 ? '+' : ''}{factors.seasonality}%</Badge>
+              </div>
+              
+              <div className="flex items-center justify-between p-2 rounded bg-muted/50 border">
+                <span className="text-sm text-muted-foreground">Market Growth</span>
+                <Badge variant="outline" className="text-xs">{factors.marketGrowth > 0 ? '+' : ''}{factors.marketGrowth}%</Badge>
+              </div>
+
+              <Separator />
+
+              {/* Optional Factors */}
               {factors.newProductLaunch && (
                 <div className="flex items-center justify-between p-2 rounded bg-success/10 border border-success/20">
                   <div className="flex items-center gap-2">
