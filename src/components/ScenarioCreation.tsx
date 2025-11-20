@@ -147,109 +147,184 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
     <div className="space-y-4">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="w-full">
+          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700">
             <Plus className="w-4 h-4 mr-2" />
             Create New Scenario
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Create Forecast Scenario</DialogTitle>
+            <DialogTitle className="text-2xl font-semibold">Create New Demand Scenario</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Scenario Name
-              </label>
-              <Input
-                placeholder="e.g., Holiday Season Impact"
-                value={scenarioName}
-                onChange={(e) => setScenarioName(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Select SKU
-              </label>
-              <Select value={selectedSku} onValueChange={setSelectedSku}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose SKU to analyze" />
-                </SelectTrigger>
-                <SelectContent>
-                  {skuOptions.map((sku) => (
-                    <SelectItem key={sku} value={sku}>
-                      {sku}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">External Factors (%)</h4>
-              
+          
+          <div className="grid grid-cols-2 gap-8 py-6">
+            {/* Left Column - Basic Information */}
+            <div className="space-y-6">
               <div>
-                <label className="text-xs text-muted-foreground mb-1 block">
-                  Price Change Impact
-                </label>
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={factors.priceChange}
-                  onChange={(e) => setFactors(prev => ({ ...prev, priceChange: Number(e.target.value) }))}
-                  step="0.1"
-                />
-              </div>
+                <h3 className="text-lg font-semibold mb-4 text-foreground">Basic Information</h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="scenario-name">Scenario Name *</Label>
+                    <Input
+                      id="scenario-name"
+                      value={scenarioName}
+                      onChange={(e) => setScenarioName(e.target.value)}
+                      placeholder="e.g., Holiday Season 2024"
+                      className="h-10"
+                    />
+                  </div>
 
-              <div>
-                <label className="text-xs text-muted-foreground mb-1 block">
-                  Promotion Intensity
-                </label>
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={factors.promotionIntensity}
-                  onChange={(e) => setFactors(prev => ({ ...prev, promotionIntensity: Number(e.target.value) }))}
-                  step="0.1"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Describe the scenario context, assumptions, and key drivers..."
+                      className="min-h-[100px] resize-none"
+                    />
+                  </div>
 
-              <div>
-                <label className="text-xs text-muted-foreground mb-1 block">
-                  Seasonality Factor
-                </label>
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={factors.seasonality}
-                  onChange={(e) => setFactors(prev => ({ ...prev, seasonality: Number(e.target.value) }))}
-                  step="0.1"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="sku">SKU *</Label>
+                    <Select value={selectedSku} onValueChange={setSelectedSku}>
+                      <SelectTrigger id="sku" className="h-10">
+                        <SelectValue placeholder="Select SKU" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {skuOptions.map((sku) => (
+                          <SelectItem key={sku} value={sku}>
+                            {sku}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              <div>
-                <label className="text-xs text-muted-foreground mb-1 block">
-                  Market Growth Rate
-                </label>
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={factors.marketGrowth}
-                  onChange={(e) => setFactors(prev => ({ ...prev, marketGrowth: Number(e.target.value) }))}
-                  step="0.1"
-                />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="time-horizon">Time Horizon</Label>
+                      <Select value={timeHorizon} onValueChange={setTimeHorizon}>
+                        <SelectTrigger id="time-horizon" className="h-10">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="6">6 Weeks</SelectItem>
+                          <SelectItem value="12">12 Weeks</SelectItem>
+                          <SelectItem value="26">26 Weeks</SelectItem>
+                          <SelectItem value="52">52 Weeks</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="granularity">Granularity</Label>
+                      <Select value={granularity} onValueChange={setGranularity}>
+                        <SelectTrigger id="granularity" className="h-10">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                          <SelectItem value="monthly">Monthly</SelectItem>
+                          <SelectItem value="quarterly">Quarterly</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-2 pt-4">
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1" disabled={isCreating}>
-                Cancel
-              </Button>
-              <Button onClick={handleCreateScenario} className="flex-1" disabled={isCreating || !scenarioName.trim()}>
-                {isCreating ? 'Creating...' : 'Create Scenario'}
-              </Button>
+            {/* Right Column - External Drivers */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-foreground">External Drivers</h3>
+                <div className="space-y-6 bg-muted/30 rounded-lg p-5">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-sm font-medium">Price Change</Label>
+                      <span className="text-sm font-semibold text-primary">{priceChange[0]}%</span>
+                    </div>
+                    <Slider
+                      value={priceChange}
+                      onValueChange={setPriceChange}
+                      min={-50}
+                      max={50}
+                      step={5}
+                      className="py-2"
+                    />
+                    <p className="text-xs text-muted-foreground">Impact of pricing changes on demand</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-sm font-medium">Promotion Intensity</Label>
+                      <span className="text-sm font-semibold text-primary">{promotionIntensity[0]}%</span>
+                    </div>
+                    <Slider
+                      value={promotionIntensity}
+                      onValueChange={setPromotionIntensity}
+                      min={0}
+                      max={100}
+                      step={10}
+                      className="py-2"
+                    />
+                    <p className="text-xs text-muted-foreground">Marketing and promotional activity level</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-sm font-medium">Seasonality Impact</Label>
+                      <span className="text-sm font-semibold text-primary">{seasonalityImpact[0]}%</span>
+                    </div>
+                    <Slider
+                      value={seasonalityImpact}
+                      onValueChange={setSeasonalityImpact}
+                      min={-30}
+                      max={30}
+                      step={5}
+                      className="py-2"
+                    />
+                    <p className="text-xs text-muted-foreground">Seasonal variation adjustment</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-sm font-medium">Market Growth</Label>
+                      <span className="text-sm font-semibold text-primary">{marketGrowth[0]}%</span>
+                    </div>
+                    <Slider
+                      value={marketGrowth}
+                      onValueChange={setMarketGrowth}
+                      min={-20}
+                      max={20}
+                      step={2}
+                      className="py-2"
+                    />
+                    <p className="text-xs text-muted-foreground">Overall market trend impact</p>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsDialogOpen(false);
+                setIsCreating(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleCreateScenario}
+              disabled={isCreating || !scenarioName.trim()}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 px-8"
+            >
+              {isCreating ? 'Creating...' : 'Create Scenario'}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
