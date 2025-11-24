@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 interface D3LineChartProps {
   data: Array<{
     period: number;
+    periodLabel?: string;
     historical: number | null;
     baseline: number | null;
     enhanced: number | null;
@@ -69,7 +70,10 @@ export const D3LineChart = ({
     // Axes
     const xAxis = d3.axisBottom(xScale)
       .ticks(Math.min(12, data.length))
-      .tickFormat(d => `${d}`);
+      .tickFormat(d => {
+        const index = Math.round(d as number) - 1;
+        return data[index]?.periodLabel || `${d}`;
+      });
 
     const yAxis = d3.axisLeft(yScale)
       .ticks(6)
@@ -151,7 +155,7 @@ export const D3LineChart = ({
           .style('left', `${event.pageX + 10}px`)
           .style('top', `${event.pageY - 10}px`)
           .html(`
-            <div class="text-xs font-semibold">Period ${d.period}</div>
+            <div class="text-xs font-semibold">${d.periodLabel || `Period ${d.period}`}</div>
             <div class="text-xs">${enhancedLabel}: ${d.enhanced?.toFixed(1)}</div>
           `);
       })
@@ -180,7 +184,7 @@ export const D3LineChart = ({
           .style('left', `${event.pageX + 10}px`)
           .style('top', `${event.pageY - 10}px`)
           .html(`
-            <div class="text-xs font-semibold">Period ${d.period}</div>
+            <div class="text-xs font-semibold">${d.periodLabel || `Period ${d.period}`}</div>
             <div class="text-xs">${baselineLabel}: ${d.baseline?.toFixed(1)}</div>
           `);
       })
