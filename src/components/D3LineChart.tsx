@@ -111,7 +111,7 @@ export const D3LineChart = ({
     g.append('path')
       .datum(data.filter(d => d.historical !== null))
       .attr('fill', 'none')
-      .attr('stroke', 'hsl(var(--chart-1))')
+      .attr('stroke', 'hsl(var(--accent))')
       .attr('stroke-width', 2)
       .attr('d', lineHistorical);
 
@@ -119,7 +119,7 @@ export const D3LineChart = ({
     g.append('path')
       .datum(data.filter(d => d.baseline !== null))
       .attr('fill', 'none')
-      .attr('stroke', 'hsl(var(--chart-2))')
+      .attr('stroke', 'hsl(var(--info))')
       .attr('stroke-width', 2)
       .attr('stroke-dasharray', '5,5')
       .attr('d', lineBaseline);
@@ -128,7 +128,7 @@ export const D3LineChart = ({
     g.append('path')
       .datum(data.filter(d => d.enhanced !== null))
       .attr('fill', 'none')
-      .attr('stroke', 'hsl(var(--chart-3))')
+      .attr('stroke', 'hsl(var(--primary))')
       .attr('stroke-width', 2.5)
       .attr('d', lineEnhanced);
 
@@ -144,7 +144,7 @@ export const D3LineChart = ({
       .attr('cx', d => xScale(d.period))
       .attr('cy', d => yScale(d.enhanced!))
       .attr('r', 4)
-      .attr('fill', 'hsl(var(--chart-3))')
+      .attr('fill', 'hsl(var(--primary))')
       .attr('stroke', 'white')
       .attr('stroke-width', 2)
       .style('cursor', 'pointer')
@@ -173,7 +173,7 @@ export const D3LineChart = ({
       .attr('cx', d => xScale(d.period))
       .attr('cy', d => yScale(d.baseline!))
       .attr('r', 3)
-      .attr('fill', 'hsl(var(--chart-2))')
+      .attr('fill', 'hsl(var(--info))')
       .attr('stroke', 'white')
       .attr('stroke-width', 1.5)
       .style('cursor', 'pointer')
@@ -199,9 +199,9 @@ export const D3LineChart = ({
         .attr('transform', `translate(${width - margin.right + 10}, ${margin.top})`);
 
       const legendData = [
-        { label: 'Historical', color: 'hsl(var(--chart-1))', dashed: false },
-        { label: baselineLabel, color: 'hsl(var(--chart-2))', dashed: true },
-        { label: enhancedLabel, color: 'hsl(var(--chart-3))', dashed: false }
+        { label: 'Historical', color: 'hsl(var(--accent))', dashed: false },
+        { label: baselineLabel, color: 'hsl(var(--info))', dashed: true },
+        { label: enhancedLabel, color: 'hsl(var(--primary))', dashed: false }
       ];
 
       legendData.forEach((item, i) => {
