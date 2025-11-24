@@ -1,10 +1,10 @@
 export const dataPreviewSample = [
-  { sku: "P0073", product: "ComfortWear Sports Shoes P0073", location: "Ahmedabad Store L038", channel: "Online", date: "2024-01-01", sales: 30, revenue: "₹22,591.91", stock: 245 },
-  { sku: "P0073", product: "ComfortWear Sports Shoes P0073", location: "Ahmedabad Store L038", channel: "Online", date: "2024-01-08", sales: 31, revenue: "₹18,661.69", stock: 214 },
-  { sku: "P0056", product: "PrimeBasics Kurti P0056", location: "Pune Store L012", channel: "Online", date: "2024-01-15", sales: 45, revenue: "₹34,785.00", stock: 189 },
-  { sku: "P0065", product: "MetroStyle Jeans P0065", location: "Kolkata Store L007", channel: "Online", date: "2024-01-22", sales: 28, revenue: "₹24,108.00", stock: 156 },
-  { sku: "P0060", product: "StreetLine Chinos P0060", location: "Delhi Store L018", channel: "Modern Trade", date: "2024-02-05", sales: 52, revenue: "₹44,616.00", stock: 322 },
-  { sku: "P0021", product: "MetroStyle Flip Flops P0021", location: "Hyderabad Store L017", channel: "Online", date: "2024-02-12", sales: 38, revenue: "₹56,202.00", stock: 198 },
-  { sku: "P0073", product: "ComfortWear Sports Shoes P0073", location: "Pune Store L044", channel: "Online", date: "2024-02-19", sales: 41, revenue: "₹35,301.00", stock: 267 },
-  { sku: "P0056", product: "PrimeBasics Kurti P0056", location: "Chennai Store L024", channel: "General Trade", date: "2024-03-04", sales: 35, revenue: "₹27,055.00", stock: 143 },
+  { sku: "RX1287", product: "Lipitor 20mg (Atorvastatin)", location: "Apollo Pharmacy Delhi", channel: "Retail Pharmacy", date: "2024-01-01", sales: 485, revenue: "₹1,45,500", stock: 2450 },
+  { sku: "RX1287", product: "Lipitor 20mg (Atorvastatin)", location: "Apollo Pharmacy Delhi", channel: "Retail Pharmacy", date: "2024-01-08", sales: 512, revenue: "₹1,53,600", stock: 1938 },
+  { sku: "OTC2145", product: "Crocin Advance 650mg", location: "Max Hospital Mumbai", channel: "Hospital", date: "2024-01-15", sales: 1250, revenue: "₹37,500", stock: 8920 },
+  { sku: "RX3456", product: "Metformin 500mg Extended Release", location: "Fortis Healthcare Bangalore", channel: "Hospital", date: "2024-01-22", sales: 890, revenue: "₹1,24,600", stock: 4560 },
+  { sku: "RX4789", product: "Lisinopril 10mg (BP Control)", location: "Medplus Pharmacy Chennai", channel: "Retail Pharmacy", date: "2024-02-05", sales: 645, revenue: "₹96,750", stock: 3220 },
+  { sku: "OTC5621", product: "Dolo 650mg Paracetamol", location: "AIIMS Pharmacy Hyderabad", channel: "Hospital", date: "2024-02-12", sales: 2340, revenue: "₹46,800", stock: 12450 },
+  { sku: "RX1287", product: "Lipitor 20mg (Atorvastatin)", location: "Manipal Hospital Pune", channel: "Hospital", date: "2024-02-19", sales: 425, revenue: "₹1,27,500", stock: 2670 },
+  { sku: "RX6734", product: "Insulin Glargine 100U/mL", location: "MedPlus Pharmacy Kolkata", channel: "Retail Pharmacy", date: "2024-03-04", sales: 234, revenue: "₹2,10,600", stock: 980 },
 ];
