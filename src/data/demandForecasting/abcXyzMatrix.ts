@@ -5,30 +5,30 @@ export const abcXyzMatrixData = [
     row: "A",
     col: "X",
     skuCount: 245,
-    revenue: "$6800K",
-    label: "High service level",
+    revenue: "₹68.0Cr",
+    label: "Critical medicines",
     priority: "high",
-    description: "Stable high-value items - maintain optimal stock"
+    description: "Stable high-value drugs - ensure 99% availability for life-saving medicines"
   },
   {
     segment: "AY",
     row: "A",
     col: "Y",
     skuCount: 127,
-    revenue: "$2900K",
-    label: "Moderate SS",
+    revenue: "₹29.0Cr",
+    label: "Seasonal drugs",
     priority: "medium",
-    description: "Variable high-value items - moderate safety stock"
+    description: "Variable high-value drugs - adjust for seasonal illness patterns"
   },
   {
     segment: "AZ",
     row: "A",
     col: "Z",
     skuCount: 45,
-    revenue: "$890K",
-    label: "Risk management",
+    revenue: "₹8.9Cr",
+    label: "Specialty drugs",
     priority: "risk",
-    description: "Erratic high-value items - requires close monitoring"
+    description: "Erratic high-value specialty medicines - monitor expiry and demand closely"
   },
   // Row B (15% Value)
   {
@@ -36,30 +36,30 @@ export const abcXyzMatrixData = [
     row: "B",
     col: "X",
     skuCount: 198,
-    revenue: "$1200K",
-    label: "Standard SS",
+    revenue: "₹12.0Cr",
+    label: "Chronic care",
     priority: "medium",
-    description: "Stable medium-value items - standard safety stock"
+    description: "Stable chronic disease medications - standard safety stock protocols"
   },
   {
     segment: "BY",
     row: "B",
     col: "Y",
     skuCount: 267,
-    revenue: "$895K",
-    label: "Balance cost",
+    revenue: "₹8.95Cr",
+    label: "Acute care",
     priority: "medium",
-    description: "Variable medium-value items - balance service and cost"
+    description: "Variable acute care medicines - balance availability and expiry risk"
   },
   {
     segment: "BZ",
     row: "B",
     col: "Z",
     skuCount: 89,
-    revenue: "$234K",
-    label: "High SS",
+    revenue: "₹2.34Cr",
+    label: "Watch closely",
     priority: "risk",
-    description: "Erratic medium-value items - higher safety stock needed"
+    description: "Erratic demand patterns - monitor for generic competition impact"
   },
   // Row C (5% Value)
   {
@@ -67,30 +67,30 @@ export const abcXyzMatrixData = [
     row: "C",
     col: "X",
     skuCount: 187,
-    revenue: "$345K",
-    label: "Low priority",
+    revenue: "₹3.45Cr",
+    label: "Generic OTC",
     priority: "low",
-    description: "Stable low-value items - minimal safety stock"
+    description: "Stable low-value OTC drugs - minimal safety stock required"
   },
   {
-    segment: "BY",
+    segment: "CY",
     row: "C",
     col: "Y",
     skuCount: 245,
-    revenue: "$289K",
-    label: "Bulk approach",
+    revenue: "₹2.89Cr",
+    label: "Bulk ordering",
     priority: "low",
-    description: "Variable low-value items - periodic bulk ordering"
+    description: "Variable low-value supplements - periodic bulk procurement"
   },
   {
     segment: "CZ",
     row: "C",
     col: "Z",
     skuCount: 98,
-    revenue: "$123K",
-    label: "Consider DC",
+    revenue: "₹1.23Cr",
+    label: "Slow movers",
     priority: "low",
-    description: "Erratic low-value items - consider discontinuation"
+    description: "Erratic low-value items - consider phasing out or formulary removal"
   },
 ];
 
