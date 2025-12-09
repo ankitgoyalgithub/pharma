@@ -1544,7 +1544,7 @@ export default function Foundry() {
                     Entity Explorer
                   </h1>
                   <p className="text-sm text-muted-foreground mt-1 font-medium">
-                    Turning "Garbage In, Garbage Out" on its head
+                    Turning "Garbage In, Smart Out" on its head
                   </p>
                 </div>
               </div>
