@@ -136,7 +136,8 @@ const supplyChainModules = [
     description: "Optimize transportation and logistics networks",
     icon: <Truck className="w-6 h-6" />,
     category: "Operations" as const,
-    route: "/logistics-optimization"
+    route: "/logistics-optimization",
+    hidden: true
   }
 ];
 
@@ -289,8 +290,9 @@ export default function Dashboard() {
   const allModules = [...supplyChainModules, ...financeModules, ...pricingModules, ...esgModules];
   
   const filteredModules = (modules: typeof allModules) => {
-    if (!searchQuery) return modules;
-    return modules.filter(module => 
+    const visibleModules = modules.filter(module => !('hidden' in module && module.hidden));
+    if (!searchQuery) return visibleModules;
+    return visibleModules.filter(module => 
       module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       module.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
