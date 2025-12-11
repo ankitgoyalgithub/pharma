@@ -2608,9 +2608,15 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="h-[180px] flex items-end justify-between gap-2 px-2">
                     {Array.from({ length: 12 }, (_, i) => {
-                      const heights = [85, 87, 89, 91, 88, 92, 94, 93, 95, 94, 96, 94];
+                      // More varied accuracy data with realistic fashion retail patterns
+                      const heights = [82, 78, 86, 91, 84, 88, 92, 87, 83, 90, 94, 91];
                       const actualHeight = heights[i];
-                      const colors = actualHeight >= 90 ? 'bg-success shadow-sm shadow-success/50' : actualHeight >= 85 ? 'bg-warning shadow-sm shadow-warning/50' : 'bg-destructive shadow-sm shadow-destructive/50';
+                      // Consistent color logic based on accuracy thresholds
+                      const colors = actualHeight >= 90 
+                        ? 'bg-success shadow-sm shadow-success/50' 
+                        : actualHeight >= 85 
+                          ? 'bg-warning shadow-sm shadow-warning/50' 
+                          : 'bg-destructive shadow-sm shadow-destructive/50';
                       return (
                         <Tooltip key={i}>
                           <TooltipTrigger asChild>
