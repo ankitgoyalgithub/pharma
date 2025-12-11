@@ -357,8 +357,8 @@ const DemandForecasting = () => {
       setDriversLoading(true);
       setTimeout(() => {
         const driversToSelect = [
-          { name: "Healthcare Policy Changes", autoSelected: true, icon: "FileText" },
-          { name: "Disease Outbreak Tracking", autoSelected: true, icon: "Activity" },
+          { name: "Promotions & Discounts", autoSelected: true, icon: "Tag" },
+          { name: "Seasonality Trends", autoSelected: true, icon: "CalendarDays" },
         ];
         setSelectedDrivers(driversToSelect.filter(d => d.autoSelected).map(d => d.name));
         setDriversLoading(false);
