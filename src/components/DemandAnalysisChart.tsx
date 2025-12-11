@@ -13,7 +13,7 @@ interface DemandAnalysisChartProps {
 }
 
 // Proxy SKU mapping for NPI forecasting
-const npiProxyMapping: Record<string, { proxySku: string; proxyName: string; npiName: string }> = {
+export const npiProxyMapping: Record<string, { proxySku: string; proxyName: string; npiName: string }> = {
   'NPI001': { proxySku: 'SKU006', proxyName: 'Splash Core Chinos', npiName: 'Lee Cooper SS25 Cargo Pants' },
   'NPI002': { proxySku: 'SKU007', proxyName: 'Lee Cooper Denim Jacket', npiName: 'Kappa Retro Bomber Jacket' },
   'NPI003': { proxySku: 'SKU003', proxyName: 'Elle Floral Maxi Dress', npiName: 'Elle Summer Midi Skirt' },
@@ -42,14 +42,14 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     return () => ro.disconnect();
   }, []);
 
-  const isNpiMode = npiSku !== 'none' && npiProxyMapping[npiSku];
+  const isNpiMode = npiSku !== 'none' && !!npiProxyMapping[npiSku];
   const npiInfo = isNpiMode ? npiProxyMapping[npiSku] : null;
 
   const data = React.useMemo(() => {
     const storeMultiplier = getChartMultiplier(storeFilter);
 
     // NPI Mode: Show proxy SKU history (W5-W35), NPI history (W36-W52), forecast (W53+)
-    if (isNpiMode) {
+    if (isNpiMode && npiInfo) {
       const weeklyNpiData = [];
       for (let i = 1; i <= 65; i++) {
         const proxyTrendBase = (82 + (i * 1.1)) * storeMultiplier;
@@ -64,7 +64,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           // Proxy SKU history (W5-W35)
           weeklyNpiData.push({ 
             period: i, 
-            periodLabel, 
+            periodLabel,
+            skuName: npiInfo.proxyName,
+            isProxy: true,
             historical: proxyTrendBase + seasonality + noise, 
             baseline: null, 
             enhanced: null 
@@ -73,7 +75,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           // NPI SKU history (W36-W52)
           weeklyNpiData.push({ 
             period: i, 
-            periodLabel, 
+            periodLabel,
+            skuName: npiInfo.npiName,
+            isProxy: false,
             historical: npiTrendBase + seasonality + noise * 1.2, 
             baseline: null, 
             enhanced: null 
@@ -83,7 +87,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           const lastValue = npiTrendBase + seasonality + noise;
           weeklyNpiData.push({ 
             period: i, 
-            periodLabel, 
+            periodLabel,
+            skuName: npiInfo.npiName,
+            isProxy: false,
             historical: null, 
             baseline: lastValue, 
             enhanced: lastValue 
@@ -92,7 +98,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           // Forecast period
           weeklyNpiData.push({ 
             period: i, 
-            periodLabel, 
+            periodLabel,
+            skuName: npiInfo.npiName,
+            isProxy: false,
             historical: null, 
             baseline: npiTrendBase + seasonality + (Math.random() - 0.5) * 5, 
             enhanced: npiTrendBase + seasonality + 10 + (Math.random() - 0.5) * 5 
@@ -193,13 +201,13 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
   return (
     <div ref={containerRef} style={{ width: '100%', height: '320px' }}>
       {isNpiMode && npiInfo && (
-        <div className="mb-2 px-2 py-1 bg-primary/10 border border-primary/20 rounded text-xs text-primary flex items-center gap-2">
-          <span className="font-medium">NPI Mode:</span>
-          <span>W5-W35: {npiInfo.proxyName} (Proxy)</span>
+        <div className="mb-2 px-3 py-1.5 bg-primary/5 border border-primary/15 rounded-md text-[11px] inline-flex items-center gap-1.5">
+          <span className="font-medium text-primary">NPI:</span>
+          <span className="text-warning-foreground bg-warning/20 px-1.5 py-0.5 rounded">W5-W35: {npiInfo.proxyName}</span>
           <span className="text-muted-foreground">→</span>
-          <span>W36-W52: {npiInfo.npiName} (NPI History)</span>
+          <span className="text-accent-foreground bg-accent/20 px-1.5 py-0.5 rounded">W36-W52: {npiInfo.npiName}</span>
           <span className="text-muted-foreground">→</span>
-          <span>W53+: Forecast</span>
+          <span className="text-primary bg-primary/10 px-1.5 py-0.5 rounded">W53+: Forecast</span>
         </div>
       )}
       {renderWidth > 0 && (
@@ -210,6 +218,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           showLegend={true}
           baselineLabel="Baseline Forecast"
           enhancedLabel="Enhanced Forecast"
+          yAxisLabel="Volume"
+          isNpiMode={isNpiMode}
         />
       )}
     </div>
