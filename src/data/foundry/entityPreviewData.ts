@@ -1,13 +1,13 @@
 import { EntityPreviewMap } from "./types";
 
 const splashImageUrls = [
-  "https://freeimage.host/i/f5NFmLN",
-  "https://freeimage.host/i/f5NFbXp",
-  "https://freeimage.host/i/f5NFyBI",
-  "https://freeimage.host/i/f5NK91t",
-  "https://freeimage.host/i/f5NKHrX",
-  "https://freeimage.host/i/f5NK27s",
-  "https://freeimage.host/i/f5NKqhl"
+  "https://iili.io/f5NFmLN.webp",
+  "https://iili.io/f5NFbXp.webp",
+  "https://iili.io/f5NFyBI.webp",
+  "https://iili.io/f5NK91t.webp",
+  "https://iili.io/f5NKHrX.webp",
+  "https://iili.io/f5NK27s.webp",
+  "https://iili.io/f5NKqhl.webp"
 ];
 
 export const entityPreviewData: EntityPreviewMap = {
