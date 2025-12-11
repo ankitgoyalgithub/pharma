@@ -539,7 +539,7 @@ export default function EntityEDA() {
                                 tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
                               />
                               <Tooltip />
-                              <Bar dataKey="count" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]} />
+                              <Bar dataKey="count" fill="hsl(var(--accent))" radius={[0, 4, 4, 0]} />
                             </BarChart>
                           </ResponsiveContainer>
                         </div>
