@@ -157,12 +157,22 @@ const DemandForecasting = () => {
 
   // Map external driver display names to Foundry object keys
   const driverToFoundryKey: Record<string, string> = {
+    // Fashion industry external drivers
+    "Promotions & Discounts": "Promotions_Discounts",
+    "Seasonality Trends": "Seasonality_Trends",
+    "Fashion Week Calendar": "Fashion_Week_Calendar",
+    "Weather & Climate Data": "Weather_Climate",
+    "Social Media Trends": "Social_Media_Trends",
+    "Influencer Campaigns": "Influencer_Campaigns",
+    "Competitor Pricing": "Competitor_Pricing",
     "Holiday Calendar": "Holiday_Calendar",
-    "Crude Oil Prices": "Crude_Oil_Prices",
-    "NSE Index": "NSE_Index",
-    "NASDAQ Index": "NASDAQ_Index",
-    "Weather Data": "Weather_Data",
-    "Search Trends (Google Trends)": "Search_Trends",
+    "Store Events": "Store_Events",
+    "New Collection Launches": "New_Collection_Launches",
+    "Clearance & End-of-Season": "Clearance_EOS",
+    "Back-to-School Season": "Back_To_School",
+    "Wedding & Festive Season": "Wedding_Festive",
+    "Online vs Offline Traffic": "Online_Offline_Traffic",
+    "Brand Collaborations": "Brand_Collaborations",
   };
 
   // Stepper configuration
