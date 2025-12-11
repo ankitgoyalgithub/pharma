@@ -1554,61 +1554,75 @@ const DemandForecasting = () => {
           </CardContent>
         </Card>
 
-        {/* Data Quality Summary Card */}
+        {/* Data Completeness by Entity Chart */}
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-medium text-foreground">Data Quality Summary</h3>
+              <h3 className="text-base font-medium text-foreground">Data Completeness by Entity</h3>
               <Tooltip>
                 <TooltipTrigger>
                   <Info className="w-4 h-4 text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Overview of data quality metrics and recommendations for improving forecast accuracy.</p>
+                  <p>Shows the percentage of complete records for each data entity required for demand forecasting.</p>
                 </TooltipContent>
               </Tooltip>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm font-medium">Complete Records</span>
-                </div>
-                <span className="text-lg font-bold text-emerald-500">94.2%</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm font-medium">Missing Values</span>
-                </div>
-                <span className="text-lg font-bold text-amber-500">127</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-red-500/10 rounded-lg border border-red-500/20">
-                <div className="flex items-center gap-2">
-                  <XCircle className="w-4 h-4 text-red-500" />
-                  <span className="text-sm font-medium">Outliers Detected</span>
-                </div>
-                <span className="text-lg font-bold text-red-500">23</span>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium">Forecast Readiness</span>
-                </div>
-                <span className="text-lg font-bold text-primary">High</span>
-              </div>
-            </div>
-            
-            <div className="pt-3 border-t border-border">
-              <p className="text-xs text-muted-foreground">
-                <strong>Recommendation:</strong> Use AI Auto-Fix to impute missing values and handle outliers for optimal forecast accuracy.
-              </p>
-            </div>
+          <CardContent className="h-[300px]">
+            <Bar 
+              data={{
+                labels: ['Sales History', 'Product Master', 'Store Master', 'Channel Master', 'Promotions'],
+                datasets: [{
+                  label: 'Completeness %',
+                  data: [94.2, 98.5, 96.8, 100, 89.3],
+                  backgroundColor: [
+                    'hsla(142, 76%, 36%, 0.7)',
+                    'hsla(142, 76%, 36%, 0.7)',
+                    'hsla(142, 76%, 36%, 0.7)',
+                    'hsla(142, 76%, 36%, 0.7)',
+                    'hsla(45, 93%, 47%, 0.7)',
+                  ],
+                  borderColor: [
+                    'hsl(142, 76%, 36%)',
+                    'hsl(142, 76%, 36%)',
+                    'hsl(142, 76%, 36%)',
+                    'hsl(142, 76%, 36%)',
+                    'hsl(45, 93%, 47%)',
+                  ],
+                  borderWidth: 1,
+                  borderRadius: 4,
+                }]
+              }}
+              options={{
+                indexAxis: 'y' as const,
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context: any) => `${context.raw}% complete`
+                    }
+                  }
+                },
+                scales: {
+                  x: {
+                    min: 0,
+                    max: 100,
+                    grid: { color: hslVar('--border', 0.3) },
+                    ticks: { 
+                      color: hslVar('--muted-foreground'),
+                      callback: (value: any) => `${value}%`
+                    }
+                  },
+                  y: {
+                    grid: { display: false },
+                    ticks: { color: hslVar('--foreground') }
+                  }
+                }
+              }}
+            />
           </CardContent>
         </Card>
       </div>
