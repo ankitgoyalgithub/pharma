@@ -59,6 +59,7 @@ import {
   ZoomOut,
   Box,
   MapPin,
+  XCircle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -1517,7 +1518,7 @@ const DemandForecasting = () => {
         issues={dynamicDataQualityIssues}
       />
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -1549,6 +1550,64 @@ const DemandForecasting = () => {
               <div className="absolute bottom-16 right-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
                 Lumpy
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Quality Summary Card */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-medium text-foreground">Data Quality Summary</h3>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Overview of data quality metrics and recommendations for improving forecast accuracy.</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  <span className="text-sm font-medium">Complete Records</span>
+                </div>
+                <span className="text-lg font-bold text-emerald-500">94.2%</span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  <span className="text-sm font-medium">Missing Values</span>
+                </div>
+                <span className="text-lg font-bold text-amber-500">127</span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                <div className="flex items-center gap-2">
+                  <XCircle className="w-4 h-4 text-red-500" />
+                  <span className="text-sm font-medium">Outliers Detected</span>
+                </div>
+                <span className="text-lg font-bold text-red-500">23</span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium">Forecast Readiness</span>
+                </div>
+                <span className="text-lg font-bold text-primary">High</span>
+              </div>
+            </div>
+            
+            <div className="pt-3 border-t border-border">
+              <p className="text-xs text-muted-foreground">
+                <strong>Recommendation:</strong> Use AI Auto-Fix to impute missing values and handle outliers for optimal forecast accuracy.
+              </p>
             </div>
           </CardContent>
         </Card>
