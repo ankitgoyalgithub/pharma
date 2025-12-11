@@ -91,4 +91,13 @@ export const masterEntities: EntityModule[] = [
     lastSync: "2025-07-21T10:15:00Z",
     sourceType: "snowflake",
   },
+  {
+    title: "Stores",
+    description: "Splash retail store locations across UAE",
+    origin: "csv",
+    route: "/entity-preview/stores",
+    recordCount: 50,
+    lastSync: "2025-12-11T09:00:00Z",
+    sourceType: "csv",
+  },
 ];
