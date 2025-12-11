@@ -2167,11 +2167,10 @@ const DemandForecasting = () => {
 
             <div className="flex justify-center">
             <ForecastCard
-              title="ABC, XYZ & More"
+              title="Insights"
               value={`${abcThresholdA}%`}
-              subtitle={`Class A threshold • ${xyzThresholdX}% Class X threshold
-                        FMR ${fmrThresholdF}% Fast-moving
-                        ${classificationBasis === 'value' ? 'Value-based' : 'Volume-based'} classification`}
+              subtitle={`ABC-XYZ Segmentation • FMR Analysis
+                        Impact Analysis • Channel Distribution`}
               icon={BarChart3}
               isActive={selectedScenario === null && activeTab === "insights"}
               onClick={() => {
@@ -2192,21 +2191,6 @@ const DemandForecasting = () => {
               onClick={() => {
                 setSelectedScenario(null);
                 setActiveTab("workbook");
-              }}
-            />
-            </div>
-
-            <div className="flex justify-center">
-            <ForecastCard
-              title="Impact Analysis"
-              value="10K"
-              subtitle="Units sold due to promotion
-                        High price sensitivity"
-              icon={BarChart3}
-              isActive={selectedScenario === null && activeTab === "impact"}
-              onClick={() => {
-                setSelectedScenario(null);
-                setActiveTab("impact");
               }}
             />
             </div>
@@ -2274,9 +2258,8 @@ const DemandForecasting = () => {
           <h1 className="text-xl font-bold tracking-tight text-foreground animate-fade-in">
             {selectedScenario ? `Scenario Analysis: ${scenarios.find(s => s.id === selectedScenario)?.name}` : 
              activeTab === "overview" ? "Forecast Overview" :
-             activeTab === "insights" ? "Demand Insights" :
+             activeTab === "insights" ? "Insights & Impact Analysis" :
              activeTab === "workbook" ? "Collaborative Workbook" :
-             activeTab === "impact" ? "Impact Analysis" :
              activeTab === "npi" ? "New & Limited History Forecast" :
              activeTab === "quality" ? "Data Quality Review" : "Results"}
           </h1>
@@ -2723,30 +2706,35 @@ const DemandForecasting = () => {
 
         {activeTab === "insights" && (
           <div className="space-y-6 animate-fade-in">
-            {/* ABC-XYZ Segmentation Matrix - Full Width */}
-            <ABCXYZMatrix />
+            {/* Top Row: ABC-XYZ Matrix (half) + Channel Distribution (half) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* ABC-XYZ Segmentation Matrix */}
+              <ABCXYZMatrix />
 
-            {/* Bottom Row - Channel Distribution and Classifications */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <Card className="shadow-card border-0">
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2 text-sm">
-                    <PieChartIcon className="w-4 h-4" />
+              {/* Channel Distribution */}
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                    <PieChartIcon className="w-5 h-5" />
                     Channel Distribution
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-[200px]">
+                  <div className="h-[300px]">
                     <Pie data={channelPieData} options={pieOptions} />
                   </div>
                 </CardContent>
               </Card>
+            </div>
 
-              <Card className="shadow-card border-0">
-                <CardHeader className="pb-2">
+            {/* Second Row: ABC, XYZ, FMR Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* ABC Analysis Chart */}
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+                <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-sm">
-                      <BarChart3 className="w-4 h-4" />
+                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                      <BarChart3 className="w-5 h-5" />
                       ABC Analysis
                     </CardTitle>
                     <Tooltip>
@@ -2754,40 +2742,73 @@ const DemandForecasting = () => {
                         <Info className="w-3 h-3 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Categorizes items by {classificationBasis === 'value' ? 'revenue value' : 'volume'}: A (high), B (medium), C (low). Helps prioritize forecasting efforts.</p>
+                        <p>SKU classification by {classificationBasis === 'value' ? 'revenue value' : 'volume'}: A (high), B (medium), C (low).</p>
                       </TooltipContent>
                     </Tooltip>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Class A (High {classificationBasis === 'value' ? 'Value' : 'Volume'})</span>
-                      <Badge variant="secondary" className="bg-success/10 text-success">{abcThresholdA}%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Class B (Medium {classificationBasis === 'value' ? 'Value' : 'Volume'})</span>
-                      <Badge variant="secondary" className="bg-warning/10 text-warning">{abcThresholdB}%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Class C (Low {classificationBasis === 'value' ? 'Value' : 'Volume'})</span>
-                      <Badge variant="secondary" className="bg-muted/10 text-muted-foreground">{100 - parseInt(abcThresholdA) - parseInt(abcThresholdB)}%</Badge>
-                    </div>
-                    <div className="mt-4 pt-3 border-t">
-                      <div className="text-2xl font-bold text-primary">
-                        {getABCRevenueImpact(appliedFilters.store).formatted}
-                      </div>
-                      <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
-                    </div>
+                  <div className="h-[220px]">
+                    <Bar 
+                      data={{
+                        labels: ['Class A', 'Class B', 'Class C'],
+                        datasets: [
+                          {
+                            label: 'Revenue ($M)',
+                            data: [42.3, 18.6, 7.2],
+                            backgroundColor: hslVar('--success', 0.7),
+                            borderColor: hslVar('--success'),
+                            borderWidth: 2,
+                            yAxisID: 'y'
+                          },
+                          {
+                            label: 'SKU Count',
+                            data: [128, 384, 768],
+                            backgroundColor: hslVar('--primary', 0.7),
+                            borderColor: hslVar('--primary'),
+                            borderWidth: 2,
+                            yAxisID: 'y1'
+                          }
+                        ]
+                      }}
+                      options={{
+                        ...buildChartOptions(),
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 10 } } }
+                        },
+                        scales: {
+                          y: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            title: { display: true, text: 'Revenue ($M)', font: { size: 10 } }
+                          },
+                          y1: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'SKU Count', font: { size: 10 } }
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="mt-3 pt-3 border-t">
+                    <div className="text-xl font-bold text-primary">$68.1M</div>
+                    <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="shadow-card border-0">
-                <CardHeader className="pb-2">
+              {/* XYZ Analysis Chart */}
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+                <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-sm">
-                      <BarChart3 className="w-4 h-4" />
+                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                      <BarChart3 className="w-5 h-5" />
                       XYZ Analysis
                     </CardTitle>
                     <Tooltip>
@@ -2795,38 +2816,73 @@ const DemandForecasting = () => {
                         <Info className="w-3 h-3 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Groups items by demand variability: X (stable), Y (variable), Z (highly unpredictable). Indicates forecast difficulty.</p>
+                        <p>Demand variability: X (stable), Y (variable), Z (highly unpredictable).</p>
                       </TooltipContent>
                     </Tooltip>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">X (Low Variability)</span>
-                      <Badge variant="secondary" className="bg-success/10 text-success">{xyzThresholdX}%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Y (Medium Variability)</span>
-                      <Badge variant="secondary" className="bg-warning/10 text-warning">{parseInt(xyzThresholdY) - parseInt(xyzThresholdX)}%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Z (High Variability)</span>
-                      <Badge variant="secondary" className="bg-destructive/10 text-destructive">{100 - parseInt(xyzThresholdY)}%</Badge>
-                    </div>
-                    <div className="mt-4 pt-3 border-t">
-                      <div className="text-2xl font-bold text-warning">14.2%</div>
-                      <p className="text-xs text-muted-foreground">Avg Coefficient of Variation</p>
-                    </div>
+                  <div className="h-[220px]">
+                    <Bar 
+                      data={{
+                        labels: ['X (Stable)', 'Y (Variable)', 'Z (Erratic)'],
+                        datasets: [
+                          {
+                            label: 'Revenue ($M)',
+                            data: [38.4, 21.2, 8.5],
+                            backgroundColor: hslVar('--success', 0.7),
+                            borderColor: hslVar('--success'),
+                            borderWidth: 2,
+                            yAxisID: 'y'
+                          },
+                          {
+                            label: 'SKU Count',
+                            data: [512, 448, 320],
+                            backgroundColor: hslVar('--warning', 0.7),
+                            borderColor: hslVar('--warning'),
+                            borderWidth: 2,
+                            yAxisID: 'y1'
+                          }
+                        ]
+                      }}
+                      options={{
+                        ...buildChartOptions(),
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 10 } } }
+                        },
+                        scales: {
+                          y: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            title: { display: true, text: 'Revenue ($M)', font: { size: 10 } }
+                          },
+                          y1: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'SKU Count', font: { size: 10 } }
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="mt-3 pt-3 border-t">
+                    <div className="text-xl font-bold text-warning">14.2%</div>
+                    <p className="text-xs text-muted-foreground">Avg Coefficient of Variation</p>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="shadow-card border-0">
-                <CardHeader className="pb-2">
+              {/* FMR Analysis Chart */}
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+                <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-sm">
-                      <Activity className="w-4 h-4" />
+                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                      <Activity className="w-5 h-5" />
                       FMR Analysis
                     </CardTitle>
                     <Tooltip>
@@ -2834,51 +2890,75 @@ const DemandForecasting = () => {
                         <Info className="w-3 h-3 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Fast, Medium, Rare classification based on movement frequency: F (fast-moving), M (medium), R (rare/slow-moving).</p>
+                        <p>Movement frequency: F (fast), M (medium), R (rare/slow).</p>
                       </TooltipContent>
                     </Tooltip>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">F (Fast Moving)</span>
-                      <Badge variant="secondary" className="bg-success/10 text-success">{fmrThresholdF}%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">M (Medium Moving)</span>
-                      <Badge variant="secondary" className="bg-warning/10 text-warning">{parseInt(fmrThresholdM) - parseInt(fmrThresholdF)}%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">R (Rare/Slow Moving)</span>
-                      <Badge variant="secondary" className="bg-muted/10 text-muted-foreground">{100 - parseInt(fmrThresholdM)}%</Badge>
-                    </div>
-                    <div className="mt-4 pt-3 border-t">
-                      <div className="text-2xl font-bold text-success">
-                        {getFMRUnits(appliedFilters.store).formatted}
-                      </div>
-                      <p className="text-xs text-muted-foreground">Fast-Moving Units</p>
-                    </div>
+                  <div className="h-[220px]">
+                    <Bar 
+                      data={{
+                        labels: ['F (Fast)', 'M (Medium)', 'R (Rare)'],
+                        datasets: [
+                          {
+                            label: 'Units (K)',
+                            data: [156, 89, 32],
+                            backgroundColor: hslVar('--success', 0.7),
+                            borderColor: hslVar('--success'),
+                            borderWidth: 2,
+                            yAxisID: 'y'
+                          },
+                          {
+                            label: 'SKU Count',
+                            data: [384, 512, 384],
+                            backgroundColor: hslVar('--info', 0.7),
+                            borderColor: hslVar('--info'),
+                            borderWidth: 2,
+                            yAxisID: 'y1'
+                          }
+                        ]
+                      }}
+                      options={{
+                        ...buildChartOptions(),
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 10 } } }
+                        },
+                        scales: {
+                          y: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            title: { display: true, text: 'Units (K)', font: { size: 10 } }
+                          },
+                          y1: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'SKU Count', font: { size: 10 } }
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="mt-3 pt-3 border-t">
+                    <div className="text-xl font-bold text-success">156K</div>
+                    <p className="text-xs text-muted-foreground">Fast-Moving Units</p>
                   </div>
                 </CardContent>
               </Card>
             </div>
-          </div>
-        )}
-        {activeTab === "workbook" && (
-          <div className="mb-6 animate-fade-in">
-            <CollaborativeForecastTable />
-          </div>
-        )}
-        {activeTab === "impact" && (
-          <div className="space-y-4 animate-fade-in">
-            {/* Simplified Layout - Two Main Charts */}
+
+            {/* Impact Analysis Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Waterfall Chart - Contribution Analysis */}
-              <Card className="shadow-card border-0">
+              {/* Contribution Analysis */}
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-lg">
+                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
                       <BarChart3 className="w-5 h-5" />
                       Contribution Analysis
                     </CardTitle>
@@ -2893,12 +2973,12 @@ const DemandForecasting = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
+                  <div className="h-56">
                     <Bar 
                       data={{
                         labels: ['Base Forecast', 'Seasonality', 'Promotions', 'Price Change', 'Final Forecast'],
                         datasets: [{
-                          label: 'Contribution',
+                          label: 'Contribution ($M)',
                           data: [85, 8, 12, -3, 108],
                           backgroundColor: [
                             hslVar('--primary', 0.8),
@@ -2927,7 +3007,7 @@ const DemandForecasting = () => {
                         scales: {
                           y: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Impact (M units)' }
+                            title: { display: true, text: 'Impact ($M)', font: { size: 10 } }
                           }
                         }
                       }}
@@ -2937,10 +3017,10 @@ const DemandForecasting = () => {
               </Card>
 
               {/* Sensitivity Analysis */}
-              <Card className="shadow-card border-0">
+              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-lg">
+                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
                       <BarChart3 className="w-5 h-5" />
                       Sensitivity Analysis
                     </CardTitle>
@@ -2955,7 +3035,7 @@ const DemandForecasting = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64">
+                  <div className="h-56">
                     <Bar 
                       data={{
                         labels: ['Price Elasticity', 'Promotion Depth', 'Seasonality', 'Market Growth'],
@@ -2988,7 +3068,7 @@ const DemandForecasting = () => {
                         scales: {
                           x: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Sensitivity (±%)' }
+                            title: { display: true, text: 'Sensitivity (±%)', font: { size: 10 } }
                           }
                         }
                       }}
@@ -2998,10 +3078,10 @@ const DemandForecasting = () => {
               </Card>
             </div>
 
-            {/* Summary Insights */}
-            <Card className="shadow-card border-0">
+            {/* Key Impact Insights */}
+            <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-base font-semibold">
                   <Award className="w-5 h-5" />
                   Key Impact Insights
                 </CardTitle>
@@ -3033,8 +3113,8 @@ const DemandForecasting = () => {
                         <span className="font-medium">89.2%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Avg. Impact</span>
-                        <span className="font-medium">+21%</span>
+                        <span className="text-muted-foreground">Revenue Impact</span>
+                        <span className="font-medium">+$14.2M</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Confidence</span>
@@ -3047,7 +3127,7 @@ const DemandForecasting = () => {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Prediction Interval</span>
-                        <span className="font-medium">±12%</span>
+                        <span className="font-medium">±$8.1M</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Risk Level</span>
