@@ -42,8 +42,8 @@ export const ABCXYZMatrix: React.FC = () => {
 
   return (
     <TooltipProvider>
-      <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
-        <CardHeader className="pb-3">
+      <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300 h-full">
+        <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <CardTitle className="text-base font-semibold">
@@ -51,34 +51,33 @@ export const ABCXYZMatrix: React.FC = () => {
               </CardTitle>
               <Tooltip>
                 <TooltipTrigger>
-                  <Info className="w-4 h-4 text-muted-foreground" />
+                  <Info className="w-3.5 h-3.5 text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   <p className="text-xs">
-                    Matrix combining value (ABC) and variability (XYZ) analysis. 
-                    Each cell shows SKU count, revenue, and recommended strategy.
+                    Matrix combining value (ABC) and variability (XYZ) analysis.
                   </p>
                 </TooltipContent>
               </Tooltip>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0 pb-3">
           {/* Matrix Grid */}
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full">
               {/* Column Headers */}
-              <div className="flex mb-2">
-                <div className="w-24 shrink-0" /> {/* Empty corner */}
+              <div className="flex mb-1">
+                <div className="w-16 shrink-0" /> {/* Empty corner */}
                 {abcXyzHeaders.cols.map((col) => (
                   <div
                     key={col.id}
-                    className="flex-1 min-w-[200px] text-center px-2"
+                    className="flex-1 min-w-[140px] text-center px-1"
                   >
-                    <div className="font-semibold text-sm text-foreground">
+                    <div className="font-semibold text-xs text-foreground">
                       {col.label}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] text-muted-foreground">
                       {col.sublabel}
                     </div>
                   </div>
@@ -87,13 +86,13 @@ export const ABCXYZMatrix: React.FC = () => {
 
               {/* Rows */}
               {abcXyzHeaders.rows.map((row) => (
-                <div key={row.id} className="flex mb-2">
+                <div key={row.id} className="flex mb-1">
                   {/* Row Header */}
-                  <div className="w-24 shrink-0 flex flex-col items-center justify-center pr-3">
-                    <div className="font-semibold text-base text-foreground">
+                  <div className="w-16 shrink-0 flex flex-col items-center justify-center pr-2">
+                    <div className="font-semibold text-sm text-foreground">
                       {row.label}
                     </div>
-                    <div className="text-xs text-muted-foreground text-center">
+                    <div className="text-[10px] text-muted-foreground text-center">
                       {row.sublabel}
                     </div>
                   </div>
@@ -107,23 +106,23 @@ export const ABCXYZMatrix: React.FC = () => {
                       <Tooltip key={`${row.id}${col.id}`}>
                         <TooltipTrigger asChild>
                           <div
-                            className={`flex-1 min-w-[200px] p-3 mx-1 rounded-lg border-2 transition-all cursor-help ${getPriorityColors(
+                            className={`flex-1 min-w-[140px] p-2 mx-0.5 rounded-md border transition-all cursor-help ${getPriorityColors(
                               cellData.priority
                             )}`}
                           >
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="font-semibold text-sm text-foreground">
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="font-semibold text-xs text-foreground">
                                 {cellData.segment}
                               </div>
                             </div>
-                            <div className="space-y-1">
-                              <div className="text-lg font-bold text-foreground">
+                            <div className="space-y-0.5">
+                              <div className="text-sm font-bold text-foreground">
                                 {cellData.skuCount} SKUs
                               </div>
-                              <div className="text-base font-semibold text-foreground">
+                              <div className="text-xs font-semibold text-foreground">
                                 {cellData.revenue}
                               </div>
-                              <div className="text-xs text-muted-foreground italic mt-2">
+                              <div className="text-[10px] text-muted-foreground italic">
                                 {cellData.label}
                               </div>
                             </div>
@@ -141,12 +140,12 @@ export const ABCXYZMatrix: React.FC = () => {
           </div>
 
           {/* Legend */}
-          <div className="mt-6 pt-4 border-t border-border/40">
-            <div className="flex flex-wrap gap-4 justify-center">
+          <div className="mt-3 pt-2 border-t border-border/40">
+            <div className="flex flex-wrap gap-3 justify-center">
               {abcXyzLegend.map((item) => (
-                <div key={item.label} className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded ${getLegendColor(item.color)}`} />
-                  <div className="text-xs">
+                <div key={item.label} className="flex items-center gap-1.5">
+                  <div className={`w-2 h-2 rounded ${getLegendColor(item.color)}`} />
+                  <div className="text-[10px]">
                     <span className="font-medium text-foreground">{item.label}</span>
                     <span className="text-muted-foreground ml-1">- {item.description}</span>
                   </div>

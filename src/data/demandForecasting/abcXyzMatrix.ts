@@ -4,93 +4,93 @@ export const abcXyzMatrixData = [
     segment: "AX",
     row: "A",
     col: "X",
-    skuCount: 245,
-    revenue: "₹68.0Cr",
-    label: "Critical medicines",
+    skuCount: 128,
+    revenue: "$42.3M",
+    label: "Core bestsellers",
     priority: "high",
-    description: "Stable high-value drugs - ensure 99% availability for life-saving medicines"
+    description: "Stable high-value fashion items - ensure 99% availability for key styles"
   },
   {
     segment: "AY",
     row: "A",
     col: "Y",
-    skuCount: 127,
-    revenue: "₹29.0Cr",
-    label: "Seasonal drugs",
+    skuCount: 96,
+    revenue: "$18.6M",
+    label: "Seasonal trends",
     priority: "medium",
-    description: "Variable high-value drugs - adjust for seasonal illness patterns"
+    description: "Variable high-value items - adjust for seasonal fashion cycles"
   },
   {
     segment: "AZ",
     row: "A",
     col: "Z",
-    skuCount: 45,
-    revenue: "₹8.9Cr",
-    label: "Specialty drugs",
+    skuCount: 32,
+    revenue: "$7.2M",
+    label: "Trend pieces",
     priority: "risk",
-    description: "Erratic high-value specialty medicines - monitor expiry and demand closely"
+    description: "Erratic high-value trend items - monitor closely for markdowns"
   },
   // Row B (15% Value)
   {
     segment: "BX",
     row: "B",
     col: "X",
-    skuCount: 198,
-    revenue: "₹12.0Cr",
-    label: "Chronic care",
+    skuCount: 192,
+    revenue: "$12.4M",
+    label: "Everyday basics",
     priority: "medium",
-    description: "Stable chronic disease medications - standard safety stock protocols"
+    description: "Stable mid-value basics - standard replenishment protocols"
   },
   {
     segment: "BY",
     row: "B",
     col: "Y",
-    skuCount: 267,
-    revenue: "₹8.95Cr",
-    label: "Acute care",
+    skuCount: 224,
+    revenue: "$8.8M",
+    label: "Occasion wear",
     priority: "medium",
-    description: "Variable acute care medicines - balance availability and expiry risk"
+    description: "Variable mid-value items - balance availability and markdown risk"
   },
   {
     segment: "BZ",
     row: "B",
     col: "Z",
-    skuCount: 89,
-    revenue: "₹2.34Cr",
+    skuCount: 64,
+    revenue: "$2.4M",
     label: "Watch closely",
     priority: "risk",
-    description: "Erratic demand patterns - monitor for generic competition impact"
+    description: "Erratic demand patterns - monitor for clearance timing"
   },
   // Row C (5% Value)
   {
     segment: "CX",
     row: "C",
     col: "X",
-    skuCount: 187,
-    revenue: "₹3.45Cr",
-    label: "Generic OTC",
+    skuCount: 256,
+    revenue: "$3.2M",
+    label: "Accessories",
     priority: "low",
-    description: "Stable low-value OTC drugs - minimal safety stock required"
+    description: "Stable low-value accessories - minimal safety stock needed"
   },
   {
     segment: "CY",
     row: "C",
     col: "Y",
-    skuCount: 245,
-    revenue: "₹2.89Cr",
-    label: "Bulk ordering",
+    skuCount: 224,
+    revenue: "$2.1M",
+    label: "Bulk buys",
     priority: "low",
-    description: "Variable low-value supplements - periodic bulk procurement"
+    description: "Variable low-value items - periodic bulk procurement"
   },
   {
     segment: "CZ",
     row: "C",
     col: "Z",
-    skuCount: 98,
-    revenue: "₹1.23Cr",
+    skuCount: 64,
+    revenue: "$1.1M",
     label: "Slow movers",
     priority: "low",
-    description: "Erratic low-value items - consider phasing out or formulary removal"
+    description: "Erratic low-value items - consider phasing out"
   },
 ];
 
@@ -102,14 +102,14 @@ export const abcXyzHeaders = {
   ],
   cols: [
     { id: "X", label: "X (Stable)", sublabel: "CV < 0.5" },
-    { id: "Y", label: "Y (Variable)", sublabel: "0.5 ≤CV ≤1.0" },
-    { id: "Z", label: "Z (Erratic)", sublabel: "CV≥1.0" },
+    { id: "Y", label: "Y (Variable)", sublabel: "0.5 ≤ CV ≤ 1.0" },
+    { id: "Z", label: "Z (Erratic)", sublabel: "CV ≥ 1.0" },
   ],
 };
 
 export const abcXyzLegend = [
-  { label: "High Priority", color: "success", description: "Focus on service level and availability" },
-  { label: "Medium Priority", color: "warning", description: "Balance service and cost efficiency" },
-  { label: "Risk Items", color: "destructive", description: "Requires special attention and monitoring" },
-  { label: "Low Priority", color: "muted", description: "Minimize inventory and cost" },
+  { label: "High Priority", color: "success", description: "Focus on availability" },
+  { label: "Medium Priority", color: "warning", description: "Balance service & cost" },
+  { label: "Risk Items", color: "destructive", description: "Needs monitoring" },
+  { label: "Low Priority", color: "muted", description: "Minimize inventory" },
 ];
