@@ -33,7 +33,8 @@ export const D3LineChart = ({
     // Clear previous chart
     d3.select(svgRef.current).selectAll('*').remove();
 
-    const margin = { top: 20, right: 120, bottom: 40, left: 60 };
+    const legendHeight = showLegend ? 40 : 0;
+    const margin = { top: 20, right: 30, bottom: 40 + legendHeight, left: 60 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -193,20 +194,23 @@ export const D3LineChart = ({
         tooltip.style('opacity', '0');
       });
 
-    // Legend
+    // Legend at bottom
     if (showLegend) {
-      const legend = svg.append('g')
-        .attr('transform', `translate(${width - margin.right + 10}, ${margin.top})`);
-
       const legendData = [
         { label: 'Historical', color: 'hsl(var(--accent))', dashed: false },
         { label: baselineLabel, color: 'hsl(var(--info))', dashed: true },
         { label: enhancedLabel, color: 'hsl(var(--primary))', dashed: false }
       ];
 
+      const legendSpacing = 150;
+      const legendStartX = (width - (legendData.length * legendSpacing)) / 2;
+
+      const legend = svg.append('g')
+        .attr('transform', `translate(${legendStartX}, ${height - 25})`);
+
       legendData.forEach((item, i) => {
         const legendRow = legend.append('g')
-          .attr('transform', `translate(0, ${i * 24})`);
+          .attr('transform', `translate(${i * legendSpacing}, 0)`);
 
         legendRow.append('line')
           .attr('x1', 0)

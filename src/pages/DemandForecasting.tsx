@@ -3767,15 +3767,12 @@ const DemandForecasting = () => {
 
                   <div className="flex gap-2 pt-4">
                     <Button onClick={() => applyFilters('local')} className="flex-1">
-                      Apply Local
+                      Apply
                     </Button>
-                    <Button onClick={() => applyFilters('global')} variant="outline" className="flex-1">
-                      Apply Global
+                    <Button onClick={resetFilters} variant="outline" className="flex-1">
+                      Reset
                     </Button>
                   </div>
-                  <Button onClick={resetFilters} variant="outline" className="w-full">
-                    Reset All
-                  </Button>
                 </div>
               )}
 
