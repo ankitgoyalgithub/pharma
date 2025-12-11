@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,14 @@ export const AutoFixDialog = ({ open, onOpenChange, issues, onApplyFixes }: Auto
   const [fixing, setFixing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [fixedIssues, setFixedIssues] = useState<string[]>([]);
+  
+  // Generate stable confidence values for each issue (only recalculated when issues change)
+  const confidenceValues = useMemo(() => {
+    return issues.reduce((acc, issue) => {
+      acc[issue.id] = (85 + Math.random() * 10).toFixed(1);
+      return acc;
+    }, {} as Record<string, string>);
+  }, [issues]);
 
   const handleAutoFix = async () => {
     setFixing(true);
@@ -132,7 +140,7 @@ export const AutoFixDialog = ({ open, onOpenChange, issues, onApplyFixes }: Auto
                         </p>
                         <p className="text-xs">{issue.explanation}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Model: gemini-2.5-flash | Confidence: {(85 + Math.random() * 10).toFixed(1)}%
+                          Model: gemini-2.5-flash | Confidence: {confidenceValues[issue.id]}%
                         </p>
                       </div>
                     )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScientificLoader } from "@/components/ScientificLoader";
@@ -259,6 +259,34 @@ const DemandForecasting = () => {
   const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "quality">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
   const [showAutoFixDialog, setShowAutoFixDialog] = useState(false);
+  
+  // Generate dynamic data quality issues based on uploaded files
+  const dynamicDataQualityIssues = useMemo(() => {
+    // Get file names from uploaded files and foundry objects
+    const fileNames = [
+      ...uploadedFiles.map(f => f.name),
+      ...foundryObjects.map(obj => `${obj.name.toLowerCase().replace(/ /g, '_')}.csv`)
+    ];
+    
+    // If no files uploaded, use the default static issues
+    if (fileNames.length === 0) {
+      return dataQualityIssues;
+    }
+    
+    // Map static issue file references to dynamic uploaded file names
+    const fileMapping: Record<string, string> = {
+      'sales_history.csv': fileNames.find(f => f.toLowerCase().includes('sales') || f.toLowerCase().includes('history')) || fileNames[0],
+      'location_master.csv': fileNames.find(f => f.toLowerCase().includes('location') || f.toLowerCase().includes('store')) || fileNames[Math.min(1, fileNames.length - 1)],
+      'product_master.csv': fileNames.find(f => f.toLowerCase().includes('product') || f.toLowerCase().includes('sku')) || fileNames[Math.min(2, fileNames.length - 1)],
+      'mapping_master.csv': fileNames.find(f => f.toLowerCase().includes('mapping')) || fileNames[Math.min(3, fileNames.length - 1)],
+      'channel_master.csv': fileNames.find(f => f.toLowerCase().includes('channel')) || fileNames[Math.min(4, fileNames.length - 1)],
+    };
+    
+    return dataQualityIssues.map(issue => ({
+      ...issue,
+      file: fileMapping[issue.file] || issue.file
+    }));
+  }, [uploadedFiles, foundryObjects]);
   // Demand Analysis controls
   const [granularity, setGranularity] = useState<"weekly" | "monthly" | "quarterly">("weekly");
   const [valueMode, setValueMode] = useState<"value" | "volume">("value");
@@ -1486,7 +1514,7 @@ const DemandForecasting = () => {
 
       {/* Data Quality Issues Table */}
       <DataQualityIssuesTable 
-        issues={dataQualityIssues}
+        issues={dynamicDataQualityIssues}
       />
 
       <div className="grid grid-cols-1 gap-6">
@@ -1529,7 +1557,7 @@ const DemandForecasting = () => {
       <AutoFixDialog
         open={showAutoFixDialog}
         onOpenChange={setShowAutoFixDialog}
-        issues={dataQualityIssues}
+        issues={dynamicDataQualityIssues}
         onApplyFixes={() => {
           console.log('Applying fixes...');
           // Here you would apply the fixes to the actual data
