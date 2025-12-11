@@ -3,12 +3,12 @@ import { EntityModule } from "./types";
 export const timeseriesEntities: EntityModule[] = [
   {
     title: "Sales History",
-    description: "Daily sales by product and region",
+    description: "Weekly sales by store and SKU",
     origin: "csv",
     route: "/entity-preview/sales-history",
-    recordCount: 18542,
-    lastSync: "2025-07-19T18:15:00Z",
-    sourceType: "hdfs",
+    recordCount: 60000,
+    lastSync: "2025-12-11T15:00:00Z",
+    sourceType: "csv",
   },
   {
     title: "Copper Prices",
