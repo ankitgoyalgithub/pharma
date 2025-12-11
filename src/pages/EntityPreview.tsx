@@ -24,6 +24,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
   Table,
   TableBody,
   TableCell,
@@ -117,6 +122,63 @@ export default function EntityPreview() {
       case "premium": return "default";
       default: return "secondary";
     }
+  };
+
+  // Map color names to hex values
+  const getColorFromName = (colorName: string): string => {
+    const colorMap: Record<string, string> = {
+      'black': '#000000',
+      'white': '#FFFFFF',
+      'red': '#EF4444',
+      'blue': '#3B82F6',
+      'green': '#22C55E',
+      'yellow': '#EAB308',
+      'orange': '#F97316',
+      'purple': '#A855F7',
+      'pink': '#EC4899',
+      'gray': '#6B7280',
+      'grey': '#6B7280',
+      'brown': '#92400E',
+      'navy': '#1E3A5A',
+      'beige': '#D4C4A8',
+      'cream': '#FFFDD0',
+      'gold': '#D4AF37',
+      'silver': '#C0C0C0',
+      'maroon': '#800000',
+      'teal': '#008080',
+      'coral': '#FF7F50',
+      'turquoise': '#40E0D0',
+      'khaki': '#C3B091',
+      'olive': '#808000',
+      'charcoal': '#36454F',
+      'burgundy': '#800020',
+      'tan': '#D2B48C',
+      'mint': '#98FF98',
+      'lavender': '#E6E6FA',
+      'peach': '#FFCBA4',
+      'rose': '#FF007F',
+      'wine': '#722F37',
+      'slate': '#708090',
+      'ivory': '#FFFFF0',
+      'sand': '#C2B280',
+      'rust': '#B7410E',
+      'magenta': '#FF00FF',
+      'cyan': '#00FFFF',
+      'lime': '#32CD32',
+      'indigo': '#4B0082',
+      'violet': '#8B00FF',
+      'aqua': '#00FFFF',
+      'chocolate': '#D2691E',
+      'crimson': '#DC143C',
+      'mustard': '#FFDB58',
+      'salmon': '#FA8072',
+      'plum': '#DDA0DD',
+      'multi': 'linear-gradient(135deg, #FF0000, #00FF00, #0000FF)',
+      'multicolor': 'linear-gradient(135deg, #FF0000, #00FF00, #0000FF)',
+    };
+    
+    const lowerColor = colorName.toLowerCase();
+    return colorMap[lowerColor] || '#9CA3AF';
   };
 
   // Handle column sorting
@@ -409,17 +471,60 @@ export default function EntityPreview() {
                   ) : (
                     paginatedData.map((row, rowIndex) => (
                       <TableRow key={rowIndex}>
-                        {columns.map((column) => (
-                          <TableCell key={column.accessorKey} className="whitespace-nowrap">
-                            {column.accessorKey === "status" && row[column.accessorKey] ? (
-                              <Badge variant={getStatusBadgeVariant(row[column.accessorKey])}>
-                                {row[column.accessorKey]}
-                              </Badge>
-                            ) : (
-                              row[column.accessorKey]
-                            )}
-                          </TableCell>
-                        ))}
+                        {columns.map((column) => {
+                          const cellValue = row[column.accessorKey];
+                          const isUrlColumn = column.accessorKey.toLowerCase().includes('url') || 
+                                              column.accessorKey.toLowerCase().includes('image') ||
+                                              (typeof cellValue === 'string' && cellValue.startsWith('http'));
+                          const isColorColumn = column.accessorKey.toLowerCase() === 'color' ||
+                                                column.header.toLowerCase() === 'color';
+                          
+                          return (
+                            <TableCell key={column.accessorKey} className="whitespace-nowrap">
+                              {column.accessorKey === "status" && cellValue ? (
+                                <Badge variant={getStatusBadgeVariant(cellValue)}>
+                                  {cellValue}
+                                </Badge>
+                              ) : isUrlColumn && cellValue ? (
+                                <HoverCard>
+                                  <HoverCardTrigger asChild>
+                                    <a 
+                                      href={cellValue} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-primary hover:underline cursor-pointer max-w-[200px] truncate block"
+                                    >
+                                      {cellValue}
+                                    </a>
+                                  </HoverCardTrigger>
+                                  <HoverCardContent className="w-64 p-2" side="right">
+                                    <img 
+                                      src={cellValue} 
+                                      alt="Preview" 
+                                      className="w-full h-auto rounded-md object-contain max-h-48"
+                                      onError={(e) => {
+                                        (e.target as HTMLImageElement).style.display = 'none';
+                                      }}
+                                    />
+                                    <p className="text-xs text-muted-foreground mt-2 truncate">{cellValue}</p>
+                                  </HoverCardContent>
+                                </HoverCard>
+                              ) : isColorColumn && cellValue ? (
+                                <div className="flex items-center gap-2">
+                                  <div 
+                                    className="w-4 h-4 rounded-full border border-border shadow-sm"
+                                    style={{ 
+                                      backgroundColor: getColorFromName(cellValue)
+                                    }}
+                                  />
+                                  <span>{cellValue}</span>
+                                </div>
+                              ) : (
+                                cellValue
+                              )}
+                            </TableCell>
+                          );
+                        })}
                       </TableRow>
                     ))
                   )}
