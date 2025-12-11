@@ -3144,6 +3144,11 @@ const DemandForecasting = () => {
             </Card>
           </div>
         )}
+        {activeTab === "workbook" && (
+          <div className="mb-6 animate-fade-in">
+            <CollaborativeForecastTable />
+          </div>
+        )}
         {activeTab === "npi" && (
           <div className="space-y-6 animate-fade-in">
             {/* NPI Overview Subtitle */}
