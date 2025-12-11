@@ -1084,73 +1084,129 @@ export default function Foundry() {
     const routeKey = module.route.split('/').pop() || '';
     const preview = (entityPreviewData as any)[routeKey];
     const displayCount = (preview?.rows?.length ?? module.recordCount);
+
+    // Category mapping for gradient overlays based on sourceType
+    const sourceCategory = ["csv", "upload_csv", "s3", "hdfs"].includes(module.sourceType) 
+      ? "data" 
+      : ["salesforce", "oracle", "sap"].includes(module.sourceType)
+      ? "enterprise"
+      : "cloud";
+
+    const categoryGradient = sourceCategory === "data" 
+      ? "bg-gradient-data" 
+      : sourceCategory === "enterprise" 
+      ? "bg-gradient-operations" 
+      : "bg-gradient-finance";
+
+    const categoryColor = sourceCategory === "data"
+      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+      : sourceCategory === "enterprise"
+      ? "bg-accent-light/30 text-accent dark:bg-accent/20 dark:text-accent-light"
+      : "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300";
     
     return (
       <Card
         key={module.title}
-        className="group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 border-border/50 hover:border-primary/30 overflow-hidden relative bg-gradient-to-br from-card via-card to-card/80 hover:scale-[1.02]"
+        className="group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border-border/50 bg-card/80 backdrop-blur-sm min-h-[200px] relative overflow-hidden"
         onClick={() => handlePreview(module)}
       >
-        {/* Quality indicator bar */}
+        {/* Subtle gradient overlay */}
         <div className={cn(
-          "absolute top-0 left-0 right-0 h-1 transition-all duration-300",
-          isHealthy ? "bg-gradient-to-r from-success via-success to-success/70" : 
-          isWarning ? "bg-gradient-to-r from-warning via-warning to-warning/70" : 
-          "bg-gradient-to-r from-destructive via-destructive to-destructive/70"
+          "absolute inset-0 opacity-[0.03] transition-opacity duration-300 group-hover:opacity-[0.08]",
+          categoryGradient
         )} />
         
-        <CardHeader className="pb-3 pt-5">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              {/* Source icon with enhanced styling */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary/20 rounded-lg blur-md group-hover:blur-lg transition-all" />
-                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-2.5 rounded-lg border border-primary/20 group-hover:border-primary/40 transition-all">
-                    <img
-                      src={sourceTypeIcon[module.sourceType]}
-                      alt={module.sourceType}
-                      className="h-5 w-5 relative z-10"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <CardTitle className="text-lg font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
-                    {module.title}
-                  </CardTitle>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <Badge
-                      variant={module.origin === "csv" ? "secondary" : "default"}
-                      className="text-xs font-medium"
-                    >
-                      {module.origin === "csv" ? "Uploaded" : "Synced"}
-                    </Badge>
-                    <div className="flex items-center gap-1 text-xs font-semibold">
-                      <div className={cn(
-                        "w-1.5 h-1.5 rounded-full animate-pulse",
-                        isHealthy ? "bg-success" : isWarning ? "bg-warning" : "bg-destructive"
-                      )} />
-                      <span className={cn(
-                        isHealthy ? "text-success" : isWarning ? "text-warning" : "text-destructive"
-                      )}>
-                        {qualityScore}% Quality
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <CardContent className="p-5 h-full flex flex-col relative z-10">
+          {/* Top Row - Icon and Recent badge */}
+          <div className="flex items-start justify-between mb-3">
+            <div className="w-11 h-11 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+              <img
+                src={sourceTypeIcon[module.sourceType]}
+                alt={module.sourceType}
+                className="h-5 w-5"
+                loading="lazy"
+              />
             </div>
-            
+            <div className="flex items-center gap-2">
+              {/* Quality indicator */}
+              <div className="flex items-center gap-1 text-xs font-medium">
+                <div className={cn(
+                  "w-1.5 h-1.5 rounded-full",
+                  isHealthy ? "bg-success" : isWarning ? "bg-warning" : "bg-destructive"
+                )} />
+                <span className={cn(
+                  isHealthy ? "text-success" : isWarning ? "text-warning" : "text-destructive"
+                )}>
+                  {qualityScore}%
+                </span>
+              </div>
+              {module.origin === "csv" && (
+                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-accent/10 text-accent border-accent/20 font-medium">
+                  Uploaded
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* Category + Text */}
+          <div className="space-y-2 mb-4">
+            <Badge className={cn("text-xs px-2 py-0.5 font-medium capitalize", categoryColor)}>
+              {sourceCategory}
+            </Badge>
+
+            <h3 className="font-semibold text-foreground text-sm leading-tight group-hover:text-primary transition-colors">
+              {module.title}
+            </h3>
+
+            <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+              {module.description}
+            </p>
+          </div>
+
+          {/* Stats row */}
+          <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
+            <div className="flex items-center gap-1">
+              <Database className="h-3 w-3" />
+              <span className="font-medium">{displayCount.toLocaleString()} rows</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span>{formatDate(module.lastSync).split(',')[0]}</span>
+            </div>
+          </div>
+
+          {/* Button (pushed to bottom) */}
+          <div className="mt-auto flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 px-2 hover:bg-primary/10 hover:text-primary"
+              onClick={(e) => handleLineage(module, e)}
+              title="View Data Lineage"
+            >
+              <GitBranch className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 px-2 hover:bg-primary/10 hover:text-primary"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSync(module);
+              }}
+              title={module.origin === "csv" ? "Append Data" : "Sync Data"}
+            >
+              <RefreshCcw className="h-3.5 w-3.5" />
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="h-8 px-2 hover:bg-primary/10 hover:text-primary"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <MoreVertical className="h-4 w-4" />
+                  <MoreVertical className="h-3.5 w-3.5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
@@ -1168,69 +1224,15 @@ export default function Foundry() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-        </CardHeader>
-
-        <CardContent className="pt-0 space-y-4">
-          <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-            {module.description}
-          </p>
-
-          {/* Enhanced metrics section */}
-          <div className="grid grid-cols-2 gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Database className="h-3.5 w-3.5" />
-                <span className="font-medium">Records</span>
-              </div>
-              <div className="text-base font-bold text-foreground">
-                {displayCount.toLocaleString()}
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Clock className="h-3.5 w-3.5" />
-                <span className="font-medium">Last Sync</span>
-              </div>
-              <div className="text-xs font-semibold text-foreground">
-                {formatDate(module.lastSync).split(',')[0]}
-              </div>
-            </div>
-          </div>
-
-          {/* Action buttons with enhanced styling */}
-          <div className="flex items-center gap-2 pt-2">
             <Button
-              size="sm"
-              variant="ghost"
-              className="hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all border border-transparent"
-              onClick={(e) => handleLineage(module, e)}
-              title="View Data Lineage"
-            >
-              <GitBranch className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="flex-1 group/btn hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleSync(module);
-              }}
-            >
-              <RefreshCcw className="h-3.5 w-3.5 mr-1.5 group-hover/btn:rotate-180 transition-transform duration-500" />
-              {module.origin === "csv" ? "Append" : "Sync"}
-            </Button>
-            <Button
-              size="sm"
               variant="default"
-              className="flex-1 bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg hover:shadow-primary/25 transition-all"
+              className="ml-auto bg-[#4f74f9] hover:bg-[#3f64e0] text-white h-8 px-4 rounded-full text-sm font-medium flex items-center gap-2 shadow"
               onClick={(e) => {
                 e.stopPropagation();
                 handlePreview(module);
               }}
             >
-              <Eye className="h-3.5 w-3.5 mr-1.5" />
+              <Eye className="h-3.5 w-3.5" />
               Preview
             </Button>
           </div>
