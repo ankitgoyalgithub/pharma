@@ -65,7 +65,7 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
 }) => {
   const [viewMode, setViewMode] = useState<"form" | "json">("form");
   const [isPrimaryOpen, setIsPrimaryOpen] = useState(true);
-  const [isClassificationOpen, setIsClassificationOpen] = useState(true);
+  const [isClassificationOpen, setIsClassificationOpen] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [isAlgorithmOpen, setIsAlgorithmOpen] = useState(false);
   // Configuration object for JSON view
