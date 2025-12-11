@@ -3063,45 +3063,45 @@ const DemandForecasting = () => {
         {activeTab === "npi" && (
           <div className="space-y-6 animate-fade-in">
             {/* NPI Overview Subtitle */}
-            <p className="text-sm text-muted-foreground">
-              Focus on items with reliable vs unreliable history, new colours and new product introductions for Splash Fashion AE.
+            <p className="text-xs text-muted-foreground">
+              SKU categorization based on history reliability — new colours, NPIs, and items requiring manual review.
             </p>
             
             {/* NPI Metric Tiles */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card className="relative overflow-hidden border-border/40 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Total SKUs in Scope</div>
-                  <div className="text-3xl font-bold text-foreground mb-1">1,280</div>
-                  <div className="text-xs text-muted-foreground mb-3">Across all Splash UAE stores & online</div>
-                  <Badge variant="secondary" className="text-xs">Focus set: Apparel & Fashion</Badge>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Total SKUs in Scope</div>
+                  <div className="text-2xl font-bold text-foreground mb-1">1,280</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">All Splash UAE stores & online</div>
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Apparel & Fashion</Badge>
                 </CardContent>
               </Card>
               
               <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Reliable History</div>
-                  <div className="text-3xl font-bold text-success mb-1">640</div>
-                  <div className="text-xs text-muted-foreground mb-3">3+ seasons of stable history, no major stock-outs</div>
-                  <Badge className="bg-success/15 text-success border-success/30 text-xs">Engine can trust past patterns</Badge>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Reliable History</div>
+                  <div className="text-2xl font-bold text-success mb-1">640</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">3+ seasons, no major stock-outs</div>
+                  <Badge className="bg-success/15 text-success border-success/30 text-[10px] px-1.5 py-0.5">Trusted patterns</Badge>
                 </CardContent>
               </Card>
               
               <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Limited / Unreliable History</div>
-                  <div className="text-3xl font-bold text-warning mb-1">360</div>
-                  <div className="text-xs text-muted-foreground mb-3">High volatility, gaps or stock-outs in last 12 months</div>
-                  <Badge className="bg-warning/15 text-warning border-warning/30 text-xs">Needs help from similar items</Badge>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Limited / Unreliable</div>
+                  <div className="text-2xl font-bold text-warning mb-1">360</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">Gaps or stock-outs in 12 months</div>
+                  <Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Needs similar items</Badge>
                 </CardContent>
               </Card>
               
               <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">New / Recolour / NPI</div>
-                  <div className="text-3xl font-bold text-destructive mb-1">280</div>
-                  <div className="text-xs text-muted-foreground mb-3">New colours, fits, and first-time introductions</div>
-                  <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-xs">Launch-sensitive · manual review</Badge>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">New / Recolour / NPI</div>
+                  <div className="text-2xl font-bold text-destructive mb-1">280</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">New colours & first-time items</div>
+                  <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">Manual review</Badge>
                 </CardContent>
               </Card>
             </div>
@@ -3110,63 +3110,63 @@ const DemandForecasting = () => {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
               {/* Left: New Items & Out-of-Stock Table */}
               <Card className="lg:col-span-3 border-border/40">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground">New Items & Out-of-Stock Last Season</CardTitle>
-                  <p className="text-xs text-muted-foreground">Prioritised list of high-impact items where history is either missing or unreliable.</p>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs font-semibold text-foreground">New Items & Out-of-Stock Last Season</CardTitle>
+                  <p className="text-[10px] text-muted-foreground">High-impact items with missing or unreliable history.</p>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                    <table className="w-full">
                       <thead>
-                        <tr className="border-b border-border/40">
-                          <th className="text-left py-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-medium bg-muted/30">SKU</th>
-                          <th className="text-left py-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-medium bg-muted/30">Product</th>
-                          <th className="text-left py-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-medium bg-muted/30">Type</th>
-                          <th className="text-left py-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-medium bg-muted/30">History</th>
-                          <th className="text-left py-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-medium bg-muted/30">Last Eid/Season</th>
-                          <th className="text-left py-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-medium bg-muted/30">Suggested Strategy</th>
+                        <tr className="border-b border-border/40 bg-muted/30">
+                          <th className="text-left py-2 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">SKU</th>
+                          <th className="text-left py-2 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Product</th>
+                          <th className="text-left py-2 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold min-w-[100px]">Type</th>
+                          <th className="text-left py-2 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">History</th>
+                          <th className="text-left py-2 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Last Season</th>
+                          <th className="text-left py-2 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Strategy</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-xs">SP-SS25-001</td>
-                          <td className="py-2 px-2 text-xs">Eid Kaftan – Gold Foil</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-xs">New product intro</Badge></td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">None</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">New for SS25</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Copy pattern from top 3 Eid kaftans and add +18% for Dubai and online.</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-001</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Eid Kaftan – Gold Foil</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">NPI</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">None</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">New for SS25</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Copy top 3 Eid kaftans +18%</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-xs">SP-SS25-014</td>
-                          <td className="py-2 px-2 text-xs">Smiley Graphic Tee – Neon Lime</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-xs">New colour</Badge></td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">2 seasons (core graphic line)</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Ran out in week 3 of Eid</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Start at 1.3× last season's peak and push more stock to big malls and online.</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-014</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Smiley Graphic Tee – Lime</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New colour</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">2 seasons</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">OOS week 3</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× last peak</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-xs">SP-SS25-032</td>
-                          <td className="py-2 px-2 text-xs">Wide-Leg Cargo Pants – Sand</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-xs">Trend style</Badge></td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Only 6 weeks of sales</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Out-of-stock for 4 weeks</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Blend early sales with similar cargo fits and protect inventory in top stores.</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-032</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Wide-Leg Cargo – Sand</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Trend</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">6 weeks</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">OOS 4 weeks</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with similar cargo fits</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-xs">SP-SS25-057</td>
-                          <td className="py-2 px-2 text-xs">Modest Dress – Dusty Rose</td>
-                          <td className="py-2 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-xs">Re-entry after stock-out</Badge></td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Stopped mid-season</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Sold out 2 weeks before Eid</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Re-launch with +25% over last full week and reuse size curve from closest dress.</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-057</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Modest Dress – Rose</td>
+                          <td className="py-2 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Re-entry</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Mid-season</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Sold out pre-Eid</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Relaunch +25% last week</td>
                         </tr>
                         <tr className="hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-xs">SP-SS25-081</td>
-                          <td className="py-2 px-2 text-xs">Kids Matching Set – Palm Print</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-xs">New bundle</Badge></td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Parent tees have 3 seasons</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">N/A</td>
-                          <td className="py-2 px-2 text-xs text-muted-foreground">Use parent tee history, slightly lower volume in small stores, full bundle online.</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-081</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Kids Matching Set – Palm</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Bundle</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">3 seasons</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">N/A</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use parent tee history</td>
                         </tr>
                       </tbody>
                     </table>
@@ -3176,36 +3176,41 @@ const DemandForecasting = () => {
               
               {/* Right: Strategy Summary */}
               <Card className="lg:col-span-2 border-border/40">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground">Forecast Strategy by Item Group</CardTitle>
-                  <p className="text-xs text-muted-foreground">Simple rules that explain how the engine treats each type of item.</p>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs font-semibold text-foreground">Forecast Strategy by Item Group</CardTitle>
+                  <p className="text-[10px] text-muted-foreground">How the engine treats each item type.</p>
                 </CardHeader>
                 <CardContent className="pt-0 space-y-3">
-                  <ul className="space-y-2 text-xs text-muted-foreground">
-                    <li className="flex gap-2">
-                      <span className="text-foreground font-medium">Reliable history</span> — we mostly trust the data and let the model follow past patterns at store and online level.
+                  <ul className="space-y-2">
+                    <li className="flex gap-2 text-[11px]">
+                      <span className="text-foreground font-medium min-w-[90px]">Reliable history</span>
+                      <span className="text-muted-foreground">— Trust data, follow past patterns at store level.</span>
                     </li>
-                    <li className="flex gap-2">
-                      <span className="text-foreground font-medium">Unreliable history</span> — we do not take every spike at face value and borrow shape and level from similar items.
+                    <li className="flex gap-2 text-[11px]">
+                      <span className="text-foreground font-medium min-w-[90px]">Unreliable history</span>
+                      <span className="text-muted-foreground">— Borrow shape from similar items, ignore spikes.</span>
                     </li>
-                    <li className="flex gap-2">
-                      <span className="text-foreground font-medium">New colours</span> — we start from the parent style's demand and adjust based on colour strength and store profile.
+                    <li className="flex gap-2 text-[11px]">
+                      <span className="text-foreground font-medium min-w-[90px]">New colours</span>
+                      <span className="text-muted-foreground">— Start from parent style, adjust by store profile.</span>
                     </li>
-                    <li className="flex gap-2">
-                      <span className="text-foreground font-medium">New product introductions (NPI)</span> — we look at "look-alike" families (price, fit, fabric) and use their launch curve as a guide.
+                    <li className="flex gap-2 text-[11px]">
+                      <span className="text-foreground font-medium min-w-[90px]">NPI</span>
+                      <span className="text-muted-foreground">— Use "look-alike" families as launch guide.</span>
                     </li>
-                    <li className="flex gap-2">
-                      <span className="text-foreground font-medium">Items that ran out last year</span> — we treat stock-out weeks as lost demand and plan slightly higher to avoid repeat OOS.
+                    <li className="flex gap-2 text-[11px]">
+                      <span className="text-foreground font-medium min-w-[90px]">Stock-out items</span>
+                      <span className="text-muted-foreground">— Treat OOS as lost demand, plan higher.</span>
                     </li>
                   </ul>
                   
                   <div className="border-t border-border/40 pt-3 mt-3">
-                    <div className="text-xs text-muted-foreground font-medium mb-2">Launch playbook for Splash AE:</div>
-                    <ul className="space-y-1 text-xs text-muted-foreground list-disc list-inside">
-                      <li>Dubai Mall, Mall of Emirates, and online receive stronger launch quantities than neighbourhood stores.</li>
-                      <li>Eid capsule lands around 4 weeks before the festival; DSF capsule around Dubai Shopping Festival start.</li>
-                      <li>Kaftans and modest dresses get extra safety stock in top 20 stores because they sold out early last year.</li>
-                      <li>Kids and family matching sets are pushed more where the adult base style already sells above average.</li>
+                    <div className="text-[10px] text-foreground font-semibold mb-2 uppercase tracking-wider">Launch Playbook</div>
+                    <ul className="space-y-1 text-[10px] text-muted-foreground list-disc list-inside">
+                      <li>Dubai Mall, MoE & online get stronger launch quantities.</li>
+                      <li>Eid capsule 4 weeks before festival; DSF at event start.</li>
+                      <li>Kaftans & modest dresses: extra safety stock in top 20 stores.</li>
+                      <li>Family sets pushed where adult base style sells above average.</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -3214,90 +3219,90 @@ const DemandForecasting = () => {
             
             {/* Mix & Risk View */}
             <Card className="border-border/40">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground">Mix & Risk View</CardTitle>
-                <p className="text-xs text-muted-foreground">Visual split of SKU groups and stock-out risk based on last Eid / DSF performance.</p>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-semibold text-foreground">Mix & Risk View</CardTitle>
+                <p className="text-[10px] text-muted-foreground">SKU group split and stock-out risk from last Eid/DSF.</p>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Forecast Coverage Mix */}
                   <div>
-                    <div className="text-sm font-medium mb-4">Forecast coverage mix</div>
-                    <div className="space-y-3">
+                    <div className="text-[11px] font-semibold text-foreground mb-3">Forecast Coverage Mix</div>
+                    <div className="space-y-2.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-32 text-xs text-muted-foreground">Reliable history</div>
-                        <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
+                        <div className="w-28 text-[10px] text-muted-foreground">Reliable history</div>
+                        <div className="flex-1 h-2.5 bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-gradient-to-r from-success to-success/80 rounded-full" style={{ width: '52%' }} />
                         </div>
-                        <div className="text-xs font-medium w-10">52%</div>
+                        <div className="text-[10px] font-semibold text-foreground w-8">52%</div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="w-32 text-xs text-muted-foreground">Limited / unreliable</div>
-                        <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
+                        <div className="w-28 text-[10px] text-muted-foreground">Limited / unreliable</div>
+                        <div className="flex-1 h-2.5 bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-gradient-to-r from-warning to-warning/80 rounded-full" style={{ width: '28%' }} />
                         </div>
-                        <div className="text-xs font-medium w-10">28%</div>
+                        <div className="text-[10px] font-semibold text-foreground w-8">28%</div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="w-32 text-xs text-muted-foreground">New & NPI</div>
-                        <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
+                        <div className="w-28 text-[10px] text-muted-foreground">New & NPI</div>
+                        <div className="flex-1 h-2.5 bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-gradient-to-r from-primary to-primary/80 rounded-full" style={{ width: '20%' }} />
                         </div>
-                        <div className="text-xs font-medium w-10">20%</div>
+                        <div className="text-[10px] font-semibold text-foreground w-8">20%</div>
                       </div>
                     </div>
-                    <div className="flex gap-4 mt-4 flex-wrap">
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <div className="w-2.5 h-2.5 rounded-full bg-success" />
-                        Reliable history (model-led)
+                    <div className="flex gap-4 mt-3 flex-wrap">
+                      <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                        <div className="w-2 h-2 rounded-full bg-success" />
+                        Model-led
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <div className="w-2.5 h-2.5 rounded-full bg-warning" />
-                        Limited history (hybrid)
+                      <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                        <div className="w-2 h-2 rounded-full bg-warning" />
+                        Hybrid
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <div className="w-2.5 h-2.5 rounded-full bg-primary" />
-                        New / NPI (rule + analogue)
+                      <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                        <div className="w-2 h-2 rounded-full bg-primary" />
+                        Rule + analogue
                       </div>
                     </div>
                   </div>
                   
                   {/* Stock-out Risk Table */}
                   <div>
-                    <div className="text-sm font-medium mb-4">Stock-out risk last Eid season</div>
-                    <table className="w-full text-sm">
+                    <div className="text-[11px] font-semibold text-foreground mb-3">Stock-out Risk (Last Eid)</div>
+                    <table className="w-full">
                       <thead>
-                        <tr className="border-b border-border/40">
-                          <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground font-medium">Group</th>
-                          <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground font-medium">Stock-out Rate</th>
-                          <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground font-medium">Risk</th>
-                          <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground font-medium">Comment</th>
+                        <tr className="border-b border-border/40 bg-muted/30">
+                          <th className="text-left py-1.5 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Group</th>
+                          <th className="text-left py-1.5 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Rate</th>
+                          <th className="text-left py-1.5 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Risk</th>
+                          <th className="text-left py-1.5 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Note</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-b border-border/20">
-                          <td className="py-2 text-xs">Reliable history</td>
-                          <td className="py-2 text-xs">6%</td>
-                          <td className="py-2"><Badge className="bg-success/15 text-success border-success/30 text-xs">Low</Badge></td>
-                          <td className="py-2 text-xs text-muted-foreground">Well-covered with standard replenishment rules.</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Reliable</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">6%</td>
+                          <td className="py-1.5 px-2"><Badge className="bg-success/15 text-success border-success/30 text-[10px] px-1.5 py-0.5">Low</Badge></td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Standard replen rules</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-2 text-xs">Limited / unreliable</td>
-                          <td className="py-2 text-xs">14%</td>
-                          <td className="py-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-xs">Medium</Badge></td>
-                          <td className="py-2 text-xs text-muted-foreground">Mostly due to promotions without pre-build in top malls.</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Limited</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">14%</td>
+                          <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Med</Badge></td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">No promo pre-build</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-2 text-xs">New colours</td>
-                          <td className="py-2 text-xs">19%</td>
-                          <td className="py-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-xs">High</Badge></td>
-                          <td className="py-2 text-xs text-muted-foreground">OOS in fashion-forward stores; demand underestimated from parent styles.</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">New colours</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">19%</td>
+                          <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">High</Badge></td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">OOS in fashion stores</td>
                         </tr>
                         <tr>
-                          <td className="py-2 text-xs">New product introductions</td>
-                          <td className="py-2 text-xs">23%</td>
-                          <td className="py-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-xs">Very high</Badge></td>
-                          <td className="py-2 text-xs text-muted-foreground">Short launch window & limited initial buy; strong social response.</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">NPI</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">23%</td>
+                          <td className="py-1.5 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">V. High</Badge></td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Limited initial buy</td>
                         </tr>
                       </tbody>
                     </table>
