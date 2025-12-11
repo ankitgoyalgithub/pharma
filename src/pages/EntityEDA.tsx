@@ -496,10 +496,10 @@ export default function EntityEDA() {
                           <h4 className="font-medium mb-2 text-sm">{col.header}</h4>
                           <div className="h-40">
                             <ResponsiveContainer width="100%" height="100%">
-                              <BarChart data={bins}>
+                            <BarChart data={bins}>
                                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                                <XAxis dataKey="range" tick={{ fontSize: 10 }} />
-                                <YAxis tick={{ fontSize: 10 }} />
+                                <XAxis dataKey="range" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
+                                <YAxis tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
                                 <Tooltip />
                                 <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                               </BarChart>
@@ -526,17 +526,17 @@ export default function EntityEDA() {
                         <h4 className="font-medium mb-2 text-sm">{col.header}</h4>
                         <div className="h-40">
                           <ResponsiveContainer width="100%" height="100%">
-                            <BarChart 
+                          <BarChart 
                               data={col.topValues?.slice(0, 8) || []} 
                               layout="vertical"
                             >
                               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                              <XAxis type="number" tick={{ fontSize: 10 }} />
+                              <XAxis type="number" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
                               <YAxis 
                                 dataKey="value" 
                                 type="category" 
                                 width={80} 
-                                tick={{ fontSize: 10 }}
+                                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
                               />
                               <Tooltip />
                               <Bar dataKey="count" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]} />
