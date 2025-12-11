@@ -2608,13 +2608,15 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="h-[180px] flex items-end justify-between gap-2 px-2">
                     {Array.from({ length: 12 }, (_, i) => {
-                      // More varied accuracy data with realistic fashion retail patterns
-                      const heights = [82, 78, 86, 91, 84, 88, 92, 87, 83, 90, 94, 91];
-                      const actualHeight = heights[i];
+                      // Varied accuracy data with realistic fashion retail patterns
+                      const accuracyValues = [72, 65, 88, 94, 78, 85, 96, 82, 68, 91, 98, 89];
+                      const actualAccuracy = accuracyValues[i];
+                      // Scale visual height: map 60-100% accuracy to 20-100% bar height for visual clarity
+                      const visualHeight = 20 + ((actualAccuracy - 60) / 40) * 80;
                       // Consistent color logic based on accuracy thresholds
-                      const colors = actualHeight >= 90 
+                      const colors = actualAccuracy >= 90 
                         ? 'bg-success shadow-sm shadow-success/50' 
-                        : actualHeight >= 85 
+                        : actualAccuracy >= 85 
                           ? 'bg-warning shadow-sm shadow-warning/50' 
                           : 'bg-destructive shadow-sm shadow-destructive/50';
                       return (
@@ -2623,16 +2625,16 @@ const DemandForecasting = () => {
                             <div className="flex-1 flex flex-col items-center gap-1.5 cursor-pointer group">
                               <div 
                                 className={`w-full ${colors} rounded-t-md transition-all group-hover:opacity-80 group-hover:scale-105 min-h-[20px]`}
-                                style={{ height: `${actualHeight}%` }}
+                                style={{ height: `${visualHeight}%` }}
                               />
                               <span className="text-[10px] text-muted-foreground font-medium">W{i+1}</span>
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="font-semibold">Week {i+1}</p>
-                            <p className="text-sm">Accuracy: {actualHeight}%</p>
+                            <p className="text-sm">Accuracy: {actualAccuracy}%</p>
                             <p className="text-xs text-muted-foreground mt-1">
-                              {actualHeight >= 90 ? 'Excellent Performance' : actualHeight >= 85 ? 'Good Performance' : 'Needs Attention'}
+                              {actualAccuracy >= 90 ? 'Excellent Performance' : actualAccuracy >= 85 ? 'Good Performance' : 'Needs Attention'}
                             </p>
                           </TooltipContent>
                         </Tooltip>
