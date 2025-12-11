@@ -358,7 +358,8 @@ const DemandForecasting = () => {
     channel: 'all',
     timePeriod: 'all',
     businessUnits: 'all',
-    dataAvailability: 'all'
+    dataAvailability: 'all',
+    npiSku: 'none'
   });
   const [appliedFilters, setAppliedFilters] = useState({
     skuProduct: 'all',
@@ -367,7 +368,8 @@ const DemandForecasting = () => {
     channel: 'all',
     timePeriod: 'all',
     businessUnits: 'all',
-    dataAvailability: 'all'
+    dataAvailability: 'all',
+    npiSku: 'none'
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiMessages, setAiMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
@@ -473,7 +475,8 @@ const DemandForecasting = () => {
       channel: 'all',
       timePeriod: 'all',
       businessUnits: 'all',
-      dataAvailability: 'all'
+      dataAvailability: 'all',
+      npiSku: 'none'
     };
     setFilterValues(defaultFilters);
     setAppliedFilters(defaultFilters);
@@ -2447,6 +2450,7 @@ const DemandForecasting = () => {
                   locationFilter={locationFilter}
                   chartGranularity={chartGranularity}
                   storeFilter={appliedFilters.store}
+                  npiSku={appliedFilters.npiSku}
                 />
               </CardContent>
             </Card>
@@ -3606,11 +3610,42 @@ const DemandForecasting = () => {
                       <SelectTrigger>
                         <SelectValue placeholder="Select product" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-[300px]">
                         <SelectItem value="all">All Products</SelectItem>
-                        <SelectItem value="electronics">Electronics</SelectItem>
-                        <SelectItem value="clothing">Clothing</SelectItem>
-                        <SelectItem value="home">Home & Garden</SelectItem>
+                        <SelectItem value="SKU001">Lee Cooper Slim Fit Jeans</SelectItem>
+                        <SelectItem value="SKU002">Kappa Polo T-Shirt</SelectItem>
+                        <SelectItem value="SKU003">Elle Floral Maxi Dress</SelectItem>
+                        <SelectItem value="SKU004">Smiley Graphic Hoodie</SelectItem>
+                        <SelectItem value="SKU005">ICONIC Formal Blazer</SelectItem>
+                        <SelectItem value="SKU006">Splash Core Chinos</SelectItem>
+                        <SelectItem value="SKU007">Lee Cooper Denim Jacket</SelectItem>
+                        <SelectItem value="SKU008">Kappa Track Pants</SelectItem>
+                        <SelectItem value="SKU009">Elle Silk Blouse</SelectItem>
+                        <SelectItem value="SKU010">ICONIC Linen Shirt</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">
+                      NPI (New Product)
+                    </label>
+                    <Select value={filterValues.npiSku} onValueChange={(value) => setFilterValues(prev => ({ ...prev, npiSku: value }))}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select NPI" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px]">
+                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="NPI001">Lee Cooper SS25 Cargo Pants</SelectItem>
+                        <SelectItem value="NPI002">Kappa Retro Bomber Jacket</SelectItem>
+                        <SelectItem value="NPI003">Elle Summer Midi Skirt</SelectItem>
+                        <SelectItem value="NPI004">Smiley Collab Oversized Tee</SelectItem>
+                        <SelectItem value="NPI005">ICONIC Wool Blend Coat</SelectItem>
+                        <SelectItem value="NPI006">Splash Core Linen Shorts</SelectItem>
+                        <SelectItem value="NPI007">Lee Cooper Vintage Wash Jeans</SelectItem>
+                        <SelectItem value="NPI008">Kappa Performance Joggers</SelectItem>
+                        <SelectItem value="NPI009">Elle Embroidered Kaftan</SelectItem>
+                        <SelectItem value="NPI010">ICONIC Relaxed Fit Trousers</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
