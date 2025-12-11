@@ -11,15 +11,6 @@ export const timeseriesEntities: EntityModule[] = [
     sourceType: "csv",
   },
   {
-    title: "Copper Prices",
-    description: "Time-indexed prices of key raw materials",
-    origin: "third-party",
-    route: "/entity-preview/copper-prices",
-    recordCount: 15846,
-    lastSync: "2025-07-20T22:00:00Z",
-    sourceType: "gdrive",
-  },
-  {
     title: "Inventory Levels",
     description: "Historical inventory data by location",
     origin: "csv",
