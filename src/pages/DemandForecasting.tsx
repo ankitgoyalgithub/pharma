@@ -2151,7 +2151,7 @@ const DemandForecasting = () => {
               subtitle={(() => {
                 const metrics = getStoreMetrics(appliedFilters.store);
                 return `Backtested Accuracy • $${metrics.revenueFormatted}M Value • ${metrics.unitsFormatted} Units
-                        12-Week Horizon • ${appliedFilters.store === 'all' ? '45' : '1'} Active Store${appliedFilters.store === 'all' ? 's' : ''} • 4 Channels`;
+                        12-Week Horizon • ${appliedFilters.store === 'all' ? '50' : '1'} Active Store${appliedFilters.store === 'all' ? 's' : ''} • 4 Channels`;
               })()}
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
@@ -2494,7 +2494,7 @@ const DemandForecasting = () => {
                           <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">$42.3M Impact</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Class A items (PRD001, PRD002, PRD005) drive 62.2% revenue but show 15% variance in Chennai/Mumbai. Recommend weekly cycle counts and +18% safety stock for Q1 2025 to prevent $1.8M stockout risk.
+                          Class A items (Lee Cooper Jeans, Kappa Polo, Elle Dress) drive 62.2% revenue but show 15% variance in Dubai Mall/Abu Dhabi. Recommend weekly cycle counts and +18% safety stock for Q1 2025 to prevent $1.8M stockout risk.
                         </p>
                       </div>
                     </div>
@@ -2505,11 +2505,11 @@ const DemandForecasting = () => {
                       <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">Pharma Regulatory Impact - Proactive Action Required</span>
-                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Jan 2025 Deadline</Badge>
+                          <span className="font-semibold text-sm">New Collection Launch - Inventory Positioning</span>
+                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Feb 2025</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          New FDA labeling requirements will cause 2-3 week supply disruption for 12% of pharma SKUs. Historical impact: -18% to -25% availability. Build 6 weeks safety stock now for affected products.
+                          Spring/Summer 2025 collection launch will cause 2-3 week transition period for 18% of current SKUs. Historical impact: -15% to -20% availability for outgoing styles. Pre-plan markdowns and build 4 weeks stock for new arrivals.
                         </p>
                       </div>
                     </div>
@@ -2520,11 +2520,11 @@ const DemandForecasting = () => {
                       <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">Seasonal Demand Intelligence - Diwali & Holi Surge</span>
+                          <span className="font-semibold text-sm">Seasonal Demand Intelligence - Eid & DSF Surge</span>
                           <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+34% Peak</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Festival analysis shows 34% Diwali surge (Oct 24-Nov 15) and 28% Holi spike (Mar 14-25). PRD001 & PRD005 lead growth. Pre-position inventory 3 weeks ahead in top 5 metro stores.
+                          Festival analysis shows 34% Eid surge (Apr 10-25) and 28% Dubai Shopping Festival spike (Dec 15-Jan 30). Lee Cooper & Kappa lead growth. Pre-position inventory 3 weeks ahead in top 5 UAE mall stores.
                         </p>
                       </div>
                     </div>
@@ -2549,7 +2549,7 @@ const DemandForecasting = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center p-4 bg-gradient-to-br from-success/5 to-success/10 rounded-lg border border-success/20">
-                    <div className="text-3xl font-bold text-success">+18.4%</div>
+                    <div className="text-3xl font-bold text-success">+15.6%</div>
                     <div className="text-xs text-muted-foreground mt-1">vs Naive Forecast</div>
                   </div>
 
@@ -2660,10 +2660,10 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="space-y-2">
                     {[
-                      { sku: 'SKU003-WGT-C', issue: 'High Variability', priority: 'high', variance: '+34%' },
-                      { sku: 'SKU001-WGT-A', issue: 'Trend Shift', priority: 'medium', variance: '+18%' },
-                      { sku: 'SKU005-WGT-E', issue: 'Outlier Detected', priority: 'medium', variance: '-12%' },
-                      { sku: 'SKU002-WGT-B', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
+                      { sku: 'Lee Cooper Slim Fit', issue: 'High Variability', priority: 'high', variance: '+34%' },
+                      { sku: 'Kappa Polo Navy', issue: 'Trend Shift', priority: 'medium', variance: '+18%' },
+                      { sku: 'Elle Summer Dress', issue: 'Outlier Detected', priority: 'medium', variance: '-12%' },
+                      { sku: 'Smiley Graphic Tee', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-2">
