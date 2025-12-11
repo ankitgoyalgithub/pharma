@@ -30,6 +30,7 @@ export const entityPreviewData: EntityPreviewMap = {
       { accessorKey: "listPrice", header: "List Price (AED)" },
       { accessorKey: "costPrice", header: "Cost Price (AED)" },
       { accessorKey: "marginPct", header: "Margin %" },
+      { accessorKey: "imageUrl", header: "Image URL" },
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
