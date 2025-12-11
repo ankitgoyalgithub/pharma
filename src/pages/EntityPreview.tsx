@@ -56,7 +56,10 @@ import {
   ArrowDown,
   X,
   BarChart3,
+  Image,
+  Link,
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 import { entityPreviewData } from "@/data/foundry";
 
@@ -71,6 +74,7 @@ export default function EntityPreview() {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
+  const [showThumbnails, setShowThumbnails] = useState(false);
 
   const entityData = entityPreviewData[entityName || "product"];
   
@@ -389,6 +393,18 @@ export default function EntityPreview() {
                 Clear Filters ({Object.keys(columnFilters).length})
               </Button>
             )}
+            <div className="flex items-center gap-2 ml-auto border rounded-md px-3 py-1.5 bg-background">
+              <Link className="w-4 h-4 text-muted-foreground" />
+              <Switch
+                checked={showThumbnails}
+                onCheckedChange={setShowThumbnails}
+                className="data-[state=checked]:bg-primary"
+              />
+              <Image className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">
+                {showThumbnails ? "Thumbnails" : "URLs"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -495,29 +511,54 @@ export default function EntityPreview() {
                                   {cellValue}
                                 </Badge>
                               ) : isUrlColumn && cellValue ? (
-                                <HoverCard>
-                                  <HoverCardTrigger asChild>
-                                    <a 
-                                      href={cellValue} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      className="text-primary hover:underline cursor-pointer max-w-[200px] truncate block"
-                                    >
-                                      {cellValue}
-                                    </a>
-                                  </HoverCardTrigger>
-                                  <HoverCardContent className="w-64 p-2" side="right">
-                                    <img 
-                                      src={cellValue} 
-                                      alt="Preview" 
-                                      className="w-full h-auto rounded-md object-contain max-h-48"
-                                      onError={(e) => {
-                                        (e.target as HTMLImageElement).style.display = 'none';
-                                      }}
-                                    />
-                                    <p className="text-xs text-muted-foreground mt-2 truncate">{cellValue}</p>
-                                  </HoverCardContent>
-                                </HoverCard>
+                                showThumbnails ? (
+                                  <HoverCard>
+                                    <HoverCardTrigger asChild>
+                                      <div className="w-12 h-12 rounded border overflow-hidden cursor-pointer hover:ring-2 hover:ring-primary">
+                                        <img 
+                                          src={cellValue} 
+                                          alt="Thumbnail" 
+                                          className="w-full h-full object-cover"
+                                          onError={(e) => {
+                                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="gray" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
+                                          }}
+                                        />
+                                      </div>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent className="w-64 p-2" side="right">
+                                      <img 
+                                        src={cellValue} 
+                                        alt="Preview" 
+                                        className="w-full h-auto rounded-md object-contain max-h-48"
+                                      />
+                                      <p className="text-xs text-muted-foreground mt-2 truncate">{cellValue}</p>
+                                    </HoverCardContent>
+                                  </HoverCard>
+                                ) : (
+                                  <HoverCard>
+                                    <HoverCardTrigger asChild>
+                                      <a 
+                                        href={cellValue} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline cursor-pointer max-w-[200px] truncate block"
+                                      >
+                                        {cellValue}
+                                      </a>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent className="w-64 p-2" side="right">
+                                      <img 
+                                        src={cellValue} 
+                                        alt="Preview" 
+                                        className="w-full h-auto rounded-md object-contain max-h-48"
+                                        onError={(e) => {
+                                          (e.target as HTMLImageElement).style.display = 'none';
+                                        }}
+                                      />
+                                      <p className="text-xs text-muted-foreground mt-2 truncate">{cellValue}</p>
+                                    </HoverCardContent>
+                                  </HoverCard>
+                                )
                               ) : isColorColumn && cellValue ? (
                                 <div className="flex items-center gap-2">
                                   <div 
