@@ -9,9 +9,24 @@ interface DemandAnalysisChartProps {
   locationFilter: string;
   chartGranularity: 'daily' | 'weekly' | 'monthly' | 'quarterly';
   storeFilter?: string;
+  npiSku?: string;
 }
 
-export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all' }: DemandAnalysisChartProps) => {
+// Proxy SKU mapping for NPI forecasting
+const npiProxyMapping: Record<string, { proxySku: string; proxyName: string; npiName: string }> = {
+  'NPI001': { proxySku: 'SKU006', proxyName: 'Splash Core Chinos', npiName: 'Lee Cooper SS25 Cargo Pants' },
+  'NPI002': { proxySku: 'SKU007', proxyName: 'Lee Cooper Denim Jacket', npiName: 'Kappa Retro Bomber Jacket' },
+  'NPI003': { proxySku: 'SKU003', proxyName: 'Elle Floral Maxi Dress', npiName: 'Elle Summer Midi Skirt' },
+  'NPI004': { proxySku: 'SKU004', proxyName: 'Smiley Graphic Hoodie', npiName: 'Smiley Collab Oversized Tee' },
+  'NPI005': { proxySku: 'SKU005', proxyName: 'ICONIC Formal Blazer', npiName: 'ICONIC Wool Blend Coat' },
+  'NPI006': { proxySku: 'SKU006', proxyName: 'Splash Core Chinos', npiName: 'Splash Core Linen Shorts' },
+  'NPI007': { proxySku: 'SKU001', proxyName: 'Lee Cooper Slim Fit Jeans', npiName: 'Lee Cooper Vintage Wash Jeans' },
+  'NPI008': { proxySku: 'SKU008', proxyName: 'Kappa Track Pants', npiName: 'Kappa Performance Joggers' },
+  'NPI009': { proxySku: 'SKU009', proxyName: 'Elle Silk Blouse', npiName: 'Elle Embroidered Kaftan' },
+  'NPI010': { proxySku: 'SKU005', proxyName: 'ICONIC Formal Blazer', npiName: 'ICONIC Relaxed Fit Trousers' },
+};
+
+export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none' }: DemandAnalysisChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [renderWidth, setRenderWidth] = useState(0);
 
@@ -27,9 +42,67 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     return () => ro.disconnect();
   }, []);
 
+  const isNpiMode = npiSku !== 'none' && npiProxyMapping[npiSku];
+  const npiInfo = isNpiMode ? npiProxyMapping[npiSku] : null;
+
   const data = React.useMemo(() => {
     const storeMultiplier = getChartMultiplier(storeFilter);
 
+    // NPI Mode: Show proxy SKU history (W5-W35), NPI history (W36-W52), forecast (W53+)
+    if (isNpiMode) {
+      const weeklyNpiData = [];
+      for (let i = 1; i <= 65; i++) {
+        const proxyTrendBase = (82 + (i * 1.1)) * storeMultiplier;
+        const npiTrendBase = (78 + (i * 1.3)) * storeMultiplier;
+        const seasonality = Math.sin(i / 8) * 10 * storeMultiplier;
+        const noise = (Math.random() - 0.5) * 6;
+        
+        let periodLabel = `W${i}`;
+        if (i > 52) periodLabel = `W${i} (F)`;
+
+        if (i >= 5 && i <= 35) {
+          // Proxy SKU history (W5-W35)
+          weeklyNpiData.push({ 
+            period: i, 
+            periodLabel, 
+            historical: proxyTrendBase + seasonality + noise, 
+            baseline: null, 
+            enhanced: null 
+          });
+        } else if (i >= 36 && i <= 52) {
+          // NPI SKU history (W36-W52)
+          weeklyNpiData.push({ 
+            period: i, 
+            periodLabel, 
+            historical: npiTrendBase + seasonality + noise * 1.2, 
+            baseline: null, 
+            enhanced: null 
+          });
+        } else if (i === 53) {
+          // Transition point
+          const lastValue = npiTrendBase + seasonality + noise;
+          weeklyNpiData.push({ 
+            period: i, 
+            periodLabel, 
+            historical: null, 
+            baseline: lastValue, 
+            enhanced: lastValue 
+          });
+        } else if (i > 53) {
+          // Forecast period
+          weeklyNpiData.push({ 
+            period: i, 
+            periodLabel, 
+            historical: null, 
+            baseline: npiTrendBase + seasonality + (Math.random() - 0.5) * 5, 
+            enhanced: npiTrendBase + seasonality + 10 + (Math.random() - 0.5) * 5 
+          });
+        }
+      }
+      return weeklyNpiData.filter(d => d.period >= 5);
+    }
+
+    // Standard mode
     switch (chartGranularity) {
       case 'daily':
         const dailyData = [];
@@ -115,15 +188,25 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       default:
         return [];
     }
-  }, [chartGranularity, storeFilter]);
+  }, [chartGranularity, storeFilter, npiSku, isNpiMode]);
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '320px' }}>
+      {isNpiMode && npiInfo && (
+        <div className="mb-2 px-2 py-1 bg-primary/10 border border-primary/20 rounded text-xs text-primary flex items-center gap-2">
+          <span className="font-medium">NPI Mode:</span>
+          <span>W5-W35: {npiInfo.proxyName} (Proxy)</span>
+          <span className="text-muted-foreground">→</span>
+          <span>W36-W52: {npiInfo.npiName} (NPI History)</span>
+          <span className="text-muted-foreground">→</span>
+          <span>W53+: Forecast</span>
+        </div>
+      )}
       {renderWidth > 0 && (
         <D3LineChart 
           data={data}
           width={renderWidth}
-          height={320}
+          height={isNpiMode ? 290 : 320}
           showLegend={true}
           baselineLabel="Baseline Forecast"
           enhancedLabel="Enhanced Forecast"
