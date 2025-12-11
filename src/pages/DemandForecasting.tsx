@@ -2608,11 +2608,13 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="h-[180px] flex items-end justify-between gap-2 px-2">
                     {Array.from({ length: 12 }, (_, i) => {
-                      // Varied accuracy data with realistic fashion retail patterns
-                      const accuracyValues = [72, 65, 88, 94, 78, 85, 96, 82, 68, 91, 98, 89];
+                      // Varied accuracy data - fewer reds, good variation
+                      const accuracyValues = [82, 78, 88, 94, 86, 91, 96, 89, 85, 93, 98, 92];
                       const actualAccuracy = accuracyValues[i];
-                      // Scale visual height: map 60-100% accuracy to 20-100% bar height for visual clarity
-                      const visualHeight = 20 + ((actualAccuracy - 60) / 40) * 80;
+                      // Calculate bar height in pixels (max 150px, min 40px based on 70-100% range)
+                      const maxBarHeight = 150;
+                      const minBarHeight = 40;
+                      const barHeight = minBarHeight + ((actualAccuracy - 70) / 30) * (maxBarHeight - minBarHeight);
                       // Consistent color logic based on accuracy thresholds
                       const colors = actualAccuracy >= 90 
                         ? 'bg-success shadow-sm shadow-success/50' 
@@ -2622,10 +2624,10 @@ const DemandForecasting = () => {
                       return (
                         <Tooltip key={i}>
                           <TooltipTrigger asChild>
-                            <div className="flex-1 flex flex-col items-center gap-1.5 cursor-pointer group">
+                            <div className="flex-1 flex flex-col items-end justify-end gap-1.5 cursor-pointer group h-full">
                               <div 
-                                className={`w-full ${colors} rounded-t-md transition-all group-hover:opacity-80 group-hover:scale-105 min-h-[20px]`}
-                                style={{ height: `${visualHeight}%` }}
+                                className={`w-full ${colors} rounded-t-md transition-all group-hover:opacity-80 group-hover:scale-105`}
+                                style={{ height: `${barHeight}px` }}
                               />
                               <span className="text-[10px] text-muted-foreground font-medium">W{i+1}</span>
                             </div>
