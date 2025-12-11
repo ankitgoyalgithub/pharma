@@ -1,22 +1,22 @@
-// External drivers aligned with Feature Store entities in Foundry
+// External drivers aligned with Feature Store entities in Foundry - Fashion Industry
 export const getExternalDrivers = (studyType: string, hasData: boolean = false) => {
-  // Pharma-specific feature store drivers
+  // Fashion-specific feature store drivers for Splash Fashions
   const featureStoreDrivers = [
-    { name: "Healthcare Policy Changes", autoSelected: true, icon: "FileText" },
-    { name: "Disease Outbreak Tracking", autoSelected: true, icon: "Activity" },
-    { name: "Drug Patent Expirations", autoSelected: false, icon: "Clock" },
-    { name: "Clinical Trial Outcomes", autoSelected: false, icon: "Microscope" },
-    { name: "Hospital Admission Rates", autoSelected: false, icon: "Building2" },
-    { name: "Seasonal Illness Patterns", autoSelected: false, icon: "CalendarDays" },
+    { name: "Promotions & Discounts", autoSelected: true, icon: "Tag" },
+    { name: "Seasonality Trends", autoSelected: true, icon: "CalendarDays" },
+    { name: "Fashion Week Calendar", autoSelected: false, icon: "Calendar" },
     { name: "Weather & Climate Data", autoSelected: false, icon: "CloudRain" },
-    { name: "Generic Drug Launches", autoSelected: false, icon: "Pill" },
-    { name: "Insurance Coverage Changes", autoSelected: false, icon: "Shield" },
-    { name: "Prescription Trends", autoSelected: false, icon: "ClipboardList" },
-    { name: "Regulatory Approvals (FDA/EMA)", autoSelected: false, icon: "CheckCircle" },
-    { name: "Healthcare Spending", autoSelected: false, icon: "DollarSign" },
-    { name: "Competitor Drug Launches", autoSelected: false, icon: "Users" },
-    { name: "Medical Conference Calendar", autoSelected: false, icon: "Calendar" },
-    { name: "Pharmacy Network Expansion", autoSelected: false, icon: "MapPin" },
+    { name: "Social Media Trends", autoSelected: false, icon: "TrendingUp" },
+    { name: "Influencer Campaigns", autoSelected: false, icon: "Users" },
+    { name: "Competitor Pricing", autoSelected: false, icon: "DollarSign" },
+    { name: "Holiday Calendar", autoSelected: false, icon: "Gift" },
+    { name: "Store Events", autoSelected: false, icon: "Store" },
+    { name: "New Collection Launches", autoSelected: false, icon: "Sparkles" },
+    { name: "Clearance & End-of-Season", autoSelected: false, icon: "Percent" },
+    { name: "Back-to-School Season", autoSelected: false, icon: "GraduationCap" },
+    { name: "Wedding & Festive Season", autoSelected: false, icon: "Heart" },
+    { name: "Online vs Offline Traffic", autoSelected: false, icon: "ShoppingCart" },
+    { name: "Brand Collaborations", autoSelected: false, icon: "Handshake" },
   ];
 
   // Return feature store drivers for all study types to maintain consistency
