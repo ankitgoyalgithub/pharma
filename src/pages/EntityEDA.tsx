@@ -43,15 +43,15 @@ import {
 
 const CHART_COLORS = [
   "hsl(var(--primary))",
-  "hsl(var(--chart-2))",
-  "hsl(var(--chart-3))",
-  "hsl(var(--chart-4))",
-  "hsl(var(--chart-5))",
-  "#8884d8",
-  "#82ca9d",
-  "#ffc658",
-  "#ff7300",
-  "#00C49F",
+  "hsl(var(--accent))",
+  "hsl(var(--warning))",
+  "hsl(var(--info))",
+  "hsl(var(--success))",
+  "hsl(var(--destructive))",
+  "hsl(var(--primary-light))",
+  "hsl(var(--accent-light))",
+  "hsl(280, 65%, 55%)",
+  "hsl(25, 85%, 55%)",
 ];
 
 interface ColumnStats {
