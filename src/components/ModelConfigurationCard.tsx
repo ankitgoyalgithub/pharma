@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
-import { Info, FileJson, FormInput } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Info, FileJson, FormInput, ChevronDown } from "lucide-react";
 
 interface ModelConfigurationCardProps {
   forecastHorizon: string;
@@ -63,7 +64,7 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
   setClassificationBasis,
 }) => {
   const [viewMode, setViewMode] = useState<"form" | "json">("form");
-
+  const [isOpen, setIsOpen] = useState(true);
   // Configuration object for JSON view
   const configObject = {
     primarySettings: {
@@ -154,43 +155,50 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
   };
 
   return (
-    <Card className="border-primary/20">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-base">Model Configuration</CardTitle>
-            <Tooltip>
-              <TooltipTrigger>
-                <Info className="w-4 h-4 text-muted-foreground" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Configure the AI forecast model parameters including time horizon, data granularity, seasonality detection, classification thresholds, and advanced model settings.</p>
-              </TooltipContent>
-            </Tooltip>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Card className="border-primary/20">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-0 h-auto hover:bg-transparent">
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isOpen ? '' : '-rotate-90'}`} />
+                </Button>
+              </CollapsibleTrigger>
+              <CardTitle className="text-base">Model Configuration</CardTitle>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Configure the AI forecast model parameters including time horizon, data granularity, seasonality detection, classification thresholds, and advanced model settings.</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <div className="flex gap-1 border rounded-lg p-1">
+              <Button
+                variant={viewMode === "form" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("form")}
+                className="h-7 px-3"
+              >
+                <FormInput className="w-3.5 h-3.5 mr-1.5" />
+                Form
+              </Button>
+              <Button
+                variant={viewMode === "json" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("json")}
+                className="h-7 px-3"
+              >
+                <FileJson className="w-3.5 h-3.5 mr-1.5" />
+                JSON
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-1 border rounded-lg p-1">
-            <Button
-              variant={viewMode === "form" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("form")}
-              className="h-7 px-3"
-            >
-              <FormInput className="w-3.5 h-3.5 mr-1.5" />
-              Form
-            </Button>
-            <Button
-              variant={viewMode === "json" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("json")}
-              className="h-7 px-3"
-            >
-              <FileJson className="w-3.5 h-3.5 mr-1.5" />
-              JSON
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </CardHeader>
+        <CollapsibleContent>
+          <CardContent className="space-y-4">
         {viewMode === "form" ? (
           <>
             {/* Primary Settings */}
@@ -654,7 +662,9 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
             <p className="text-xs text-muted-foreground">Edit the JSON directly. Valid changes will be reflected in the form.</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+          </CardContent>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
   );
 };
