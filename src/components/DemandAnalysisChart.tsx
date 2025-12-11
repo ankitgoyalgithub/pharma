@@ -201,13 +201,13 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
   return (
     <div ref={containerRef} style={{ width: '100%', height: '320px' }}>
       {isNpiMode && npiInfo && (
-        <div className="mb-2 px-3 py-1.5 bg-primary/5 border border-primary/15 rounded-md text-[11px] inline-flex items-center gap-1.5">
-          <span className="font-medium text-primary">NPI:</span>
-          <span className="text-warning-foreground bg-warning/20 px-1.5 py-0.5 rounded">W5-W35: {npiInfo.proxyName}</span>
+        <div className="mb-2 px-3 py-1.5 bg-muted border border-border rounded-md text-[11px] inline-flex items-center gap-1.5">
+          <span className="font-medium text-foreground">NPI:</span>
+          <span className="text-amber-900 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/40 px-1.5 py-0.5 rounded">W5-W35: {npiInfo.proxyName}</span>
           <span className="text-muted-foreground">→</span>
-          <span className="text-accent-foreground bg-accent/20 px-1.5 py-0.5 rounded">W36-W52: {npiInfo.npiName}</span>
+          <span className="text-blue-900 dark:text-blue-200 bg-blue-100 dark:bg-blue-900/40 px-1.5 py-0.5 rounded">W36-W52: {npiInfo.npiName}</span>
           <span className="text-muted-foreground">→</span>
-          <span className="text-primary bg-primary/10 px-1.5 py-0.5 rounded">W53+: Forecast</span>
+          <span className="text-emerald-900 dark:text-emerald-200 bg-emerald-100 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded">W53+: Forecast</span>
         </div>
       )}
       {renderWidth > 0 && (
