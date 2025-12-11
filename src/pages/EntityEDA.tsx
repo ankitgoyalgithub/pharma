@@ -201,9 +201,6 @@ export default function EntityEDA() {
                     <BarChart3 className="w-6 h-6 text-primary" />
                     {title} - Exploratory Data Analysis
                   </h1>
-                  <p className="text-muted-foreground text-sm mt-1">
-                    Kaggle-style data profiling and statistical analysis
-                  </p>
                 </div>
               </div>
             </div>
