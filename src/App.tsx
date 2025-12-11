@@ -17,6 +17,7 @@ import Foundry from "./pages/Foundry";
 import Jobs from "./pages/Jobs";
 import AddLookupPage from "./pages/AddLookupPage";
 import EntityPreview from "./pages/EntityPreview";
+import EntityEDA from "./pages/EntityEDA";
 import DetailedProductionScheduling from "./pages/DetailedProductionScheduling";
 import ProcurementPlanning from "./pages/ProcurementPlanning";
 import Workflows from "./pages/Workflows";
@@ -60,6 +61,7 @@ const App = () => (
             <Route path="/data-jobs" element={<Jobs />} />
             <Route path="/add-lookup" element={<AddLookupPage />} />
             <Route path="/entity-preview/:entityName" element={<EntityPreview />} />
+            <Route path="/entity-eda/:entityName" element={<EntityEDA />} />
             <Route path="demand-forecasting" element={<DemandForecasting />} />
             <Route path="assortment-planning" element={<AssortmentPlanning />} />
             <Route path="inventory-optimization" element={<InventoryOptimization />} />

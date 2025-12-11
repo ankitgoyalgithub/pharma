@@ -55,6 +55,7 @@ import {
   ArrowUp,
   ArrowDown,
   X,
+  BarChart3,
 } from "lucide-react";
 
 import { entityPreviewData } from "@/data/foundry";
@@ -326,6 +327,14 @@ export default function EntityPreview() {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
+              <Button 
+                variant="default" 
+                size="sm"
+                onClick={() => navigate(`/entity-eda/${entityName}`)}
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                EDA
+              </Button>
               <Button variant="outline" size="sm">
                 <RefreshCcw className="w-4 h-4 mr-2" />
                 Sync
