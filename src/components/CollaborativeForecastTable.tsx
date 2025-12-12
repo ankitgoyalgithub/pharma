@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare, Maximize, Minimize, CheckCircle2, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { toast } from "sonner";
 
 // Import product images
@@ -475,11 +476,28 @@ export const CollaborativeForecastTable: React.FC = () => {
                           />
                         </td>
                         <td className="p-2">
-                          <img 
-                            src={r.imageUrl} 
-                            alt={r.productName}
-                            className="w-10 h-10 object-cover rounded-md border border-border"
-                          />
+                          <HoverCard openDelay={200} closeDelay={100}>
+                            <HoverCardTrigger asChild>
+                              <img 
+                                src={r.imageUrl} 
+                                alt={r.productName}
+                                className="w-10 h-10 object-cover rounded-md border border-border cursor-pointer transition-transform hover:scale-105"
+                              />
+                            </HoverCardTrigger>
+                            <HoverCardContent side="right" align="start" className="w-64 p-2">
+                              <div className="space-y-2">
+                                <img 
+                                  src={r.imageUrl} 
+                                  alt={r.productName}
+                                  className="w-full h-auto rounded-md object-cover"
+                                />
+                                <div className="text-center">
+                                  <p className="text-sm font-medium">{r.productName}</p>
+                                  <p className="text-xs text-muted-foreground">{r.sku}</p>
+                                </div>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
                         </td>
                         <td className="p-3 font-medium text-xs">{r.sku}</td>
                         <td className="p-3">
