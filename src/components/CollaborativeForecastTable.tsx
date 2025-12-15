@@ -63,76 +63,75 @@ interface ForecastRow {
   }>;
 }
 
-// Splash Fashion SKUs based on actual data from Splash_SKUs.xlsx
-const splashSKUs = [
-  { sku: "SKU00553", name: "Elle Women Evening - Black S", category: "Dresses" },
-  { sku: "SKU00351", name: "Kappa Unisex Shirts - Red M", category: "Shirts" },
-  { sku: "SKU00116", name: "Lee Cooper Jeans - Blue 32", category: "Jeans" },
-  { sku: "SKU00234", name: "Smiley Kids Tee - Yellow 8Y", category: "Kidswear" },
-  { sku: "SKU00445", name: "ICONIC Blazer - Navy L", category: "Formalwear" },
-  { sku: "SKU00567", name: "Splash Core Polo - White M", category: "Polos" },
-  { sku: "SKU00189", name: "Elle Maxi Dress - Floral S", category: "Dresses" },
-  { sku: "SKU00312", name: "Kappa Track Pants - Black L", category: "Sportswear" },
-  { sku: "SKU00478", name: "Lee Cooper Chinos - Khaki 34", category: "Trousers" },
-  { sku: "SKU00623", name: "Smiley Kids Shorts - Blue 10Y", category: "Kidswear" },
-  { sku: "SKU00145", name: "ICONIC Suit Jacket - Charcoal M", category: "Formalwear" },
-  { sku: "SKU00289", name: "Splash Core Tee - Black XL", category: "T-Shirts" },
-  { sku: "SKU00401", name: "Elle Blouse - Pink M", category: "Tops" },
-  { sku: "SKU00534", name: "Kappa Hoodie - Grey L", category: "Hoodies" },
-  { sku: "SKU00167", name: "Lee Cooper Shorts - Denim 30", category: "Shorts" },
-  { sku: "SKU00723", name: "Smiley Kids Jacket - Green 6Y", category: "Kidswear" },
-  { sku: "SKU00856", name: "ICONIC Trousers - Black 32", category: "Formalwear" },
-  { sku: "SKU00912", name: "Splash Core Joggers - Navy M", category: "Casual" },
-  { sku: "SKU00378", name: "Elle Skirt - Beige S", category: "Skirts" },
-  { sku: "SKU00645", name: "Kappa Sports Tee - White XL", category: "Sportswear" },
-  { sku: "SKU00098", name: "Lee Cooper Jacket - Brown L", category: "Jackets" },
+// Pharma SKUs based on actual data from sku_master.csv
+const pharmaSKUs = [
+  { sku: "SKU001", name: "Paracetamol 500mg Tablet", category: "Analgesic" },
+  { sku: "SKU002", name: "Azithromycin 500mg Tablet", category: "Antibiotic" },
+  { sku: "SKU003", name: "Cetirizine 10mg Tablet", category: "Antihistamine" },
+  { sku: "SKU004", name: "Insulin Glargine 100U/ml", category: "Diabetes Care" },
+  { sku: "SKU005", name: "Amoxicillin 500mg Capsule", category: "Antibiotic" },
+  { sku: "SKU006", name: "ORS Sachet (WHO Formula)", category: "Rehydration" },
+  { sku: "SKU007", name: "Salbutamol 100mcg Inhaler", category: "Respiratory" },
+  { sku: "SKU008", name: "Cholecalciferol 60K IU", category: "Vitamin" },
+  { sku: "SKU009", name: "Ceftriaxone 1g Injection", category: "Antibiotic" },
+  { sku: "SKU010", name: "Pantoprazole 40mg Tablet", category: "GI Care" },
+  { sku: "SKU011", name: "Metformin 500mg Tablet", category: "Diabetes Care" },
+  { sku: "SKU012", name: "Atorvastatin 10mg Tablet", category: "Cardiac" },
+  { sku: "SKU013", name: "Omeprazole 20mg Capsule", category: "GI Care" },
+  { sku: "SKU014", name: "Losartan 50mg Tablet", category: "Cardiac" },
+  { sku: "SKU015", name: "Montelukast 10mg Tablet", category: "Respiratory" },
+  { sku: "SKU016", name: "Dolo 650mg Tablet", category: "Analgesic" },
+  { sku: "SKU017", name: "Augmentin 625mg Tablet", category: "Antibiotic" },
+  { sku: "SKU018", name: "Pan-D Capsule", category: "GI Care" },
+  { sku: "SKU019", name: "Telmisartan 40mg Tablet", category: "Cardiac" },
+  { sku: "SKU020", name: "Crocin Advance 500mg", category: "Analgesic" },
 ];
 
-// UAE/GCC Store Locations from storeMetrics.ts
-const uaeNodes = [
-  "Dubai Mall",
-  "Mall of Emirates",
-  "Abu Dhabi Mall",
-  "Yas Mall",
-  "Dubai Festival City",
-  "Deira City Centre",
-  "Sharjah City Centre",
-  "Al Wahda Mall",
-  "Mirdif City Centre",
-  "Ibn Battuta Mall",
-  "The Dubai Outlet",
-  "Fujairah City Centre",
-  "RAK Mall",
-  "Al Ain Mall",
-  "Marina Mall Abu Dhabi",
-  "The Galleria Al Maryah",
-  "City Centre Ajman",
-  "Sahara Centre",
-  "Dragon Mart",
-  "The Pointe Palm Jumeirah"
+// India Pharma Distribution Nodes
+const pharmaNodes = [
+  "Mumbai Central WH",
+  "Delhi North Hub",
+  "Chennai Distribution",
+  "Kolkata East Hub",
+  "Bengaluru South WH",
+  "Ahmedabad West Hub",
+  "Pune Regional WH",
+  "Hyderabad Hub",
+  "Jaipur North WH",
+  "Lucknow Distribution",
+  "Apollo Hospitals Mumbai",
+  "Fortis Healthcare Delhi",
+  "Max Hospital Chain",
+  "Medplus Retail Chain",
+  "Apollo Pharmacy Network",
+  "Netmeds E-Pharmacy",
+  "PharmEasy Hub",
+  "1mg Distribution",
+  "Govt Hospital Tender",
+  "CGHS Distribution"
 ];
 
 const plannerNames = [
-  "Ahmed Hassan", "Fatima Al-Rashid", "Mohammed Al-Sayed", "Sara Al-Mansoori",
-  "Omar Khalil", "Layla Ibrahim", "Yusuf Al-Farsi", "Noor Al-Qasimi",
-  "Khalid Mahmoud", "Aisha Al-Shamsi", "Hassan Al-Ali", "Mariam Al-Suwaidi"
+  "Rajesh Kumar", "Priya Sharma", "Amit Patel", "Sneha Reddy",
+  "Vikram Singh", "Ananya Gupta", "Suresh Menon", "Deepika Nair",
+  "Arun Joshi", "Kavita Rao", "Sanjay Mehta", "Pooja Iyer"
 ];
 
 const approverNames = [
-  "Rashid Al-Maktoum", "Salim Al-Nahyan", "Jamal Khoury", "Rania Al-Jasmi",
-  "Tariq Al-Balooshi", "Huda Al-Fahim", "Abdullah Al-Rostamani", "Nawal Al-Qassimi"
+  "Dr. Raman Khanna", "Sunita Agarwal", "Prakash Verma", "Dr. Meera Jain",
+  "Anil Kapoor", "Nirmala Sitharaman", "Rajiv Gandhi", "Dr. Shyam Sundar"
 ];
 
-// Generate realistic forecast data based on fashion retail patterns
+// Generate realistic forecast data based on pharma demand patterns
 const generateWeeklyForecast = (baseValue: number, weekIndex: number) => {
-  // Fashion retail seasonality adjustments
-  const seasonalFactors = [0.95, 0.92, 0.98, 1.02, 1.08, 1.15, 1.12, 1.05, 0.98, 0.94, 0.96, 1.18];
+  // Pharma seasonality adjustments (monsoon, winter flu season)
+  const seasonalFactors = [0.95, 0.92, 0.98, 1.02, 1.18, 1.25, 1.22, 1.15, 1.08, 0.98, 0.96, 1.05];
   return Math.round(baseValue * seasonalFactors[weekIndex] * (0.9 + Math.random() * 0.2));
 };
 
-const sampleForecastData: ForecastRow[] = splashSKUs.map((sku, index) => {
-  const baseValue = 120 + Math.floor(Math.random() * 180); // 120-300 units base
-  const nodeIndex = index % uaeNodes.length;
+const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
+  const baseValue = 500 + Math.floor(Math.random() * 1500); // 500-2000 units base
+  const nodeIndex = index % pharmaNodes.length;
   const channels: ("Online" | "Retail" | "B2B" | "Direct")[] = ["Online", "Retail", "B2B", "Direct"];
   const channel = channels[index % 4];
   const owner = plannerNames[index % plannerNames.length];
@@ -146,18 +145,18 @@ const sampleForecastData: ForecastRow[] = splashSKUs.map((sku, index) => {
     weeks[`week${w}`] = { forecast };
   }
   
-  // Add planner adjustments for some weeks with fashion-relevant reasons
-  const fashionReasons = [
-    "Eid Al-Fitr promotion expected",
-    "Dubai Shopping Festival boost",
-    "New collection launch impact",
-    "Ramadan shopping surge",
-    "Back-to-school season demand",
-    "Summer clearance sale",
-    "End-of-season markdown",
-    "Influencer campaign launch",
-    "Mall anniversary sale",
-    "National Day celebration demand"
+  // Add planner adjustments for some weeks with pharma-relevant reasons
+  const pharmaReasons = [
+    "Monsoon outbreak surge expected",
+    "Flu season demand boost",
+    "Generic drug launch impact",
+    "Hospital tender fulfillment",
+    "E-pharmacy promotion campaign",
+    "API supply constraint adjustment",
+    "Cold chain capacity limitation",
+    "Medical conference Rx uplift",
+    "Disease outbreak pre-positioning",
+    "Chronic care refill cycle peak"
   ];
   
   // Add 1-2 planner adjustments per SKU
@@ -169,7 +168,7 @@ const sampleForecastData: ForecastRow[] = splashSKUs.map((sku, index) => {
   weeks[weekKey] = {
     forecast: currentForecast,
     plannerInput: Math.round(currentForecast * adjustmentFactor),
-    reason: fashionReasons[index % fashionReasons.length]
+    reason: pharmaReasons[index % pharmaReasons.length]
   };
   
   const isApproved = Math.random() > 0.15; // 85% approval rate
@@ -179,7 +178,7 @@ const sampleForecastData: ForecastRow[] = splashSKUs.map((sku, index) => {
     sku: sku.sku,
     productName: sku.name,
     imageUrl,
-    node: uaeNodes[nodeIndex],
+    node: pharmaNodes[nodeIndex],
     channel,
     owner,
     ...weeks,
@@ -191,16 +190,16 @@ const sampleForecastData: ForecastRow[] = splashSKUs.map((sku, index) => {
       ? {
           approvedBy: approver,
           approvedAt: "2024-10-15 14:30",
-          remarks: "Forecast aligned with seasonal trends and historical data"
+          remarks: "Forecast aligned with seasonal illness patterns and historical data"
         }
       : {
           rejectedBy: approver,
           rejectedAt: "2024-10-14 16:45",
-          remarks: "Requires adjustment for supply constraints"
+          remarks: "Requires adjustment for API supply constraints"
         },
     allRemarks: [
-      { date: "2024-10-12 10:00", user: owner, comment: `Adjusted ${sku.category} forecast based on seasonal patterns` },
-      { date: "2024-10-13 14:15", user: approver, comment: isApproved ? "Reviewed - aligned with UAE market trends" : "Needs revision - check inventory levels" },
+      { date: "2024-10-12 10:00", user: owner, comment: `Adjusted ${sku.category} forecast based on disease seasonality` },
+      { date: "2024-10-13 14:15", user: approver, comment: isApproved ? "Reviewed - aligned with outbreak tracking data" : "Needs revision - check cold chain capacity" },
       { date: "2024-10-15 14:30", user: approver, comment: isApproved ? "Approved with seasonal adjustments" : "Pending further review" }
     ]
   } as ForecastRow;
@@ -361,38 +360,38 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All SKUs</SelectItem>
-              <SelectItem value="SKU00553">Elle Evening</SelectItem>
-              <SelectItem value="SKU00351">Kappa Shirts</SelectItem>
-              <SelectItem value="SKU00116">Lee Cooper Jeans</SelectItem>
-              <SelectItem value="SKU00234">Smiley Kids</SelectItem>
-              <SelectItem value="SKU00445">ICONIC Blazer</SelectItem>
+              <SelectItem value="SKU001">Paracetamol 500mg</SelectItem>
+              <SelectItem value="SKU002">Azithromycin 500mg</SelectItem>
+              <SelectItem value="SKU004">Insulin Glargine</SelectItem>
+              <SelectItem value="SKU007">Salbutamol Inhaler</SelectItem>
+              <SelectItem value="SKU010">Pantoprazole 40mg</SelectItem>
             </SelectContent>
           </Select>
           
           <Select value={filterNode} onValueChange={setFilterNode}>
             <SelectTrigger className="w-44">
-              <SelectValue placeholder="All Stores" />
+              <SelectValue placeholder="All Locations" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="All">All Stores</SelectItem>
-              <SelectItem value="Dubai Mall">Dubai Mall</SelectItem>
-              <SelectItem value="Mall of Emirates">Mall of Emirates</SelectItem>
-              <SelectItem value="Abu Dhabi Mall">Abu Dhabi Mall</SelectItem>
-              <SelectItem value="Yas Mall">Yas Mall</SelectItem>
-              <SelectItem value="Deira City Centre">Deira City Centre</SelectItem>
+              <SelectItem value="All">All Locations</SelectItem>
+              <SelectItem value="Mumbai Central WH">Mumbai Central WH</SelectItem>
+              <SelectItem value="Delhi North Hub">Delhi North Hub</SelectItem>
+              <SelectItem value="Apollo Hospitals">Apollo Hospitals</SelectItem>
+              <SelectItem value="Netmeds">Netmeds E-Pharmacy</SelectItem>
+              <SelectItem value="Govt Hospital">Govt Hospital Tender</SelectItem>
             </SelectContent>
           </Select>
           
           <Select value={filterChannel} onValueChange={setFilterChannel}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-36">
               <SelectValue placeholder="All Channels" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Channels</SelectItem>
-              <SelectItem value="Online">Online</SelectItem>
-              <SelectItem value="Retail">Retail</SelectItem>
-              <SelectItem value="B2B">B2B</SelectItem>
-              <SelectItem value="Direct">Direct</SelectItem>
+              <SelectItem value="Online">E-Pharmacy</SelectItem>
+              <SelectItem value="Retail">Retail Pharmacy</SelectItem>
+              <SelectItem value="B2B">Hospital</SelectItem>
+              <SelectItem value="Direct">Distributor</SelectItem>
             </SelectContent>
           </Select>
         </div>
