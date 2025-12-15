@@ -17,6 +17,13 @@ export { holidayCalendarData } from "./holidayCalendarData";
 export { crudeOilPricesData } from "./crudeOilPricesData";
 export { weatherData } from "./weatherData";
 export { channelMasterData } from "./channelMasterData";
+export { weatherClimateData } from "./weatherClimateData";
+export { seasonalIllnessData } from "./seasonalIllnessData";
+export { prescriptionTrendsData } from "./prescriptionTrendsData";
+export { medicalConferenceData } from "./medicalConferenceData";
+export { healthcarePolicyData } from "./healthcarePolicyData";
+export { genericDrugLaunchesData } from "./genericDrugLaunchesData";
+export { diseaseOutbreakData } from "./diseaseOutbreakData";
 export { foundryDataMapper, getFoundryObjectData } from "./foundryDataMapper";
 
 export type { 

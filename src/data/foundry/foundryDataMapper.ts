@@ -11,6 +11,13 @@ import { crudeOilPricesData } from "./crudeOilPricesData";
 import { weatherData } from "./weatherData";
 import { channelMasterData } from "./channelMasterData";
 import { externalDriversData } from "../demandForecasting/externalDriversData";
+import { weatherClimateData } from "./weatherClimateData";
+import { seasonalIllnessData } from "./seasonalIllnessData";
+import { prescriptionTrendsData } from "./prescriptionTrendsData";
+import { medicalConferenceData } from "./medicalConferenceData";
+import { healthcarePolicyData } from "./healthcarePolicyData";
+import { genericDrugLaunchesData } from "./genericDrugLaunchesData";
+import { diseaseOutbreakData } from "./diseaseOutbreakData";
 
 export const foundryDataMapper = {
   // Master Data
@@ -38,6 +45,13 @@ export const foundryDataMapper = {
   "Holiday_Calendar": holidayCalendarData,
   "Crude_Oil_Prices": crudeOilPricesData,
   "Weather_Data": weatherData,
+  "Weather_Climate_Data": weatherClimateData,
+  "Seasonal_Illness_Patterns": seasonalIllnessData,
+  "Prescription_Trends": prescriptionTrendsData,
+  "Medical_Conference_Calendar": medicalConferenceData,
+  "Healthcare_Policy_Changes": healthcarePolicyData,
+  "Generic_Drug_Launches": genericDrugLaunchesData,
+  "Disease_Outbreak_Tracking": diseaseOutbreakData,
   "NSE_Index": [
     { date: "2024-07-01", index: "NIFTY50", value: 24500, change: 125.5 },
     { date: "2024-07-02", index: "NIFTY50", value: 24350, change: -150.0 }

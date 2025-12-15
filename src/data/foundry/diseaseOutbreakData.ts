@@ -1,0 +1,18 @@
+export const diseaseOutbreakData = [
+  { week_start: "2024-06-03", state: "Telangana", disease: "Influenza-like illness", reported_cases: 10744, severity_index: 0.47 },
+  { week_start: "2024-06-10", state: "Tamil Nadu", disease: "Dengue", reported_cases: 7784, severity_index: 0.33 },
+  { week_start: "2024-06-17", state: "Gujarat", disease: "Influenza-like illness", reported_cases: 2560, severity_index: 0.8 },
+  { week_start: "2024-06-24", state: "Karnataka", disease: "Dengue", reported_cases: 24573, severity_index: 0.26 },
+  { week_start: "2024-07-01", state: "Tamil Nadu", disease: "Influenza-like illness", reported_cases: 11377, severity_index: 0.44 },
+  { week_start: "2024-07-08", state: "Tamil Nadu", disease: "Influenza-like illness", reported_cases: 3351, severity_index: 0.8 },
+  { week_start: "2024-07-15", state: "Karnataka", disease: "Influenza-like illness", reported_cases: 2237, severity_index: 0.68 },
+  { week_start: "2024-07-22", state: "Maharashtra", disease: "Dengue", reported_cases: 13634, severity_index: 0.69 },
+  { week_start: "2024-07-29", state: "Delhi", disease: "Chikungunya", reported_cases: 12110, severity_index: 0.89 },
+  { week_start: "2024-08-05", state: "Karnataka", disease: "Chikungunya", reported_cases: 3473, severity_index: 0.22 },
+  { week_start: "2024-08-12", state: "Telangana", disease: "Influenza-like illness", reported_cases: 22231, severity_index: 0.67 },
+  { week_start: "2024-08-19", state: "Telangana", disease: "Influenza-like illness", reported_cases: 5392, severity_index: 0.72 },
+  { week_start: "2024-08-26", state: "Tamil Nadu", disease: "Dengue", reported_cases: 9942, severity_index: 0.72 },
+  { week_start: "2024-09-02", state: "Maharashtra", disease: "Chikungunya", reported_cases: 19292, severity_index: 0.7 },
+  { week_start: "2024-09-09", state: "Gujarat", disease: "Influenza-like illness", reported_cases: 11425, severity_index: 0.25 },
+  { week_start: "2024-09-16", state: "Gujarat", disease: "Chikungunya", reported_cases: 2399, severity_index: 0.26 },
+];
