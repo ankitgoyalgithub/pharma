@@ -16,6 +16,7 @@ export { inventoryLevelsData } from "./inventoryLevelsData";
 export { holidayCalendarData } from "./holidayCalendarData";
 export { crudeOilPricesData } from "./crudeOilPricesData";
 export { weatherData } from "./weatherData";
+export { channelMasterData } from "./channelMasterData";
 export { foundryDataMapper, getFoundryObjectData } from "./foundryDataMapper";
 
 export type { 

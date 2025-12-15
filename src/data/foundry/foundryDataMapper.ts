@@ -9,6 +9,7 @@ import { inventoryLevelsData } from "./inventoryLevelsData";
 import { holidayCalendarData } from "./holidayCalendarData";
 import { crudeOilPricesData } from "./crudeOilPricesData";
 import { weatherData } from "./weatherData";
+import { channelMasterData } from "./channelMasterData";
 import { externalDriversData } from "../demandForecasting/externalDriversData";
 
 export const foundryDataMapper = {
@@ -18,11 +19,7 @@ export const foundryDataMapper = {
   "Customer_Master": customerMasterData,
   "Supplier_Master": supplierMasterData,
   "Employee_Master": employeeMasterData,
-  "Channel_Master": [
-    { id: "CH001", name: "Online", type: "E-commerce", status: "Active" },
-    { id: "CH002", name: "Direct Sales", type: "B2B", status: "Active" },
-    { id: "CH003", name: "Partner", type: "Retail", status: "Active" }
-  ],
+  "Channel_Master": channelMasterData,
   
   // Time Series Data  
   "Sales_Historical": salesHistoryData,
