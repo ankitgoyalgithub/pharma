@@ -1,22 +1,22 @@
-// External drivers aligned with Feature Store entities in Foundry - Fashion Industry
+// External drivers aligned with Feature Store entities in Foundry - Pharmaceutical Industry
 export const getExternalDrivers = (studyType: string, hasData: boolean = false) => {
-  // Fashion-specific feature store drivers for Splash Fashions
+  // Pharma-specific feature store drivers
   const featureStoreDrivers = [
-    { name: "Promotions & Discounts", autoSelected: true, icon: "Tag" },
-    { name: "Seasonality Trends", autoSelected: true, icon: "CalendarDays" },
-    { name: "Fashion Week Calendar", autoSelected: false, icon: "Calendar" },
-    { name: "Weather & Climate Data", autoSelected: false, icon: "CloudRain" },
-    { name: "Social Media Trends", autoSelected: false, icon: "TrendingUp" },
-    { name: "Influencer Campaigns", autoSelected: false, icon: "Users" },
-    { name: "Competitor Pricing", autoSelected: false, icon: "DollarSign" },
+    { name: "Weather & Climate Data", autoSelected: true, icon: "CloudRain" },
+    { name: "Seasonal Illness Patterns", autoSelected: true, icon: "Thermometer" },
+    { name: "Disease Outbreak Tracking", autoSelected: true, icon: "Activity" },
+    { name: "Prescription Trends", autoSelected: false, icon: "TrendingUp" },
+    { name: "Medical Conference Calendar", autoSelected: false, icon: "Calendar" },
+    { name: "Healthcare Policy Changes", autoSelected: false, icon: "FileText" },
+    { name: "Generic Drug Launches", autoSelected: false, icon: "Package" },
     { name: "Holiday Calendar", autoSelected: false, icon: "Gift" },
-    { name: "Store Events", autoSelected: false, icon: "Store" },
-    { name: "New Collection Launches", autoSelected: false, icon: "Sparkles" },
-    { name: "Clearance & End-of-Season", autoSelected: false, icon: "Percent" },
-    { name: "Back-to-School Season", autoSelected: false, icon: "GraduationCap" },
-    { name: "Wedding & Festive Season", autoSelected: false, icon: "Heart" },
-    { name: "Online vs Offline Traffic", autoSelected: false, icon: "ShoppingCart" },
-    { name: "Brand Collaborations", autoSelected: false, icon: "Handshake" },
+    { name: "Government Tender Schedule", autoSelected: false, icon: "Building" },
+    { name: "Promotional Campaigns", autoSelected: false, icon: "Tag" },
+    { name: "New Product Launches", autoSelected: false, icon: "Sparkles" },
+    { name: "API Price Index", autoSelected: false, icon: "DollarSign" },
+    { name: "Hospital Procurement Cycles", autoSelected: false, icon: "ShoppingCart" },
+    { name: "Vaccination Drives", autoSelected: false, icon: "Shield" },
+    { name: "Insurance Coverage Updates", autoSelected: false, icon: "Heart" },
   ];
 
   // Return feature store drivers for all study types to maintain consistency
