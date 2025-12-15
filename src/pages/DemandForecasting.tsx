@@ -158,22 +158,16 @@ const DemandForecasting = () => {
 
   // Map external driver display names to Foundry object keys
   const driverToFoundryKey: Record<string, string> = {
-    // Fashion industry external drivers
-    "Promotions & Discounts": "Promotions_Discounts",
-    "Seasonality Trends": "Seasonality_Trends",
-    "Fashion Week Calendar": "Fashion_Week_Calendar",
-    "Weather & Climate Data": "Weather_Climate",
-    "Social Media Trends": "Social_Media_Trends",
-    "Influencer Campaigns": "Influencer_Campaigns",
-    "Competitor Pricing": "Competitor_Pricing",
+    // Pharma industry external drivers
+    "Seasonal Illness Patterns": "Seasonal_Illness_Patterns",
+    "Disease Outbreak Tracking": "Disease_Outbreak_Tracking",
+    "Weather & Climate Data": "Weather_Climate_Data",
+    "Healthcare Policy Changes": "Healthcare_Policy_Changes",
+    "Generic Drug Launches": "Generic_Drug_Launches",
+    "Medical Conference Calendar": "Medical_Conference_Calendar",
+    "Prescription Trends": "Prescription_Trends",
     "Holiday Calendar": "Holiday_Calendar",
-    "Store Events": "Store_Events",
-    "New Collection Launches": "New_Collection_Launches",
-    "Clearance & End-of-Season": "Clearance_EOS",
-    "Back-to-School Season": "Back_To_School",
-    "Wedding & Festive Season": "Wedding_Festive",
-    "Online vs Offline Traffic": "Online_Offline_Traffic",
-    "Brand Collaborations": "Brand_Collaborations",
+    "Promotions & Discounts": "Promotions_Discounts",
   };
 
   // Stepper configuration
@@ -2198,8 +2192,8 @@ const DemandForecasting = () => {
             <div className="flex justify-center">
             <ForecastCard
               title="NPIs & Limited History"
-              value="280"
-              subtitle="New colours, fits, and first-time introductions. Launch-sensitive items requiring manual review."
+              value="80"
+              subtitle="New molecules, generic launches, and outbreak-sensitive SKUs. Items requiring manual review."
               icon={Sparkles}
               isActive={selectedScenario === null && activeTab === "npi"}
               onClick={() => {
@@ -2507,11 +2501,11 @@ const DemandForecasting = () => {
                       <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">New Collection Launch - Inventory Positioning</span>
-                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Feb 2025</Badge>
+                          <span className="font-semibold text-sm">Generic Drug Launch Alert - Cholecalciferol</span>
+                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2024</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Spring/Summer 2025 collection launch will cause 2-3 week transition period for 18% of current SKUs. Historical impact: -15% to -20% availability for outgoing styles. Pre-plan markdowns and build 4 weeks stock for new arrivals.
+                          Generic Vitamin D3 launch expected to trigger 18% volume surge and 12% price erosion. D3Max (SKU008) faces competition. Secure API supply now and build 8 weeks safety stock to capture market opportunity.
                         </p>
                       </div>
                     </div>
@@ -2522,11 +2516,11 @@ const DemandForecasting = () => {
                       <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">Seasonal Demand Intelligence - Eid & DSF Surge</span>
-                          <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+34% Peak</Badge>
+                          <span className="font-semibold text-sm">Monsoon Disease Outbreak Intelligence</span>
+                          <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+42% Peak</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Festival analysis shows 34% Eid surge (Apr 10-25) and 28% Dubai Shopping Festival spike (Dec 15-Jan 30). Lee Cooper & Kappa lead growth. Pre-position inventory 3 weeks ahead in top 5 UAE mall stores.
+                          Seasonal illness data shows 42% surge in respiratory medications during winter (Nov-Feb) and dengue outbreak spike in monsoon (Jul-Sep). Pre-position Azithromycin (SKU002), Paracetamol (SKU001), and Cetirizine (SKU003) in affected regions 4 weeks ahead.
                         </p>
                       </div>
                     </div>
@@ -2672,10 +2666,10 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="space-y-2">
                     {[
-                      { sku: 'Lee Cooper Slim Fit', issue: 'High Variability', priority: 'high', variance: '+34%' },
-                      { sku: 'Kappa Polo Navy', issue: 'Trend Shift', priority: 'medium', variance: '+18%' },
-                      { sku: 'Elle Summer Dress', issue: 'Outlier Detected', priority: 'medium', variance: '-12%' },
-                      { sku: 'Smiley Graphic Tee', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
+                      { sku: 'Insulin Glargine SKU004', issue: 'Cold Chain Variability', priority: 'high', variance: '+34%' },
+                      { sku: 'Azithromycin SKU002', issue: 'Outbreak Spike', priority: 'medium', variance: '+18%' },
+                      { sku: 'Cetirizine SKU003', issue: 'Seasonal Shift', priority: 'medium', variance: '-12%' },
+                      { sku: 'Pantoprazole SKU010', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-2">
@@ -3161,17 +3155,17 @@ const DemandForecasting = () => {
               <Card className="relative overflow-hidden border-border/40 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Total SKUs in Scope</div>
-                  <div className="text-2xl font-bold text-foreground mb-1">1,280</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">All Splash UAE stores & online</div>
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Apparel & Fashion</Badge>
+                  <div className="text-2xl font-bold text-foreground mb-1">542</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">All pharmacy channels & locations</div>
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Pharmaceuticals</Badge>
                 </CardContent>
               </Card>
               
               <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Reliable History</div>
-                  <div className="text-2xl font-bold text-success mb-1">640</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">3+ seasons, no major stock-outs</div>
+                  <div className="text-2xl font-bold text-success mb-1">320</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">12+ months, stable demand patterns</div>
                   <Badge className="bg-success/15 text-success border-success/30 text-[10px] px-1.5 py-0.5">Trusted patterns</Badge>
                 </CardContent>
               </Card>
@@ -3179,17 +3173,17 @@ const DemandForecasting = () => {
               <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Limited / Unreliable</div>
-                  <div className="text-2xl font-bold text-warning mb-1">360</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">Gaps or stock-outs in 12 months</div>
+                  <div className="text-2xl font-bold text-warning mb-1">142</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">Outbreak-driven or seasonal gaps</div>
                   <Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Needs similar items</Badge>
                 </CardContent>
               </Card>
               
               <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">New / Recolour / NPI</div>
-                  <div className="text-2xl font-bold text-destructive mb-1">280</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">New colours & first-time items</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">New / Generic Launch</div>
+                  <div className="text-2xl font-bold text-destructive mb-1">80</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">New formulations & generic entries</div>
                   <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">Manual review</Badge>
                 </CardContent>
               </Card>
@@ -3216,46 +3210,46 @@ const DemandForecasting = () => {
                           <th className="text-left py-2 px-2 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Strategy</th>
                         </tr>
                       </thead>
-                      <tbody>
+                    <tbody>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-001</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Eid Kaftan – Gold Foil</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">NPI</Badge></td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">GEN-VD3-001</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Generic Cholecalciferol 60K IU</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Generic Launch</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">None</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">New for SS25</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Copy top 3 Eid kaftans +18%</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">New Nov 2024</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use D3Max history +18%</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-014</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Smiley Graphic Tee – Lime</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New colour</Badge></td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">2 seasons</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">OOS week 3</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× last peak</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-INS-002</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Insulin Degludec 100U/ml</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Molecule</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">3 months</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Limited launch</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× Glargine baseline</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-032</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Wide-Leg Cargo – Sand</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Trend</Badge></td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">6 weeks</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">OOS 4 weeks</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with similar cargo fits</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">OB-AZI-003</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Azithromycin 500mg (Outbreak)</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Outbreak SKU</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">12 months</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">OOS monsoon</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with outbreak tracking</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-057</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Modest Dress – Rose</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">RE-CET-004</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Cetirizine 10mg (Re-entry)</td>
                           <td className="py-2 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Re-entry</Badge></td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Mid-season</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Sold out pre-Eid</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Relaunch +25% last week</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">6 months</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Sold out allergy season</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Relaunch +25% safety stock</td>
                         </tr>
                         <tr className="hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">SP-SS25-081</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Kids Matching Set – Palm</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">BDL-ORS-005</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">ORS + Zinc Combo Pack</td>
                           <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Bundle</Badge></td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">3 seasons</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">8 months</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">N/A</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use parent tee history</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use ORS history + outbreak factor</td>
                         </tr>
                       </tbody>
                     </table>
@@ -3273,15 +3267,15 @@ const DemandForecasting = () => {
                   <ul className="space-y-2">
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">Reliable history</span>
-                      <span className="text-muted-foreground">— Trust data, follow past patterns at store level.</span>
+                      <span className="text-muted-foreground">— Trust data, follow chronic medication patterns.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
-                      <span className="text-foreground font-medium min-w-[90px]">Unreliable history</span>
-                      <span className="text-muted-foreground">— Borrow shape from similar items, ignore spikes.</span>
+                      <span className="text-foreground font-medium min-w-[90px]">Outbreak-driven</span>
+                      <span className="text-muted-foreground">— Blend with disease outbreak tracking data.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
-                      <span className="text-foreground font-medium min-w-[90px]">New colours</span>
-                      <span className="text-muted-foreground">— Start from parent style, adjust by store profile.</span>
+                      <span className="text-foreground font-medium min-w-[90px]">Generic launch</span>
+                      <span className="text-muted-foreground">— Start from branded molecule, apply price elasticity.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">NPI</span>
@@ -3296,10 +3290,10 @@ const DemandForecasting = () => {
                   <div className="border-t border-border/40 pt-3 mt-3">
                     <div className="text-[10px] text-foreground font-semibold mb-2 uppercase tracking-wider">Launch Playbook</div>
                     <ul className="space-y-1 text-[10px] text-muted-foreground list-disc list-inside">
-                      <li>Dubai Mall, MoE & online get stronger launch quantities.</li>
-                      <li>Eid capsule 4 weeks before festival; DSF at event start.</li>
-                      <li>Kaftans & modest dresses: extra safety stock in top 20 stores.</li>
-                      <li>Family sets pushed where adult base style sells above average.</li>
+                      <li>Hospital pharmacies & large chains get stronger launch quantities.</li>
+                      <li>Cold chain SKUs: extra safety stock in metros with reliable storage.</li>
+                      <li>Outbreak drugs: pre-position 4 weeks before monsoon season.</li>
+                      <li>Generic launches: match distribution to branded molecule footprint.</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -3310,7 +3304,7 @@ const DemandForecasting = () => {
             <Card className="border-border/40">
               <CardHeader className="pb-2">
                 <CardTitle className="text-xs font-semibold text-foreground">Mix & Risk View</CardTitle>
-                <p className="text-[10px] text-muted-foreground">SKU group split and stock-out risk from last Eid/DSF.</p>
+                <p className="text-[10px] text-muted-foreground">SKU group split and stock-out risk from last monsoon season.</p>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -3358,7 +3352,7 @@ const DemandForecasting = () => {
                   
                   {/* Stock-out Risk Table */}
                   <div>
-                    <div className="text-[11px] font-semibold text-foreground mb-3">Stock-out Risk (Last Eid)</div>
+                    <div className="text-[11px] font-semibold text-foreground mb-3">Stock-out Risk (Last Monsoon)</div>
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border/40 bg-muted/30">
@@ -3370,28 +3364,28 @@ const DemandForecasting = () => {
                       </thead>
                       <tbody>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Reliable</td>
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">6%</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Chronic Care</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">4%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-success/15 text-success border-success/30 text-[10px] px-1.5 py-0.5">Low</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Standard replen rules</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Stable refill patterns</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Limited</td>
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">14%</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Seasonal</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">12%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Med</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">No promo pre-build</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Monsoon surge timing</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">New colours</td>
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">19%</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Outbreak</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">22%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">High</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">OOS in fashion stores</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Dengue spike OOS</td>
                         </tr>
                         <tr>
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">NPI</td>
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">23%</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Generic Launch</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">18%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">V. High</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Limited initial buy</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">API supply constraints</td>
                         </tr>
                       </tbody>
                     </table>
@@ -3697,16 +3691,16 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent className="max-h-[300px]">
                         <SelectItem value="all">All Products</SelectItem>
-                        <SelectItem value="SKU001">Lee Cooper Slim Fit Jeans</SelectItem>
-                        <SelectItem value="SKU002">Kappa Polo T-Shirt</SelectItem>
-                        <SelectItem value="SKU003">Elle Floral Maxi Dress</SelectItem>
-                        <SelectItem value="SKU004">Smiley Graphic Hoodie</SelectItem>
-                        <SelectItem value="SKU005">ICONIC Formal Blazer</SelectItem>
-                        <SelectItem value="SKU006">Splash Core Chinos</SelectItem>
-                        <SelectItem value="SKU007">Lee Cooper Denim Jacket</SelectItem>
-                        <SelectItem value="SKU008">Kappa Track Pants</SelectItem>
-                        <SelectItem value="SKU009">Elle Silk Blouse</SelectItem>
-                        <SelectItem value="SKU010">ICONIC Linen Shirt</SelectItem>
+                        <SelectItem value="SKU001">Paracetamol 500mg Tablet</SelectItem>
+                        <SelectItem value="SKU002">Azithromycin 500mg Tablet</SelectItem>
+                        <SelectItem value="SKU003">Cetirizine 10mg Tablet</SelectItem>
+                        <SelectItem value="SKU004">Insulin Glargine 100U/ml</SelectItem>
+                        <SelectItem value="SKU005">Amoxicillin 500mg Capsule</SelectItem>
+                        <SelectItem value="SKU006">ORS Sachet (WHO Formula)</SelectItem>
+                        <SelectItem value="SKU007">Salbutamol 100mcg Inhaler</SelectItem>
+                        <SelectItem value="SKU008">Cholecalciferol 60K IU</SelectItem>
+                        <SelectItem value="SKU009">Ceftriaxone 1g Injection</SelectItem>
+                        <SelectItem value="SKU010">Pantoprazole 40mg Tablet</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -3721,16 +3715,16 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent className="max-h-[300px]">
                         <SelectItem value="none">None</SelectItem>
-                        <SelectItem value="NPI001">Lee Cooper SS25 Cargo Pants</SelectItem>
-                        <SelectItem value="NPI002">Kappa Retro Bomber Jacket</SelectItem>
-                        <SelectItem value="NPI003">Elle Summer Midi Skirt</SelectItem>
-                        <SelectItem value="NPI004">Smiley Collab Oversized Tee</SelectItem>
-                        <SelectItem value="NPI005">ICONIC Wool Blend Coat</SelectItem>
-                        <SelectItem value="NPI006">Splash Core Linen Shorts</SelectItem>
-                        <SelectItem value="NPI007">Lee Cooper Vintage Wash Jeans</SelectItem>
-                        <SelectItem value="NPI008">Kappa Performance Joggers</SelectItem>
-                        <SelectItem value="NPI009">Elle Embroidered Kaftan</SelectItem>
-                        <SelectItem value="NPI010">ICONIC Relaxed Fit Trousers</SelectItem>
+                        <SelectItem value="NPI001">Generic Cholecalciferol 60K IU</SelectItem>
+                        <SelectItem value="NPI002">Insulin Degludec 100U/ml</SelectItem>
+                        <SelectItem value="NPI003">Favipiravir 200mg Tablet</SelectItem>
+                        <SelectItem value="NPI004">Remdesivir 100mg Injection</SelectItem>
+                        <SelectItem value="NPI005">Molnupiravir 200mg Capsule</SelectItem>
+                        <SelectItem value="NPI006">Ivermectin 12mg Tablet</SelectItem>
+                        <SelectItem value="NPI007">Dexamethasone 6mg Tablet</SelectItem>
+                        <SelectItem value="NPI008">Tocilizumab 400mg Injection</SelectItem>
+                        <SelectItem value="NPI009">Baricitinib 4mg Tablet</SelectItem>
+                        <SelectItem value="NPI010">Enoxaparin 60mg Injection</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -3763,10 +3757,11 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Channels</SelectItem>
-                        <SelectItem value="online">Online</SelectItem>
-                        <SelectItem value="retail">Retail</SelectItem>
-                        <SelectItem value="direct">Direct Sales</SelectItem>
-                        <SelectItem value="b2b">B2B</SelectItem>
+                        <SelectItem value="retail">Retail Pharmacy</SelectItem>
+                        <SelectItem value="hospital">Hospital Pharmacy</SelectItem>
+                        <SelectItem value="epharmacy">E-Pharmacy</SelectItem>
+                        <SelectItem value="distributor">Distributor/Stockist</SelectItem>
+                        <SelectItem value="govt">Government Tender</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
