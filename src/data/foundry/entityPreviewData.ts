@@ -500,5 +500,162 @@ export const entityPreviewData: EntityPreviewMap = {
       { asOfDate: "2025-01-01", nodeId: "DEP_EAST", skuId: "SKU002", batchNo: "B74541", mfgDate: "2024-09-23", expiryDate: "2025-06-01", onHandQty: 6984, reservedQty: 502, availableQty: 6391, quarantineQty: 91, uom: "EA" }
     ],
     stats: { totalRecords: 32, lastSync: "2025-01-01 16:30", source: "ERP System" }
+  },
+  "weather-climate-data": {
+    title: "Weather & Climate Data",
+    description: "Regional temperature, humidity, and rainfall patterns affecting pharmaceutical demand",
+    columns: [
+      { accessorKey: "month", header: "Month" },
+      { accessorKey: "region", header: "Region" },
+      { accessorKey: "avg_temp_c", header: "Avg Temp (°C)" },
+      { accessorKey: "humidity_index", header: "Humidity Index" },
+      { accessorKey: "rainfall_mm", header: "Rainfall (mm)" }
+    ],
+    rows: [
+      { month: "2024-01", region: "North", avg_temp_c: 14, humidity_index: 0.55, rainfall_mm: 18 },
+      { month: "2024-02", region: "North", avg_temp_c: 18, humidity_index: 0.5, rainfall_mm: 12 },
+      { month: "2024-03", region: "North", avg_temp_c: 24, humidity_index: 0.45, rainfall_mm: 10 },
+      { month: "2024-04", region: "North", avg_temp_c: 30, humidity_index: 0.4, rainfall_mm: 8 },
+      { month: "2024-05", region: "North", avg_temp_c: 34, humidity_index: 0.45, rainfall_mm: 22 },
+      { month: "2024-06", region: "North", avg_temp_c: 36, humidity_index: 0.55, rainfall_mm: 65 },
+      { month: "2024-07", region: "North", avg_temp_c: 34, humidity_index: 0.7, rainfall_mm: 180 },
+      { month: "2024-08", region: "North", avg_temp_c: 33, humidity_index: 0.78, rainfall_mm: 210 },
+      { month: "2024-09", region: "North", avg_temp_c: 31, humidity_index: 0.72, rainfall_mm: 165 },
+      { month: "2024-10", region: "North", avg_temp_c: 27, humidity_index: 0.6, rainfall_mm: 45 },
+      { month: "2024-11", region: "North", avg_temp_c: 21, humidity_index: 0.58, rainfall_mm: 12 },
+      { month: "2024-12", region: "North", avg_temp_c: 16, humidity_index: 0.6, rainfall_mm: 8 }
+    ],
+    stats: { totalRecords: 12, lastSync: "2025-07-21 07:00", source: "IMD Data Feed" }
+  },
+  "seasonal-illness-patterns": {
+    title: "Seasonal Illness Patterns",
+    description: "Monthly indices for flu, dengue, and allergy prevalence",
+    columns: [
+      { accessorKey: "month", header: "Month" },
+      { accessorKey: "flu_index", header: "Flu Index" },
+      { accessorKey: "dengue_index", header: "Dengue Index" },
+      { accessorKey: "allergy_index", header: "Allergy Index" }
+    ],
+    rows: [
+      { month: "2024-01", flu_index: 0.82, dengue_index: 0.1, allergy_index: 0.2 },
+      { month: "2024-02", flu_index: 0.88, dengue_index: 0.08, allergy_index: 0.25 },
+      { month: "2024-03", flu_index: 0.62, dengue_index: 0.07, allergy_index: 0.55 },
+      { month: "2024-04", flu_index: 0.4, dengue_index: 0.06, allergy_index: 0.7 },
+      { month: "2024-05", flu_index: 0.28, dengue_index: 0.08, allergy_index: 0.62 },
+      { month: "2024-06", flu_index: 0.22, dengue_index: 0.12, allergy_index: 0.4 },
+      { month: "2024-07", flu_index: 0.3, dengue_index: 0.35, allergy_index: 0.3 },
+      { month: "2024-08", flu_index: 0.34, dengue_index: 0.6, allergy_index: 0.28 },
+      { month: "2024-09", flu_index: 0.32, dengue_index: 0.55, allergy_index: 0.25 },
+      { month: "2024-10", flu_index: 0.38, dengue_index: 0.28, allergy_index: 0.3 },
+      { month: "2024-11", flu_index: 0.55, dengue_index: 0.15, allergy_index: 0.35 },
+      { month: "2024-12", flu_index: 0.75, dengue_index: 0.12, allergy_index: 0.3 }
+    ],
+    stats: { totalRecords: 12, lastSync: "2025-07-21 08:30", source: "ICMR Data" }
+  },
+  "prescription-trends": {
+    title: "Prescription Trends",
+    description: "Therapy-wise prescription indices for antibiotics, respiratory, and diabetes",
+    columns: [
+      { accessorKey: "month", header: "Month" },
+      { accessorKey: "rx_index_antibiotic", header: "Antibiotic Rx Index" },
+      { accessorKey: "rx_index_respiratory", header: "Respiratory Rx Index" },
+      { accessorKey: "rx_index_diabetes", header: "Diabetes Rx Index" }
+    ],
+    rows: [
+      { month: "2024-01", rx_index_antibiotic: 0.95, rx_index_respiratory: 1.1, rx_index_diabetes: 1.0 },
+      { month: "2024-02", rx_index_antibiotic: 0.98, rx_index_respiratory: 1.15, rx_index_diabetes: 1.01 },
+      { month: "2024-03", rx_index_antibiotic: 1.05, rx_index_respiratory: 1.02, rx_index_diabetes: 1.02 },
+      { month: "2024-04", rx_index_antibiotic: 1.02, rx_index_respiratory: 0.9, rx_index_diabetes: 1.02 },
+      { month: "2024-05", rx_index_antibiotic: 0.97, rx_index_respiratory: 0.85, rx_index_diabetes: 1.03 },
+      { month: "2024-06", rx_index_antibiotic: 0.92, rx_index_respiratory: 0.8, rx_index_diabetes: 1.03 },
+      { month: "2024-07", rx_index_antibiotic: 1.0, rx_index_respiratory: 0.82, rx_index_diabetes: 1.04 },
+      { month: "2024-08", rx_index_antibiotic: 1.1, rx_index_respiratory: 0.88, rx_index_diabetes: 1.04 },
+      { month: "2024-09", rx_index_antibiotic: 1.08, rx_index_respiratory: 0.86, rx_index_diabetes: 1.05 },
+      { month: "2024-10", rx_index_antibiotic: 0.99, rx_index_respiratory: 0.92, rx_index_diabetes: 1.05 },
+      { month: "2024-11", rx_index_antibiotic: 0.96, rx_index_respiratory: 1.0, rx_index_diabetes: 1.06 },
+      { month: "2024-12", rx_index_antibiotic: 0.94, rx_index_respiratory: 1.08, rx_index_diabetes: 1.06 }
+    ],
+    stats: { totalRecords: 12, lastSync: "2025-07-21 06:15", source: "IQVIA Data" }
+  },
+  "medical-conference-calendar": {
+    title: "Medical Conference Calendar",
+    description: "Industry conferences with expected prescription uplift by therapy area",
+    columns: [
+      { accessorKey: "event_name", header: "Event Name" },
+      { accessorKey: "city", header: "City" },
+      { accessorKey: "start_date", header: "Start Date" },
+      { accessorKey: "end_date", header: "End Date" },
+      { accessorKey: "therapy_area", header: "Therapy Area" },
+      { accessorKey: "expected_rx_uplift_pct", header: "Expected Rx Uplift %" }
+    ],
+    rows: [
+      { event_name: "API Annual Conference (India)", city: "New Delhi", start_date: "2024-02-16", end_date: "2024-02-18", therapy_area: "General Medicine", expected_rx_uplift_pct: 2 },
+      { event_name: "Respiratory Summit", city: "Mumbai", start_date: "2024-08-09", end_date: "2024-08-10", therapy_area: "Respiratory", expected_rx_uplift_pct: 3 },
+      { event_name: "Diabetology Congress", city: "Hyderabad", start_date: "2024-11-22", end_date: "2024-11-24", therapy_area: "Diabetes", expected_rx_uplift_pct: 2 }
+    ],
+    stats: { totalRecords: 3, lastSync: "2025-07-21 09:45", source: "Industry Calendar" }
+  },
+  "healthcare-policy-changes": {
+    title: "Healthcare Policy Changes",
+    description: "Regulatory updates and policy changes affecting drug pricing and demand",
+    columns: [
+      { accessorKey: "effective_date", header: "Effective Date" },
+      { accessorKey: "policy_type", header: "Policy Type" },
+      { accessorKey: "agency", header: "Agency" },
+      { accessorKey: "affected_therapy_area", header: "Affected Therapy Area" },
+      { accessorKey: "expected_demand_impact_pct", header: "Demand Impact %" }
+    ],
+    rows: [
+      { effective_date: "2024-02-10", policy_type: "Price cap update (essential medicines)", agency: "NPPA", affected_therapy_area: "Analgesic/Antibiotic", expected_demand_impact_pct: -3 },
+      { effective_date: "2024-04-01", policy_type: "Insurance coverage expansion (OPD pilot)", agency: "State Govt", affected_therapy_area: "Diabetes/GI", expected_demand_impact_pct: 6 },
+      { effective_date: "2024-08-15", policy_type: "Tender rate revision", agency: "Government Procurement", affected_therapy_area: "Antibiotic", expected_demand_impact_pct: 4 }
+    ],
+    stats: { totalRecords: 3, lastSync: "2025-07-21 10:30", source: "NPPA / Govt Notifications" }
+  },
+  "generic-drug-launches": {
+    title: "Generic Drug Launches",
+    description: "Upcoming generic launches with expected price and volume impact",
+    columns: [
+      { accessorKey: "launch_month", header: "Launch Month" },
+      { accessorKey: "molecule", header: "Molecule" },
+      { accessorKey: "therapy_area", header: "Therapy Area" },
+      { accessorKey: "expected_price_drop_pct", header: "Expected Price Drop %" },
+      { accessorKey: "expected_volume_uplift_pct", header: "Expected Volume Uplift %" }
+    ],
+    rows: [
+      { launch_month: "2024-11", molecule: "Cholecalciferol", therapy_area: "Vitamins", expected_price_drop_pct: 12, expected_volume_uplift_pct: 18 },
+      { launch_month: "2024-07", molecule: "Paracetamol", therapy_area: "Analgesic/Antipyretic", expected_price_drop_pct: 6, expected_volume_uplift_pct: 10 }
+    ],
+    stats: { totalRecords: 2, lastSync: "2025-07-21 08:20", source: "DCGI Filings" }
+  },
+  "disease-outbreak-tracking": {
+    title: "Disease Outbreak Tracking",
+    description: "Weekly disease surveillance data by state with severity indices",
+    columns: [
+      { accessorKey: "week_start", header: "Week Start" },
+      { accessorKey: "state", header: "State" },
+      { accessorKey: "disease", header: "Disease" },
+      { accessorKey: "reported_cases", header: "Reported Cases" },
+      { accessorKey: "severity_index", header: "Severity Index" }
+    ],
+    rows: [
+      { week_start: "2024-06-03", state: "Telangana", disease: "Influenza-like illness", reported_cases: 10744, severity_index: 0.47 },
+      { week_start: "2024-06-10", state: "Tamil Nadu", disease: "Dengue", reported_cases: 7784, severity_index: 0.33 },
+      { week_start: "2024-06-17", state: "Gujarat", disease: "Influenza-like illness", reported_cases: 2560, severity_index: 0.8 },
+      { week_start: "2024-06-24", state: "Karnataka", disease: "Dengue", reported_cases: 24573, severity_index: 0.26 },
+      { week_start: "2024-07-01", state: "Tamil Nadu", disease: "Influenza-like illness", reported_cases: 11377, severity_index: 0.44 },
+      { week_start: "2024-07-08", state: "Tamil Nadu", disease: "Influenza-like illness", reported_cases: 3351, severity_index: 0.8 },
+      { week_start: "2024-07-15", state: "Karnataka", disease: "Influenza-like illness", reported_cases: 2237, severity_index: 0.68 },
+      { week_start: "2024-07-22", state: "Maharashtra", disease: "Dengue", reported_cases: 13634, severity_index: 0.69 },
+      { week_start: "2024-07-29", state: "Delhi", disease: "Chikungunya", reported_cases: 12110, severity_index: 0.89 },
+      { week_start: "2024-08-05", state: "Karnataka", disease: "Chikungunya", reported_cases: 3473, severity_index: 0.22 },
+      { week_start: "2024-08-12", state: "Telangana", disease: "Influenza-like illness", reported_cases: 22231, severity_index: 0.67 },
+      { week_start: "2024-08-19", state: "Telangana", disease: "Influenza-like illness", reported_cases: 5392, severity_index: 0.72 },
+      { week_start: "2024-08-26", state: "Tamil Nadu", disease: "Dengue", reported_cases: 9942, severity_index: 0.72 },
+      { week_start: "2024-09-02", state: "Maharashtra", disease: "Chikungunya", reported_cases: 19292, severity_index: 0.7 },
+      { week_start: "2024-09-09", state: "Gujarat", disease: "Influenza-like illness", reported_cases: 11425, severity_index: 0.25 },
+      { week_start: "2024-09-16", state: "Gujarat", disease: "Chikungunya", reported_cases: 2399, severity_index: 0.26 }
+    ],
+    stats: { totalRecords: 16, lastSync: "2025-07-21 11:00", source: "IDSP / State Health Depts" }
   }
 };
