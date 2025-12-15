@@ -12,18 +12,18 @@ interface DemandAnalysisChartProps {
   npiSku?: string;
 }
 
-// Proxy SKU mapping for NPI forecasting
+// Proxy SKU mapping for NPI forecasting - Pharma domain
 export const npiProxyMapping: Record<string, { proxySku: string; proxyName: string; npiName: string }> = {
-  'NPI001': { proxySku: 'SKU006', proxyName: 'Splash Core Chinos', npiName: 'Lee Cooper SS25 Cargo Pants' },
-  'NPI002': { proxySku: 'SKU007', proxyName: 'Lee Cooper Denim Jacket', npiName: 'Kappa Retro Bomber Jacket' },
-  'NPI003': { proxySku: 'SKU003', proxyName: 'Elle Floral Maxi Dress', npiName: 'Elle Summer Midi Skirt' },
-  'NPI004': { proxySku: 'SKU004', proxyName: 'Smiley Graphic Hoodie', npiName: 'Smiley Collab Oversized Tee' },
-  'NPI005': { proxySku: 'SKU005', proxyName: 'ICONIC Formal Blazer', npiName: 'ICONIC Wool Blend Coat' },
-  'NPI006': { proxySku: 'SKU006', proxyName: 'Splash Core Chinos', npiName: 'Splash Core Linen Shorts' },
-  'NPI007': { proxySku: 'SKU001', proxyName: 'Lee Cooper Slim Fit Jeans', npiName: 'Lee Cooper Vintage Wash Jeans' },
-  'NPI008': { proxySku: 'SKU008', proxyName: 'Kappa Track Pants', npiName: 'Kappa Performance Joggers' },
-  'NPI009': { proxySku: 'SKU009', proxyName: 'Elle Silk Blouse', npiName: 'Elle Embroidered Kaftan' },
-  'NPI010': { proxySku: 'SKU005', proxyName: 'ICONIC Formal Blazer', npiName: 'ICONIC Relaxed Fit Trousers' },
+  'NPI001': { proxySku: 'SKU008', proxyName: 'Cholecalciferol 60K IU (D3Max)', npiName: 'Generic Cholecalciferol 60K IU' },
+  'NPI002': { proxySku: 'SKU004', proxyName: 'Insulin Glargine 100IU/ml', npiName: 'Insulin Degludec 100IU/ml' },
+  'NPI003': { proxySku: 'SKU002', proxyName: 'Azithromycin 500mg Tablet', npiName: 'Azithromycin 250mg Suspension' },
+  'NPI004': { proxySku: 'SKU001', proxyName: 'Paracetamol 500mg Tablet', npiName: 'Paracetamol 650mg Extended Release' },
+  'NPI005': { proxySku: 'SKU005', proxyName: 'Amoxicillin 500mg Capsule', npiName: 'Amoxicillin-Clavulanate 625mg' },
+  'NPI006': { proxySku: 'SKU006', proxyName: 'ORS Sachets (WHO Formula)', npiName: 'ORS Sachets (Zinc Fortified)' },
+  'NPI007': { proxySku: 'SKU003', proxyName: 'Cetirizine 10mg Tablet', npiName: 'Levocetirizine 5mg Tablet' },
+  'NPI008': { proxySku: 'SKU007', proxyName: 'Salbutamol 100mcg Inhaler', npiName: 'Formoterol-Budesonide Inhaler' },
+  'NPI009': { proxySku: 'SKU009', proxyName: 'Ceftriaxone 1g Injection', npiName: 'Cefoperazone-Sulbactam 1.5g Injection' },
+  'NPI010': { proxySku: 'SKU010', proxyName: 'Pantoprazole 40mg Tablet', npiName: 'Esomeprazole 40mg Capsule' },
 };
 
 export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none' }: DemandAnalysisChartProps) => {

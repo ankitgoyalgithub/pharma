@@ -2487,10 +2487,10 @@ const DemandForecasting = () => {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="font-semibold text-sm">ABC Revenue Concentration Alert</span>
-                          <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">$42.3M Impact</Badge>
+                          <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">₹52.8Cr Impact</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Class A items (Lee Cooper Jeans, Kappa Polo, Elle Dress) drive 62.2% revenue but show 15% variance in Dubai Mall/Abu Dhabi. Recommend weekly cycle counts and +18% safety stock for Q1 2025 to prevent $1.8M stockout risk.
+                          Class A items (Insulin Glargine SKU004, Azithromycin SKU002, Amoxicillin SKU005) drive 68.5% revenue but show 12% forecast variance in Delhi and Mumbai hospital chains. Recommend daily inventory reviews and +22% safety stock for Q1 2025 to prevent ₹2.4Cr stockout risk on life-saving medications.
                         </p>
                       </div>
                     </div>
@@ -2791,7 +2791,7 @@ const DemandForecasting = () => {
                     />
                   </div>
                   <div className="mt-3 pt-3 border-t">
-                    <div className="text-xl font-bold text-primary">$68.1M</div>
+                    <div className="text-xl font-bold text-primary">₹82.4Cr</div>
                     <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
                   </div>
                 </CardContent>
