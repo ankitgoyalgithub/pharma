@@ -11,12 +11,12 @@ export const timeseriesEntities: EntityModule[] = [
     sourceType: "csv",
   },
   {
-    title: "Inventory Levels",
-    description: "Historical inventory data by location",
+    title: "Inventory Snapshot",
+    description: "Batch-wise inventory with expiry and quarantine tracking",
     origin: "csv",
     route: "/entity-preview/inventory-levels",
-    recordCount: 28456,
-    lastSync: "2025-07-21T16:30:00Z",
+    recordCount: 32,
+    lastSync: "2025-01-01T16:30:00Z",
     sourceType: "snowflake",
   },
   {
