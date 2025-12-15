@@ -20,8 +20,8 @@ export const dataQualityIssues: DataQualityIssue[] = [
     issueType: 'Missing Value',
     severity: 'high',
     currentValue: null,
-    suggestedFix: '42',
-    explanation: 'Linear interpolation between Week 1246 (38) and Week 1248 (46) for product P0073 at location L038',
+    suggestedFix: '4200',
+    explanation: 'Linear interpolation between Week 1246 (3800) and Week 1248 (4600) for SKU001 (Paracetamol) at NCR DC',
     impactScore: 8.5
   },
   {
@@ -31,9 +31,9 @@ export const dataQualityIssues: DataQualityIssue[] = [
     column: 'units_sold',
     issueType: 'Outlier',
     severity: 'high',
-    currentValue: '9999',
-    suggestedFix: '35',
-    explanation: 'Value exceeds 3 std dev from mean. Likely data entry error. Replaced with 4-week moving average.',
+    currentValue: '99999',
+    suggestedFix: '5200',
+    explanation: 'Value exceeds 3 std dev from mean for SKU002 (Azithromycin). Likely data entry error. Replaced with 4-week moving average.',
     impactScore: 9.2
   },
   {
@@ -44,8 +44,8 @@ export const dataQualityIssues: DataQualityIssue[] = [
     issueType: 'Missing Value',
     severity: 'medium',
     currentValue: null,
-    suggestedFix: '861.00',
-    explanation: 'Forward-filled with last known price from Week 5677 for same product',
+    suggestedFix: '98.00',
+    explanation: 'Forward-filled with last known MRP for SKU002 (Azithromycin 500mg Tablet 3s)',
     impactScore: 6.3
   },
   {
@@ -64,24 +64,24 @@ export const dataQualityIssues: DataQualityIssue[] = [
     id: 'dq_005',
     file: 'location_master.csv',
     rowNumber: 12,
-    column: 'region',
+    column: 'state',
     issueType: 'Invalid Category',
     severity: 'low',
     currentValue: 'UNKNWN',
-    suggestedFix: 'West',
-    explanation: 'Standardized to valid region based on city (Pune)',
+    suggestedFix: 'Maharashtra',
+    explanation: 'Standardized to valid state based on pincode (421302 - Bhiwandi)',
     impactScore: 3.2
   },
   {
     id: 'dq_006',
     file: 'product_master.csv',
     rowNumber: 23,
-    column: 'base_mrp',
+    column: 'mrp',
     issueType: 'Missing Value',
     severity: 'medium',
     currentValue: null,
-    suggestedFix: '1520',
-    explanation: 'Imputed using category median MRP for Footwear/Sports Shoes',
+    suggestedFix: '155',
+    explanation: 'Imputed using therapy area median MRP for Respiratory/Inhaler products',
     impactScore: 5.7
   },
   {
@@ -93,31 +93,31 @@ export const dataQualityIssues: DataQualityIssue[] = [
     severity: 'medium',
     currentValue: '2024-03-11',
     suggestedFix: 'Remove duplicate',
-    explanation: 'Duplicate entry for P0073, L038, C01 on same date. Keeping first occurrence.',
+    explanation: 'Duplicate entry for SKU004, DC_NCR, CH01 on same date. Keeping first occurrence.',
     impactScore: 6.9
   },
   {
     id: 'dq_008',
-    file: 'mapping_master.csv',
+    file: 'sku_master.csv',
     rowNumber: 234,
-    column: 'listed_flag',
+    column: 'cold_chain_required',
     issueType: 'Inconsistent Format',
     severity: 'low',
     currentValue: 'Yes',
-    suggestedFix: '1',
-    explanation: 'Standardized boolean flag to numeric format (1/0)',
+    suggestedFix: 'Y',
+    explanation: 'Standardized boolean flag to single character format (Y/N)',
     impactScore: 2.5
   },
   {
     id: 'dq_009',
     file: 'channel_master.csv',
     rowNumber: 2,
-    column: 'channel_type',
+    column: 'channel_group',
     issueType: 'Missing Value',
     severity: 'medium',
     currentValue: null,
-    suggestedFix: 'Brick & Mortar',
-    explanation: 'Inferred from channel_name (Modern Trade) using common retail classifications',
+    suggestedFix: 'Institutional',
+    explanation: 'Inferred from channel_name (Hospital Pharmacy) using pharma distribution classifications',
     impactScore: 5.2
   },
   {
@@ -136,9 +136,9 @@ export const dataQualityIssues: DataQualityIssue[] = [
 
 export const dataQualitySummary = {
   totalIssues: 10,
-  highSeverity: 4,
+  highSeverity: 3,
   mediumSeverity: 4,
-  lowSeverity: 2,
+  lowSeverity: 3,
   filesAffected: 5,
   rowsAffected: 10,
   estimatedAccuracyImprovement: '12-15%'
