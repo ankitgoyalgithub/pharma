@@ -1569,19 +1569,17 @@ const DemandForecasting = () => {
           <CardContent className="h-[300px]">
             <Bar 
               data={{
-                labels: ['Sales History', 'Product Master', 'Store Master', 'Channel Master', 'Promotions'],
+                labels: ['Sales History', 'Product Master', 'Channel Master', 'Promotions'],
                 datasets: [{
                   label: 'Completeness %',
-                  data: [94.2, 98.5, 96.8, 100, 89.3],
+                  data: [94.2, 98.5, 100, 89.3],
                   backgroundColor: [
-                    'hsla(142, 76%, 36%, 0.7)',
                     'hsla(142, 76%, 36%, 0.7)',
                     'hsla(142, 76%, 36%, 0.7)',
                     'hsla(142, 76%, 36%, 0.7)',
                     'hsla(45, 93%, 47%, 0.7)',
                   ],
                   borderColor: [
-                    'hsl(142, 76%, 36%)',
                     'hsl(142, 76%, 36%)',
                     'hsl(142, 76%, 36%)',
                     'hsl(142, 76%, 36%)',
