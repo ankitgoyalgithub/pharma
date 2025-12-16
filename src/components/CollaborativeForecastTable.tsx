@@ -10,26 +10,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare, Maximize, Minimize, CheckCircle2, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { toast } from "sonner";
 
-// Import product images
-import product1 from "@/assets/product-1.webp";
-import product2 from "@/assets/product-2.webp";
-import product3 from "@/assets/product-3.webp";
-import product4 from "@/assets/product-4.webp";
-import product5 from "@/assets/product-5.webp";
-import product6 from "@/assets/product-6.webp";
-import product7 from "@/assets/product-7.webp";
-import product8 from "@/assets/product-8.webp";
-
-const productImages = [product1, product2, product3, product4, product5, product6, product7, product8];
 
 interface ForecastRow {
   id: string;
   sku: string;
   productName: string;
-  imageUrl: string;
   node: string;
   channel: "Online" | "Retail" | "B2B" | "Direct";
   owner: string;
@@ -136,7 +123,6 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   const channel = channels[index % 4];
   const owner = plannerNames[index % plannerNames.length];
   const approver = approverNames[index % approverNames.length];
-  const imageUrl = productImages[index % productImages.length];
   
   // Generate 12 weeks of forecast data
   const weeks: { [key: string]: { forecast: number; plannerInput?: number; reason?: string } } = {};
@@ -177,7 +163,6 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
     id: String(index + 1),
     sku: sku.sku,
     productName: sku.name,
-    imageUrl,
     node: pharmaNodes[nodeIndex],
     channel,
     owner,
@@ -440,9 +425,6 @@ export const CollaborativeForecastTable: React.FC = () => {
                         aria-label="Select all rows"
                       />
                     </th>
-                    <th className="text-center p-3 w-[60px]">
-                      Image
-                    </th>
                     <th className="text-left p-3 cursor-pointer hover:bg-muted w-[100px]" onClick={() => sortBy("sku")}>
                       SKU
                     </th>
@@ -473,30 +455,6 @@ export const CollaborativeForecastTable: React.FC = () => {
                             onChange={(e) => toggleOne(r.id, e.target.checked)}
                             aria-label={`Select row for ${r.sku}`}
                           />
-                        </td>
-                        <td className="p-2">
-                          <HoverCard openDelay={200} closeDelay={100}>
-                            <HoverCardTrigger asChild>
-                              <img 
-                                src={r.imageUrl} 
-                                alt={r.productName}
-                                className="w-10 h-10 object-cover rounded-md border border-border cursor-pointer transition-transform hover:scale-105"
-                              />
-                            </HoverCardTrigger>
-                            <HoverCardContent side="right" align="start" className="w-64 p-2">
-                              <div className="space-y-2">
-                                <img 
-                                  src={r.imageUrl} 
-                                  alt={r.productName}
-                                  className="w-full h-auto rounded-md object-cover"
-                                />
-                                <div className="text-center">
-                                  <p className="text-sm font-medium">{r.productName}</p>
-                                  <p className="text-xs text-muted-foreground">{r.sku}</p>
-                                </div>
-                              </div>
-                            </HoverCardContent>
-                          </HoverCard>
                         </td>
                         <td className="p-3 font-medium text-xs">{r.sku}</td>
                         <td className="p-3">
