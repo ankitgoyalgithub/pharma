@@ -98,13 +98,15 @@ ChartJS.register(
   Title
 );
 
-// Sample AI responses
+// Sample AI responses - Pharma context
 const sampleAiResponses = [
-  "Based on current inventory levels, I recommend increasing safety stock for Widget A by 15% to maintain 95% service level during peak season.",
-  "Analysis shows that Lead Time variability is impacting stockout risk. Consider negotiating shorter lead times with suppliers or adding buffer stock.",
-  "The current reorder point for SKU002 appears too low. Increasing it by 10% would reduce stockout probability by 23%.",
-  "Cost optimization suggests consolidating orders for Component B to reduce ordering costs while maintaining service levels.",
-  "Inventory turnover rate is below target. Consider implementing more frequent reviews for slow-moving SKUs.",
+  "ORS Sachet (SKU006) at DC_WEST is critically below safety stock. With monsoon season approaching, recommend emergency replenishment of 32,000 units to prevent stockouts during peak diarrheal illness period.",
+  "Insulin Glargine (SKU004) requires cold chain capacity verification at DEP_EAST before any stock transfer. Current cold storage utilization at 92% - consider temporary cold chain rental.",
+  "Batch B52280 of Salbutamol Inhaler expires May 2025. Recommend promotional push to hospital pharmacies or transfer to higher-velocity nodes to minimize write-off risk.",
+  "Lead time variability from Hyderabad Injectables Plant to DC_NCR ranges 1-7 days. For critical injectables, recommend maintaining additional 3-day buffer stock.",
+  "Vitamin D3 (SKU008) at DEP_EAST is 41% below reorder point. East region shows consistent demand - expedite order of 15,000 units before next review cycle.",
+  "Ceftriaxone demand forecast indicates 18% surge in Q3 aligned with monsoon infection patterns. Pre-position additional stock at DC_NCR and DC_SOUTH.",
+  "Pantoprazole and ORS show correlated demand patterns in GI therapy area. Consider bundled replenishment to optimize ordering costs.",
 ];
 
 // Network Diagram Types
@@ -349,26 +351,32 @@ const InventoryOptimization = () => {
     toast.success("Upsynq link copied to clipboard!");
   };
 
-  // Sample data for workbook, policies, gaps
+  // Sample data for workbook, policies, gaps - Pharma context
   const workbookData = [
-    { sku: "SKU001", location: "Delhi FC", onHand: 520, onOrder: 200, backorder: 0, leadTime: 12, demandMean: 45, demandStd: 18 },
-    { sku: "SKU002", location: "Mumbai FC", onHand: 140, onOrder: 80, backorder: 10, leadTime: 18, demandMean: 22, demandStd: 9 },
-    { sku: "SKU003", location: "Bengaluru FC", onHand: 60, onOrder: 0, backorder: 5, leadTime: 25, demandMean: 15, demandStd: 15 },
+    { sku: "SKU001", product: "Paracetamol 500mg Tablet", location: "DC_NCR", onHand: 5214, onOrder: 1500, backorder: 0, leadTime: 7, demandMean: 285, demandStd: 43, therapyArea: "Analgesic" },
+    { sku: "SKU004", product: "Insulin Glargine Pen", location: "DC_NCR", onHand: 2934, onOrder: 500, backorder: 0, leadTime: 7, demandMean: 145, demandStd: 17, therapyArea: "Diabetes" },
+    { sku: "SKU006", product: "ORS Sachet 21g", location: "DC_WEST", onHand: 1502, onOrder: 0, backorder: 850, leadTime: 30, demandMean: 320, demandStd: 112, therapyArea: "GI" },
+    { sku: "SKU007", product: "Salbutamol Inhaler", location: "DC_SOUTH", onHand: 4975, onOrder: 1500, backorder: 0, leadTime: 7, demandMean: 228, demandStd: 57, therapyArea: "Respiratory" },
+    { sku: "SKU009", product: "Ceftriaxone 1g Injection", location: "DC_NCR", onHand: 4438, onOrder: 1000, backorder: 0, leadTime: 7, demandMean: 298, demandStd: 42, therapyArea: "Antibiotic" },
   ];
 
   const policyRows = [
-    { sku: "SKU001", abc: "A", service: 95, reorderPoint: 700, safetyStock: 220, orderQty: 500, policy: "Min/Max 700-1200" },
-    { sku: "SKU002", abc: "B", service: 92, reorderPoint: 330, safetyStock: 150, orderQty: 300, policy: "EOQ 300" },
-    { sku: "SKU003", abc: "C", service: 85, reorderPoint: 190, safetyStock: 140, orderQty: 200, policy: "Review-Period 2W" },
+    { sku: "SKU001", product: "Paracetamol 500mg", abc: "A", service: 94, reorderPoint: 3967, safetyStock: 3967, orderQty: 1500, policy: "Min/Max 3967-9774", therapyArea: "Analgesic" },
+    { sku: "SKU004", product: "Insulin Glargine", abc: "A", service: 96, reorderPoint: 2025, safetyStock: 2025, orderQty: 500, policy: "Min/Max 2025-4626", therapyArea: "Diabetes" },
+    { sku: "SKU006", product: "ORS Sachet", abc: "A", service: 96, reorderPoint: 4071, safetyStock: 4071, orderQty: 1000, policy: "Min/Max 4071-9012", therapyArea: "GI" },
+    { sku: "SKU009", product: "Ceftriaxone 1g", abc: "A", service: 97, reorderPoint: 4438, safetyStock: 4438, orderQty: 1000, policy: "Min/Max 4438-9525", therapyArea: "Antibiotic" },
+    { sku: "SKU002", product: "Azithromycin 500mg", abc: "B", service: 94, reorderPoint: 1558, safetyStock: 1558, orderQty: 1500, policy: "Min/Max 1558-6787", therapyArea: "Antibiotic" },
+    { sku: "SKU003", product: "Cetirizine 10mg", abc: "B", service: 95, reorderPoint: 4226, safetyStock: 4226, orderQty: 1500, policy: "Min/Max 4226-7676", therapyArea: "Allergy" },
+    { sku: "SKU010", product: "Pantoprazole 40mg", abc: "B", service: 94, reorderPoint: 4319, safetyStock: 4319, orderQty: 1500, policy: "Min/Max 4319-9132", therapyArea: "GI" },
   ];
 
   const gapData = [
-    { bucket: "Service Gap (by ABC)", issues: 7 },
-    { bucket: "Lead Time Variability", issues: 5 },
-    { bucket: "Supplier Reliability", issues: 3 },
-    { bucket: "Dead/Slow Movers", issues: 6 },
-    { bucket: "Overstock Hotspots", issues: 4 },
-    { bucket: "Stockout Hotspots", issues: 2 },
+    { bucket: "Below Safety Stock", issues: 3 },
+    { bucket: "Near Expiry (< 90 days)", issues: 5 },
+    { bucket: "Lead Time Variance", issues: 4 },
+    { bucket: "Cold Chain Gap", issues: 1 },
+    { bucket: "Overstock (> Max)", issues: 2 },
+    { bucket: "Policy Mismatch", issues: 2 },
   ];
 
   const gapsBarData = {
@@ -1146,9 +1154,9 @@ const InventoryOptimization = () => {
             <div className="flex justify-center">
               <ForecastCard
                 title="Inventory Snapshot"
-                value="96.5%"
-                subtitle={`Fill Rate • ₹4.2Cr Capital • 37 Stockouts Avoided
-                          5 Locations • 82 SKUs • Optimized`}
+                value="96.4%"
+                subtitle={`Fill Rate • ₹8.6Cr Stock Value • 17 Stockouts Avoided
+                          4 DCs • 10 SKUs • Pharma Optimized`}
                 icon={TrendingUp}
                 isActive={selectedScenario === null && activeTab === "overview"}
                 onClick={() => {
@@ -1160,10 +1168,10 @@ const InventoryOptimization = () => {
 
             <div className="flex justify-center">
               <ForecastCard
-                title="Policy Insights"
-                value="65%"
-                subtitle={`Class A items, Safety stock optimized
-                          Reorder points adjusted`}
+                title="Therapy Area Insights"
+                value="7"
+                subtitle={`Therapy areas tracked, Antibiotics lead
+                          GI highest stockout risk`}
                 icon={BarChart3}
                 isActive={selectedScenario === null && activeTab === "policies"}
                 onClick={() => {
@@ -1175,10 +1183,10 @@ const InventoryOptimization = () => {
 
             <div className="flex justify-center">
               <ForecastCard
-                title="Capital Impact"
-                value="₹4.2Cr"
+                title="Capital & Expiry Risk"
+                value="₹8.6Cr"
                 subtitle={`Working capital tied up
-                          14% carrying cost`}
+                          ₹32L near-expiry stock identified`}
                 icon={Wallet}
                 isActive={selectedScenario === null && activeTab === "capital"}
                 onClick={() => {
@@ -1190,10 +1198,10 @@ const InventoryOptimization = () => {
 
             <div className="flex justify-center">
               <ForecastCard
-                title="Policy Workbook"
-                value="Data Table"
-                subtitle={`Optimized reorder points
-                          Safety stock levels`}
+                title="Replenishment Workbook"
+                value="10 SKUs"
+                subtitle={`MIN-MAX policies optimized
+                          Cold chain requirements flagged`}
                 icon={Package}
                 isActive={selectedScenario === null && activeTab === "workbook"}
                 onClick={() => {
@@ -1206,8 +1214,8 @@ const InventoryOptimization = () => {
             <div className="flex justify-center">
               <ForecastCard
                 title="Data Quality Review"
-                value="98.1%"
-                subtitle="Completeness score, 2 missing values imputed. AI-enhanced integrity verified."
+                value="94.2%"
+                subtitle="Completeness score, 8 batch expiry gaps fixed. Cold chain compliance verified."
                 icon={Shield}
                 isActive={selectedScenario === null && activeTab === "quality"}
                 onClick={() => {
@@ -2183,8 +2191,10 @@ const InventoryOptimization = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Products</SelectItem>
-                        <SelectItem value="widget-a">Widget A</SelectItem>
-                        <SelectItem value="component-b">Component B</SelectItem>
+                        <SelectItem value="sku001">Paracetamol 500mg</SelectItem>
+                        <SelectItem value="sku004">Insulin Glargine</SelectItem>
+                        <SelectItem value="sku006">ORS Sachet</SelectItem>
+                        <SelectItem value="sku009">Ceftriaxone 1g</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -2197,8 +2207,10 @@ const InventoryOptimization = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Locations</SelectItem>
-                        <SelectItem value="delhi">Delhi FC</SelectItem>
-                        <SelectItem value="mumbai">Mumbai FC</SelectItem>
+                        <SelectItem value="dc_ncr">NCR Distribution Center</SelectItem>
+                        <SelectItem value="dc_west">West Distribution Center</SelectItem>
+                        <SelectItem value="dc_south">South Distribution Center</SelectItem>
+                        <SelectItem value="dep_east">East Depot</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
