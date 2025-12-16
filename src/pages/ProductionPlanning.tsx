@@ -55,9 +55,6 @@ import { useStepper } from "@/hooks/useStepper";
 import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
-import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
-import { ExternalDriversSection } from "@/components/ExternalDriversSection";
-
 // --- Chart.js for utilization / summary charts ---
 import {
   Chart as ChartJS,
@@ -187,82 +184,79 @@ function PlanningWorkbook({ rows, height }) {
   );
 }
 
-/** Seeded production plan rows (drive both workbook + timeline) */
+/** Pharma Production Plan - Operations based on uploaded routing and capacity data */
 const planOps = [
-  // WO-1001
-  { order:"WO-1001", product:"Prod-A", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:1200, setupHrs:0.5, runHrs:8, start:"2025-08-01", end:"2025-08-02", due:"2025-08-08", priority:"High",   status:"In Progress", dependsOn:null },
-  { order:"WO-1001", product:"Prod-A", opSeq:20, operation:"Machining", workCenter:"Machining", qty:1200, setupHrs:0.5, runHrs:6, start:"2025-08-02", end:"2025-08-03", due:"2025-08-08", priority:"High",   status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1001", product:"Prod-A", opSeq:30, operation:"Assembly",  workCenter:"Assembly",  qty:1200, setupHrs:1.0, runHrs:16,start:"2025-08-03", end:"2025-08-05", due:"2025-08-08", priority:"High",   status:"Planned",     dependsOn:"Machining" },
-  { order:"WO-1001", product:"Prod-A", opSeq:40, operation:"Painting",  workCenter:"Painting",  qty:1200, setupHrs:0.3, runHrs:8, start:"2025-08-05", end:"2025-08-06", due:"2025-08-08", priority:"High",   status:"Planned",     dependsOn:"Assembly" },
-  { order:"WO-1001", product:"Prod-A", opSeq:50, operation:"QC",        workCenter:"QC",        qty:1200, setupHrs:0.1, runHrs:4, start:"2025-08-06", end:"2025-08-07", due:"2025-08-08", priority:"High",   status:"Planned",     dependsOn:"Painting" },
-  { order:"WO-1001", product:"Prod-A", opSeq:60, operation:"Packaging", workCenter:"Packaging", qty:1200, setupHrs:0.2, runHrs:4, start:"2025-08-07", end:"2025-08-08", due:"2025-08-08", priority:"High",   status:"Planned",     dependsOn:"QC" },
+  // Batch-001: Paracetamol 500mg - Bhiwadi Tablets Line
+  { order:"BATCH-001", product:"Paracetamol 500mg", opSeq:10, operation:"Granulation",   workCenter:"Granulation",   qty:120000, setupHrs:2.0, runHrs:8, start:"2025-01-06", end:"2025-01-06", due:"2025-01-12", priority:"High",   status:"In Progress", dependsOn:null },
+  { order:"BATCH-001", product:"Paracetamol 500mg", opSeq:20, operation:"Compression", workCenter:"Tablet Press", qty:120000, setupHrs:2.0, runHrs:10, start:"2025-01-07", end:"2025-01-07", due:"2025-01-12", priority:"High",   status:"Planned",     dependsOn:"Granulation" },
+  { order:"BATCH-001", product:"Paracetamol 500mg", opSeq:30, operation:"Coating",  workCenter:"Coating",  qty:120000, setupHrs:1.5, runHrs:6, start:"2025-01-08", end:"2025-01-08", due:"2025-01-12", priority:"High",   status:"Planned",     dependsOn:"Compression" },
+  { order:"BATCH-001", product:"Paracetamol 500mg", opSeq:40, operation:"QC Testing",  workCenter:"QC Lab",  qty:120000, setupHrs:0.5, runHrs:4, start:"2025-01-09", end:"2025-01-09", due:"2025-01-12", priority:"High",   status:"Planned",     dependsOn:"Coating" },
+  { order:"BATCH-001", product:"Paracetamol 500mg", opSeq:50, operation:"Packaging", workCenter:"Blister Pack", qty:120000, setupHrs:1.0, runHrs:8, start:"2025-01-10", end:"2025-01-10", due:"2025-01-12", priority:"High",   status:"Planned",     dependsOn:"QC Testing" },
 
-  // WO-1002
-  { order:"WO-1002", product:"Prod-B", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:800,  setupHrs:0.4, runHrs:6, start:"2025-08-04", end:"2025-08-05", due:"2025-08-14", priority:"Medium", status:"Planned",     dependsOn:null },
-  { order:"WO-1002", product:"Prod-B", opSeq:20, operation:"Machining", workCenter:"Machining", qty:800,  setupHrs:0.4, runHrs:6, start:"2025-08-05", end:"2025-08-06", due:"2025-08-14", priority:"Medium", status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1002", product:"Prod-B", opSeq:30, operation:"Assembly",  workCenter:"Assembly",  qty:800,  setupHrs:0.6, runHrs:24,start:"2025-08-06", end:"2025-08-09", due:"2025-08-14", priority:"Medium", status:"Risk",        dependsOn:"Machining" },
-  { order:"WO-1002", product:"Prod-B", opSeq:40, operation:"QC",        workCenter:"QC",        qty:800,  setupHrs:0.1, runHrs:4, start:"2025-08-09", end:"2025-08-10", due:"2025-08-14", priority:"Medium", status:"Planned",     dependsOn:"Assembly" },
-  { order:"WO-1002", product:"Prod-B", opSeq:50, operation:"Packaging", workCenter:"Packaging", qty:800,  setupHrs:0.2, runHrs:6, start:"2025-08-10", end:"2025-08-11", due:"2025-08-14", priority:"Medium", status:"Planned",     dependsOn:"QC" },
+  // Batch-002: Azithromycin 500mg - Bhiwadi Tablets Line  
+  { order:"BATCH-002", product:"Azithromycin 500mg", opSeq:10, operation:"Granulation",   workCenter:"Granulation",   qty:90000,  setupHrs:2.5, runHrs:10, start:"2025-01-08", end:"2025-01-08", due:"2025-01-15", priority:"High", status:"Planned",     dependsOn:null },
+  { order:"BATCH-002", product:"Azithromycin 500mg", opSeq:20, operation:"Compression", workCenter:"Tablet Press", qty:90000,  setupHrs:2.5, runHrs:10, start:"2025-01-09", end:"2025-01-09", due:"2025-01-15", priority:"High", status:"Planned",     dependsOn:"Granulation" },
+  { order:"BATCH-002", product:"Azithromycin 500mg", opSeq:30, operation:"Coating",  workCenter:"Coating",  qty:90000,  setupHrs:1.5, runHrs:6, start:"2025-01-10", end:"2025-01-10", due:"2025-01-15", priority:"High",   status:"Planned",     dependsOn:"Compression" },
+  { order:"BATCH-002", product:"Azithromycin 500mg", opSeq:40, operation:"QC Testing",        workCenter:"QC Lab",        qty:90000,  setupHrs:0.5, runHrs:6, start:"2025-01-11", end:"2025-01-11", due:"2025-01-15", priority:"High", status:"Planned",     dependsOn:"Coating" },
+  { order:"BATCH-002", product:"Azithromycin 500mg", opSeq:50, operation:"Packaging", workCenter:"Blister Pack", qty:90000,  setupHrs:1.0, runHrs:6, start:"2025-01-13", end:"2025-01-13", due:"2025-01-15", priority:"High", status:"Planned",     dependsOn:"QC Testing" },
 
-  // WO-1003
-  { order:"WO-1003", product:"Prod-C", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:600,  setupHrs:0.3, runHrs:5, start:"2025-08-02", end:"2025-08-03", due:"2025-08-12", priority:"Low",    status:"Done",        dependsOn:null },
-  { order:"WO-1003", product:"Prod-C", opSeq:20, operation:"Assembly",  workCenter:"Assembly",  qty:600,  setupHrs:0.5, runHrs:12,start:"2025-08-03", end:"2025-08-04", due:"2025-08-12", priority:"Low",    status:"In Progress", dependsOn:"Cutting" },
-  { order:"WO-1003", product:"Prod-C", opSeq:30, operation:"QC",        workCenter:"QC",        qty:600,  setupHrs:0.1, runHrs:3, start:"2025-08-04", end:"2025-08-05", due:"2025-08-12", priority:"Low",    status:"Planned",     dependsOn:"Assembly" },
-  { order:"WO-1003", product:"Prod-C", opSeq:40, operation:"Packaging", workCenter:"Packaging", qty:600,  setupHrs:0.2, runHrs:4, start:"2025-08-05", end:"2025-08-06", due:"2025-08-12", priority:"Low",    status:"Planned",     dependsOn:"QC" },
+  // Batch-003: Cetirizine 10mg - Bhiwadi Tablets Line
+  { order:"BATCH-003", product:"Cetirizine 10mg", opSeq:10, operation:"Granulation",   workCenter:"Granulation",   qty:140000,  setupHrs:1.5, runHrs:6, start:"2025-01-06", end:"2025-01-06", due:"2025-01-13", priority:"Medium",    status:"Done",        dependsOn:null },
+  { order:"BATCH-003", product:"Cetirizine 10mg", opSeq:20, operation:"Compression",  workCenter:"Tablet Press",  qty:140000,  setupHrs:1.5, runHrs:10, start:"2025-01-07", end:"2025-01-07", due:"2025-01-13", priority:"Medium",    status:"In Progress", dependsOn:"Granulation" },
+  { order:"BATCH-003", product:"Cetirizine 10mg", opSeq:30, operation:"QC Testing",        workCenter:"QC Lab",        qty:140000,  setupHrs:0.5, runHrs:4, start:"2025-01-08", end:"2025-01-08", due:"2025-01-13", priority:"Medium",    status:"Planned",     dependsOn:"Compression" },
+  { order:"BATCH-003", product:"Cetirizine 10mg", opSeq:40, operation:"Packaging", workCenter:"Blister Pack", qty:140000,  setupHrs:1.0, runHrs:6, start:"2025-01-09", end:"2025-01-09", due:"2025-01-13", priority:"Medium",    status:"Planned",     dependsOn:"QC Testing" },
 
-  // WO-1004
-  { order:"WO-1004", product:"Prod-D", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:1500, setupHrs:0.6, runHrs:10,start:"2025-08-06", end:"2025-08-07", due:"2025-08-18", priority:"High",   status:"Planned",     dependsOn:null },
-  { order:"WO-1004", product:"Prod-D", opSeq:20, operation:"Machining", workCenter:"Machining", qty:1500, setupHrs:0.6, runHrs:10,start:"2025-08-07", end:"2025-08-08", due:"2025-08-18", priority:"High",   status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1004", product:"Prod-D", opSeq:30, operation:"Assembly",  workCenter:"Assembly",  qty:1500, setupHrs:0.8, runHrs:24,start:"2025-08-08", end:"2025-08-11", due:"2025-08-18", priority:"High",   status:"Planned",     dependsOn:"Machining" },
-  { order:"WO-1004", product:"Prod-D", opSeq:40, operation:"Painting",  workCenter:"Painting",  qty:1500, setupHrs:0.4, runHrs:12,start:"2025-08-11", end:"2025-08-12", due:"2025-08-18", priority:"High",   status:"Planned",     dependsOn:"Assembly" },
-  { order:"WO-1004", product:"Prod-D", opSeq:50, operation:"QC",        workCenter:"QC",        qty:1500, setupHrs:0.2, runHrs:6, start:"2025-08-12", end:"2025-08-13", due:"2025-08-18", priority:"High",   status:"Planned",     dependsOn:"Painting" },
-  { order:"WO-1004", product:"Prod-D", opSeq:60, operation:"Packaging", workCenter:"Packaging", qty:1500, setupHrs:0.3, runHrs:8, start:"2025-08-13", end:"2025-08-14", due:"2025-08-18", priority:"High",   status:"Planned",     dependsOn:"QC" },
+  // Batch-004: Insulin Glargine - Hyderabad Injectables Line
+  { order:"BATCH-004", product:"Insulin Glargine 100U", opSeq:10, operation:"Formulation",   workCenter:"Sterile Formulation",   qty:35000, setupHrs:4.0, runHrs:12, start:"2025-01-06", end:"2025-01-07", due:"2025-01-14", priority:"High",   status:"In Progress",     dependsOn:null },
+  { order:"BATCH-004", product:"Insulin Glargine 100U", opSeq:20, operation:"Filling", workCenter:"Aseptic Filling", qty:35000, setupHrs:3.5, runHrs:14, start:"2025-01-08", end:"2025-01-09", due:"2025-01-14", priority:"High",   status:"Planned",     dependsOn:"Formulation" },
+  { order:"BATCH-004", product:"Insulin Glargine 100U", opSeq:30, operation:"Inspection",  workCenter:"Visual Inspection",  qty:35000, setupHrs:1.0, runHrs:8, start:"2025-01-10", end:"2025-01-10", due:"2025-01-14", priority:"High",   status:"Risk",     dependsOn:"Filling" },
+  { order:"BATCH-004", product:"Insulin Glargine 100U", opSeq:40, operation:"Labeling",  workCenter:"Labeling",  qty:35000, setupHrs:1.0, runHrs:6, start:"2025-01-11", end:"2025-01-11", due:"2025-01-14", priority:"High",   status:"Planned",     dependsOn:"Inspection" },
+  { order:"BATCH-004", product:"Insulin Glargine 100U", opSeq:50, operation:"QC Release",        workCenter:"QC Lab",        qty:35000, setupHrs:0.5, runHrs:8, start:"2025-01-12", end:"2025-01-12", due:"2025-01-14", priority:"High",   status:"Planned",     dependsOn:"Labeling" },
+  { order:"BATCH-004", product:"Insulin Glargine 100U", opSeq:60, operation:"Cold Storage", workCenter:"Cold Chain", qty:35000, setupHrs:0.5, runHrs:4, start:"2025-01-13", end:"2025-01-13", due:"2025-01-14", priority:"High",   status:"Planned",     dependsOn:"QC Release" },
 
-  // WO-1005
-  { order:"WO-1005", product:"Prod-E", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:500,  setupHrs:0.2, runHrs:4, start:"2025-08-07", end:"2025-08-07", due:"2025-08-15", priority:"Low",    status:"Planned",     dependsOn:null },
-  { order:"WO-1005", product:"Prod-E", opSeq:20, operation:"Assembly",  workCenter:"Assembly",  qty:500,  setupHrs:0.4, runHrs:8, start:"2025-08-08", end:"2025-08-09", due:"2025-08-15", priority:"Low",    status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1005", product:"Prod-E", opSeq:30, operation:"QC",        workCenter:"QC",        qty:500,  setupHrs:0.1, runHrs:2, start:"2025-08-09", end:"2025-08-10", due:"2025-08-15", priority:"Low",    status:"Planned",     dependsOn:"Assembly" },
+  // Batch-005: Ceftriaxone 1g Injection - Hyderabad Injectables Line
+  { order:"BATCH-005", product:"Ceftriaxone 1g Inj", opSeq:10, operation:"Formulation",   workCenter:"Sterile Formulation",   qty:50000,  setupHrs:3.5, runHrs:10, start:"2025-01-07", end:"2025-01-07", due:"2025-01-16", priority:"Medium",    status:"Planned",     dependsOn:null },
+  { order:"BATCH-005", product:"Ceftriaxone 1g Inj", opSeq:20, operation:"Filling",  workCenter:"Aseptic Filling",  qty:50000,  setupHrs:3.5, runHrs:12, start:"2025-01-08", end:"2025-01-09", due:"2025-01-16", priority:"Medium",    status:"Planned",     dependsOn:"Formulation" },
+  { order:"BATCH-005", product:"Ceftriaxone 1g Inj", opSeq:30, operation:"Lyophilization",        workCenter:"Lyophilizer",        qty:50000,  setupHrs:2.0, runHrs:24, start:"2025-01-10", end:"2025-01-11", due:"2025-01-16", priority:"Medium",    status:"Planned",     dependsOn:"Filling" },
+  { order:"BATCH-005", product:"Ceftriaxone 1g Inj", opSeq:40, operation:"Capping", workCenter:"Vial Capping", qty:50000, setupHrs:1.0, runHrs:6, start:"2025-01-12", end:"2025-01-12", due:"2025-01-16", priority:"Medium",    status:"Planned",     dependsOn:"Lyophilization" },
+  { order:"BATCH-005", product:"Ceftriaxone 1g Inj", opSeq:50, operation:"QC Release", workCenter:"QC Lab", qty:50000, setupHrs:0.5, runHrs:8, start:"2025-01-13", end:"2025-01-13", due:"2025-01-16", priority:"Medium",    status:"Planned",     dependsOn:"Capping" },
 
-  // WO-1006
-  { order:"WO-1006", product:"Prod-F", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:900,  setupHrs:0.3, runHrs:6, start:"2025-08-09", end:"2025-08-10", due:"2025-08-20", priority:"Medium", status:"Planned",     dependsOn:null },
-  { order:"WO-1006", product:"Prod-F", opSeq:20, operation:"Machining", workCenter:"Machining", qty:900,  setupHrs:0.5, runHrs:7, start:"2025-08-10", end:"2025-08-11", due:"2025-08-20", priority:"Medium", status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1006", product:"Prod-F", opSeq:30, operation:"Assembly",  workCenter:"Assembly",  qty:900,  setupHrs:0.6, runHrs:18,start:"2025-08-11", end:"2025-08-13", due:"2025-08-20", priority:"Medium", status:"Planned",     dependsOn:"Machining" },
-  { order:"WO-1006", product:"Prod-F", opSeq:40, operation:"Packaging", workCenter:"Packaging", qty:900,  setupHrs:0.2, runHrs:5, start:"2025-08-13", end:"2025-08-14", due:"2025-08-20", priority:"Medium", status:"Planned",     dependsOn:"Assembly" },
+  // Batch-006: Pantoprazole 40mg - Bhiwadi Tablets Line
+  { order:"BATCH-006", product:"Pantoprazole 40mg", opSeq:10, operation:"Granulation",   workCenter:"Granulation",   qty:110000,  setupHrs:2.0, runHrs:8, start:"2025-01-10", end:"2025-01-10", due:"2025-01-18", priority:"Medium", status:"Planned",     dependsOn:null },
+  { order:"BATCH-006", product:"Pantoprazole 40mg", opSeq:20, operation:"Compression", workCenter:"Tablet Press", qty:110000,  setupHrs:2.0, runHrs:10, start:"2025-01-11", end:"2025-01-11", due:"2025-01-18", priority:"Medium", status:"Planned",     dependsOn:"Granulation" },
+  { order:"BATCH-006", product:"Pantoprazole 40mg", opSeq:30, operation:"Enteric Coating",  workCenter:"Coating",  qty:110000,  setupHrs:2.0, runHrs:8, start:"2025-01-13", end:"2025-01-13", due:"2025-01-18", priority:"Medium", status:"Planned",     dependsOn:"Compression" },
+  { order:"BATCH-006", product:"Pantoprazole 40mg", opSeq:40, operation:"QC Testing", workCenter:"QC Lab", qty:110000,  setupHrs:0.5, runHrs:6, start:"2025-01-14", end:"2025-01-14", due:"2025-01-18", priority:"Medium", status:"Planned",     dependsOn:"Enteric Coating" },
+  { order:"BATCH-006", product:"Pantoprazole 40mg", opSeq:50, operation:"Packaging", workCenter:"Blister Pack", qty:110000,  setupHrs:1.0, runHrs:8, start:"2025-01-15", end:"2025-01-15", due:"2025-01-18", priority:"Medium", status:"Planned",     dependsOn:"QC Testing" },
 
-  // WO-1007
-  { order:"WO-1007", product:"Prod-G", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:1100, setupHrs:0.5, runHrs:8, start:"2025-08-11", end:"2025-08-12", due:"2025-08-23", priority:"High",   status:"Planned",     dependsOn:null },
-  { order:"WO-1007", product:"Prod-G", opSeq:20, operation:"Assembly",  workCenter:"Assembly",  qty:1100, setupHrs:0.7, runHrs:20,start:"2025-08-12", end:"2025-08-14", due:"2025-08-23", priority:"High",   status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1007", product:"Prod-G", opSeq:30, operation:"Painting",  workCenter:"Painting",  qty:1100, setupHrs:0.3, runHrs:10,start:"2025-08-14", end:"2025-08-15", due:"2025-08-23", priority:"High",   status:"Planned",     dependsOn:"Assembly" },
-  { order:"WO-1007", product:"Prod-G", opSeq:40, operation:"QC",        workCenter:"QC",        qty:1100, setupHrs:0.2, runHrs:5, start:"2025-08-15", end:"2025-08-16", due:"2025-08-23", priority:"High",   status:"Planned",     dependsOn:"Painting" },
+  // Batch-007: Amoxicillin 500mg - Bhiwadi Tablets Line
+  { order:"BATCH-007", product:"Amoxicillin 500mg", opSeq:10, operation:"Granulation",   workCenter:"Granulation",   qty:80000, setupHrs:3.0, runHrs:10, start:"2025-01-12", end:"2025-01-12", due:"2025-01-20", priority:"High",   status:"Planned",     dependsOn:null },
+  { order:"BATCH-007", product:"Amoxicillin 500mg", opSeq:20, operation:"Encapsulation",  workCenter:"Capsule Filler",  qty:80000, setupHrs:2.0, runHrs:12, start:"2025-01-13", end:"2025-01-14", due:"2025-01-20", priority:"High",   status:"Planned",     dependsOn:"Granulation" },
+  { order:"BATCH-007", product:"Amoxicillin 500mg", opSeq:30, operation:"QC Testing",  workCenter:"QC Lab",  qty:80000, setupHrs:0.5, runHrs:6, start:"2025-01-15", end:"2025-01-15", due:"2025-01-20", priority:"High",   status:"Planned",     dependsOn:"Encapsulation" },
+  { order:"BATCH-007", product:"Amoxicillin 500mg", opSeq:40, operation:"Packaging",        workCenter:"Blister Pack",        qty:80000, setupHrs:1.0, runHrs:6, start:"2025-01-16", end:"2025-01-16", due:"2025-01-20", priority:"High",   status:"Planned",     dependsOn:"QC Testing" },
 
-  // WO-1008
-  { order:"WO-1008", product:"Prod-H", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:700,  setupHrs:0.3, runHrs:5, start:"2025-08-12", end:"2025-08-13", due:"2025-08-24", priority:"Low",    status:"Planned",     dependsOn:null },
-  { order:"WO-1008", product:"Prod-H", opSeq:20, operation:"Machining", workCenter:"Machining", qty:700,  setupHrs:0.4, runHrs:6, start:"2025-08-13", end:"2025-08-14", due:"2025-08-24", priority:"Low",    status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1008", product:"Prod-H", opSeq:30, operation:"Assembly",  workCenter:"Assembly",  qty:700,  setupHrs:0.5, runHrs:14,start:"2025-08-14", end:"2025-08-16", due:"2025-08-24", priority:"Low",    status:"Planned",     dependsOn:"Machining" },
-  { order:"WO-1008", product:"Prod-H", opSeq:40, operation:"Packaging", workCenter:"Packaging", qty:700,  setupHrs:0.2, runHrs:4, start:"2025-08-16", end:"2025-08-17", due:"2025-08-24", priority:"Low",    status:"Planned",     dependsOn:"Assembly" },
-
-  // WO-1009
-  { order:"WO-1009", product:"Prod-I", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:950,  setupHrs:0.4, runHrs:7, start:"2025-08-14", end:"2025-08-15", due:"2025-08-27", priority:"Medium", status:"Planned",     dependsOn:null },
-  { order:"WO-1009", product:"Prod-I", opSeq:20, operation:"Assembly",  workCenter:"Assembly",  qty:950,  setupHrs:0.6, runHrs:18,start:"2025-08-15", end:"2025-08-17", due:"2025-08-27", priority:"Medium", status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1009", product:"Prod-I", opSeq:30, operation:"QC",        workCenter:"QC",        qty:950,  setupHrs:0.2, runHrs:5, start:"2025-08-17", end:"2025-08-18", due:"2025-08-27", priority:"Medium", status:"Planned",     dependsOn:"Assembly" },
-
-  // WO-1010
-  { order:"WO-1010", product:"Prod-J", opSeq:10, operation:"Cutting",   workCenter:"Cutting",   qty:1050, setupHrs:0.5, runHrs:8, start:"2025-08-16", end:"2025-08-17", due:"2025-08-30", priority:"High",   status:"Planned",     dependsOn:null },
-  { order:"WO-1010", product:"Prod-J", opSeq:20, operation:"Machining", workCenter:"Machining", qty:1050, setupHrs:0.6, runHrs:8, start:"2025-08-17", end:"2025-08-18", due:"2025-08-30", priority:"High",   status:"Planned",     dependsOn:"Cutting" },
-  { order:"WO-1010", product:"Prod-J", opSeq:30, operation:"Assembly",  workCenter:"Assembly",  qty:1050, setupHrs:0.7, runHrs:22,start:"2025-08-18", end:"2025-08-20", due:"2025-08-30", priority:"High",   status:"Planned",     dependsOn:"Machining" },
-  { order:"WO-1010", product:"Prod-J", opSeq:40, operation:"Painting",  workCenter:"Painting",  qty:1050, setupHrs:0.3, runHrs:10,start:"2025-08-20", end:"2025-08-21", due:"2025-08-30", priority:"High",   status:"Planned",     dependsOn:"Assembly" },
-  { order:"WO-1010", product:"Prod-J", opSeq:50, operation:"QC",        workCenter:"QC",        qty:1050, setupHrs:0.2, runHrs:5, start:"2025-08-21", end:"2025-08-22", due:"2025-08-30", priority:"High",   status:"Planned",     dependsOn:"Painting" },
-  { order:"WO-1010", product:"Prod-J", opSeq:60, operation:"Packaging", workCenter:"Packaging", qty:1050, setupHrs:0.3, runHrs:7, start:"2025-08-22", end:"2025-08-23", due:"2025-08-30", priority:"High",   status:"Planned",     dependsOn:"QC" },
+  // Batch-008: Metformin 500mg - Bhiwadi Tablets Line
+  { order:"BATCH-008", product:"Metformin 500mg", opSeq:10, operation:"Granulation",   workCenter:"Granulation",   qty:150000,  setupHrs:2.0, runHrs:10, start:"2025-01-14", end:"2025-01-14", due:"2025-01-22", priority:"Medium",    status:"Planned",     dependsOn:null },
+  { order:"BATCH-008", product:"Metformin 500mg", opSeq:20, operation:"Compression", workCenter:"Tablet Press", qty:150000,  setupHrs:2.0, runHrs:14, start:"2025-01-15", end:"2025-01-16", due:"2025-01-22", priority:"Medium",    status:"Planned",     dependsOn:"Granulation" },
+  { order:"BATCH-008", product:"Metformin 500mg", opSeq:30, operation:"Film Coating",  workCenter:"Coating",  qty:150000,  setupHrs:1.5, runHrs:8, start:"2025-01-17", end:"2025-01-17", due:"2025-01-22", priority:"Medium",    status:"Planned",     dependsOn:"Compression" },
+  { order:"BATCH-008", product:"Metformin 500mg", opSeq:40, operation:"QC Testing", workCenter:"QC Lab", qty:150000,  setupHrs:0.5, runHrs:6, start:"2025-01-18", end:"2025-01-18", due:"2025-01-22", priority:"Medium",    status:"Planned",     dependsOn:"Film Coating" },
+  { order:"BATCH-008", product:"Metformin 500mg", opSeq:50, operation:"Packaging", workCenter:"Blister Pack", qty:150000,  setupHrs:1.0, runHrs:10, start:"2025-01-20", end:"2025-01-20", due:"2025-01-22", priority:"Medium",    status:"Planned",     dependsOn:"QC Testing" },
 ];
 
-/** Colors per Work Center */
+/** Colors per Pharma Work Center */
 const wcColor = {
-  Cutting: "#3b82f6",
-  Machining: "#6366f1",
-  Assembly: "#10b981",
-  Painting: "#f59e0b",
-  QC: "#ef4444",
-  Packaging: "#8b5cf6",
+  "Granulation": "#3b82f6",
+  "Tablet Press": "#6366f1",
+  "Coating": "#10b981",
+  "Capsule Filler": "#14b8a6",
+  "QC Lab": "#ef4444",
+  "Blister Pack": "#8b5cf6",
+  "Sterile Formulation": "#f59e0b",
+  "Aseptic Filling": "#ec4899",
+  "Visual Inspection": "#84cc16",
+  "Labeling": "#06b6d4",
+  "Cold Chain": "#0ea5e9",
+  "Lyophilizer": "#a855f7",
+  "Vial Capping": "#f97316",
 };
 
 const ProductionPlanning = () => {
@@ -272,7 +266,6 @@ const ProductionPlanning = () => {
   });
   const [selectedPreview, setSelectedPreview] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
-  const [selectedDrivers, setSelectedDrivers] = useState([]);
   
   // Foundry mapping modal states
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
@@ -377,23 +370,6 @@ const ProductionPlanning = () => {
     return [...header, ...rows];
   }, []);
 
-  const externalDrivers = [
-    { name: "Maintenance Calendar", autoSelected: true, icon: "Settings" },
-    { name: "Labor Availability", autoSelected: true, icon: "Factory" },
-    { name: "Supplier Lead Times", autoSelected: true, icon: "Timer" },
-    { name: "QC/Inspection Slots", autoSelected: false, icon: "Award" },
-    { name: "Setup Family Grouping", autoSelected: false, icon: "TrendingUp" },
-  ];
-
-  useEffect(() => {
-    if (selectedDrivers.length === 0) {
-      setSelectedDrivers(externalDrivers.filter(d => d.autoSelected).map(d => d.name));
-    }
-  }, [selectedDrivers.length]);
-
-  const toggleDriver = (driver) => {
-    setSelectedDrivers(prev => prev.includes(driver) ? prev.filter(d => d !== driver) : [...prev, driver]);
-  };
 
   const handleFoundrySubmit = (data: {
     selectedObjects: string[];
@@ -428,7 +404,7 @@ const ProductionPlanning = () => {
     <div className="space-y-6 p-0">
       <div>
         <h2 className="text-xl font-semibold text-foreground mb-1">Add Data</h2>
-        <p className="text-sm text-muted-foreground">Upload BOM, Routings, Work Centers, Capacity, Shifts, Maintenance, Demand/Orders, and Supplier Lead Times.</p>
+        <p className="text-sm text-muted-foreground">Upload Bill of Materials, Production Routing, Capacity data, and Batch demand for pharma manufacturing planning.</p>
       </div>
 
       <Card>
@@ -440,7 +416,7 @@ const ProductionPlanning = () => {
                 <Info className="w-4 h-4 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Upload your production planning data: BOM, routings, work centers, capacity, and other relevant files. Supported formats: CSV, Excel, JSON.</p>
+                <p>Upload pharma production data: BOM with API/excipient quantities, routing with setup times, plant capacity, and batch demand. Supported formats: CSV, Excel.</p>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -453,13 +429,13 @@ const ProductionPlanning = () => {
                 // Create and download Excel template
                 const link = document.createElement('a');
                 link.href = '#'; // This would be the actual template file URL
-                link.download = 'production-planning-template.xlsx';
+                link.download = 'pharma-production-planning-template.xlsx';
                 link.click();
               }}
             >
               Download input template
             </Button>
-            {" "}with pre-configured sheets (BOM, Routings, Work Centers, Capacity, Demand)
+            {" "}with pre-configured sheets (Bill of Materials, Production Routing, Production Capacity)
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -545,64 +521,7 @@ const ProductionPlanning = () => {
         </CardContent>
       </Card>
 
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-base font-medium text-foreground">AI Suggested Planning Drivers</h3>
-          <Tooltip>
-            <TooltipTrigger>
-              <Info className="w-4 h-4 text-muted-foreground" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>AI-suggested external factors that may influence production planning based on your data characteristics.</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {externalDrivers.map((driver) => {
-            const isSelected = selectedDrivers.includes(driver.name);
-            
-            return (
-            <div
-              key={driver.name}
-              className="flex items-center justify-between p-3 rounded-lg border bg-card transition-colors hover:bg-accent/50 cursor-pointer"
-            >
-              <div 
-                className="flex items-center gap-2 flex-1"
-                onClick={() => toggleDriver(driver.name)}
-              >
-                {driver.icon === "Factory" && <Factory className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "Timer" && <Timer className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "Settings" && <Settings className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "TrendingUp" && <TrendingUp className="h-4 w-4 text-muted-foreground" />}
-                {driver.icon === "Award" && <Award className="h-4 w-4 text-muted-foreground" />}
-                <span className="text-sm font-medium">{driver.name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {isSelected && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="px-2 py-1 h-6 text-xs"
-                    onClick={() => {
-                      setSelectedPreview(driver.name);
-                      setPreviewLoading(true);
-                      setTimeout(() => setPreviewLoading(false), 700);
-                    }}
-                  >
-                    Preview
-                  </Button>
-                )}
-                <GradientSwitch 
-                  checked={isSelected} 
-                />
-              </div>
-            </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {(Object.values(uploadedFiles).some(Boolean) || selectedDrivers.length > 0) && (
+      {Object.values(uploadedFiles).some(Boolean) && (
         <Card className="border border-border bg-muted/30">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -641,21 +560,6 @@ const ProductionPlanning = () => {
                        {obj.name.split('_')[0]}
                      </Button>
                    ))}
-                   {selectedDrivers.map((driver, index) => (
-                    <Button
-                      key={driver}
-                      size="sm"
-                      variant={selectedPreview === driver ? "default" : "outline"}
-                      onClick={() => {
-                        setSelectedPreview(driver);
-                        setPreviewLoading(true);
-                        setTimeout(() => setPreviewLoading(false), 500);
-                      }}
-                    >
-                      <Wand2 className="h-3 w-3 mr-1" />
-                      {driver}
-                    </Button>
-                  ))}
                 </div>
               </div>
             </div>
@@ -670,84 +574,54 @@ const ProductionPlanning = () => {
                 {selectedPreview ? (
                   <>
                     <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-                      {selectedDrivers.includes(selectedPreview) ? (
-                        <Wand2 className="h-3 w-3" />
-                      ) : (
-                        <FileText className="h-3 w-3" />
-                      )}
+                      <FileText className="h-3 w-3" />
                       {selectedPreview}
                     </p>
-                    {selectedDrivers.includes(selectedPreview) ? (
-                      // External driver preview
-                      <div className="space-y-3">
-                        <div className="text-xs text-muted-foreground">
-                          External planning factor data preview:
-                        </div>
-                        <table className="min-w-full text-xs border border-border rounded">
-                          <thead className="bg-muted text-muted-foreground">
-                            <tr>
-                              <th className="text-left px-3 py-2">Date</th>
-                              <th className="text-left px-3 py-2">Factor</th>
-                              <th className="text-left px-3 py-2">Value</th>
-                              <th className="text-left px-3 py-2">Impact</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr className="hover:bg-muted/20">
-                              <td className="px-3 py-2">2024-08-01</td>
-                              <td className="px-3 py-2">{selectedPreview}</td>
-                              <td className="px-3 py-2">85%</td>
-                              <td className="px-3 py-2">+12%</td>
-                            </tr>
-                            <tr className="hover:bg-muted/20">
-                              <td className="px-3 py-2">2024-08-15</td>
-                              <td className="px-3 py-2">{selectedPreview}</td>
-                              <td className="px-3 py-2">92%</td>
-                              <td className="px-3 py-2">+18%</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    ) : (
-                      // File preview
-                      <table className="min-w-full text-xs border border-border rounded">
-                        <thead className="bg-muted text-muted-foreground">
-                          <tr>
-                            <th className="text-left px-3 py-2">Code</th>
-                            <th className="text-left px-3 py-2">Description</th>
-                            <th className="text-left px-3 py-2">Attribute 1</th>
-                            <th className="text-left px-3 py-2">Attribute 2</th>
-                            <th className="text-left px-3 py-2">Attribute 3</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="hover:bg-muted/20">
-                            <td className="px-3 py-2">WCN-01</td>
-                            <td className="px-3 py-2">Cutting Station</td>
-                            <td className="px-3 py-2">Capacity: 8h</td>
-                            <td className="px-3 py-2">Shift A</td>
-                            <td className="px-3 py-2">Setup: 30min</td>
-                          </tr>
-                          <tr className="hover:bg-muted/20">
-                            <td className="px-3 py-2">WCN-02</td>
-                            <td className="px-3 py-2">Assembly Line</td>
-                            <td className="px-3 py-2">Capacity: 10h</td>
-                            <td className="px-3 py-2">Shift B</td>
-                            <td className="px-3 py-2">Setup: 20min</td>
-                          </tr>
-                          <tr className="hover:bg-muted/20">
-                            <td className="px-3 py-2">WCN-03</td>
-                            <td className="px-3 py-2">Quality Control</td>
-                            <td className="px-3 py-2">Capacity: 6h</td>
-                            <td className="px-3 py-2">Shift A</td>
-                            <td className="px-3 py-2">Setup: 10min</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    )}
+                    {/* Pharma production data preview */}
+                    <table className="min-w-full text-xs border border-border rounded">
+                      <thead className="bg-muted text-muted-foreground">
+                        <tr>
+                          <th className="text-left px-3 py-2">SKU ID</th>
+                          <th className="text-left px-3 py-2">Plant</th>
+                          <th className="text-left px-3 py-2">Line</th>
+                          <th className="text-right px-3 py-2">Std Rate (units/hr)</th>
+                          <th className="text-right px-3 py-2">Setup (hrs)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="hover:bg-muted/20">
+                          <td className="px-3 py-2">SKU001</td>
+                          <td className="px-3 py-2">Bhiwadi Formulations</td>
+                          <td className="px-3 py-2">LINE_TAB (Tablets)</td>
+                          <td className="px-3 py-2 text-right">1,200</td>
+                          <td className="px-3 py-2 text-right">2.0</td>
+                        </tr>
+                        <tr className="hover:bg-muted/20">
+                          <td className="px-3 py-2">SKU002</td>
+                          <td className="px-3 py-2">Bhiwadi Formulations</td>
+                          <td className="px-3 py-2">LINE_TAB (Tablets)</td>
+                          <td className="px-3 py-2 text-right">900</td>
+                          <td className="px-3 py-2 text-right">2.5</td>
+                        </tr>
+                        <tr className="hover:bg-muted/20">
+                          <td className="px-3 py-2">SKU004</td>
+                          <td className="px-3 py-2">Hyderabad Injectables</td>
+                          <td className="px-3 py-2">LINE_INJ (Injectables)</td>
+                          <td className="px-3 py-2 text-right">350</td>
+                          <td className="px-3 py-2 text-right">4.0</td>
+                        </tr>
+                        <tr className="hover:bg-muted/20">
+                          <td className="px-3 py-2">SKU009</td>
+                          <td className="px-3 py-2">Hyderabad Injectables</td>
+                          <td className="px-3 py-2">LINE_INJ (Injectables)</td>
+                          <td className="px-3 py-2 text-right">500</td>
+                          <td className="px-3 py-2 text-right">3.5</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </>
                 ) : (
-                  <p className="text-sm text-muted-foreground">Select a file or driver to preview.</p>
+                  <p className="text-sm text-muted-foreground">Select a file to preview.</p>
                 )}
               </>
             )}
@@ -768,18 +642,18 @@ const ProductionPlanning = () => {
 
   // ---------- STEP 2: Data Gaps ----------
   const gapKPIs = [
-    { label: "Completeness", value: "96.8%", icon: CheckCircle },
-    { label: "Missing Routings", value: "3", icon: AlertCircle },
-    { label: "Invalid BOM Links", value: "5", icon: AlertCircle },
+    { label: "Completeness", value: "94.2%", icon: CheckCircle },
+    { label: "Missing BOM Links", value: "4", icon: AlertCircle },
+    { label: "API Yield Gaps", value: "3", icon: AlertCircle },
     { label: "Capacity Conflicts", value: "2", icon: Timer },
   ];
 
   const wcUtilData = {
-    labels: ["Cutting", "Assembly", "Painting", "QC"],
+    labels: ["Granulation", "Tablet Press", "Coating", "Sterile Fill", "QC Lab"],
     datasets: [
       {
         label: "Utilization %",
-        data: [72, 86, 64, 55],
+        data: [78, 92, 68, 85, 62],
         backgroundColor: hslVar("--primary", 0.5),
         borderColor: hslVar("--primary"),
         borderWidth: 1,
@@ -838,10 +712,10 @@ const ProductionPlanning = () => {
           </CardHeader>
           <CardContent>
             <ul className="text-sm list-disc pl-5 space-y-2 text-muted-foreground">
-              <li>Orders without complete routing (missing operation or duration)</li>
-              <li>Components missing or mismatched between BOM and routing</li>
-              <li>Capacity exceeds shift hours on WC-02 for 12–13 Aug</li>
-              <li>Maintenance overlap on WC-03 causing delays</li>
+              <li>Batches without complete BOM (missing API or excipient quantities)</li>
+              <li>Yield % mismatch between BOM and actual batch records</li>
+              <li>Capacity exceeds shift hours on Tablet Press for Jan 15-16</li>
+              <li>Cold chain capacity constraint on Insulin batches</li>
             </ul>
           </CardContent>
         </Card>
@@ -860,10 +734,11 @@ const ProductionPlanning = () => {
 
   // ---------- STEP 3: Review Data ----------
   const wcCapacitySummary = [
-    { wc: "Cutting", availableHrs: 48, requiredHrs: 36, utilization: 75 },
-    { wc: "Assembly", availableHrs: 48, requiredHrs: 44, utilization: 92 },
-    { wc: "Painting", availableHrs: 48, requiredHrs: 30, utilization: 63 },
-    { wc: "QC", availableHrs: 48, requiredHrs: 28, utilization: 58 },
+    { wc: "Granulation", availableHrs: 608, requiredHrs: 474, utilization: 78 },
+    { wc: "Tablet Press", availableHrs: 608, requiredHrs: 560, utilization: 92 },
+    { wc: "Coating", availableHrs: 608, requiredHrs: 413, utilization: 68 },
+    { wc: "Sterile Fill", availableHrs: 482, requiredHrs: 410, utilization: 85 },
+    { wc: "QC Lab", availableHrs: 480, requiredHrs: 298, utilization: 62 },
   ];
 
   const utilBarData = {
@@ -1155,10 +1030,10 @@ const ProductionPlanning = () => {
                   <div className="h-64">
                     <Bar
                       data={{
-                        labels: ["Cutting", "Machining", "Assembly", "Painting", "QC", "Packaging"],
+                        labels: ["Granulation", "Tablet Press", "Coating", "Sterile Fill", "QC Lab", "Blister Pack"],
                         datasets: [{
                           label: "Current Utilization (%)",
-                          data: [85, 92, 78, 68, 55, 72],
+                          data: [78, 92, 68, 85, 62, 72],
                           backgroundColor: [
                             hslVar('--primary', 0.8),
                             hslVar('--success', 0.8),
