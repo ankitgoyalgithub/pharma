@@ -114,8 +114,8 @@ const InventoryOptimization = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [parsedFileData, setParsedFileData] = useState<Record<string, { columns: string[]; rows: any[] }>>({});
   const [foundryObjects, setFoundryObjects] = useState<Array<{ name: string; type: "master" | "transactional"; fromDate?: Date; toDate?: Date }>>([]);
-  
 
   // Stepper configuration
   const stepperSteps = [
@@ -473,6 +473,34 @@ const InventoryOptimization = () => {
                 setUploadedFiles(prev => [...prev, ...files]);
                 setSelectedPreview(files[0].name);
                 setPreviewLoading(true);
+                
+                // Parse CSV files
+                files.forEach(file => {
+                  if (file.name.endsWith('.csv')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      const text = event.target?.result as string;
+                      const lines = text.split('\n').filter(line => line.trim());
+                      if (lines.length > 0) {
+                        const columns = lines[0].split(',').map(col => col.trim().replace(/"/g, ''));
+                        const rows = lines.slice(1, 11).map(line => {
+                          const values = line.split(',').map(val => val.trim().replace(/"/g, ''));
+                          const row: Record<string, string> = {};
+                          columns.forEach((col, idx) => {
+                            row[col] = values[idx] || '';
+                          });
+                          return row;
+                        });
+                        setParsedFileData(prev => ({
+                          ...prev,
+                          [file.name]: { columns, rows }
+                        }));
+                      }
+                    };
+                    reader.readAsText(file);
+                  }
+                });
+                
                 setTimeout(() => setPreviewLoading(false), 700);
               }
             }}
@@ -633,35 +661,34 @@ const InventoryOptimization = () => {
                             </table>
                           );
                         })()
+                      ) : parsedFileData[selectedPreview || ''] ? (
+                        (() => {
+                          const fileData = parsedFileData[selectedPreview || ''];
+                          return (
+                            <table className="min-w-full text-xs border border-border rounded">
+                              <thead className="bg-muted text-muted-foreground">
+                                <tr>
+                                  {fileData.columns.map((col) => (
+                                    <th key={col} className="text-left px-3 py-2 capitalize">{col.replace(/_/g, ' ')}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {fileData.rows.map((row, idx) => (
+                                  <tr key={idx} className="hover:bg-muted/20">
+                                    {fileData.columns.map((col) => (
+                                      <td key={col} className="px-3 py-2">{String(row[col] || '')}</td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          );
+                        })()
                       ) : (
-                        <table className="min-w-full text-xs border border-border rounded">
-                          <thead className="bg-muted text-muted-foreground">
-                            <tr>
-                              <th className="text-left px-3 py-2">SKU</th>
-                              <th className="text-left px-3 py-2">Location</th>
-                              <th className="text-left px-3 py-2">On-Hand</th>
-                              <th className="text-left px-3 py-2">On-Order</th>
-                              <th className="text-left px-3 py-2">Lead Time</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {workbookData.map((row, idx) => (
-                              <tr key={idx} className="hover:bg-muted/20">
-                                <td className="px-3 py-2">{row.sku}</td>
-                                <td className="px-3 py-2">{row.location}</td>
-                                <td className="px-3 py-2">
-                                  <Input value={row.onHand.toString()} className="w-16" readOnly />
-                                </td>
-                                <td className="px-3 py-2">
-                                  <Input value={row.onOrder.toString()} className="w-16" readOnly />
-                                </td>
-                                <td className="px-3 py-2">
-                                  <Input value={row.leadTime.toString()} className="w-16" readOnly />
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                        <div className="text-sm text-muted-foreground">
+                          Loading file preview...
+                        </div>
                       )}
 
                   </>
