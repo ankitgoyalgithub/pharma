@@ -61,9 +61,6 @@ import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import { MapFromFoundryDialog } from "@/components/MapFromFoundryDialog";
-import { getExternalDrivers } from "@/data/demandForecasting/externalDrivers";
-import { getExternalDriverData } from "@/data/demandForecasting/externalDriversData";
-import { ExternalDriversSection } from "@/components/ExternalDriversSection";
 import { InventoryAnalysisChart } from "@/components/InventoryAnalysisChart";
 import { InventoryScenarioCreation } from "@/components/InventoryScenarioCreation";
 import { getFoundryObjectData } from "@/data/foundry";
@@ -118,7 +115,7 @@ const InventoryOptimization = () => {
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [foundryObjects, setFoundryObjects] = useState<Array<{ name: string; type: "master" | "transactional"; fromDate?: Date; toDate?: Date }>>([]);
-  const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+  
 
   // Stepper configuration
   const stepperSteps = [
@@ -160,7 +157,7 @@ const InventoryOptimization = () => {
     }
   }, [currentStep]);
 
-  const [driversLoading, setDriversLoading] = useState(false);
+  
   const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [isFoundryModalOpen, setIsFoundryModalOpen] = useState(false);
@@ -242,25 +239,6 @@ const InventoryOptimization = () => {
     window.dispatchEvent(event);
   }, []);
 
-  useEffect(() => {
-    const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
-    if (hasData && selectedDrivers.length === 0) {
-      setDriversLoading(true);
-      setTimeout(() => {
-        const driversToSelect = [
-          { name: "Lead Time Variability", autoSelected: true },
-          { name: "Supplier Reliability", autoSelected: true },
-          { name: "Seasonal Patterns", autoSelected: true },
-        ];
-        setSelectedDrivers(driversToSelect.filter((d) => d.autoSelected).map((d) => d.name));
-        setDriversLoading(false);
-      }, 500);
-    }
-  }, [uploadedFiles.length, foundryObjects.length]);
-
-  const toggleDriver = (driver: string) => {
-    setSelectedDrivers((prev) => (prev.includes(driver) ? prev.filter((d) => d !== driver) : [...prev, driver]));
-  };
 
   const handleStepTransition = (nextStep: number) => {
     setIsLoading(true);
@@ -428,7 +406,6 @@ const InventoryOptimization = () => {
 
   // Step 1 - Add Data
   const hasData = uploadedFiles.length > 0 || foundryObjects.length > 0;
-  const externalDrivers = getExternalDrivers("inventory-optimization", hasData);
 
   const renderStep1 = () => (
     <div className="space-y-6 pt-10 px-0 pb-0">
@@ -572,22 +549,8 @@ const InventoryOptimization = () => {
         </CardContent>
       </Card>
 
-      <ExternalDriversSection
-        title="External Drivers"
-        description="External factors that may influence inventory patterns. Toggle AI suggestions on/off and manually select additional drivers."
-        drivers={externalDrivers}
-        selectedDrivers={selectedDrivers}
-        driversLoading={driversLoading}
-        onToggleDriver={toggleDriver}
-        onPreviewDriver={(driverName) => {
-          setSelectedPreview(driverName);
-          setPreviewLoading(true);
-          setTimeout(() => setPreviewLoading(false), 700);
-        }}
-        showManualControls={true}
-      />
 
-      {(uploadedFiles.length > 0 || foundryObjects.length > 0 || selectedDrivers.length > 0) && (
+      {(uploadedFiles.length > 0 || foundryObjects.length > 0) && (
         <Card className="border border-border bg-muted/30">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -624,21 +587,6 @@ const InventoryOptimization = () => {
                       {obj.name.split('_')[0]}
                     </Button>
                   ))}
-                  {selectedDrivers.map((driver, index) => (
-                    <Button
-                      key={driver}
-                      size="sm"
-                      variant={selectedPreview === driver ? "default" : "outline"}
-                      onClick={() => {
-                        setSelectedPreview(driver);
-                        setPreviewLoading(true);
-                        setTimeout(() => setPreviewLoading(false), 500);
-                      }}
-                    >
-                      <Zap className="h-3 w-3 mr-1" />
-                      {driver}
-                    </Button>
-                  ))}
                 </div>
               </div>
             </div>
@@ -653,66 +601,14 @@ const InventoryOptimization = () => {
                 {selectedPreview ? (
                   <>
                     <p className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-                      {selectedDrivers.includes(selectedPreview) ? (
-                        <Zap className="h-3 w-3" />
-                      ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                      {foundryObjects.some(obj => obj.name === selectedPreview) ? (
                         <Database className="h-3 w-3" />
                       ) : (
                         <FileText className="h-3 w-3" />
                       )}
                       {selectedPreview}
                     </p>
-                     {selectedDrivers.includes(selectedPreview) ? (
-                      // External driver preview - showing Foundry format data
-                      <div className="space-y-4">
-                        {(() => {
-                          const driverData = getExternalDriverData(selectedPreview || "");
-                          if (!driverData || driverData.length === 0) {
-                            return <p className="text-sm text-muted-foreground">No data available for this driver.</p>;
-                          }
-                          
-                          // Get column headers from first data object
-                          const columns = Object.keys(driverData[0]);
-                          
-                          return (
-                            <div className="grid grid-cols-1 gap-4">
-                              <div>
-                                <h4 className="text-sm font-medium mb-2">Sample Data Points</h4>
-                                <table className="min-w-full text-xs border border-border rounded">
-                                  <thead className="bg-muted text-muted-foreground">
-                                    <tr>
-                                      {columns.map((col) => (
-                                        <th key={col} className="text-left px-3 py-2 capitalize">
-                                          {col.replace(/_/g, ' ')}
-                                        </th>
-                                      ))}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {driverData.slice(0, 3).map((row, idx) => (
-                                      <tr key={idx} className="hover:bg-muted/20">
-                                        {columns.map((col) => (
-                                          <td key={col} className="px-3 py-2">
-                                            {String((row as any)[col])}
-                                          </td>
-                                        ))}
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                              <div className="text-xs text-muted-foreground space-y-2">
-                                <div><strong>Data Points:</strong> {driverData.length} records</div>
-                                <div><strong>Source:</strong> Foundry Feature Store</div>
-                                <div><strong>Update Frequency:</strong> Real-time</div>
-                                <div><strong>Historical Coverage:</strong> 5+ years</div>
-                                <div><strong>Reliability:</strong> High (99.5% uptime)</div>
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    ) : foundryObjects.some(obj => obj.name === selectedPreview) ? (
+                     {foundryObjects.some(obj => obj.name === selectedPreview) ? (
                         (() => {
                           const data = getFoundryObjectData(selectedPreview as string) as any[];
                           const columns = data.length > 0 ? Object.keys(data[0]) : [];
