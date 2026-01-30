@@ -1,6 +1,6 @@
 export const crudeOilPricesData = [
   {
-    date: "2024-07-01",
+    date: "2025-07-01",
     oilType: "WTI Crude",
     price: 82.45,
     currency: "USD",
@@ -11,7 +11,7 @@ export const crudeOilPricesData = [
     changePercent: 1.54
   },
   {
-    date: "2024-07-01",
+    date: "2025-07-01",
     oilType: "Brent Crude",
     price: 85.20,
     currency: "USD", 
@@ -22,7 +22,7 @@ export const crudeOilPricesData = [
     changePercent: 1.13
   },
   {
-    date: "2024-07-02",
+    date: "2025-07-02",
     oilType: "WTI Crude",
     price: 81.75,
     currency: "USD",
@@ -33,7 +33,7 @@ export const crudeOilPricesData = [
     changePercent: -0.85
   },
   {
-    date: "2024-07-02", 
+    date: "2025-07-02", 
     oilType: "Brent Crude",
     price: 84.50,
     currency: "USD",
@@ -44,7 +44,7 @@ export const crudeOilPricesData = [
     changePercent: -0.82
   },
   {
-    date: "2024-07-03",
+    date: "2025-07-03",
     oilType: "WTI Crude",
     price: 83.10,
     currency: "USD",
@@ -55,7 +55,7 @@ export const crudeOilPricesData = [
     changePercent: 1.65
   },
   {
-    date: "2024-07-03",
+    date: "2025-07-03",
     oilType: "Brent Crude",
     price: 85.90,
     currency: "USD",
@@ -66,7 +66,7 @@ export const crudeOilPricesData = [
     changePercent: 1.66
   },
   {
-    date: "2024-07-04",
+    date: "2025-07-04",
     oilType: "WTI Crude",
     price: 82.30,
     currency: "USD",
@@ -77,7 +77,7 @@ export const crudeOilPricesData = [
     changePercent: -0.96
   },
   {
-    date: "2024-07-04",
+    date: "2025-07-04",
     oilType: "Brent Crude",
     price: 84.80,
     currency: "USD",
@@ -88,7 +88,7 @@ export const crudeOilPricesData = [
     changePercent: -1.28
   },
   {
-    date: "2024-07-05",
+    date: "2025-07-05",
     oilType: "WTI Crude", 
     price: 83.65,
     currency: "USD",
@@ -99,7 +99,7 @@ export const crudeOilPricesData = [
     changePercent: 1.64
   },
   {
-    date: "2024-07-05",
+    date: "2025-07-05",
     oilType: "Brent Crude",
     price: 86.25,
     currency: "USD",

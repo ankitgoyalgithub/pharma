@@ -19,7 +19,7 @@ export const dataQualityIssues = [
     severity: 'low',
     category: 'Outliers',
     issue: 'Unusual sales spike detected',
-    affected: 'SKU-A089, Week 2024-W08',
+    affected: 'SKU-A089, Week 2025-W08',
     recommendation: 'Review for promotional activity or data entry error',
     autoFixable: false
   },

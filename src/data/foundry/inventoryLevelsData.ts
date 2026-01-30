@@ -1,11 +1,11 @@
 export const inventoryLevelsData = [
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU001",
     batchNo: "B33393",
-    mfgDate: "2024-06-14",
-    expiryDate: "2025-08-31",
+    mfgDate: "2025-06-14",
+    expiryDate: "2026-08-31",
     onHandQty: 6070,
     reservedQty: 775,
     availableQty: 5214,
@@ -13,7 +13,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU002",
     batchNo: "B13352",
@@ -26,12 +26,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU003",
     batchNo: "B63532",
-    mfgDate: "2024-04-15",
-    expiryDate: "2026-01-30",
+    mfgDate: "2025-04-15",
+    expiryDate: "2027-01-30",
     onHandQty: 1737,
     reservedQty: 229,
     availableQty: 1487,
@@ -39,12 +39,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU004",
     batchNo: "B72284",
-    mfgDate: "2024-10-04",
-    expiryDate: "2026-03-10",
+    mfgDate: "2025-10-04",
+    expiryDate: "2027-03-10",
     onHandQty: 3248,
     reservedQty: 188,
     availableQty: 2934,
@@ -52,7 +52,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU005",
     batchNo: "B27938",
@@ -65,12 +65,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU006",
     batchNo: "B98988",
-    mfgDate: "2023-11-25",
-    expiryDate: "2025-07-09",
+    mfgDate: "2024-11-25",
+    expiryDate: "2026-07-09",
     onHandQty: 6310,
     reservedQty: 289,
     availableQty: 5837,
@@ -78,12 +78,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU007",
     batchNo: "B11506",
     mfgDate: "2025-03-12",
-    expiryDate: "2025-11-25",
+    expiryDate: "2026-11-25",
     onHandQty: 4100,
     reservedQty: 463,
     availableQty: 3486,
@@ -91,12 +91,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_NCR",
     skuId: "SKU008",
     batchNo: "B39256",
-    mfgDate: "2024-08-14",
-    expiryDate: "2025-06-30",
+    mfgDate: "2025-08-14",
+    expiryDate: "2026-06-30",
     onHandQty: 6543,
     reservedQty: 785,
     availableQty: 5460,
@@ -104,7 +104,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU001",
     batchNo: "B76610",
@@ -117,12 +117,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU002",
     batchNo: "B42890",
-    mfgDate: "2024-04-23",
-    expiryDate: "2025-07-14",
+    mfgDate: "2025-04-23",
+    expiryDate: "2026-07-14",
     onHandQty: 7796,
     reservedQty: 269,
     availableQty: 7464,
@@ -130,12 +130,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU003",
     batchNo: "B77508",
     mfgDate: "2025-03-07",
-    expiryDate: "2025-10-07",
+    expiryDate: "2026-10-07",
     onHandQty: 7144,
     reservedQty: 504,
     availableQty: 6392,
@@ -143,12 +143,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU004",
     batchNo: "B19832",
-    mfgDate: "2024-02-23",
-    expiryDate: "2026-01-29",
+    mfgDate: "2025-02-23",
+    expiryDate: "2027-01-29",
     onHandQty: 7332,
     reservedQty: 974,
     availableQty: 6126,
@@ -156,7 +156,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU005",
     batchNo: "B81201",
@@ -169,12 +169,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU006",
     batchNo: "B43525",
-    mfgDate: "2023-12-30",
-    expiryDate: "2025-12-08",
+    mfgDate: "2024-12-30",
+    expiryDate: "2026-12-08",
     onHandQty: 1696,
     reservedQty: 152,
     availableQty: 1502,
@@ -182,7 +182,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU007",
     batchNo: "B42490",
@@ -195,12 +195,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_WEST",
     skuId: "SKU008",
     batchNo: "B89901",
-    mfgDate: "2024-11-07",
-    expiryDate: "2025-08-09",
+    mfgDate: "2025-11-07",
+    expiryDate: "2026-08-09",
     onHandQty: 7665,
     reservedQty: 295,
     availableQty: 7008,
@@ -208,12 +208,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU001",
     batchNo: "B65555",
-    mfgDate: "2024-06-04",
-    expiryDate: "2025-05-11",
+    mfgDate: "2025-06-04",
+    expiryDate: "2026-05-11",
     onHandQty: 6115,
     reservedQty: 526,
     availableQty: 5375,
@@ -221,7 +221,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU002",
     batchNo: "B31615",
@@ -234,12 +234,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU003",
     batchNo: "B77571",
-    mfgDate: "2024-11-18",
-    expiryDate: "2025-06-21",
+    mfgDate: "2025-11-18",
+    expiryDate: "2026-06-21",
     onHandQty: 4281,
     reservedQty: 148,
     availableQty: 4028,
@@ -247,12 +247,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU004",
     batchNo: "B51205",
-    mfgDate: "2024-11-04",
-    expiryDate: "2026-05-31",
+    mfgDate: "2025-11-04",
+    expiryDate: "2027-05-31",
     onHandQty: 4015,
     reservedQty: 339,
     availableQty: 3572,
@@ -260,12 +260,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU005",
     batchNo: "B52770",
-    mfgDate: "2024-09-16",
-    expiryDate: "2026-02-16",
+    mfgDate: "2025-09-16",
+    expiryDate: "2027-02-16",
     onHandQty: 4207,
     reservedQty: 212,
     availableQty: 3976,
@@ -273,12 +273,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU006",
     batchNo: "B42222",
-    mfgDate: "2023-11-30",
-    expiryDate: "2025-07-24",
+    mfgDate: "2024-11-30",
+    expiryDate: "2026-07-24",
     onHandQty: 5587,
     reservedQty: 531,
     availableQty: 4834,
@@ -286,12 +286,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU007",
     batchNo: "B52280",
-    mfgDate: "2023-07-23",
-    expiryDate: "2025-05-19",
+    mfgDate: "2024-07-23",
+    expiryDate: "2026-05-19",
     onHandQty: 5550,
     reservedQty: 318,
     availableQty: 4975,
@@ -299,12 +299,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DC_SOUTH",
     skuId: "SKU008",
     batchNo: "B48399",
-    mfgDate: "2024-09-17",
-    expiryDate: "2026-01-05",
+    mfgDate: "2025-09-17",
+    expiryDate: "2027-01-05",
     onHandQty: 2411,
     reservedQty: 295,
     availableQty: 2041,
@@ -312,7 +312,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU001",
     batchNo: "B18471",
@@ -325,12 +325,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU002",
     batchNo: "B74541",
-    mfgDate: "2024-09-23",
-    expiryDate: "2025-06-01",
+    mfgDate: "2025-09-23",
+    expiryDate: "2026-06-01",
     onHandQty: 6984,
     reservedQty: 502,
     availableQty: 6391,
@@ -338,7 +338,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU003",
     batchNo: "B51493",
@@ -351,12 +351,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU004",
     batchNo: "B66610",
-    mfgDate: "2024-06-11",
-    expiryDate: "2025-09-09",
+    mfgDate: "2025-06-11",
+    expiryDate: "2026-09-09",
     onHandQty: 3907,
     reservedQty: 123,
     availableQty: 3744,
@@ -364,12 +364,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU005",
     batchNo: "B67744",
-    mfgDate: "2024-02-18",
-    expiryDate: "2025-10-16",
+    mfgDate: "2025-02-18",
+    expiryDate: "2026-10-16",
     onHandQty: 8566,
     reservedQty: 50,
     availableQty: 8158,
@@ -377,7 +377,7 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU006",
     batchNo: "B90205",
@@ -390,12 +390,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU007",
     batchNo: "B98180",
-    mfgDate: "2024-07-27",
-    expiryDate: "2025-07-16",
+    mfgDate: "2025-07-27",
+    expiryDate: "2026-07-16",
     onHandQty: 1542,
     reservedQty: 196,
     availableQty: 1346,
@@ -403,12 +403,12 @@ export const inventoryLevelsData = [
     uom: "EA"
   },
   {
-    asOfDate: "2025-01-01",
+    asOfDate: "2026-01-01",
     nodeId: "DEP_EAST",
     skuId: "SKU008",
     batchNo: "B34751",
-    mfgDate: "2024-10-03",
-    expiryDate: "2026-03-27",
+    mfgDate: "2025-10-03",
+    expiryDate: "2027-03-27",
     onHandQty: 2639,
     reservedQty: 7,
     availableQty: 2623,
