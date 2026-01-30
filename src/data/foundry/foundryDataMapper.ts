@@ -18,6 +18,8 @@ import { medicalConferenceData } from "./medicalConferenceData";
 import { healthcarePolicyData } from "./healthcarePolicyData";
 import { genericDrugLaunchesData } from "./genericDrugLaunchesData";
 import { diseaseOutbreakData } from "./diseaseOutbreakData";
+import { seasonalityTrendsData } from "./seasonalityTrendsData";
+import { promotionalCampaignsData } from "./promotionalCampaignsData";
 
 export const foundryDataMapper = {
   // Master Data
@@ -52,6 +54,8 @@ export const foundryDataMapper = {
   "Healthcare_Policy_Changes": healthcarePolicyData,
   "Generic_Drug_Launches": genericDrugLaunchesData,
   "Disease_Outbreak_Tracking": diseaseOutbreakData,
+  "Seasonality_Trends": seasonalityTrendsData,
+  "Promotional_Campaigns": promotionalCampaignsData,
   "NSE_Index": [
     { date: "2025-07-01", index: "NIFTY50", value: 24500, change: 125.5 },
     { date: "2025-07-02", index: "NIFTY50", value: 24350, change: -150.0 }
