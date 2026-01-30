@@ -111,28 +111,28 @@ export const externalDriversData = {
 
   // Holiday Calendar (India focused for Pharma)
   "Holiday_Calendar": [
-    { date: "2024-01-14", event: "Makar Sankranti", type: "Festival", region: "Pan-India", impact: "Medium", salesLift: 1.15, duration: 2 },
-    { date: "2024-01-26", event: "Republic Day", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.85, duration: 1 },
-    { date: "2024-03-25", event: "Holi", type: "Festival", region: "North/West", impact: "Medium", salesLift: 1.20, duration: 2 },
-    { date: "2024-04-11", event: "Eid ul-Fitr", type: "Festival", region: "Pan-India", impact: "High", salesLift: 1.35, duration: 3 },
-    { date: "2024-04-14", event: "Ambedkar Jayanti", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.90, duration: 1 },
-    { date: "2024-08-15", event: "Independence Day", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.85, duration: 1 },
-    { date: "2024-08-26", event: "Janmashtami", type: "Festival", region: "North/West", impact: "Medium", salesLift: 1.18, duration: 2 },
-    { date: "2024-10-02", event: "Gandhi Jayanti", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.88, duration: 1 },
-    { date: "2024-10-12", event: "Durga Puja/Navratri", type: "Festival", region: "East/West", impact: "High", salesLift: 1.40, duration: 9 },
-    { date: "2024-11-01", event: "Diwali", type: "Festival", region: "Pan-India", impact: "Very High", salesLift: 1.65, duration: 5 },
-    { date: "2024-11-15", event: "Guru Nanak Jayanti", type: "Festival", region: "North", impact: "Medium", salesLift: 1.12, duration: 1 },
-    { date: "2024-12-25", event: "Christmas", type: "Commercial", region: "Metro Cities", impact: "Medium", salesLift: 1.15, duration: 3 },
+    { date: "2025-01-14", event: "Makar Sankranti", type: "Festival", region: "Pan-India", impact: "Medium", salesLift: 1.15, duration: 2 },
+    { date: "2025-01-26", event: "Republic Day", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.85, duration: 1 },
+    { date: "2025-03-14", event: "Holi", type: "Festival", region: "North/West", impact: "Medium", salesLift: 1.20, duration: 2 },
+    { date: "2025-03-31", event: "Eid ul-Fitr", type: "Festival", region: "Pan-India", impact: "High", salesLift: 1.35, duration: 3 },
+    { date: "2025-04-14", event: "Ambedkar Jayanti", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.90, duration: 1 },
+    { date: "2025-08-15", event: "Independence Day", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.85, duration: 1 },
+    { date: "2025-08-16", event: "Janmashtami", type: "Festival", region: "North/West", impact: "Medium", salesLift: 1.18, duration: 2 },
+    { date: "2025-10-02", event: "Gandhi Jayanti", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.88, duration: 1 },
+    { date: "2025-10-01", event: "Durga Puja/Navratri", type: "Festival", region: "East/West", impact: "High", salesLift: 1.40, duration: 9 },
+    { date: "2025-10-20", event: "Diwali", type: "Festival", region: "Pan-India", impact: "Very High", salesLift: 1.65, duration: 5 },
+    { date: "2025-11-05", event: "Guru Nanak Jayanti", type: "Festival", region: "North", impact: "Medium", salesLift: 1.12, duration: 1 },
+    { date: "2025-12-25", event: "Christmas", type: "Commercial", region: "Metro Cities", impact: "Medium", salesLift: 1.15, duration: 3 },
   ],
 
   // Government Tender Schedule
   "Government_Tender_Schedule": [
-    { tenderId: "CGHS-2024-Q1", authority: "CGHS", category: "Essential Medicines", openDate: "2024-01-15", closeDate: "2024-02-15", estimatedValue: "₹45Cr", affectedSKUs: ["SKU001", "SKU006", "SKU010"] },
-    { tenderId: "ESIC-2024-01", authority: "ESIC", category: "Antibiotics", openDate: "2024-02-01", closeDate: "2024-03-01", estimatedValue: "₹28Cr", affectedSKUs: ["SKU002", "SKU005", "SKU009"] },
-    { tenderId: "MH-PHD-2024", authority: "Maharashtra State", category: "Diabetes Care", openDate: "2024-03-15", closeDate: "2024-04-15", estimatedValue: "₹18Cr", affectedSKUs: ["SKU004"] },
-    { tenderId: "TNMSC-2024-Q2", authority: "Tamil Nadu MSC", category: "ORS & Rehydration", openDate: "2024-04-01", closeDate: "2024-05-01", estimatedValue: "₹12Cr", affectedSKUs: ["SKU006"] },
-    { tenderId: "CGHS-2024-Q2", authority: "CGHS", category: "Respiratory", openDate: "2024-05-15", closeDate: "2024-06-15", estimatedValue: "₹22Cr", affectedSKUs: ["SKU007", "SKU003"] },
-    { tenderId: "Army-MH-2024", authority: "Army Medical", category: "Injectables", openDate: "2024-06-01", closeDate: "2024-07-01", estimatedValue: "₹35Cr", affectedSKUs: ["SKU004", "SKU009"] },
+    { tenderId: "CGHS-2025-Q1", authority: "CGHS", category: "Essential Medicines", openDate: "2025-01-15", closeDate: "2025-02-15", estimatedValue: "₹45Cr", affectedSKUs: ["SKU001", "SKU006", "SKU010"] },
+    { tenderId: "ESIC-2025-01", authority: "ESIC", category: "Antibiotics", openDate: "2025-02-01", closeDate: "2025-03-01", estimatedValue: "₹28Cr", affectedSKUs: ["SKU002", "SKU005", "SKU009"] },
+    { tenderId: "MH-PHD-2025", authority: "Maharashtra State", category: "Diabetes Care", openDate: "2025-03-15", closeDate: "2025-04-15", estimatedValue: "₹18Cr", affectedSKUs: ["SKU004"] },
+    { tenderId: "TNMSC-2025-Q2", authority: "Tamil Nadu MSC", category: "ORS & Rehydration", openDate: "2025-04-01", closeDate: "2025-05-01", estimatedValue: "₹12Cr", affectedSKUs: ["SKU006"] },
+    { tenderId: "CGHS-2025-Q2", authority: "CGHS", category: "Respiratory", openDate: "2025-05-15", closeDate: "2025-06-15", estimatedValue: "₹22Cr", affectedSKUs: ["SKU007", "SKU003"] },
+    { tenderId: "Army-MH-2025", authority: "Army Medical", category: "Injectables", openDate: "2025-06-01", closeDate: "2025-07-01", estimatedValue: "₹35Cr", affectedSKUs: ["SKU004", "SKU009"] },
   ],
 
   // Hospital Procurement Cycles
@@ -146,35 +146,35 @@ export const externalDriversData = {
 
   // Vaccination Drives
   "Vaccination_Drives": [
-    { driveName: "Universal Immunization Program", region: "Pan-India", startDate: "2024-01-01", endDate: "2024-12-31", demandImpact: "Sustained", affectedCategories: ["Vitamins", "ORS"] },
-    { driveName: "Pulse Polio", region: "Pan-India", startDate: "2024-01-28", endDate: "2024-01-30", demandImpact: "Spike", affectedCategories: ["ORS", "Vitamins"] },
-    { driveName: "Mission Indradhanush", region: "Underserved Districts", startDate: "2024-04-07", endDate: "2024-04-14", demandImpact: "Moderate", affectedCategories: ["Antipyretic", "ORS"] },
-    { driveName: "Dengue Prevention Campaign", region: "Endemic States", startDate: "2024-06-15", endDate: "2024-10-15", demandImpact: "High", affectedCategories: ["ORS", "Antipyretic", "Allergy"] },
+    { driveName: "Universal Immunization Program", region: "Pan-India", startDate: "2025-01-01", endDate: "2025-12-31", demandImpact: "Sustained", affectedCategories: ["Vitamins", "ORS"] },
+    { driveName: "Pulse Polio", region: "Pan-India", startDate: "2025-01-28", endDate: "2025-01-30", demandImpact: "Spike", affectedCategories: ["ORS", "Vitamins"] },
+    { driveName: "Mission Indradhanush", region: "Underserved Districts", startDate: "2025-04-07", endDate: "2025-04-14", demandImpact: "Moderate", affectedCategories: ["Antipyretic", "ORS"] },
+    { driveName: "Dengue Prevention Campaign", region: "Endemic States", startDate: "2025-06-15", endDate: "2025-10-15", demandImpact: "High", affectedCategories: ["ORS", "Antipyretic", "Allergy"] },
   ],
 
   // API Price Index
   "API_Price_Index": [
-    { month: "2024-01", molecule: "Paracetamol", priceIndex: 1.0, trend: "Stable", importDependency: "Low" },
-    { month: "2024-02", molecule: "Azithromycin", priceIndex: 1.02, trend: "Rising", importDependency: "Medium" },
-    { month: "2024-03", molecule: "Cetirizine", priceIndex: 0.98, trend: "Declining", importDependency: "Low" },
-    { month: "2024-04", molecule: "Insulin Glargine", priceIndex: 1.05, trend: "Rising", importDependency: "High" },
-    { month: "2024-05", molecule: "Amoxicillin", priceIndex: 1.01, trend: "Stable", importDependency: "Medium" },
-    { month: "2024-06", molecule: "Ceftriaxone", priceIndex: 1.08, trend: "Rising", importDependency: "High" },
+    { month: "2025-01", molecule: "Paracetamol", priceIndex: 1.0, trend: "Stable", importDependency: "Low" },
+    { month: "2025-02", molecule: "Azithromycin", priceIndex: 1.02, trend: "Rising", importDependency: "Medium" },
+    { month: "2025-03", molecule: "Cetirizine", priceIndex: 0.98, trend: "Declining", importDependency: "Low" },
+    { month: "2025-04", molecule: "Insulin Glargine", priceIndex: 1.05, trend: "Rising", importDependency: "High" },
+    { month: "2025-05", molecule: "Amoxicillin", priceIndex: 1.01, trend: "Stable", importDependency: "Medium" },
+    { month: "2025-06", molecule: "Ceftriaxone", priceIndex: 1.08, trend: "Rising", importDependency: "High" },
   ],
 
   // Insurance Coverage Updates
   "Insurance_Coverage_Updates": [
-    { effectiveDate: "2024-01-01", insurer: "Star Health", changeType: "Coverage Expansion", therapyArea: "Diabetes", expectedDemandImpact: "+8%", affectedSKUs: ["SKU004", "SKU010"] },
-    { effectiveDate: "2024-04-01", insurer: "ICICI Lombard", changeType: "OPD Coverage", therapyArea: "General", expectedDemandImpact: "+5%", affectedSKUs: ["SKU001", "SKU003", "SKU008"] },
-    { effectiveDate: "2024-07-01", insurer: "Ayushman Bharat", changeType: "Hospital Rate Revision", therapyArea: "Critical Care", expectedDemandImpact: "+12%", affectedSKUs: ["SKU004", "SKU009"] },
-    { effectiveDate: "2024-10-01", insurer: "HDFC Ergo", changeType: "Preventive Care", therapyArea: "Vitamins", expectedDemandImpact: "+6%", affectedSKUs: ["SKU008"] },
+    { effectiveDate: "2025-01-01", insurer: "Star Health", changeType: "Coverage Expansion", therapyArea: "Diabetes", expectedDemandImpact: "+8%", affectedSKUs: ["SKU004", "SKU010"] },
+    { effectiveDate: "2025-04-01", insurer: "ICICI Lombard", changeType: "OPD Coverage", therapyArea: "General", expectedDemandImpact: "+5%", affectedSKUs: ["SKU001", "SKU003", "SKU008"] },
+    { effectiveDate: "2025-07-01", insurer: "Ayushman Bharat", changeType: "Hospital Rate Revision", therapyArea: "Critical Care", expectedDemandImpact: "+12%", affectedSKUs: ["SKU004", "SKU009"] },
+    { effectiveDate: "2025-10-01", insurer: "HDFC Ergo", changeType: "Preventive Care", therapyArea: "Vitamins", expectedDemandImpact: "+6%", affectedSKUs: ["SKU008"] },
   ],
 
   // New Product Launches
   "New_Product_Launches": [
-    { launchId: "NPL001", productName: "Paracetamol 650mg FD Tablet", brand: "Calmofen Plus", launchDate: "2024-02-01", therapyArea: "Analgesic", expectedVolume: 50000, cannibalizationRisk: "SKU001" },
-    { launchId: "NPL002", productName: "Azithromycin 250mg Suspension", brand: "AziSure Junior", launchDate: "2024-03-15", therapyArea: "Antibiotic", expectedVolume: 25000, cannibalizationRisk: "None" },
-    { launchId: "NPL003", productName: "Insulin Aspart Pen", brand: "Rapidis", launchDate: "2024-05-01", therapyArea: "Diabetes", expectedVolume: 8000, cannibalizationRisk: "SKU004" },
-    { launchId: "NPL004", productName: "Vitamin D3 + K2 Combo", brand: "D3Max Plus", launchDate: "2024-09-01", therapyArea: "Vitamins", expectedVolume: 35000, cannibalizationRisk: "SKU008" },
+    { launchId: "NPL001", productName: "Paracetamol 650mg FD Tablet", brand: "Calmofen Plus", launchDate: "2025-02-01", therapyArea: "Analgesic", expectedVolume: 50000, cannibalizationRisk: "SKU001" },
+    { launchId: "NPL002", productName: "Azithromycin 250mg Suspension", brand: "AziSure Junior", launchDate: "2025-03-15", therapyArea: "Antibiotic", expectedVolume: 25000, cannibalizationRisk: "None" },
+    { launchId: "NPL003", productName: "Insulin Aspart Pen", brand: "Rapidis", launchDate: "2025-05-01", therapyArea: "Diabetes", expectedVolume: 8000, cannibalizationRisk: "SKU004" },
+    { launchId: "NPL004", productName: "Vitamin D3 + K2 Combo", brand: "D3Max Plus", launchDate: "2025-09-01", therapyArea: "Vitamins", expectedVolume: 35000, cannibalizationRisk: "SKU008" },
   ],
 };

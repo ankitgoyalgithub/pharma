@@ -51,7 +51,7 @@ const sampleData: ForecastRecord[] = [
     confidence: 92,
     trend: "increasing",
     region: "North",
-    lastUpdated: "2024-01-15"
+    lastUpdated: "2025-01-15"
   },
   {
     id: "2", 
@@ -63,7 +63,7 @@ const sampleData: ForecastRecord[] = [
     confidence: 87,
     trend: "stable",
     region: "South",
-    lastUpdated: "2024-01-15"
+    lastUpdated: "2025-01-15"
   },
   {
     id: "3",
@@ -75,7 +75,7 @@ const sampleData: ForecastRecord[] = [
     confidence: 84,
     trend: "decreasing",
     region: "East",
-    lastUpdated: "2024-01-14"
+    lastUpdated: "2025-01-14"
   },
   {
     id: "4",
@@ -87,7 +87,7 @@ const sampleData: ForecastRecord[] = [
     confidence: 91,
     trend: "increasing",
     region: "West",
-    lastUpdated: "2024-01-15"
+    lastUpdated: "2025-01-15"
   },
   {
     id: "5",
@@ -99,7 +99,7 @@ const sampleData: ForecastRecord[] = [
     confidence: 89,
     trend: "stable",
     region: "North",
-    lastUpdated: "2024-01-14"
+    lastUpdated: "2025-01-14"
   }
 ];
 

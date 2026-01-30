@@ -39,7 +39,7 @@ const Workflows = () => {
       name: 'Supply Chain Optimization',
       description: 'End-to-end supply chain planning workflow with demand forecasting and inventory optimization',
       status: 'active',
-      lastRun: '2024-07-18 14:30',
+      lastRun: '2025-07-18 14:30',
       visibility: 'public',
       blocks: 8,
       connections: 12
@@ -59,7 +59,7 @@ const Workflows = () => {
       name: 'Production Scheduling',
       description: 'Automated production planning and scheduling with resource optimization',
       status: 'active',
-      lastRun: '2024-07-19 09:15',
+      lastRun: '2025-07-19 09:15',
       visibility: 'public',
       blocks: 12,
       connections: 18
@@ -69,7 +69,7 @@ const Workflows = () => {
       name: 'Merchandise Planning',
       description: 'Comprehensive merchandise planning with sales forecasting, assortment optimization, and replenishment',
       status: 'active',
-      lastRun: '2024-07-20 11:45',
+      lastRun: '2025-07-20 11:45',
       visibility: 'public',
       blocks: 11,
       connections: 10,

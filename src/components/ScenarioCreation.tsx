@@ -227,7 +227,7 @@ export const ScenarioCreation: React.FC<ScenarioCreationProps> = ({
                       id="scenario-name"
                       value={scenarioName}
                       onChange={(e) => setScenarioName(e.target.value)}
-                      placeholder="e.g., Holiday Season 2024"
+                      placeholder="e.g., Monsoon Season 2025"
                       className="h-10"
                     />
                   </div>

@@ -32,13 +32,13 @@ export const foundryDataMapper = {
   "Sales_Historical": salesHistoryData,
   "Inventory_Data": inventoryLevelsData,
   "Price_History": [
-    { date: "2024-07-01", product: "Widget A", price: 29.99, currency: "USD" },
-    { date: "2024-07-02", product: "Widget A", price: 30.25, currency: "USD" },
-    { date: "2024-07-03", product: "Component B", price: 15.50, currency: "USD" }
+    { date: "2025-07-01", product: "Widget A", price: 29.99, currency: "USD" },
+    { date: "2025-07-02", product: "Widget A", price: 30.25, currency: "USD" },
+    { date: "2025-07-03", product: "Component B", price: 15.50, currency: "USD" }
   ],
   "Promotion_Data": [
-    { date: "2024-07-01", product: "Widget A", discount: 10, type: "Percentage" },
-    { date: "2024-07-15", product: "Component B", discount: 5, type: "Percentage" }
+    { date: "2025-07-01", product: "Widget A", discount: 10, type: "Percentage" },
+    { date: "2025-07-15", product: "Component B", discount: 5, type: "Percentage" }
   ],
   
   // Feature Store Data
@@ -53,12 +53,12 @@ export const foundryDataMapper = {
   "Generic_Drug_Launches": genericDrugLaunchesData,
   "Disease_Outbreak_Tracking": diseaseOutbreakData,
   "NSE_Index": [
-    { date: "2024-07-01", index: "NIFTY50", value: 24500, change: 125.5 },
-    { date: "2024-07-02", index: "NIFTY50", value: 24350, change: -150.0 }
+    { date: "2025-07-01", index: "NIFTY50", value: 24500, change: 125.5 },
+    { date: "2025-07-02", index: "NIFTY50", value: 24350, change: -150.0 }
   ],
   "NASDAQ_Index": [
-    { date: "2024-07-01", index: "NASDAQ", value: 18200, change: 85.2 },
-    { date: "2024-07-02", index: "NASDAQ", value: 18150, change: -50.0 }
+    { date: "2025-07-01", index: "NASDAQ", value: 18200, change: 85.2 },
+    { date: "2025-07-02", index: "NASDAQ", value: 18150, change: -50.0 }
   ],
   "Search_Trends": [
     { date: "2023-01-01", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 38 },
