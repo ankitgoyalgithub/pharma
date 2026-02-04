@@ -55,6 +55,7 @@ export const foundryDataMapper = {
   "Generic_Drug_Launches": genericDrugLaunchesData,
   "Seasonality_Trends": seasonalityTrendsData,
   "Promotional_Campaigns": promotionalCampaignsData,
+  "Promotions_Discounts": promotionalCampaignsData,
   "NSE_Index": [
     { date: "2025-07-01", index: "NIFTY50", value: 24500, change: 125.5 },
     { date: "2025-07-02", index: "NIFTY50", value: 24350, change: -150.0 }
