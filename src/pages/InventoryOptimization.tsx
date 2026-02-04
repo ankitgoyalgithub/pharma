@@ -189,7 +189,7 @@ const InventoryOptimization = () => {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<"overview" | "policies" | "capital" | "workbook" | "quality">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "policies" | "workbook" | "quality">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
   const [chartGranularity, setChartGranularity] = useState<"daily" | "weekly" | "monthly" | "quarterly">("weekly");
 
@@ -1091,7 +1091,7 @@ const InventoryOptimization = () => {
 
             <div className="flex justify-center">
               <ForecastCard
-                title="Therapy Area Insights"
+                title="Insights"
                 value="7"
                 subtitle={`Therapy areas tracked, Antibiotics lead
                           GI highest stockout risk`}
@@ -1100,21 +1100,6 @@ const InventoryOptimization = () => {
                 onClick={() => {
                   setSelectedScenario(null);
                   setActiveTab("policies");
-                }}
-              />
-            </div>
-
-            <div className="flex justify-center">
-              <ForecastCard
-                title="Capital & Expiry Risk"
-                value="₹8.6Cr"
-                subtitle={`Working capital tied up
-                          ₹32L near-expiry stock identified`}
-                icon={Wallet}
-                isActive={selectedScenario === null && activeTab === "capital"}
-                onClick={() => {
-                  setSelectedScenario(null);
-                  setActiveTab("capital");
                 }}
               />
             </div>
@@ -1184,7 +1169,6 @@ const InventoryOptimization = () => {
             <h1 className="text-2xl font-bold text-foreground">
               {activeTab === "overview" && "Inventory Overview"}
               {activeTab === "policies" && "Policy Insights"}
-              {activeTab === "capital" && "Capital & Cost Impact"}
               {activeTab === "workbook" && "Policy Workbook"}
               {activeTab === "quality" && "Data Quality Review"}
             </h1>
@@ -1192,7 +1176,6 @@ const InventoryOptimization = () => {
               {activeTab === "overview" && "Comprehensive inventory insights and analytics"}
               {activeTab === "policies" && "Reorder points, safety stock, and policy recommendations"}
               {activeTab === "workbook" && "Interactive data table with optimization results"}
-              {activeTab === "capital" && "Working capital analysis and cost optimization"}
               {activeTab === "quality" && "Data integrity assessment and AI-enhanced quality insights"}
             </p>
           </div>
@@ -1594,41 +1577,6 @@ const InventoryOptimization = () => {
               </div>
             )}
 
-            {activeTab === "capital" && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Total Investment</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold text-primary">₹4.2Cr</div>
-                      <p className="text-sm text-muted-foreground mt-2">Working capital tied up in inventory</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Carrying Cost</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold text-warning">14%</div>
-                      <p className="text-sm text-muted-foreground mt-2">Annual carrying cost rate</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Potential Savings</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold text-success">₹0.6Cr</div>
-                      <p className="text-sm text-muted-foreground mt-2">Through optimization</p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            )}
 
             {activeTab === "workbook" && (
               <div className="space-y-4">
