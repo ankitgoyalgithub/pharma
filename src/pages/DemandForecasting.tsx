@@ -2462,71 +2462,6 @@ const DemandForecasting = () => {
               />
             </div>
 
-            {/* Enhanced Forecast Snapshot - Logility & Kinexis Inspired */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5 mb-5">
-              {/* AI Insights & Recommendations */}
-              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300 lg:col-span-2">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                      <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-                      AI-Powered Insights & Recommendations
-                    </CardTitle>
-                    <Badge variant="secondary" className="bg-primary/15 text-primary border border-primary/20 shadow-sm">
-                      <Brain className="w-3 h-3 mr-1" />
-                      ML Enhanced
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="p-4 rounded-xl bg-success/10 border border-success/30 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-start gap-3">
-                      <Target className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">ABC Revenue Concentration Alert</span>
-                          <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">₹52.8Cr Impact</Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                          Class A items (Insulin Glargine SKU004, Azithromycin SKU002, Amoxicillin SKU005) drive 68.5% revenue but show 12% forecast variance in Delhi and Mumbai hospital chains. Recommend daily inventory reviews and +22% safety stock for Q1 2025 to prevent ₹2.4Cr stockout risk on life-saving medications.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 rounded-xl bg-warning/10 border border-warning/30 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">Generic Drug Launch Alert - Cholecalciferol</span>
-                          <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2024</Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                          Generic Vitamin D3 launch expected to trigger 18% volume surge and 12% price erosion. D3Max (SKU008) faces competition. Secure API supply now and build 8 weeks safety stock to capture market opportunity.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-xl bg-info/10 border border-info/30 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-start gap-3">
-                      <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-sm">Monsoon Disease Outbreak Intelligence</span>
-                          <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+42% Peak</Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                          Seasonal illness data shows 42% surge in respiratory medications during winter (Nov-Feb) and dengue outbreak spike in monsoon (Jul-Sep). Pre-position Azithromycin (SKU002), Paracetamol (SKU001), and Cetirizine (SKU003) in affected regions 4 weeks ahead.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-            </div>
 
             {/* Forecast Accuracy Trend & Exceptions */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -2636,6 +2571,68 @@ const DemandForecasting = () => {
 
         {activeTab === "insights" && (
           <div className="space-y-6 animate-fade-in">
+            {/* AI-Powered Insights & Recommendations */}
+            <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                    <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                    AI-Powered Insights & Recommendations
+                  </CardTitle>
+                  <Badge variant="secondary" className="bg-primary/15 text-primary border border-primary/20 shadow-sm">
+                    <Brain className="w-3 h-3 mr-1" />
+                    ML Enhanced
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-4 rounded-xl bg-success/10 border border-success/30 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start gap-3">
+                    <Target className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-sm">ABC Revenue Concentration Alert</span>
+                        <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">₹52.8Cr Impact</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Class A items (Insulin Glargine SKU004, Azithromycin SKU002, Amoxicillin SKU005) drive 68.5% revenue but show 12% forecast variance in Delhi and Mumbai hospital chains. Recommend daily inventory reviews and +22% safety stock for Q1 2025 to prevent ₹2.4Cr stockout risk on life-saving medications.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-xl bg-warning/10 border border-warning/30 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start gap-3">
+                    <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-sm">Generic Drug Launch Alert - Cholecalciferol</span>
+                        <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2024</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Generic Vitamin D3 launch expected to trigger 18% volume surge and 12% price erosion. D3Max (SKU008) faces competition. Secure API supply now and build 8 weeks safety stock to capture market opportunity.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-xl bg-info/10 border border-info/30 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start gap-3">
+                    <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-sm">Monsoon Disease Outbreak Intelligence</span>
+                        <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+42% Peak</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Seasonal illness data shows 42% surge in respiratory medications during winter (Nov-Feb) and dengue outbreak spike in monsoon (Jul-Sep). Pre-position Azithromycin (SKU002), Paracetamol (SKU001), and Cetirizine (SKU003) in affected regions 4 weeks ahead.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Top Row: ABC-XYZ Matrix (half) + Channel Distribution (half) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* ABC-XYZ Segmentation Matrix */}
