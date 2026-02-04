@@ -3911,7 +3911,7 @@ const DemandForecasting = () => {
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Database className="w-5 h-5 text-primary" />
-                {previewDriverDialog.driverName} - Sample Data
+                {previewDriverDialog.driverName}
               </DialogTitle>
             </DialogHeader>
             <div className="flex-1 overflow-y-auto">
@@ -3923,12 +3923,16 @@ const DemandForecasting = () => {
                   return (
                     <div className="flex flex-col items-center justify-center py-12">
                       <Database className="w-12 h-12 text-muted-foreground mb-4" />
-                      <p className="text-sm text-muted-foreground">No sample data available for this driver</p>
+                      <p className="text-sm text-muted-foreground">No data available for this driver</p>
                     </div>
                   );
                 }
                 
-                const columns = Object.keys(driverData[0]);
+                const columns = Object.keys(driverData[0]).filter(col => 
+                  !col.toLowerCase().includes('affectedsku') && 
+                  !col.toLowerCase().includes('competingwithsku') &&
+                  !col.toLowerCase().includes('affectedcategories')
+                );
                 
                 // Apply filters
                 let filteredData = driverData.filter((row: any) => {
