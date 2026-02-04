@@ -48,12 +48,11 @@ export const foundryDataMapper = {
   "Crude_Oil_Prices": crudeOilPricesData,
   "Weather_Data": weatherData,
   "Weather_Climate_Data": weatherClimateData,
-  "Seasonal_Illness_Patterns": seasonalIllnessData,
+  "Disease_Illness_Patterns": [...seasonalIllnessData.map(s => ({ ...s, type: "Seasonal Illness" })), ...diseaseOutbreakData.map(d => ({ ...d, type: "Outbreak" }))],
   "Prescription_Trends": prescriptionTrendsData,
   "Medical_Conference_Calendar": medicalConferenceData,
   "Healthcare_Policy_Changes": healthcarePolicyData,
   "Generic_Drug_Launches": genericDrugLaunchesData,
-  "Disease_Outbreak_Tracking": diseaseOutbreakData,
   "Seasonality_Trends": seasonalityTrendsData,
   "Promotional_Campaigns": promotionalCampaignsData,
   "NSE_Index": [
