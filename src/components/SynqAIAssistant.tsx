@@ -103,8 +103,11 @@ const generateResponse = (query: string): { content: string; chart?: Message["ch
     };
   }
 
-  // Top 5 SKUs by revenue
-  if ((lowerQuery.includes("top") && lowerQuery.includes("sku")) || (lowerQuery.includes("top 5") && lowerQuery.includes("revenue"))) {
+  // Top 5 SKUs by revenue - improved matching
+  if ((lowerQuery.includes("top") && (lowerQuery.includes("sku") || lowerQuery.includes("revenue"))) || 
+      (lowerQuery.includes("highest") && lowerQuery.includes("revenue")) ||
+      (lowerQuery.includes("best") && lowerQuery.includes("sku")) ||
+      (lowerQuery.includes("revenue") && lowerQuery.includes("sku"))) {
     const sortedSkus = [...skuData].sort((a, b) => {
       const aVal = parseFloat(a.actual.replace("₹", "").replace("M", ""));
       const bVal = parseFloat(b.actual.replace("₹", "").replace("M", ""));
