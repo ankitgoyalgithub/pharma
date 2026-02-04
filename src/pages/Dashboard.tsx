@@ -335,19 +335,7 @@ export default function Dashboard() {
                   Finance
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="pricing" 
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow hover:text-foreground"
-                >
-                  Pricing
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="esg" 
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow hover:text-foreground"
-                >
-                  ESG
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="past-studies" 
+                  value="past-studies"
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow hover:text-foreground"
                 >
                   Past Studies
@@ -383,34 +371,6 @@ export default function Dashboard() {
             <TabsContent value="finance" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredModules(financeModules).map((module, index) => (
-                  <ModuleTile
-                    key={module.title}
-                    {...module}
-                    onClick={() => handleModuleClick(module.route)}
-                    className="animate-scale-in"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="pricing" className="mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredModules(pricingModules).map((module, index) => (
-                  <ModuleTile
-                    key={module.title}
-                    {...module}
-                    onClick={() => handleModuleClick(module.route)}
-                    className="animate-scale-in"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="esg" className="mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredModules(esgModules).map((module, index) => (
                   <ModuleTile
                     key={module.title}
                     {...module}
