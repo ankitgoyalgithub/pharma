@@ -2879,131 +2879,118 @@ const DemandForecasting = () => {
               </Card>
             </div>
 
-            {/* Impact Analysis Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Contribution Analysis */}
-              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                      <BarChart3 className="w-5 h-5" />
-                      Contribution Analysis
-                    </CardTitle>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-4 h-4 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Shows how different factors adjust the base forecast.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-56">
-                    <Bar 
-                      data={{
-                        labels: ['Base Forecast', 'Seasonality', 'Promotions', 'Price Change', 'Final Forecast'],
-                        datasets: [{
-                          label: 'Contribution ($M)',
-                          data: [85, 8, 12, -3, 108],
-                          backgroundColor: [
-                            hslVar('--primary', 0.8),
-                            hslVar('--success', 0.8),
-                            hslVar('--warning', 0.8),
-                            hslVar('--destructive', 0.8),
-                            hslVar('--primary', 0.9)
-                          ],
-                          borderColor: [
-                            hslVar('--primary'),
-                            hslVar('--success'),
-                            hslVar('--warning'),
-                            hslVar('--destructive'),
-                            hslVar('--primary')
-                          ],
-                          borderWidth: 2
-                        }]
-                      }}
-                      options={{
-                        ...buildChartOptions(),
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                          legend: { display: false }
-                        },
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Impact ($M)', font: { size: 10 } }
+            {/* Driver Impact Analysis */}
+            <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                    <BarChart3 className="w-5 h-5" />
+                    External Driver Impact on Forecast
+                  </CardTitle>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-4 h-4 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Shows how each external driver adjusts the statistical baseline forecast (in ₹ Crores).</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Waterfall breakdown: Statistical Baseline → Driver Adjustments → Final Forecast
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <Bar 
+                    data={{
+                      labels: [
+                        'Statistical Baseline', 
+                        'Seasonality (Monsoon)', 
+                        'Promotional Campaigns', 
+                        'Generic Drug Launches', 
+                        'Healthcare Policy', 
+                        'Weather Impact',
+                        'Final Forecast'
+                      ],
+                      datasets: [{
+                        label: 'Impact (₹ Cr)',
+                        data: [68.2, 4.8, 6.2, -2.4, 3.1, 2.5, 82.4],
+                        backgroundColor: [
+                          hslVar('--muted-foreground', 0.6),
+                          hslVar('--success', 0.8),
+                          hslVar('--warning', 0.8),
+                          hslVar('--destructive', 0.8),
+                          hslVar('--info', 0.8),
+                          hslVar('--primary', 0.8),
+                          hslVar('--primary', 0.9)
+                        ],
+                        borderColor: [
+                          hslVar('--muted-foreground'),
+                          hslVar('--success'),
+                          hslVar('--warning'),
+                          hslVar('--destructive'),
+                          hslVar('--info'),
+                          hslVar('--primary'),
+                          hslVar('--primary')
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 4
+                      }]
+                    }}
+                    options={{
+                      ...buildChartOptions(),
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                          callbacks: {
+                            label: (context) => {
+                              const value = context.raw as number;
+                              const label = context.label;
+                              if (label === 'Statistical Baseline' || label === 'Final Forecast') {
+                                return `${label}: ₹${value} Cr`;
+                              }
+                              return `${value > 0 ? '+' : ''}₹${value} Cr`;
+                            }
                           }
                         }
-                      }}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Sensitivity Analysis */}
-              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                      <BarChart3 className="w-5 h-5" />
-                      Sensitivity Analysis
-                    </CardTitle>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-4 h-4 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Drivers ranked by forecast impact.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-56">
-                    <Bar 
-                      data={{
-                        labels: ['Price Elasticity', 'Promotion Depth', 'Seasonality', 'Market Growth'],
-                        datasets: [{
-                          label: 'Impact Range (%)',
-                          data: [15, 12, 8, 6],
-                          backgroundColor: [
-                            hslVar('--destructive', 0.8),
-                            hslVar('--warning', 0.8),
-                            hslVar('--primary', 0.8),
-                            hslVar('--success', 0.8)
-                          ],
-                          borderColor: [
-                            hslVar('--destructive'),
-                            hslVar('--warning'),
-                            hslVar('--primary'),
-                            hslVar('--success')
-                          ],
-                          borderWidth: 2
-                        }]
-                      }}
-                      options={{
-                        ...buildChartOptions(),
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        plugins: {
-                          legend: { display: false }
+                      },
+                      scales: {
+                        y: {
+                          beginAtZero: true,
+                          title: { display: true, text: 'Revenue (₹ Crores)', font: { size: 10 } },
+                          grid: { color: hslVar('--border', 0.5) }
                         },
-                        scales: {
-                          x: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Sensitivity (±%)', font: { size: 10 } }
-                          }
+                        x: {
+                          ticks: { 
+                            font: { size: 9 },
+                            maxRotation: 45,
+                            minRotation: 45
+                          },
+                          grid: { display: false }
                         }
-                      }}
-                    />
+                      }
+                    }}
+                  />
+                </div>
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: hslVar('--success', 0.8) }}></div>
+                    <span className="text-muted-foreground">Seasonality: +₹4.8 Cr (monsoon respiratory demand)</span>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: hslVar('--warning', 0.8) }}></div>
+                    <span className="text-muted-foreground">Promotions: +₹6.2 Cr (trade schemes & campaigns)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: hslVar('--destructive', 0.8) }}></div>
+                    <span className="text-muted-foreground">Generics: -₹2.4 Cr (new generic launches)</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
           </div>
         )}
