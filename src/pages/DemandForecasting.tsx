@@ -2526,68 +2526,6 @@ const DemandForecasting = () => {
                 </CardContent>
               </Card>
 
-              {/* Forecast Value Added (FVA) */}
-              <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="text-base font-semibold">Forecast Value Added</CardTitle>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-4 h-4 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="max-w-xs">FVA measures the improvement your forecast provides over a naive baseline. Positive FVA indicates value creation.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="text-center p-4 bg-gradient-to-br from-success/5 to-success/10 rounded-lg border border-success/20">
-                    <div className="text-3xl font-bold text-success">+15.6%</div>
-                    <div className="text-xs text-muted-foreground mt-1">vs Naive Forecast</div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Statistical Model</span>
-                      <div className="flex items-center gap-1">
-                        <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="w-3/4 h-full bg-primary"></div>
-                        </div>
-                        <span className="font-medium">+12%</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">ML Enhancement</span>
-                      <div className="flex items-center gap-1">
-                        <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="w-5/6 h-full bg-success"></div>
-                        </div>
-                        <span className="font-medium">+6.4%</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Planner Input</span>
-                      <div className="flex items-center gap-1">
-                        <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="w-1/3 h-full bg-info"></div>
-                        </div>
-                        <span className="font-medium text-destructive">-2.8%</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t">
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Consensus Progress</span>
-                      <span className="font-medium">78%</span>
-                    </div>
-                    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="w-4/5 h-full bg-gradient-to-r from-primary to-success"></div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Forecast Accuracy Trend & Exceptions */}
