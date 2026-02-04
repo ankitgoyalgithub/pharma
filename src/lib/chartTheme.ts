@@ -39,17 +39,25 @@ export const buildChartOptions = (overrides: any = {}) => {
   const base: any = {
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 0 }, // Disable animations globally for performance
+    animation: false, // Disable animations completely for performance
+    hover: {
+      animationDuration: 0, // Disable hover animation
+    },
+    responsiveAnimationDuration: 0, // Disable resize animation
     plugins: {
       legend: {
         labels: { color: muted },
       },
       tooltip: {
+        enabled: true,
+        animation: false, // Disable tooltip animation for instant response
         backgroundColor: card,
         titleColor: fg,
         bodyColor: fg,
         borderColor: grid,
         borderWidth: 1,
+        intersect: false, // Show tooltip when hovering near, not just on exact point
+        mode: 'index', // Show all items at that index for better UX
       },
     },
     scales: {

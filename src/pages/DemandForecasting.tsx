@@ -2879,25 +2879,25 @@ const DemandForecasting = () => {
               </Card>
             </div>
 
-            {/* Driver Impact Analysis */}
+            {/* Forecast Accuracy by Therapeutic Category */}
             <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
                   <CardTitle className="flex items-center gap-2 text-base font-semibold">
                     <BarChart3 className="w-5 h-5" />
-                    External Driver Impact on Forecast
+                    Forecast Accuracy by Therapeutic Category
                   </CardTitle>
                   <Tooltip>
                     <TooltipTrigger>
                       <Info className="w-4 h-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Shows how each external driver adjusts the statistical baseline forecast (in ₹ Crores).</p>
+                      <p>Compares forecast accuracy and bias across therapeutic categories to identify improvement areas.</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Waterfall breakdown: Statistical Baseline → Driver Adjustments → Final Forecast
+                  Green bars indicate accuracy ≥85% | Orange 75-84% | Red &lt;75%
                 </p>
               </CardHeader>
               <CardContent>
@@ -2905,38 +2905,40 @@ const DemandForecasting = () => {
                   <Bar 
                     data={{
                       labels: [
-                        'Statistical Baseline', 
-                        'Seasonality (Monsoon)', 
-                        'Promotional Campaigns', 
-                        'Generic Drug Launches', 
-                        'Healthcare Policy', 
-                        'Weather Impact',
-                        'Final Forecast'
+                        'Antibiotics', 
+                        'Cardiovascular', 
+                        'Respiratory', 
+                        'Diabetes Care', 
+                        'Pain Relief', 
+                        'GI & Antacids',
+                        'Vitamins & Supplements'
                       ],
-                      datasets: [{
-                        label: 'Impact (₹ Cr)',
-                        data: [68.2, 4.8, 6.2, -2.4, 3.1, 2.5, 82.4],
-                        backgroundColor: [
-                          hslVar('--muted-foreground', 0.6),
-                          hslVar('--success', 0.8),
-                          hslVar('--warning', 0.8),
-                          hslVar('--destructive', 0.8),
-                          hslVar('--info', 0.8),
-                          hslVar('--primary', 0.8),
-                          hslVar('--primary', 0.9)
-                        ],
-                        borderColor: [
-                          hslVar('--muted-foreground'),
-                          hslVar('--success'),
-                          hslVar('--warning'),
-                          hslVar('--destructive'),
-                          hslVar('--info'),
-                          hslVar('--primary'),
-                          hslVar('--primary')
-                        ],
-                        borderWidth: 2,
-                        borderRadius: 4
-                      }]
+                      datasets: [
+                        {
+                          label: 'Accuracy %',
+                          data: [88.2, 84.1, 79.5, 91.3, 82.7, 86.4, 77.2],
+                          backgroundColor: [
+                            hslVar('--success', 0.8),
+                            hslVar('--warning', 0.8),
+                            hslVar('--warning', 0.8),
+                            hslVar('--success', 0.8),
+                            hslVar('--warning', 0.8),
+                            hslVar('--success', 0.8),
+                            hslVar('--destructive', 0.8)
+                          ],
+                          borderColor: [
+                            hslVar('--success'),
+                            hslVar('--warning'),
+                            hslVar('--warning'),
+                            hslVar('--success'),
+                            hslVar('--warning'),
+                            hslVar('--success'),
+                            hslVar('--destructive')
+                          ],
+                          borderWidth: 2,
+                          borderRadius: 4
+                        }
+                      ]
                     }}
                     options={{
                       ...buildChartOptions(),
@@ -2945,22 +2947,24 @@ const DemandForecasting = () => {
                       plugins: {
                         legend: { display: false },
                         tooltip: {
+                          animation: false,
                           callbacks: {
                             label: (context) => {
                               const value = context.raw as number;
-                              const label = context.label;
-                              if (label === 'Statistical Baseline' || label === 'Final Forecast') {
-                                return `${label}: ₹${value} Cr`;
-                              }
-                              return `${value > 0 ? '+' : ''}₹${value} Cr`;
+                              return `Accuracy: ${value}%`;
+                            },
+                            afterLabel: (context) => {
+                              const biasValues = ['+2.1%', '-3.2%', '+5.8%', '+0.9%', '-2.4%', '+1.7%', '+6.3%'];
+                              return `Bias: ${biasValues[context.dataIndex]}`;
                             }
                           }
                         }
                       },
                       scales: {
                         y: {
-                          beginAtZero: true,
-                          title: { display: true, text: 'Revenue (₹ Crores)', font: { size: 10 } },
+                          min: 60,
+                          max: 100,
+                          title: { display: true, text: 'Accuracy (%)', font: { size: 10 } },
                           grid: { color: hslVar('--border', 0.5) }
                         },
                         x: {
@@ -2975,18 +2979,18 @@ const DemandForecasting = () => {
                     }}
                   />
                 </div>
-                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded" style={{ backgroundColor: hslVar('--success', 0.8) }}></div>
-                    <span className="text-muted-foreground">Seasonality: +₹4.8 Cr (monsoon respiratory demand)</span>
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                  <div className="p-3 rounded-lg bg-success/10 border border-success/20">
+                    <div className="font-medium text-success mb-1">Best Performing</div>
+                    <div className="text-muted-foreground">Diabetes Care (91.3%) - stable demand patterns</div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded" style={{ backgroundColor: hslVar('--warning', 0.8) }}></div>
-                    <span className="text-muted-foreground">Promotions: +₹6.2 Cr (trade schemes & campaigns)</span>
+                  <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
+                    <div className="font-medium text-warning mb-1">Needs Attention</div>
+                    <div className="text-muted-foreground">Respiratory (79.5%) - high seasonality variance</div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded" style={{ backgroundColor: hslVar('--destructive', 0.8) }}></div>
-                    <span className="text-muted-foreground">Generics: -₹2.4 Cr (new generic launches)</span>
+                  <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                    <div className="font-medium text-destructive mb-1">Action Required</div>
+                    <div className="text-muted-foreground">Vitamins (77.2%) - review external drivers</div>
                   </div>
                 </div>
               </CardContent>
