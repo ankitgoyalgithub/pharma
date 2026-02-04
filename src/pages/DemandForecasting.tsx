@@ -2433,7 +2433,7 @@ const DemandForecasting = () => {
             {/* Top KPI Row - 3 Cards */}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3 mb-4">
               <CompactMetricCard
-                value={appliedFilters.businessUnits === 'enterprise' ? '7.2%' : '8.7%'}
+                value={appliedFilters.businessUnits === 'enterprise' ? '16.4%' : '18.2%'}
                 label="MAPE"
                 tooltip="Mean Absolute Percentage Error - average forecast error as percentage. Lower is better."
                 valueColor="primary"
@@ -2455,7 +2455,7 @@ const DemandForecasting = () => {
               />
 
               <CompactMetricCard
-                value={appliedFilters.businessUnits === 'enterprise' ? '6.8%' : '9.3%'}
+                value={appliedFilters.businessUnits === 'enterprise' ? '15.1%' : '17.5%'}
                 label="VMAPE"
                 tooltip="Volume-weighted MAPE - accuracy metric accounting for volume importance of each forecast."
                 valueColor="info"
@@ -3005,70 +3005,6 @@ const DemandForecasting = () => {
               </Card>
             </div>
 
-            {/* Key Impact Insights */}
-            <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                  <Award className="w-5 h-5" />
-                  Key Impact Insights
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-primary">Primary Drivers</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Price Sensitivity</span>
-                        <Badge variant="secondary" className="bg-destructive/10 text-destructive">High</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Promotion Response</span>
-                        <Badge variant="secondary" className="bg-warning/10 text-warning">Medium</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Seasonal Effect</span>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary">Medium</Badge>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-success">Performance</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Forecast Accuracy</span>
-                        <span className="font-medium">89.2%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Revenue Impact</span>
-                        <span className="font-medium">+$14.2M</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Confidence</span>
-                        <Badge variant="secondary" className="bg-success/10 text-success">87%</Badge>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-info">Risk Assessment</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Prediction Interval</span>
-                        <span className="font-medium">±$8.1M</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Risk Level</span>
-                        <Badge variant="secondary" className="bg-warning/10 text-warning">Medium</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Model Bias</span>
-                        <span className="font-medium">-2.1%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         )}
         {activeTab === "workbook" && (
