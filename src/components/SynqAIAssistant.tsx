@@ -103,11 +103,12 @@ const generateResponse = (query: string): { content: string; chart?: Message["ch
     };
   }
 
-  // Top 5 SKUs by revenue - improved matching
-  if ((lowerQuery.includes("top") && (lowerQuery.includes("sku") || lowerQuery.includes("revenue"))) || 
-      (lowerQuery.includes("highest") && lowerQuery.includes("revenue")) ||
-      (lowerQuery.includes("best") && lowerQuery.includes("sku")) ||
-      (lowerQuery.includes("revenue") && lowerQuery.includes("sku"))) {
+  // Top 5 SKUs by revenue - improved matching for various phrasings
+  if ((lowerQuery.includes("top") && (lowerQuery.includes("sku") || lowerQuery.includes("revenue") || lowerQuery.includes("selling") || lowerQuery.includes("product"))) || 
+      (lowerQuery.includes("highest") && (lowerQuery.includes("revenue") || lowerQuery.includes("selling") || lowerQuery.includes("sales"))) ||
+      (lowerQuery.includes("best") && (lowerQuery.includes("sku") || lowerQuery.includes("selling") || lowerQuery.includes("product"))) ||
+      (lowerQuery.includes("revenue") && lowerQuery.includes("sku")) ||
+      (lowerQuery.includes("selling") && lowerQuery.includes("sku"))) {
     const sortedSkus = [...skuData].sort((a, b) => {
       const aVal = parseFloat(a.actual.replace("₹", "").replace("M", ""));
       const bVal = parseFloat(b.actual.replace("₹", "").replace("M", ""));
@@ -514,10 +515,17 @@ export const SynqAIAssistant: React.FC = () => {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [showAllQuestions, setShowAllQuestions] = useState(false);
+  const [questionCount, setQuestionCount] = useState(0);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
 
   const handleSendMessage = (text?: string) => {
     const messageText = text || inputValue.trim();
     if (!messageText) return;
+
+    // Check if demo quota exceeded
+    if (quotaExceeded) {
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -529,8 +537,24 @@ export const SynqAIAssistant: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputValue("");
 
+    const newCount = questionCount + 1;
+    setQuestionCount(newCount);
+
     // Generate data-driven response
     setTimeout(() => {
+      // Check if this is the 3rd question (after 2 answered)
+      if (newCount > 2) {
+        setQuotaExceeded(true);
+        const quotaMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          type: "bot",
+          content: "⚠️ **Demo Quota Exceeded**\n\nYou've reached the limit of 2 free questions in this demo session.\n\nTo unlock unlimited AI-powered analytics:\n• Upgrade to Pro plan\n• Contact sales@upsynq.com\n\nThank you for trying SynqAI!",
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, quotaMessage]);
+        return;
+      }
+
       const response = generateResponse(messageText);
       
       const botMessage: Message = {
@@ -699,23 +723,30 @@ export const SynqAIAssistant: React.FC = () => {
 
           {/* Input */}
           <div className="px-4 py-4 border-t border-border">
-            <div className="flex gap-2">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                placeholder="Ask about SKUs, regions, channels..."
-                className="flex-1 h-11"
-              />
-              <Button
-                onClick={() => handleSendMessage()}
-                size="icon"
-                className="h-11 w-11"
-                disabled={!inputValue.trim()}
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
+            {quotaExceeded ? (
+              <div className="text-center py-2">
+                <p className="text-sm text-muted-foreground">Demo quota exceeded</p>
+                <p className="text-xs text-muted-foreground mt-1">Upgrade to continue using SynqAI</p>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                  placeholder="Ask about SKUs, regions, channels..."
+                  className="flex-1 h-11"
+                />
+                <Button
+                  onClick={() => handleSendMessage()}
+                  size="icon"
+                  className="h-11 w-11"
+                  disabled={!inputValue.trim()}
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>
