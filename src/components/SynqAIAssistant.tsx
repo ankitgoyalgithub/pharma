@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sparkles, Send, ChevronDown, ChevronUp, BarChart3, TrendingUp, Package, MapPin, Building2, AlertTriangle, Target, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Bar, Pie, Line } from "react-chartjs-2";
+import ReactMarkdown from "react-markdown";
 import { skuData } from "@/data/demandForecasting/skuData";
 import { workbookData } from "@/data/demandForecasting/workbookData";
 
@@ -626,7 +627,18 @@ export const SynqAIAssistant: React.FC = () => {
                         : "bg-muted border border-border"
                     }`}
                   >
-                    <div className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</div>
+                    <div className="text-sm leading-relaxed prose prose-sm dark:prose-invert max-w-none">
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                          strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                          ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
+                          li: ({ children }) => <li className="mb-1">{children}</li>,
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
                     
                     {/* Render chart if present */}
                     {message.chart && (

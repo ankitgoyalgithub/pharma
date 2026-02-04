@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Bar, Pie, Line } from 'react-chartjs-2';
+import ReactMarkdown from 'react-markdown';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -164,10 +165,11 @@ const generateResponse = (query: string): { text: string; chart?: Message['chart
     };
   }
   
-  // Top SKUs by revenue - improved matching
-  if ((lowerQuery.includes('top') && (lowerQuery.includes('sku') || lowerQuery.includes('revenue'))) ||
-      (lowerQuery.includes('highest') && lowerQuery.includes('revenue')) ||
-      (lowerQuery.includes('best') && lowerQuery.includes('sku')) ||
+  // Top SKUs by revenue - improved matching for various phrasings
+  if ((lowerQuery.includes('top') && (lowerQuery.includes('sku') || lowerQuery.includes('revenue') || lowerQuery.includes('selling') || lowerQuery.includes('product'))) ||
+      (lowerQuery.includes('highest') && (lowerQuery.includes('revenue') || lowerQuery.includes('selling') || lowerQuery.includes('sales'))) ||
+      (lowerQuery.includes('best') && (lowerQuery.includes('sku') || lowerQuery.includes('selling') || lowerQuery.includes('product'))) ||
+      (lowerQuery.includes('selling') && lowerQuery.includes('sku')) ||
       (lowerQuery.includes('revenue') && lowerQuery.includes('sku'))) {
     const sorted = [...skuData].sort((a, b) => parseRevenue(b.actual) - parseRevenue(a.actual));
     return {
@@ -760,21 +762,17 @@ const Index = () => {
                       : 'bg-card border border-border'
                   }`}
                 >
-                  <div className="text-sm whitespace-pre-wrap">
-                    {message.content.split('\n').map((line, i) => {
-                      const boldMatch = line.match(/\*\*(.*?)\*\*/g);
-                      if (boldMatch) {
-                        const parts = line.split(/\*\*(.*?)\*\*/);
-                        return (
-                          <p key={i} className="mb-1">
-                            {parts.map((part, j) => 
-                              j % 2 === 1 ? <strong key={j}>{part}</strong> : part
-                            )}
-                          </p>
-                        );
-                      }
-                      return <p key={i} className="mb-1">{line}</p>;
-                    })}
+                  <div className="text-sm prose prose-sm dark:prose-invert max-w-none">
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                        strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                        ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
+                        li: ({ children }) => <li className="mb-1">{children}</li>,
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                   {message.chart && (
                     <div className="mt-4 h-48 bg-background/50 rounded-lg p-3">
