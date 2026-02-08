@@ -103,6 +103,7 @@ import {
   Title,
 } from "chart.js";
 import { Line, Bar, Pie, Scatter } from "react-chartjs-2";
+import ReactMarkdown from "react-markdown";
 import { CompactMetricCard } from "@/components/CompactMetricCard";
 import { CompactProjectionCard } from "@/components/CompactProjectionCard";
 import { DemandAnalysisChart } from "@/components/DemandAnalysisChart";
@@ -367,6 +368,8 @@ const DemandForecasting = () => {
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiMessages, setAiMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
+  const [aiQuestionCount, setAiQuestionCount] = useState(0);
+  const [aiQuotaExceeded, setAiQuotaExceeded] = useState(false);
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
   
 
@@ -444,12 +447,112 @@ const DemandForecasting = () => {
     }
   };
 
+  const generateAiResponse = (query: string): string => {
+    const lowerQuery = query.toLowerCase();
+
+    // Top 5 SKUs by revenue - improved matching
+    if ((lowerQuery.includes("top") && (lowerQuery.includes("sku") || lowerQuery.includes("revenue") || lowerQuery.includes("selling") || lowerQuery.includes("product"))) || 
+        (lowerQuery.includes("highest") && (lowerQuery.includes("revenue") || lowerQuery.includes("selling") || lowerQuery.includes("sales"))) ||
+        (lowerQuery.includes("best") && (lowerQuery.includes("sku") || lowerQuery.includes("selling") || lowerQuery.includes("product"))) ||
+        (lowerQuery.includes("revenue") && lowerQuery.includes("sku")) ||
+        (lowerQuery.includes("selling") && lowerQuery.includes("sku"))) {
+      const sortedSkus = [...skuData].sort((a, b) => {
+        const aVal = parseFloat(a.actual.replace("₹", "").replace("M", ""));
+        const bVal = parseFloat(b.actual.replace("₹", "").replace("M", ""));
+        return bVal - aVal;
+      }).slice(0, 5);
+
+      return `🏆 **Top 5 SKUs by Actual Revenue**\n\n${sortedSkus.map((s, i) => `${i + 1}. **${s.product}** - ${s.actual} (${s.accuracy} accuracy)`).join("\n")}`;
+    }
+
+    // SKU with highest accuracy
+    if (lowerQuery.includes("highest") && lowerQuery.includes("accuracy")) {
+      const bestSku = skuData.reduce((prev, curr) => 
+        parseInt(curr.accuracy) > parseInt(prev.accuracy) ? curr : prev
+      );
+      return `📊 **Highest Forecast Accuracy SKU**\n\n**${bestSku.product}** (${bestSku.sku}) has the highest accuracy at **${bestSku.accuracy}**\n\n• Location: ${bestSku.location}\n• Channel: ${bestSku.channel}\n• Forecasted: ${bestSku.forecasted}\n• Actual: ${bestSku.actual}\n• Variance: ${bestSku.variance}`;
+    }
+
+    // SKU with lowest accuracy
+    if (lowerQuery.includes("lowest") && lowerQuery.includes("accuracy")) {
+      const worstSku = skuData.reduce((prev, curr) => 
+        parseInt(curr.accuracy) < parseInt(prev.accuracy) ? curr : prev
+      );
+      return `⚠️ **Lowest Forecast Accuracy SKU**\n\n**${worstSku.product}** (${worstSku.sku}) needs attention at **${worstSku.accuracy}** accuracy\n\n• Location: ${worstSku.location}\n• Channel: ${worstSku.channel}\n• Variance: ${worstSku.variance}\n\n**Recommendation:** Review demand drivers and external factors affecting this SKU.`;
+    }
+
+    // Underperforming SKUs
+    if (lowerQuery.includes("underperform") || (lowerQuery.includes("negative") && lowerQuery.includes("variance"))) {
+      const underperforming = skuData.filter(s => s.variance.startsWith("-"));
+      return `📉 **Underperforming SKUs (Negative Variance)**\n\n${underperforming.map(s => `• **${s.product}** (${s.sku}): ${s.variance} variance\n  Forecasted: ${s.forecasted} → Actual: ${s.actual}`).join("\n\n")}\n\n**Total underperforming:** ${underperforming.length} out of ${skuData.length} SKUs`;
+    }
+
+    // Best performing region
+    if (lowerQuery.includes("region") && (lowerQuery.includes("best") || lowerQuery.includes("performance"))) {
+      const regionRevenue: Record<string, number> = {};
+      skuData.forEach(s => {
+        const region = s.location;
+        const revenue = parseFloat(s.actual.replace("₹", "").replace("M", ""));
+        regionRevenue[region] = (regionRevenue[region] || 0) + revenue;
+      });
+      
+      const sortedRegions = Object.entries(regionRevenue).sort((a, b) => b[1] - a[1]);
+      const bestRegion = sortedRegions[0];
+
+      return `🗺️ **Regional Sales Performance**\n\n🥇 **Best Region: ${bestRegion[0]}**\nTotal Revenue: ₹${bestRegion[1].toFixed(1)}M\n\n**All Regions Ranking:**\n${sortedRegions.map((r, i) => `${i + 1}. ${r[0]}: ₹${r[1].toFixed(1)}M`).join("\n")}`;
+    }
+
+    // Channel revenue
+    if (lowerQuery.includes("channel") && (lowerQuery.includes("revenue") || lowerQuery.includes("maximum") || lowerQuery.includes("breakdown"))) {
+      const channelRevenue: Record<string, number> = {};
+      skuData.forEach(s => {
+        const revenue = parseFloat(s.actual.replace("₹", "").replace("M", ""));
+        channelRevenue[s.channel] = (channelRevenue[s.channel] || 0) + revenue;
+      });
+      
+      const sortedChannels = Object.entries(channelRevenue).sort((a, b) => b[1] - a[1]);
+      const totalRevenue = sortedChannels.reduce((sum, c) => sum + c[1], 0);
+
+      return `📦 **Channel Revenue Analysis**\n\n🥇 **Top Channel: ${sortedChannels[0][0]}**\nRevenue: ₹${sortedChannels[0][1].toFixed(1)}M (${((sortedChannels[0][1] / totalRevenue) * 100).toFixed(1)}% share)\n\n**All Channels:**\n${sortedChannels.map((c, i) => `${i + 1}. ${c[0]}: ₹${c[1].toFixed(1)}M (${((c[1] / totalRevenue) * 100).toFixed(1)}%)`).join("\n")}`;
+    }
+
+    // Overall forecast accuracy
+    if (lowerQuery.includes("overall") && lowerQuery.includes("accuracy") || lowerQuery.includes("forecast") && lowerQuery.includes("accuracy") && lowerQuery.includes("summary")) {
+      const avgAccuracy = skuData.reduce((sum, s) => sum + parseInt(s.accuracy), 0) / skuData.length;
+      const above95 = skuData.filter(s => parseInt(s.accuracy) >= 95).length;
+      const below93 = skuData.filter(s => parseInt(s.accuracy) < 93).length;
+
+      return `🎯 **Overall Forecast Accuracy Summary**\n\n• **Average Accuracy:** ${avgAccuracy.toFixed(1)}%\n• SKUs ≥95% accuracy: ${above95} (${((above95/skuData.length)*100).toFixed(0)}%)\n• SKUs <93% accuracy: ${below93} (${((below93/skuData.length)*100).toFixed(0)}%)\n\n**Recommendation:** Focus on improving ${below93} SKUs with sub-93% accuracy.`;
+    }
+
+    // Forecast vs Actual comparison
+    if (lowerQuery.includes("forecast") && lowerQuery.includes("actual")) {
+      return `📊 **Forecast vs Actual Comparison**\n\n${skuData.slice(0, 5).map(s => `• **${s.sku}**: Forecast ${s.forecasted} → Actual ${s.actual} (${s.variance})`).join("\n")}\n\n**Summary:**\n• Overforecasted: ${skuData.filter(s => s.variance.startsWith("-")).length} SKUs\n• Underforecasted: ${skuData.filter(s => s.variance.startsWith("+")).length} SKUs`;
+    }
+
+    // Default fallback - return contextual random response
+    return sampleAiResponses[Math.floor(Math.random() * sampleAiResponses.length)];
+  };
+
   const sendAiMessage = () => {
-    if (!aiPrompt.trim()) return;
+    if (!aiPrompt.trim() || aiQuotaExceeded) return;
     
+    const newCount = aiQuestionCount + 1;
+    setAiQuestionCount(newCount);
+
     const userMessage = { role: 'user' as const, content: aiPrompt };
-    const randomResponse = sampleAiResponses[Math.floor(Math.random() * sampleAiResponses.length)];
-    const assistantMessage = { role: 'assistant' as const, content: randomResponse };
+    
+    if (newCount > 2) {
+      // Demo quota exceeded
+      setAiQuotaExceeded(true);
+      const quotaMessage = { role: 'assistant' as const, content: '⚠️ **Demo Quota Exceeded**\n\nYou have reached the maximum number of questions for the demo.\n\n**Upgrade to Pro** to unlock unlimited SynqAI queries and advanced analytics features.' };
+      setAiMessages(prev => [...prev, userMessage, quotaMessage]);
+      setAiPrompt('');
+      return;
+    }
+
+    const response = generateAiResponse(aiPrompt);
+    const assistantMessage = { role: 'assistant' as const, content: response };
     
     setAiMessages(prev => [...prev, userMessage, assistantMessage]);
     setAiPrompt('');
@@ -3510,7 +3613,18 @@ const DemandForecasting = () => {
                               ? 'bg-primary text-primary-foreground' 
                               : 'bg-muted text-foreground'
                           }`}>
-                            <p className="text-sm">{message.content}</p>
+                            <div className="text-sm prose prose-sm dark:prose-invert max-w-none">
+                              <ReactMarkdown
+                                components={{
+                                  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                                  ul: ({ children }) => <ul className="list-disc pl-4 mb-2">{children}</ul>,
+                                  li: ({ children }) => <li className="mb-1">{children}</li>,
+                                }}
+                              >
+                                {message.content}
+                              </ReactMarkdown>
+                            </div>
                           </div>
                         </div>
                       ))
@@ -3519,22 +3633,31 @@ const DemandForecasting = () => {
                   
                   {/* Input Area */}
                   <div className="space-y-2">
-                    <Textarea
-                      placeholder="e.g., What factors are driving demand in Q4?"
-                      value={aiPrompt}
-                      onChange={(e) => setAiPrompt(e.target.value)}
-                      className="min-h-[80px]"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          sendAiMessage();
-                        }
-                      }}
-                    />
-                    <Button onClick={sendAiMessage} className="w-full" disabled={!aiPrompt.trim()}>
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      Send Message
-                    </Button>
+                    {aiQuotaExceeded ? (
+                      <div className="text-center py-4 border border-border rounded-lg bg-muted/50">
+                        <p className="text-sm text-muted-foreground">Demo quota exceeded</p>
+                        <p className="text-xs text-muted-foreground mt-1">Upgrade to continue using SynqAI</p>
+                      </div>
+                    ) : (
+                      <>
+                        <Textarea
+                          placeholder="e.g., Top 5 selling SKUs, Best performing region..."
+                          value={aiPrompt}
+                          onChange={(e) => setAiPrompt(e.target.value)}
+                          className="min-h-[80px]"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              sendAiMessage();
+                            }
+                          }}
+                        />
+                        <Button onClick={sendAiMessage} className="w-full" disabled={!aiPrompt.trim()}>
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Send Message
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
