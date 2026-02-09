@@ -10,6 +10,7 @@ interface DemandAnalysisChartProps {
   chartGranularity: 'daily' | 'weekly' | 'monthly' | 'quarterly';
   storeFilter?: string;
   npiSku?: string;
+  showRangeForecast?: boolean;
 }
 
 // Proxy SKU mapping for NPI forecasting - Pharma domain
@@ -26,7 +27,7 @@ export const npiProxyMapping: Record<string, { proxySku: string; proxyName: stri
   'NPI010': { proxySku: 'SKU010', proxyName: 'Pantoprazole 40mg Tablet', npiName: 'Esomeprazole 40mg Capsule' },
 };
 
-export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none' }: DemandAnalysisChartProps) => {
+export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none', showRangeForecast = false }: DemandAnalysisChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [renderWidth, setRenderWidth] = useState(0);
 
@@ -47,6 +48,12 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
 
   const data = React.useMemo(() => {
     const storeMultiplier = getChartMultiplier(storeFilter);
+    
+    // Helper to calculate range bounds (10-15% variance for range forecast)
+    const getRangeBounds = (value: number) => {
+      const variance = value * (0.10 + Math.random() * 0.05);
+      return { upper: value + variance, lower: value - variance };
+    };
 
     // NPI Mode: Show proxy SKU history (W5-W35), NPI history (W36-W52), forecast (W53+)
     if (isNpiMode && npiInfo) {
@@ -69,7 +76,11 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
             isProxy: true,
             historical: proxyTrendBase + seasonality + noise, 
             baseline: null, 
-            enhanced: null 
+            enhanced: null,
+            baselineUpper: null,
+            baselineLower: null,
+            enhancedUpper: null,
+            enhancedLower: null
           });
         } else if (i >= 36 && i <= 52) {
           // NPI SKU history (W36-W52)
@@ -80,11 +91,17 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
             isProxy: false,
             historical: npiTrendBase + seasonality + noise * 1.2, 
             baseline: null, 
-            enhanced: null 
+            enhanced: null,
+            baselineUpper: null,
+            baselineLower: null,
+            enhancedUpper: null,
+            enhancedLower: null
           });
         } else if (i === 53) {
           // Transition point
           const lastValue = npiTrendBase + seasonality + noise;
+          const baselineRange = getRangeBounds(lastValue);
+          const enhancedRange = getRangeBounds(lastValue);
           weeklyNpiData.push({ 
             period: i, 
             periodLabel,
@@ -92,18 +109,30 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
             isProxy: false,
             historical: null, 
             baseline: lastValue, 
-            enhanced: lastValue 
+            enhanced: lastValue,
+            baselineUpper: baselineRange.upper,
+            baselineLower: baselineRange.lower,
+            enhancedUpper: enhancedRange.upper,
+            enhancedLower: enhancedRange.lower
           });
         } else if (i > 53) {
           // Forecast period
+          const baselineVal = npiTrendBase + seasonality + (Math.random() - 0.5) * 5;
+          const enhancedVal = npiTrendBase + seasonality + 10 + (Math.random() - 0.5) * 5;
+          const baselineRange = getRangeBounds(baselineVal);
+          const enhancedRange = getRangeBounds(enhancedVal);
           weeklyNpiData.push({ 
             period: i, 
             periodLabel,
             skuName: npiInfo.npiName,
             isProxy: false,
             historical: null, 
-            baseline: npiTrendBase + seasonality + (Math.random() - 0.5) * 5, 
-            enhanced: npiTrendBase + seasonality + 10 + (Math.random() - 0.5) * 5 
+            baseline: baselineVal, 
+            enhanced: enhancedVal,
+            baselineUpper: baselineRange.upper,
+            baselineLower: baselineRange.lower,
+            enhancedUpper: enhancedRange.upper,
+            enhancedLower: enhancedRange.lower
           });
         }
       }
@@ -122,12 +151,18 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           const periodLabel = i <= 365 ? `Day ${i}` : `Day ${i} (F)`;
           
           if (i <= 365) {
-            dailyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null });
+            dailyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null, baselineUpper: null, baselineLower: null, enhancedUpper: null, enhancedLower: null });
           } else if (i === 366) {
             const lastValue = trendBase + seasonality + noise;
-            dailyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue });
+            const baselineRange = getRangeBounds(lastValue);
+            const enhancedRange = getRangeBounds(lastValue);
+            dailyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           } else {
-            dailyData.push({ period: i, periodLabel, historical: null, baseline: trendBase + seasonality + (Math.random() - 0.5) * 4, enhanced: trendBase + seasonality + 5 + (Math.random() - 0.5) * 4 });
+            const baselineVal = trendBase + seasonality + (Math.random() - 0.5) * 4;
+            const enhancedVal = trendBase + seasonality + 5 + (Math.random() - 0.5) * 4;
+            const baselineRange = getRangeBounds(baselineVal);
+            const enhancedRange = getRangeBounds(enhancedVal);
+            dailyData.push({ period: i, periodLabel, historical: null, baseline: baselineVal, enhanced: enhancedVal, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           }
         }
         return dailyData;
@@ -142,12 +177,18 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           const periodLabel = i <= 52 ? `W${i}` : `W${i} (F)`;
           
           if (i <= 52) {
-            weeklyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null });
+            weeklyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null, baselineUpper: null, baselineLower: null, enhancedUpper: null, enhancedLower: null });
           } else if (i === 53) {
             const lastValue = trendBase + seasonality + noise;
-            weeklyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue });
+            const baselineRange = getRangeBounds(lastValue);
+            const enhancedRange = getRangeBounds(lastValue);
+            weeklyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           } else {
-            weeklyData.push({ period: i, periodLabel, historical: null, baseline: trendBase + seasonality + (Math.random() - 0.5) * 6, enhanced: trendBase + seasonality + 8 + (Math.random() - 0.5) * 6 });
+            const baselineVal = trendBase + seasonality + (Math.random() - 0.5) * 6;
+            const enhancedVal = trendBase + seasonality + 8 + (Math.random() - 0.5) * 6;
+            const baselineRange = getRangeBounds(baselineVal);
+            const enhancedRange = getRangeBounds(enhancedVal);
+            weeklyData.push({ period: i, periodLabel, historical: null, baseline: baselineVal, enhanced: enhancedVal, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           }
         }
         return weeklyData;
@@ -163,12 +204,18 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           const periodLabel = i <= 12 ? monthNames[i - 1] : `${monthNames[(i - 1) % 12]} (F)`;
           
           if (i <= 12) {
-            monthlyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null });
+            monthlyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null, baselineUpper: null, baselineLower: null, enhancedUpper: null, enhancedLower: null });
           } else if (i === 13) {
             const lastValue = trendBase + seasonality + noise;
-            monthlyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue });
+            const baselineRange = getRangeBounds(lastValue);
+            const enhancedRange = getRangeBounds(lastValue);
+            monthlyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           } else {
-            monthlyData.push({ period: i, periodLabel, historical: null, baseline: trendBase + seasonality + (Math.random() - 0.5) * 8, enhanced: trendBase + seasonality + 12 + (Math.random() - 0.5) * 8 });
+            const baselineVal = trendBase + seasonality + (Math.random() - 0.5) * 8;
+            const enhancedVal = trendBase + seasonality + 12 + (Math.random() - 0.5) * 8;
+            const baselineRange = getRangeBounds(baselineVal);
+            const enhancedRange = getRangeBounds(enhancedVal);
+            monthlyData.push({ period: i, periodLabel, historical: null, baseline: baselineVal, enhanced: enhancedVal, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           }
         }
         return monthlyData;
@@ -183,12 +230,18 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           const periodLabel = i <= 4 ? `Q${i}` : `Q${i - 4} (F)`;
           
           if (i <= 4) {
-            quarterlyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null });
+            quarterlyData.push({ period: i, periodLabel, historical: trendBase + seasonality + noise, baseline: null, enhanced: null, baselineUpper: null, baselineLower: null, enhancedUpper: null, enhancedLower: null });
           } else if (i === 5) {
             const lastValue = trendBase + seasonality + noise;
-            quarterlyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue });
+            const baselineRange = getRangeBounds(lastValue);
+            const enhancedRange = getRangeBounds(lastValue);
+            quarterlyData.push({ period: i, periodLabel, historical: null, baseline: lastValue, enhanced: lastValue, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           } else {
-            quarterlyData.push({ period: i, periodLabel, historical: null, baseline: trendBase + seasonality + (Math.random() - 0.5) * 10, enhanced: trendBase + seasonality + 15 + (Math.random() - 0.5) * 10 });
+            const baselineVal = trendBase + seasonality + (Math.random() - 0.5) * 10;
+            const enhancedVal = trendBase + seasonality + 15 + (Math.random() - 0.5) * 10;
+            const baselineRange = getRangeBounds(baselineVal);
+            const enhancedRange = getRangeBounds(enhancedVal);
+            quarterlyData.push({ period: i, periodLabel, historical: null, baseline: baselineVal, enhanced: enhancedVal, baselineUpper: baselineRange.upper, baselineLower: baselineRange.lower, enhancedUpper: enhancedRange.upper, enhancedLower: enhancedRange.lower });
           }
         }
         return quarterlyData;
@@ -220,6 +273,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
           enhancedLabel="Enhanced Forecast"
           yAxisLabel="Volume"
           isNpiMode={isNpiMode}
+          showRangeForecast={showRangeForecast}
         />
       )}
     </div>
