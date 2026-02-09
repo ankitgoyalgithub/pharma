@@ -9,6 +9,10 @@ interface ChartDataPoint {
   historical: number | null;
   baseline: number | null;
   enhanced: number | null;
+  baselineUpper?: number | null;
+  baselineLower?: number | null;
+  enhancedUpper?: number | null;
+  enhancedLower?: number | null;
 }
 
 interface D3LineChartProps {
@@ -20,6 +24,7 @@ interface D3LineChartProps {
   enhancedLabel?: string;
   yAxisLabel?: string;
   isNpiMode?: boolean;
+  showRangeForecast?: boolean;
 }
 
 export const D3LineChart = ({ 
@@ -30,7 +35,8 @@ export const D3LineChart = ({
   baselineLabel = 'Baseline Forecast',
   enhancedLabel = 'Enhanced Forecast',
   yAxisLabel = '',
-  isNpiMode = false
+  isNpiMode = false,
+  showRangeForecast = false
 }: D3LineChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -58,7 +64,15 @@ export const D3LineChart = ({
       .domain([1, data.length])
       .range([0, innerWidth]);
 
-    const allValues = data.flatMap(d => [d.historical, d.baseline, d.enhanced].filter((v): v is number => v !== null));
+    const allValues = data.flatMap(d => [
+      d.historical, 
+      d.baseline, 
+      d.enhanced,
+      showRangeForecast ? d.baselineUpper : null,
+      showRangeForecast ? d.baselineLower : null,
+      showRangeForecast ? d.enhancedUpper : null,
+      showRangeForecast ? d.enhancedLower : null
+    ].filter((v): v is number => v !== null));
     const yMin = d3.min(allValues) || 0;
     const yMax = d3.max(allValues) || 100;
     const yScale = d3.scaleLinear()
@@ -160,6 +174,45 @@ export const D3LineChart = ({
         .attr('stroke', 'hsl(var(--accent))')
         .attr('stroke-width', 2)
         .attr('d', lineHistorical);
+    }
+
+    // Draw range forecast bands (Bollinger-style) if enabled
+    if (showRangeForecast) {
+      // Baseline range band
+      const baselineRangeData = data.filter(d => d.baselineUpper !== null && d.baselineLower !== null);
+      if (baselineRangeData.length > 0) {
+        const areaBaseline = d3.area<ChartDataPoint>()
+          .defined(d => d.baselineUpper !== null && d.baselineLower !== null)
+          .x(d => xScale(d.period))
+          .y0(d => yScale(d.baselineLower!))
+          .y1(d => yScale(d.baselineUpper!))
+          .curve(d3.curveMonotoneX);
+
+        g.append('path')
+          .datum(baselineRangeData)
+          .attr('fill', 'hsl(var(--info))')
+          .attr('fill-opacity', 0.15)
+          .attr('stroke', 'none')
+          .attr('d', areaBaseline);
+      }
+
+      // Enhanced range band
+      const enhancedRangeData = data.filter(d => d.enhancedUpper !== null && d.enhancedLower !== null);
+      if (enhancedRangeData.length > 0) {
+        const areaEnhanced = d3.area<ChartDataPoint>()
+          .defined(d => d.enhancedUpper !== null && d.enhancedLower !== null)
+          .x(d => xScale(d.period))
+          .y0(d => yScale(d.enhancedLower!))
+          .y1(d => yScale(d.enhancedUpper!))
+          .curve(d3.curveMonotoneX);
+
+        g.append('path')
+          .datum(enhancedRangeData)
+          .attr('fill', 'hsl(var(--primary))')
+          .attr('fill-opacity', 0.15)
+          .attr('stroke', 'none')
+          .attr('d', areaEnhanced);
+      }
     }
 
     // Baseline forecast line
@@ -316,7 +369,7 @@ export const D3LineChart = ({
       });
     }
 
-  }, [data, width, height, baselineLabel, enhancedLabel, showLegend]);
+  }, [data, width, height, baselineLabel, enhancedLabel, showLegend, showRangeForecast]);
 
   return (
     <>

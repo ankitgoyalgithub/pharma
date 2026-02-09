@@ -289,6 +289,7 @@ const DemandForecasting = () => {
   const [classFilter, setClassFilter] = useState<string>("all");
   const [locationFilter, setLocationFilter] = useState<string>("all");
   const [chartGranularity, setChartGranularity] = useState<'daily' | 'weekly' | 'monthly' | 'quarterly'>('weekly');
+  const [showRangeForecast, setShowRangeForecast] = useState(false);
 
   const handleZoomIn = () => {
     const levels: Array<'daily' | 'weekly' | 'monthly' | 'quarterly'> = ['quarterly', 'monthly', 'weekly', 'daily'];
@@ -2464,6 +2465,15 @@ const DemandForecasting = () => {
                       <ZoomIn className="h-3.5 w-3.5" />
                     </Button>
                   </div>
+                  <div className="flex items-center gap-2 px-2 py-1 bg-muted/50 rounded-md">
+                    <Label htmlFor="range-toggle" className="text-xs font-medium cursor-pointer">Range</Label>
+                    <GradientSwitch 
+                      id="range-toggle"
+                      checked={showRangeForecast}
+                      onCheckedChange={setShowRangeForecast}
+                      className="h-5 w-9 data-[state=checked]:from-primary data-[state=checked]:to-primary"
+                    />
+                  </div>
                   <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon" className="rounded-full" aria-label="Chart options">
@@ -2529,6 +2539,7 @@ const DemandForecasting = () => {
                   chartGranularity={chartGranularity}
                   storeFilter={appliedFilters.store}
                   npiSku={appliedFilters.npiSku}
+                  showRangeForecast={showRangeForecast}
                 />
               </CardContent>
             </Card>
