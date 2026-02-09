@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 interface ChartDataPoint {
@@ -27,6 +27,13 @@ interface D3LineChartProps {
   showRangeForecast?: boolean;
 }
 
+interface VisibleLines {
+  historical: boolean;
+  proxy: boolean;
+  baseline: boolean;
+  enhanced: boolean;
+}
+
 export const D3LineChart = ({ 
   data, 
   width, 
@@ -40,6 +47,12 @@ export const D3LineChart = ({
 }: D3LineChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const [visibleLines, setVisibleLines] = useState<VisibleLines>({
+    historical: true,
+    proxy: true,
+    baseline: true,
+    enhanced: true
+  });
 
   useEffect(() => {
     if (!svgRef.current || width === 0) return;
@@ -148,7 +161,7 @@ export const D3LineChart = ({
       const npiHistoryData = data.filter(d => d.historical !== null && !d.isProxy);
 
       // Proxy SKU line (warning/orange color)
-      if (proxyData.length > 0) {
+      if (proxyData.length > 0 && visibleLines.proxy) {
         g.append('path')
           .datum(proxyData)
           .attr('fill', 'none')
@@ -158,7 +171,7 @@ export const D3LineChart = ({
       }
 
       // NPI History line (accent color)
-      if (npiHistoryData.length > 0) {
+      if (npiHistoryData.length > 0 && visibleLines.historical) {
         g.append('path')
           .datum(npiHistoryData)
           .attr('fill', 'none')
@@ -168,76 +181,91 @@ export const D3LineChart = ({
       }
     } else {
       // Standard historical line
-      g.append('path')
-        .datum(data.filter(d => d.historical !== null))
-        .attr('fill', 'none')
-        .attr('stroke', 'hsl(var(--accent))')
-        .attr('stroke-width', 2)
-        .attr('d', lineHistorical);
+      if (visibleLines.historical) {
+        g.append('path')
+          .datum(data.filter(d => d.historical !== null))
+          .attr('fill', 'none')
+          .attr('stroke', 'hsl(var(--accent))')
+          .attr('stroke-width', 2)
+          .attr('d', lineHistorical);
+      }
     }
 
     // Draw range forecast bands (Bollinger-style) if enabled
     if (showRangeForecast) {
       // Baseline range band
-      const baselineRangeData = data.filter(d => d.baselineUpper !== null && d.baselineLower !== null);
-      if (baselineRangeData.length > 0) {
-        const areaBaseline = d3.area<ChartDataPoint>()
-          .defined(d => d.baselineUpper !== null && d.baselineLower !== null)
-          .x(d => xScale(d.period))
-          .y0(d => yScale(d.baselineLower!))
-          .y1(d => yScale(d.baselineUpper!))
-          .curve(d3.curveMonotoneX);
+      if (visibleLines.baseline) {
+        const baselineRangeData = data.filter(d => d.baselineUpper !== null && d.baselineLower !== null);
+        if (baselineRangeData.length > 0) {
+          const areaBaseline = d3.area<ChartDataPoint>()
+            .defined(d => d.baselineUpper !== null && d.baselineLower !== null)
+            .x(d => xScale(d.period))
+            .y0(d => yScale(d.baselineLower!))
+            .y1(d => yScale(d.baselineUpper!))
+            .curve(d3.curveMonotoneX);
 
-        g.append('path')
-          .datum(baselineRangeData)
-          .attr('fill', 'hsl(var(--info))')
-          .attr('fill-opacity', 0.15)
-          .attr('stroke', 'none')
-          .attr('d', areaBaseline);
+          g.append('path')
+            .datum(baselineRangeData)
+            .attr('fill', 'hsl(var(--info))')
+            .attr('fill-opacity', 0.15)
+            .attr('stroke', 'none')
+            .attr('d', areaBaseline);
+        }
       }
 
       // Enhanced range band
-      const enhancedRangeData = data.filter(d => d.enhancedUpper !== null && d.enhancedLower !== null);
-      if (enhancedRangeData.length > 0) {
-        const areaEnhanced = d3.area<ChartDataPoint>()
-          .defined(d => d.enhancedUpper !== null && d.enhancedLower !== null)
-          .x(d => xScale(d.period))
-          .y0(d => yScale(d.enhancedLower!))
-          .y1(d => yScale(d.enhancedUpper!))
-          .curve(d3.curveMonotoneX);
+      if (visibleLines.enhanced) {
+        const enhancedRangeData = data.filter(d => d.enhancedUpper !== null && d.enhancedLower !== null);
+        if (enhancedRangeData.length > 0) {
+          const areaEnhanced = d3.area<ChartDataPoint>()
+            .defined(d => d.enhancedUpper !== null && d.enhancedLower !== null)
+            .x(d => xScale(d.period))
+            .y0(d => yScale(d.enhancedLower!))
+            .y1(d => yScale(d.enhancedUpper!))
+            .curve(d3.curveMonotoneX);
 
-        g.append('path')
-          .datum(enhancedRangeData)
-          .attr('fill', 'hsl(var(--primary))')
-          .attr('fill-opacity', 0.15)
-          .attr('stroke', 'none')
-          .attr('d', areaEnhanced);
+          g.append('path')
+            .datum(enhancedRangeData)
+            .attr('fill', 'hsl(var(--primary))')
+            .attr('fill-opacity', 0.15)
+            .attr('stroke', 'none')
+            .attr('d', areaEnhanced);
+        }
       }
     }
 
     // Baseline forecast line
-    g.append('path')
-      .datum(data.filter(d => d.baseline !== null))
-      .attr('fill', 'none')
-      .attr('stroke', 'hsl(var(--info))')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '5,5')
-      .attr('d', lineBaseline);
+    if (visibleLines.baseline) {
+      g.append('path')
+        .datum(data.filter(d => d.baseline !== null))
+        .attr('fill', 'none')
+        .attr('stroke', 'hsl(var(--info))')
+        .attr('stroke-width', 2)
+        .attr('stroke-dasharray', '5,5')
+        .attr('d', lineBaseline);
+    }
 
     // Enhanced forecast line
-    g.append('path')
-      .datum(data.filter(d => d.enhanced !== null))
-      .attr('fill', 'none')
-      .attr('stroke', 'hsl(var(--primary))')
-      .attr('stroke-width', 2.5)
-      .attr('d', lineEnhanced);
+    if (visibleLines.enhanced) {
+      g.append('path')
+        .datum(data.filter(d => d.enhanced !== null))
+        .attr('fill', 'none')
+        .attr('stroke', 'hsl(var(--primary))')
+        .attr('stroke-width', 2.5)
+        .attr('d', lineEnhanced);
+    }
 
     // Data points with hover
     const tooltip = d3.select(tooltipRef.current);
 
     // Historical points (for NPI mode, use different colors)
+    const historicalData = data.filter(d => d.historical !== null);
+    const filteredHistoricalData = isNpiMode 
+      ? historicalData.filter(d => (d.isProxy && visibleLines.proxy) || (!d.isProxy && visibleLines.historical))
+      : (visibleLines.historical ? historicalData : []);
+
     g.selectAll('.dot-historical')
-      .data(data.filter(d => d.historical !== null))
+      .data(filteredHistoricalData)
       .enter()
       .append('circle')
       .attr('class', 'dot-historical')
@@ -267,78 +295,90 @@ export const D3LineChart = ({
       });
 
     // Enhanced forecast points
-    g.selectAll('.dot-enhanced')
-      .data(data.filter(d => d.enhanced !== null))
-      .enter()
-      .append('circle')
-      .attr('class', 'dot-enhanced')
-      .attr('cx', d => xScale(d.period))
-      .attr('cy', d => yScale(d.enhanced!))
-      .attr('r', 4)
-      .attr('fill', 'hsl(var(--primary))')
-      .attr('stroke', 'white')
-      .attr('stroke-width', 2)
-      .style('cursor', 'pointer')
-      .on('mouseenter', function(event, d) {
-        d3.select(this).attr('r', 6);
-        const skuLabel = d.skuName ? `<div class="text-xs text-muted-foreground">${d.skuName}</div>` : '';
-        tooltip
-          .style('opacity', '1')
-          .style('left', `${event.pageX + 10}px`)
-          .style('top', `${event.pageY - 10}px`)
-          .html(`
-            <div class="text-xs font-semibold">${d.periodLabel || `Period ${d.period}`}</div>
-            ${skuLabel}
-            <div class="text-xs">${enhancedLabel}: ${d.enhanced?.toFixed(1)}</div>
-          `);
-      })
-      .on('mouseleave', function() {
-        d3.select(this).attr('r', 4);
-        tooltip.style('opacity', '0');
-      });
+    if (visibleLines.enhanced) {
+      g.selectAll('.dot-enhanced')
+        .data(data.filter(d => d.enhanced !== null))
+        .enter()
+        .append('circle')
+        .attr('class', 'dot-enhanced')
+        .attr('cx', d => xScale(d.period))
+        .attr('cy', d => yScale(d.enhanced!))
+        .attr('r', 4)
+        .attr('fill', 'hsl(var(--primary))')
+        .attr('stroke', 'white')
+        .attr('stroke-width', 2)
+        .style('cursor', 'pointer')
+        .on('mouseenter', function(event, d) {
+          d3.select(this).attr('r', 6);
+          const skuLabel = d.skuName ? `<div class="text-xs text-muted-foreground">${d.skuName}</div>` : '';
+          const rangeInfo = showRangeForecast && d.enhancedUpper !== null && d.enhancedLower !== null
+            ? `<div class="text-xs text-muted-foreground">Range: ${d.enhancedLower?.toFixed(1)} - ${d.enhancedUpper?.toFixed(1)}</div>`
+            : '';
+          tooltip
+            .style('opacity', '1')
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`)
+            .html(`
+              <div class="text-xs font-semibold">${d.periodLabel || `Period ${d.period}`}</div>
+              ${skuLabel}
+              <div class="text-xs">${enhancedLabel}: ${d.enhanced?.toFixed(1)}</div>
+              ${rangeInfo}
+            `);
+        })
+        .on('mouseleave', function() {
+          d3.select(this).attr('r', 4);
+          tooltip.style('opacity', '0');
+        });
+    }
 
     // Baseline forecast points
-    g.selectAll('.dot-baseline')
-      .data(data.filter(d => d.baseline !== null))
-      .enter()
-      .append('circle')
-      .attr('class', 'dot-baseline')
-      .attr('cx', d => xScale(d.period))
-      .attr('cy', d => yScale(d.baseline!))
-      .attr('r', 3)
-      .attr('fill', 'hsl(var(--info))')
-      .attr('stroke', 'white')
-      .attr('stroke-width', 1.5)
-      .style('cursor', 'pointer')
-      .on('mouseenter', function(event, d) {
-        d3.select(this).attr('r', 5);
-        const skuLabel = d.skuName ? `<div class="text-xs text-muted-foreground">${d.skuName}</div>` : '';
-        tooltip
-          .style('opacity', '1')
-          .style('left', `${event.pageX + 10}px`)
-          .style('top', `${event.pageY - 10}px`)
-          .html(`
-            <div class="text-xs font-semibold">${d.periodLabel || `Period ${d.period}`}</div>
-            ${skuLabel}
-            <div class="text-xs">${baselineLabel}: ${d.baseline?.toFixed(1)}</div>
-          `);
-      })
-      .on('mouseleave', function() {
-        d3.select(this).attr('r', 3);
-        tooltip.style('opacity', '0');
-      });
+    if (visibleLines.baseline) {
+      g.selectAll('.dot-baseline')
+        .data(data.filter(d => d.baseline !== null))
+        .enter()
+        .append('circle')
+        .attr('class', 'dot-baseline')
+        .attr('cx', d => xScale(d.period))
+        .attr('cy', d => yScale(d.baseline!))
+        .attr('r', 3)
+        .attr('fill', 'hsl(var(--info))')
+        .attr('stroke', 'white')
+        .attr('stroke-width', 1.5)
+        .style('cursor', 'pointer')
+        .on('mouseenter', function(event, d) {
+          d3.select(this).attr('r', 5);
+          const skuLabel = d.skuName ? `<div class="text-xs text-muted-foreground">${d.skuName}</div>` : '';
+          const rangeInfo = showRangeForecast && d.baselineUpper !== null && d.baselineLower !== null
+            ? `<div class="text-xs text-muted-foreground">Range: ${d.baselineLower?.toFixed(1)} - ${d.baselineUpper?.toFixed(1)}</div>`
+            : '';
+          tooltip
+            .style('opacity', '1')
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 10}px`)
+            .html(`
+              <div class="text-xs font-semibold">${d.periodLabel || `Period ${d.period}`}</div>
+              ${skuLabel}
+              <div class="text-xs">${baselineLabel}: ${d.baseline?.toFixed(1)}</div>
+              ${rangeInfo}
+            `);
+        })
+        .on('mouseleave', function() {
+          d3.select(this).attr('r', 3);
+          tooltip.style('opacity', '0');
+        });
+    }
 
-    // Legend at bottom
+    // Legend at bottom (clickable)
     if (showLegend) {
       const legendData = isNpiMode ? [
-        { label: 'Proxy SKU History', color: 'hsl(var(--warning))', dashed: false },
-        { label: 'NPI History', color: 'hsl(var(--accent))', dashed: false },
-        { label: baselineLabel, color: 'hsl(var(--info))', dashed: true },
-        { label: enhancedLabel, color: 'hsl(var(--primary))', dashed: false }
+        { label: 'Proxy SKU History', color: 'hsl(var(--warning))', dashed: false, key: 'proxy' as keyof VisibleLines },
+        { label: 'NPI History', color: 'hsl(var(--accent))', dashed: false, key: 'historical' as keyof VisibleLines },
+        { label: baselineLabel, color: 'hsl(var(--info))', dashed: true, key: 'baseline' as keyof VisibleLines },
+        { label: enhancedLabel, color: 'hsl(var(--primary))', dashed: false, key: 'enhanced' as keyof VisibleLines }
       ] : [
-        { label: 'Historical', color: 'hsl(var(--accent))', dashed: false },
-        { label: baselineLabel, color: 'hsl(var(--info))', dashed: true },
-        { label: enhancedLabel, color: 'hsl(var(--primary))', dashed: false }
+        { label: 'Historical', color: 'hsl(var(--accent))', dashed: false, key: 'historical' as keyof VisibleLines },
+        { label: baselineLabel, color: 'hsl(var(--info))', dashed: true, key: 'baseline' as keyof VisibleLines },
+        { label: enhancedLabel, color: 'hsl(var(--primary))', dashed: false, key: 'enhanced' as keyof VisibleLines }
       ];
 
       const legendSpacing = isNpiMode ? 130 : 150;
@@ -348,8 +388,14 @@ export const D3LineChart = ({
         .attr('transform', `translate(${legendStartX}, ${height - 25})`);
 
       legendData.forEach((item, i) => {
+        const isVisible = visibleLines[item.key];
         const legendRow = legend.append('g')
-          .attr('transform', `translate(${i * legendSpacing}, 0)`);
+          .attr('transform', `translate(${i * legendSpacing}, 0)`)
+          .style('cursor', 'pointer')
+          .style('opacity', isVisible ? 1 : 0.4)
+          .on('click', () => {
+            setVisibleLines(prev => ({ ...prev, [item.key]: !prev[item.key] }));
+          });
 
         legendRow.append('line')
           .attr('x1', 0)
@@ -369,7 +415,7 @@ export const D3LineChart = ({
       });
     }
 
-  }, [data, width, height, baselineLabel, enhancedLabel, showLegend, showRangeForecast]);
+  }, [data, width, height, baselineLabel, enhancedLabel, showLegend, showRangeForecast, isNpiMode, yAxisLabel, visibleLines]);
 
   return (
     <>
