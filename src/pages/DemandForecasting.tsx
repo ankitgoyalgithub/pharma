@@ -88,6 +88,7 @@ import { gapData } from '@/data/demandForecasting/gapData';
 import { dataQualityIssues, dataQualitySummary } from '@/data/demandForecasting/dataQualityIssues';
 import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
 import { AutoFixDialog } from '@/components/AutoFixDialog';
+import { NPILaunchIntelligence } from '@/components/NPILaunchIntelligence';
 
 // ---- Chart.js imports (replaces Recharts) ----
 import {
