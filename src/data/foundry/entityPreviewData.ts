@@ -1,4 +1,5 @@
 import { EntityPreviewMap } from "./types";
+import { salesHistoryData } from "./salesHistoryData";
 
 const splashImageUrls = [
   "https://iili.io/f5NFmLN.webp",
@@ -139,19 +140,8 @@ export const entityPreviewData: EntityPreviewMap = {
       { accessorKey: "stockoutFlag", header: "Stockout" },
       { accessorKey: "price", header: "Price (₹)" }
     ],
-    rows: [
-      { date: "2023-01-13", productId: "SKU_022", channelId: "Flipkart", region: "South", unitsSold: 0, revenue: 0, discountPercent: 0.23, promotionFlag: 1, stockoutFlag: 1, price: 1366 },
-      { date: "2023-02-10", productId: "SKU_037", channelId: "Flipkart", region: "East", unitsSold: 69, revenue: 82003.05, discountPercent: 0.05, promotionFlag: 0, stockoutFlag: 1, price: 1251 },
-      { date: "2023-06-13", productId: "SKU_035", channelId: "Flipkart", region: "West", unitsSold: 66, revenue: 85922.10, discountPercent: 0.01, promotionFlag: 0, stockoutFlag: 0, price: 1315 },
-      { date: "2023-05-25", productId: "SKU_012", channelId: "Amazon", region: "Central", unitsSold: 19, revenue: 57197.79, discountPercent: 0.07, promotionFlag: 1, stockoutFlag: 1, price: 3237 },
-      { date: "2023-03-23", productId: "SKU_008", channelId: "Amazon", region: "North", unitsSold: 41, revenue: 69844.32, discountPercent: 0.28, promotionFlag: 1, stockoutFlag: 0, price: 2366 },
-      { date: "2023-03-26", productId: "SKU_011", channelId: "Distributor", region: "West", unitsSold: 35, revenue: 69978.30, discountPercent: 0.06, promotionFlag: 0, stockoutFlag: 1, price: 2127 },
-      { date: "2023-01-26", productId: "SKU_023", channelId: "Retail", region: "East", unitsSold: 35, revenue: 115522.40, discountPercent: 0.02, promotionFlag: 1, stockoutFlag: 1, price: 3368 },
-      { date: "2023-01-04", productId: "SKU_044", channelId: "Retail", region: "West", unitsSold: 7, revenue: 21574.70, discountPercent: 0.02, promotionFlag: 0, stockoutFlag: 0, price: 3145 },
-      { date: "2023-01-31", productId: "SKU_021", channelId: "Flipkart", region: "Central", unitsSold: 37, revenue: 141406.60, discountPercent: 0.03, promotionFlag: 1, stockoutFlag: 1, price: 3940 },
-      { date: "2023-02-06", productId: "SKU_043", channelId: "D2C", region: "South", unitsSold: 61, revenue: 182311.92, discountPercent: 0.16, promotionFlag: 1, stockoutFlag: 0, price: 3558 }
-    ],
-    stats: { totalRecords: 12000, lastSync: "2025-12-11 15:00", source: "CSV Upload" }
+    rows: salesHistoryData,
+    stats: { totalRecords: salesHistoryData.length, lastSync: "2025-12-11 15:00", source: "CSV Upload" }
   },
   "copper-prices": {
     title: "Copper Prices",
