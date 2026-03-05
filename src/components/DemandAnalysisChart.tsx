@@ -11,23 +11,19 @@ interface DemandAnalysisChartProps {
   storeFilter?: string;
   npiSku?: string;
   showRangeForecast?: boolean;
+  channelFilter?: string;
 }
 
-// Proxy SKU mapping for NPI forecasting - Pharma domain
+// Proxy SKU mapping for NPI forecasting - Consumer Electronics
 export const npiProxyMapping: Record<string, { proxySku: string; proxyName: string; npiName: string }> = {
-  'NPI001': { proxySku: 'SKU008', proxyName: 'Cholecalciferol 60K IU (D3Max)', npiName: 'Generic Cholecalciferol 60K IU' },
-  'NPI002': { proxySku: 'SKU004', proxyName: 'Insulin Glargine 100IU/ml', npiName: 'Insulin Degludec 100IU/ml' },
-  'NPI003': { proxySku: 'SKU002', proxyName: 'Azithromycin 500mg Tablet', npiName: 'Azithromycin 250mg Suspension' },
-  'NPI004': { proxySku: 'SKU001', proxyName: 'Paracetamol 500mg Tablet', npiName: 'Paracetamol 650mg Extended Release' },
-  'NPI005': { proxySku: 'SKU005', proxyName: 'Amoxicillin 500mg Capsule', npiName: 'Amoxicillin-Clavulanate 625mg' },
-  'NPI006': { proxySku: 'SKU006', proxyName: 'ORS Sachets (WHO Formula)', npiName: 'ORS Sachets (Zinc Fortified)' },
-  'NPI007': { proxySku: 'SKU003', proxyName: 'Cetirizine 10mg Tablet', npiName: 'Levocetirizine 5mg Tablet' },
-  'NPI008': { proxySku: 'SKU007', proxyName: 'Salbutamol 100mcg Inhaler', npiName: 'Formoterol-Budesonide Inhaler' },
-  'NPI009': { proxySku: 'SKU009', proxyName: 'Ceftriaxone 1g Injection', npiName: 'Cefoperazone-Sulbactam 1.5g Injection' },
-  'NPI010': { proxySku: 'SKU010', proxyName: 'Pantoprazole 40mg Tablet', npiName: 'Esomeprazole 40mg Capsule' },
+  'NEW-TWS-001': { proxySku: 'SKU_001', proxyName: 'Airdopes 601 (Earbuds)', npiName: 'Airdopes Prime 701 ANC' },
+  'NEW-HP-002': { proxySku: 'SKU_021', proxyName: 'Rockerz 550 (Headphones)', npiName: 'Rockerz 650 Pro ANC' },
+  'NEW-SPK-003': { proxySku: 'SKU_029', proxyName: 'PartyPal 300 (Speakers)', npiName: 'PartyPal 500 Speaker' },
+  'RE-NB-004': { proxySku: 'SKU_005', proxyName: 'Rockerz 255 v2 (Earbuds)', npiName: 'Rockerz 255 v3 (Re-entry)' },
+  'BDL-GM-005': { proxySku: 'SKU_018', proxyName: 'Immortal 121 (Earbuds)', npiName: 'Immortal 350 Gaming TWS' },
 };
 
-export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none', showRangeForecast = false }: DemandAnalysisChartProps) => {
+export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none', showRangeForecast = false, channelFilter = 'all' }: DemandAnalysisChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [renderWidth, setRenderWidth] = useState(0);
 
@@ -48,6 +44,15 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
 
   const data = React.useMemo(() => {
     const storeMultiplier = getChartMultiplier(storeFilter);
+    // Channel filter adjusts demand levels
+    const channelMultiplier = channelFilter === 'all' ? 1.0 
+      : channelFilter === 'amazon' ? 0.35 
+      : channelFilter === 'flipkart' ? 0.25 
+      : channelFilter === 'd2c' ? 0.15 
+      : channelFilter === 'retail' ? 0.15 
+      : channelFilter === 'distributor' ? 0.10 
+      : 1.0;
+    const totalMultiplier = storeMultiplier * channelMultiplier;
     
     // Helper to calculate range bounds (10-15% variance for range forecast)
     const getRangeBounds = (value: number) => {
@@ -59,9 +64,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     if (isNpiMode && npiInfo) {
       const weeklyNpiData = [];
       for (let i = 1; i <= 65; i++) {
-        const proxyTrendBase = (82 + (i * 1.1)) * storeMultiplier;
-        const npiTrendBase = (78 + (i * 1.3)) * storeMultiplier;
-        const seasonality = Math.sin(i / 8) * 10 * storeMultiplier;
+        const proxyTrendBase = (82 + (i * 1.1)) * totalMultiplier;
+        const npiTrendBase = (78 + (i * 1.3)) * totalMultiplier;
+        const seasonality = Math.sin(i / 8) * 10 * totalMultiplier;
         const noise = (Math.random() - 0.5) * 6;
         
         let periodLabel = `W${i}`;
@@ -144,8 +149,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       case 'daily':
         const dailyData = [];
         for (let i = 1; i <= 455; i++) {
-          const trendBase = (80 + (i * 0.15)) * storeMultiplier;
-          const seasonality = Math.sin(i / 30) * 8 * storeMultiplier;
+          const trendBase = (80 + (i * 0.15)) * totalMultiplier;
+          const seasonality = Math.sin(i / 30) * 8 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 6;
           
           const periodLabel = i <= 365 ? `Day ${i}` : `Day ${i} (F)`;
@@ -170,8 +175,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       case 'weekly':
         const weeklyData = [];
         for (let i = 1; i <= 65; i++) {
-          const trendBase = (85 + (i * 1.2)) * storeMultiplier;
-          const seasonality = Math.sin(i / 8) * 12 * storeMultiplier;
+          const trendBase = (85 + (i * 1.2)) * totalMultiplier;
+          const seasonality = Math.sin(i / 8) * 12 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 8;
           
           const periodLabel = i <= 52 ? `W${i}` : `W${i} (F)`;
@@ -197,8 +202,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
         const monthlyData = [];
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         for (let i = 1; i <= 15; i++) {
-          const trendBase = (90 + (i * 4)) * storeMultiplier;
-          const seasonality = Math.sin(i / 3) * 15 * storeMultiplier;
+          const trendBase = (90 + (i * 4)) * totalMultiplier;
+          const seasonality = Math.sin(i / 3) * 15 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 10;
           
           const periodLabel = i <= 12 ? monthNames[i - 1] : `${monthNames[(i - 1) % 12]} (F)`;
@@ -223,8 +228,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       case 'quarterly':
         const quarterlyData = [];
         for (let i = 1; i <= 6; i++) {
-          const trendBase = (95 + (i * 12)) * storeMultiplier;
-          const seasonality = Math.sin(i / 1.5) * 20 * storeMultiplier;
+          const trendBase = (95 + (i * 12)) * totalMultiplier;
+          const seasonality = Math.sin(i / 1.5) * 20 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 12;
           
           const periodLabel = i <= 4 ? `Q${i}` : `Q${i - 4} (F)`;
@@ -249,7 +254,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       default:
         return [];
     }
-  }, [chartGranularity, storeFilter, npiSku, isNpiMode]);
+  }, [chartGranularity, storeFilter, npiSku, isNpiMode, channelFilter]);
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '320px' }}>
