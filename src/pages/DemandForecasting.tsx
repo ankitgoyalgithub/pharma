@@ -3189,27 +3189,28 @@ const DemandForecasting = () => {
                     <tbody>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
                           <td className="py-2 px-2 font-mono text-[10px] text-foreground">GEN-VD3-001</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Generic Cholecalciferol 60K IU</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Generic Launch</Badge></td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-TWS-001</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">ANC Earbuds Pro</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Launch</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">None</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">New Nov 2024</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use D3Max history +18%</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">New Feb 2025</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use SKU_001 history +18%</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-INS-002</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Insulin Degludec 100U/ml</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Molecule</Badge></td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-HP-002</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Studio Headphones X1</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Product</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">3 months</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">Limited launch</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× Glargine baseline</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× SKU_021 baseline</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">OB-AZI-003</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Azithromycin 500mg (Outbreak)</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Outbreak SKU</Badge></td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">12 months</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">OOS monsoon</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with outbreak tracking</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">TREND-SPK-003</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Party Speaker Max</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Trending SKU</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">6 months</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Festival spike</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with search trends</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
                           <td className="py-2 px-2 font-mono text-[10px] text-foreground">RE-CET-004</td>
