@@ -13,36 +13,34 @@ const splashImageUrls = [
 export const entityPreviewData: EntityPreviewMap = {
   "product": {
     title: "Product Master",
-    description: "Pharmaceutical SKU catalog with molecule, therapy area, and compliance attributes",
+    description: "Consumer electronics SKU catalog with category, price segment, and lifecycle attributes",
     columns: [
-      { accessorKey: "id", header: "SKU ID" },
+      { accessorKey: "id", header: "Product ID" },
       { accessorKey: "name", header: "Product Name" },
-      { accessorKey: "brand", header: "Brand" },
-      { accessorKey: "molecule", header: "Molecule" },
-      { accessorKey: "therapyArea", header: "Therapy Area" },
-      { accessorKey: "dosageForm", header: "Dosage Form" },
-      { accessorKey: "strength", header: "Strength" },
-      { accessorKey: "packSize", header: "Pack Size" },
-      { accessorKey: "hsnCode", header: "HSN Code" },
-      { accessorKey: "gstRate", header: "GST Rate %" },
+      { accessorKey: "category", header: "Category" },
+      { accessorKey: "subCategory", header: "Sub Category" },
+      { accessorKey: "priceSegment", header: "Price Segment" },
       { accessorKey: "mrp", header: "MRP (₹)" },
-      { accessorKey: "coldChainRequired", header: "Cold Chain" },
-      { accessorKey: "shelfLifeMonths", header: "Shelf Life (Months)" },
+      { accessorKey: "costPerUnit", header: "Cost/Unit (₹)" },
+      { accessorKey: "weightGrams", header: "Weight (g)" },
+      { accessorKey: "launchDate", header: "Launch Date" },
+      { accessorKey: "lifecycleStage", header: "Lifecycle Stage" },
+      { accessorKey: "discontinued", header: "Discontinued" },
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "SKU001", name: "Paracetamol 500mg Tablet 10s", brand: "Calmofen", molecule: "Paracetamol", therapyArea: "Analgesic/Antipyretic", dosageForm: "Tablet", strength: "500 mg", packSize: "10 Tablets", hsnCode: "300450", gstRate: 12, mrp: 32, coldChainRequired: "N", shelfLifeMonths: 36, status: "Active" },
-      { id: "SKU002", name: "Azithromycin 500mg Tablet 3s", brand: "AziSure", molecule: "Azithromycin", therapyArea: "Antibiotic", dosageForm: "Tablet", strength: "500 mg", packSize: "3 Tablets", hsnCode: "300420", gstRate: 12, mrp: 98, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU003", name: "Cetirizine 10mg Tablet 10s", brand: "CetiClear", molecule: "Cetirizine", therapyArea: "Allergy", dosageForm: "Tablet", strength: "10 mg", packSize: "10 Tablets", hsnCode: "300490", gstRate: 12, mrp: 45, coldChainRequired: "N", shelfLifeMonths: 36, status: "Active" },
-      { id: "SKU004", name: "Insulin Glargine 100IU/ml 3ml Pen", brand: "Glaris", molecule: "Insulin Glargine", therapyArea: "Diabetes", dosageForm: "Pen", strength: "100 IU/ml", packSize: "1 Pen (3ml)", hsnCode: "300431", gstRate: 5, mrp: 680, coldChainRequired: "Y", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU005", name: "Amoxicillin+Clav 625mg Tablet 10s", brand: "MoxiClav", molecule: "Amoxicillin+Clavulanate", therapyArea: "Antibiotic", dosageForm: "Tablet", strength: "625 mg", packSize: "10 Tablets", hsnCode: "300420", gstRate: 12, mrp: 210, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU006", name: "ORS Sachet 21g", brand: "Rehydra", molecule: "Oral Rehydration Salts", therapyArea: "GI", dosageForm: "Sachet", strength: "21 g", packSize: "1 Sachet", hsnCode: "300490", gstRate: 12, mrp: 18, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU007", name: "Salbutamol Inhaler 100mcg 200md", brand: "BreatheEZ", molecule: "Salbutamol", therapyArea: "Respiratory", dosageForm: "Inhaler", strength: "100 mcg", packSize: "200 metered doses", hsnCode: "300490", gstRate: 12, mrp: 155, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU008", name: "Vitamin D3 60000 IU Sachet", brand: "D3Max", molecule: "Cholecalciferol", therapyArea: "Vitamins", dosageForm: "Sachet", strength: "60000 IU", packSize: "1 Sachet", hsnCode: "300450", gstRate: 12, mrp: 42, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU009", name: "Ceftriaxone 1g Injection Vial", brand: "Ceftron", molecule: "Ceftriaxone", therapyArea: "Antibiotic", dosageForm: "Injection", strength: "1 g", packSize: "1 Vial", hsnCode: "300420", gstRate: 12, mrp: 118, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU010", name: "Pantoprazole 40mg Tablet 10s", brand: "PantoCare", molecule: "Pantoprazole", therapyArea: "GI", dosageForm: "Tablet", strength: "40 mg", packSize: "10 Tablets", hsnCode: "300490", gstRate: 12, mrp: 68, coldChainRequired: "N", shelfLifeMonths: 36, status: "Active" }
+      { id: "SKU_001", name: "Product_1", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 3872, costPerUnit: 1128, weightGrams: 91, launchDate: "2022-04-25", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_002", name: "Product_2", category: "Wearables", subCategory: "Neckband", priceSegment: "Budget", mrp: 3913, costPerUnit: 791, weightGrams: 112, launchDate: "2022-03-19", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_003", name: "Product_3", category: "Wearables", subCategory: "Smartwatch", priceSegment: "Mid", mrp: 5646, costPerUnit: 750, weightGrams: 120, launchDate: "2022-12-06", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_004", name: "Product_4", category: "Wearables", subCategory: "OverEar", priceSegment: "Mid", mrp: 4866, costPerUnit: 1007, weightGrams: 106, launchDate: "2022-08-02", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { id: "SKU_005", name: "Product_5", category: "Speakers", subCategory: "TWS", priceSegment: "Premium", mrp: 4657, costPerUnit: 1262, weightGrams: 294, launchDate: "2022-12-25", lifecycleStage: "Growth", discontinued: false, status: "Active" },
+      { id: "SKU_006", name: "Product_6", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 4101, costPerUnit: 792, weightGrams: 242, launchDate: "2022-12-03", lifecycleStage: "Growth", discontinued: false, status: "Active" },
+      { id: "SKU_007", name: "Product_7", category: "Headphones", subCategory: "Neckband", priceSegment: "Premium", mrp: 4296, costPerUnit: 1072, weightGrams: 216, launchDate: "2022-10-13", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { id: "SKU_008", name: "Product_8", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 1656, costPerUnit: 2189, weightGrams: 163, launchDate: "2022-03-24", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { id: "SKU_009", name: "Product_9", category: "Speakers", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 4947, costPerUnit: 692, weightGrams: 81, launchDate: "2022-08-13", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_010", name: "Product_10", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 5770, costPerUnit: 708, weightGrams: 279, launchDate: "2022-06-17", lifecycleStage: "Growth", discontinued: false, status: "Active" }
     ],
-    stats: { totalRecords: 10, lastSync: "2025-01-15 09:30", source: "Pharma ERP" }
+    stats: { totalRecords: 50, lastSync: "2025-01-15 09:30", source: "CSV Upload" }
   },
   "location": {
     title: "Location Master",
