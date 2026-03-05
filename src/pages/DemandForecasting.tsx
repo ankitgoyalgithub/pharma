@@ -257,7 +257,7 @@ const DemandForecasting = () => {
       setTimeout(() => setPreviewLoading(false), 700);
     }
   };
-  const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "npi" | "quality">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "npi" | "repository">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
   const [showAutoFixDialog, setShowAutoFixDialog] = useState(false);
   const [showDQPreview, setShowDQPreview] = useState(false);
