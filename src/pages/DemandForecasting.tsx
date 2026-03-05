@@ -2304,14 +2304,14 @@ const DemandForecasting = () => {
 
             <div className="flex justify-center">
             <ForecastCard
-              title="Data Quality Review"
-              value="97.4%"
-              subtitle="Completeness score, 1 missing value imputed, 2 duplicates resolved. AI-enhanced data integrity verified."
-              icon={Shield}
-              isActive={selectedScenario === null && activeTab === "quality"}
+              title="Data Repository"
+              value="6"
+              subtitle="Browse all input datasets, forecast outputs, outlier detection, and feature importance tables."
+              icon={Database}
+              isActive={selectedScenario === null && activeTab === "repository"}
               onClick={() => {
                 setSelectedScenario(null);
-                setActiveTab("quality");
+                setActiveTab("repository");
               }}
             />
             </div>
