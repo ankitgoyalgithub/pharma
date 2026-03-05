@@ -1683,51 +1683,211 @@ const DemandForecasting = () => {
 
       {/* Data Quality Issues Preview Dialog */}
       <Dialog open={showDQPreview} onOpenChange={setShowDQPreview}>
-        <DialogContent className="max-w-5xl max-h-[85vh] flex flex-col">
+        <DialogContent className="max-w-6xl max-h-[85vh] flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Eye className="h-5 w-5 text-primary" />
-              Data Quality Issues — All Affected Rows
+              Data Quality Issues — Affected Rows by File
             </DialogTitle>
+            <p className="text-xs text-muted-foreground">Actual data rows with flagged cells highlighted in context.</p>
           </DialogHeader>
           <ScrollArea className="flex-1 -mx-6 px-6">
-            <div className="border rounded-lg overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/50 sticky top-0">
-                  <tr className="border-b">
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">File</th>
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Row</th>
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Column</th>
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Issue Type</th>
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Severity</th>
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Current Value</th>
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Suggested Fix</th>
-                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Impact</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dynamicDataQualityIssues.map((issue) => (
-                    <tr key={issue.id} className="border-b hover:bg-muted/30 transition-colors">
-                      <td className="px-4 py-3 font-mono">{issue.file}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{issue.rowNumber}</td>
-                      <td className="px-4 py-3 font-medium">{issue.column}</td>
-                      <td className="px-4 py-3">{issue.issueType}</td>
-                      <td className="px-4 py-3">
-                        <Badge variant={issue.severity === 'high' ? 'destructive' : issue.severity === 'medium' ? 'default' : 'secondary'} className="text-xs">
-                          {issue.severity}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3 font-mono text-muted-foreground">
-                        {issue.currentValue || <span className="italic">null</span>}
-                      </td>
-                      <td className="px-4 py-3 font-mono text-green-700 dark:text-green-400">{issue.suggestedFix}</td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs text-muted-foreground">{issue.impactScore}/10</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-6">
+              {/* fact_sales_history.csv */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-semibold text-foreground">fact_sales_history.csv</span>
+                  <Badge variant="secondary" className="text-xs">{dynamicDataQualityIssues.filter(i => i.file.includes('sales') || i.file.includes('fact_sales')).length} issues</Badge>
+                </div>
+                <div className="border rounded-lg overflow-hidden">
+                  <table className="w-full text-xs">
+                    <thead className="bg-muted/50">
+                      <tr className="border-b">
+                        {["Row", "SKU", "Product", "Channel", "Region", "Date", "Units Sold", "Revenue", "Discount %", "Issue"].map(h => (
+                          <th key={h} className="text-left px-3 py-2 font-semibold uppercase tracking-wider text-muted-foreground">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">1247</td>
+                        <td className="px-3 py-2 font-mono">SKU_001</td>
+                        <td className="px-3 py-2">Product_1 (Earbuds)</td>
+                        <td className="px-3 py-2">Amazon</td>
+                        <td className="px-3 py-2">North</td>
+                        <td className="px-3 py-2">2023-06-18</td>
+                        <td className="px-3 py-2"><span className="bg-destructive/20 text-destructive px-1.5 py-0.5 rounded font-semibold">NULL</span></td>
+                        <td className="px-3 py-2">₹1,62,624</td>
+                        <td className="px-3 py-2">0.12</td>
+                        <td className="px-3 py-2"><Badge variant="destructive" className="text-[10px]">Missing Value</Badge></td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">3456</td>
+                        <td className="px-3 py-2 font-mono">SKU_007</td>
+                        <td className="px-3 py-2">Product_7 (Headphones)</td>
+                        <td className="px-3 py-2">D2C</td>
+                        <td className="px-3 py-2">East</td>
+                        <td className="px-3 py-2">2023-09-04</td>
+                        <td className="px-3 py-2"><span className="bg-destructive/20 text-destructive px-1.5 py-0.5 rounded font-semibold">9999</span></td>
+                        <td className="px-3 py-2">₹4,29,59,704</td>
+                        <td className="px-3 py-2">0.00</td>
+                        <td className="px-3 py-2"><Badge variant="destructive" className="text-[10px]">Outlier</Badge></td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">5678</td>
+                        <td className="px-3 py-2 font-mono">SKU_007</td>
+                        <td className="px-3 py-2">Product_7 (Headphones)</td>
+                        <td className="px-3 py-2">Flipkart</td>
+                        <td className="px-3 py-2">Central</td>
+                        <td className="px-3 py-2">2023-11-22</td>
+                        <td className="px-3 py-2">38</td>
+                        <td className="px-3 py-2"><span className="bg-warning/20 text-warning px-1.5 py-0.5 rounded font-semibold">NULL</span></td>
+                        <td className="px-3 py-2">0.08</td>
+                        <td className="px-3 py-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px]">Missing Value</Badge></td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">8912</td>
+                        <td className="px-3 py-2 font-mono">SKU_021</td>
+                        <td className="px-3 py-2">Product_21 (Headphones)</td>
+                        <td className="px-3 py-2">Amazon</td>
+                        <td className="px-3 py-2">Central</td>
+                        <td className="px-3 py-2">2024-01-15</td>
+                        <td className="px-3 py-2">45</td>
+                        <td className="px-3 py-2">₹2,53,215</td>
+                        <td className="px-3 py-2"><span className="bg-destructive/20 text-destructive px-1.5 py-0.5 rounded font-semibold">1.5</span></td>
+                        <td className="px-3 py-2"><Badge variant="destructive" className="text-[10px]">Invalid Value</Badge></td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">12345</td>
+                        <td className="px-3 py-2 font-mono">SKU_012</td>
+                        <td className="px-3 py-2">Product_12 (Speakers)</td>
+                        <td className="px-3 py-2">Amazon</td>
+                        <td className="px-3 py-2">Central</td>
+                        <td className="px-3 py-2"><span className="bg-warning/20 text-warning px-1.5 py-0.5 rounded font-semibold">2023-03-11</span></td>
+                        <td className="px-3 py-2">19</td>
+                        <td className="px-3 py-2">₹64,809</td>
+                        <td className="px-3 py-2">0.05</td>
+                        <td className="px-3 py-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px]">Duplicate</Badge></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* dim_product.csv */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-success" />
+                  <span className="text-sm font-semibold text-foreground">dim_product.csv</span>
+                  <Badge variant="secondary" className="text-xs">{dynamicDataQualityIssues.filter(i => i.file.includes('product') || i.file.includes('dim_product')).length} issues</Badge>
+                </div>
+                <div className="border rounded-lg overflow-hidden">
+                  <table className="w-full text-xs">
+                    <thead className="bg-muted/50">
+                      <tr className="border-b">
+                        {["Row", "SKU", "Product", "Category", "Sub-Category", "MRP", "Status", "Issue"].map(h => (
+                          <th key={h} className="text-left px-3 py-2 font-semibold uppercase tracking-wider text-muted-foreground">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">12</td>
+                        <td className="px-3 py-2 font-mono">SKU_012</td>
+                        <td className="px-3 py-2">Product_12</td>
+                        <td className="px-3 py-2"><span className="bg-accent/20 text-accent-foreground px-1.5 py-0.5 rounded font-semibold">Earbud</span></td>
+                        <td className="px-3 py-2">TWS</td>
+                        <td className="px-3 py-2">₹3,411</td>
+                        <td className="px-3 py-2">Active</td>
+                        <td className="px-3 py-2"><Badge variant="secondary" className="text-[10px]">Invalid Category</Badge></td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">23</td>
+                        <td className="px-3 py-2 font-mono">SKU_023</td>
+                        <td className="px-3 py-2">Product_23</td>
+                        <td className="px-3 py-2">Headphones</td>
+                        <td className="px-3 py-2">Budget</td>
+                        <td className="px-3 py-2"><span className="bg-warning/20 text-warning px-1.5 py-0.5 rounded font-semibold">NULL</span></td>
+                        <td className="px-3 py-2">Active</td>
+                        <td className="px-3 py-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px]">Missing Value</Badge></td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">34</td>
+                        <td className="px-3 py-2 font-mono">SKU_034</td>
+                        <td className="px-3 py-2">Product_34</td>
+                        <td className="px-3 py-2">Speakers</td>
+                        <td className="px-3 py-2">Portable</td>
+                        <td className="px-3 py-2">₹2,890</td>
+                        <td className="px-3 py-2"><span className="bg-accent/20 text-accent-foreground px-1.5 py-0.5 rounded font-semibold">false</span></td>
+                        <td className="px-3 py-2"><Badge variant="secondary" className="text-[10px]">Format Issue</Badge></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* dim_channel.csv */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-warning" />
+                  <span className="text-sm font-semibold text-foreground">dim_channel.csv</span>
+                  <Badge variant="secondary" className="text-xs">1 issue</Badge>
+                </div>
+                <div className="border rounded-lg overflow-hidden">
+                  <table className="w-full text-xs">
+                    <thead className="bg-muted/50">
+                      <tr className="border-b">
+                        {["Row", "Channel ID", "Channel", "Type", "Region", "Contribution", "Issue"].map(h => (
+                          <th key={h} className="text-left px-3 py-2 font-semibold uppercase tracking-wider text-muted-foreground">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">3</td>
+                        <td className="px-3 py-2 font-mono">CH_003</td>
+                        <td className="px-3 py-2">D2C</td>
+                        <td className="px-3 py-2">Own Platform</td>
+                        <td className="px-3 py-2"><span className="bg-warning/20 text-warning px-1.5 py-0.5 rounded font-semibold">NULL</span></td>
+                        <td className="px-3 py-2">20%</td>
+                        <td className="px-3 py-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px]">Missing Value</Badge></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* cost_parameters.csv */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-accent-foreground" />
+                  <span className="text-sm font-semibold text-foreground">cost_parameters.csv</span>
+                  <Badge variant="secondary" className="text-xs">1 issue</Badge>
+                </div>
+                <div className="border rounded-lg overflow-hidden">
+                  <table className="w-full text-xs">
+                    <thead className="bg-muted/50">
+                      <tr className="border-b">
+                        {["Row", "SKU", "Category", "Ordering Cost", "Holding Cost/Unit/Day", "Lead Time (Days)", "Issue"].map(h => (
+                          <th key={h} className="text-left px-3 py-2 font-semibold uppercase tracking-wider text-muted-foreground">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b hover:bg-muted/20">
+                        <td className="px-3 py-2 text-muted-foreground">15</td>
+                        <td className="px-3 py-2 font-mono">SKU_043</td>
+                        <td className="px-3 py-2">Wearables</td>
+                        <td className="px-3 py-2">₹1,200</td>
+                        <td className="px-3 py-2"><span className="bg-accent/20 text-accent-foreground px-1.5 py-0.5 rounded font-semibold">0.00</span></td>
+                        <td className="px-3 py-2">7</td>
+                        <td className="px-3 py-2"><Badge variant="secondary" className="text-[10px]">Outlier</Badge></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </ScrollArea>
         </DialogContent>
