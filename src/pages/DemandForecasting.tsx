@@ -2653,10 +2653,10 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="space-y-2">
                     {[
-                      { sku: 'Insulin Glargine SKU004', issue: 'Cold Chain Variability', priority: 'high', variance: '+34%' },
-                      { sku: 'Azithromycin SKU002', issue: 'Outbreak Spike', priority: 'medium', variance: '+18%' },
-                      { sku: 'Cetirizine SKU003', issue: 'Seasonal Shift', priority: 'medium', variance: '-12%' },
-                      { sku: 'Pantoprazole SKU010', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
+                      { sku: 'Product_21 SKU_021', issue: 'Competitor Launch Impact', priority: 'high', variance: '+34%' },
+                      { sku: 'Product_7 SKU_007', issue: 'Platform Sale Spike', priority: 'medium', variance: '+18%' },
+                      { sku: 'Product_1 SKU_001', issue: 'Seasonal Shift', priority: 'medium', variance: '-12%' },
+                      { sku: 'Product_49 SKU_049', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-2">
