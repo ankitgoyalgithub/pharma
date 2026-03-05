@@ -2354,7 +2354,7 @@ const DemandForecasting = () => {
              activeTab === "insights" ? "Insights & Impact Analysis" :
              activeTab === "workbook" ? "Collaborative Workbook" :
              activeTab === "npi" ? "New & Limited History Forecast" :
-             activeTab === "quality" ? "Data Quality Review" : "Results"}
+             activeTab === "repository" ? "Data Repository" : "Results"}
           </h1>
           <div className="flex items-center gap-2">
             {!isShareMode && (
