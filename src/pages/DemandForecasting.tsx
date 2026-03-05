@@ -2297,7 +2297,7 @@ const DemandForecasting = () => {
             <ForecastCard
               title="NPIs & Limited History"
               value="80"
-              subtitle="New molecules, generic launches, and outbreak-sensitive SKUs. Items requiring manual review."
+              subtitle="New product launches, competitor entries, and trending SKUs. Items requiring manual review."
               icon={Sparkles}
               isActive={selectedScenario === null && activeTab === "npi"}
               onClick={() => {
