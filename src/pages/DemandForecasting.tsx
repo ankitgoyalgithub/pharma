@@ -2722,11 +2722,11 @@ const DemandForecasting = () => {
                     <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-semibold text-sm">Generic Drug Launch Alert - Cholecalciferol</span>
-                        <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2024</Badge>
+                        <span className="font-semibold text-sm">Competitor Launch Alert - Budget TWS</span>
+                        <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2025</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Generic Vitamin D3 launch expected to trigger 18% volume surge and 12% price erosion. D3Max (SKU008) faces competition. Secure API supply now and build 8 weeks safety stock to capture market opportunity.
+                        Competitor launching Budget TWS Earbuds expected to trigger 22% volume surge and 15% price erosion. SKU_001 (Earbuds) faces direct competition. Increase marketing spend and build 6 weeks safety stock to capture market opportunity.
                       </p>
                     </div>
                   </div>
