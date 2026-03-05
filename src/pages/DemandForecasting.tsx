@@ -2728,20 +2728,6 @@ const DemandForecasting = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-info/10 border border-info/30 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-start gap-3">
-                    <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-semibold text-sm">Festive Season Demand Intelligence</span>
-                        <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+38% Peak</Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        Sales data shows 38% surge in Earbuds and Headphones during Oct-Nov (Big Billion Days, Diwali) and 25% spike during Jan (Republic Day sales). Pre-position SKU_001 (Earbuds), SKU_021 (Headphones), and SKU_029 (Speakers) inventory 4 weeks ahead of sale events.
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </CardContent>
             </Card>
 
