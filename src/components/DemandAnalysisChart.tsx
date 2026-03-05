@@ -64,9 +64,9 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
     if (isNpiMode && npiInfo) {
       const weeklyNpiData = [];
       for (let i = 1; i <= 65; i++) {
-        const proxyTrendBase = (82 + (i * 1.1)) * storeMultiplier;
-        const npiTrendBase = (78 + (i * 1.3)) * storeMultiplier;
-        const seasonality = Math.sin(i / 8) * 10 * storeMultiplier;
+        const proxyTrendBase = (82 + (i * 1.1)) * totalMultiplier;
+        const npiTrendBase = (78 + (i * 1.3)) * totalMultiplier;
+        const seasonality = Math.sin(i / 8) * 10 * totalMultiplier;
         const noise = (Math.random() - 0.5) * 6;
         
         let periodLabel = `W${i}`;
