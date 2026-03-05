@@ -306,8 +306,8 @@ export const NPILaunchIntelligence: React.FC = () => {
       {/* ── 6. Market Benchmark ── */}
       <Card className="border-border/40">
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-semibold flex items-center gap-2">
-            <BarChart3 className="w-3.5 h-3.5 text-primary" />
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-primary" />
             Competitive Benchmark
           </CardTitle>
           <p className="text-[10px] text-muted-foreground">boAt NPI vs closest competitor comparison.</p>
