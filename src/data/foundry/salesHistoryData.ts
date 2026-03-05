@@ -178,7 +178,7 @@ export const salesHistoryData = [
   { date: "2023-04-30", productId: "SKU_006", channelId: "Flipkart", region: "South", unitsSold: 47, revenue: 208769.30, discountPercent: 0.14, promotionFlag: 1, stockoutFlag: 1, price: 5165 },
   { date: "2023-05-31", productId: "SKU_038", channelId: "Flipkart", region: "East", unitsSold: 64, revenue: 179631.36, discountPercent: 0.07, promotionFlag: 1, stockoutFlag: 0, price: 3018 },
   { date: "2023-02-04", productId: "SKU_024", channelId: "Retail", region: "East", unitsSold: 40, revenue: 108572.40, discountPercent: 0.19, promotionFlag: 0, stockoutFlag: 0, price: 3351 },
-  { date: "2023-03-07", productId: "SKU_029", channelId: "Flipkart", region: "North", unitsSold: 65, revenue: 290283.50, discountPercent: 0.15, promotionFlag: 0, stackoutFlag: 0, price: 5254 },
+  { date: "2023-03-07", productId: "SKU_029", channelId: "Flipkart", region: "North", unitsSold: 65, revenue: 290283.50, discountPercent: 0.15, promotionFlag: 0, stockoutFlag: 0, price: 5254 },
   { date: "2023-06-21", productId: "SKU_046", channelId: "D2C", region: "West", unitsSold: 70, revenue: 175784.00, discountPercent: 0.27, promotionFlag: 0, stockoutFlag: 1, price: 3440 },
   { date: "2023-02-27", productId: "SKU_021", channelId: "D2C", region: "South", unitsSold: 43, revenue: 150620.40, discountPercent: 0.10, promotionFlag: 1, stockoutFlag: 0, price: 3892 },
   { date: "2023-06-23", productId: "SKU_025", channelId: "Amazon", region: "West", unitsSold: 31, revenue: 94572.94, discountPercent: 0.02, promotionFlag: 0, stockoutFlag: 0, price: 3113 },
