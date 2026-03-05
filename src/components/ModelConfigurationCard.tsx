@@ -42,6 +42,8 @@ interface ModelConfigurationCardProps {
 export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
   forecastHorizon,
   setForecastHorizon,
+  forecastHierarchy,
+  setForecastHierarchy,
   modelGranularity,
   setModelGranularity,
   seasonality,

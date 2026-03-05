@@ -2007,6 +2007,8 @@ const DemandForecasting = () => {
       <ModelConfigurationCard
         forecastHorizon={forecastHorizon}
         setForecastHorizon={setForecastHorizon}
+        forecastHierarchy={forecastHierarchy}
+        setForecastHierarchy={setForecastHierarchy}
         modelGranularity={modelGranularity}
         setModelGranularity={setModelGranularity}
         seasonality={seasonality}
