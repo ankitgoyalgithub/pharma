@@ -57,7 +57,7 @@ export const getStoreMetrics = (nodeId: string) => {
 // ABC Analysis - Total Revenue Impact (in Crores)
 export const getABCRevenueImpact = (nodeId: string) => {
   if (nodeId === 'all') {
-    return { formatted: '₹52.8Cr', value: 52.8 };
+    return { formatted: '₹61.6Cr', value: 61.6 };
   }
 
   const metrics = getStoreMetrics(nodeId);
