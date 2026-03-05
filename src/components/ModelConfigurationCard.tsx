@@ -226,6 +226,21 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
                       </SelectContent>
                     </Select>
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="forecast-hierarchy">Forecast Hierarchy</Label>
+                    <Select value={forecastHierarchy} onValueChange={setForecastHierarchy}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="category">Category (5)</SelectItem>
+                        <SelectItem value="subcategory">Subcategory (20)</SelectItem>
+                        <SelectItem value="brand">Brand (5)</SelectItem>
+                        <SelectItem value="sku">SKU (100)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="granularity">Data Granularity</Label>
