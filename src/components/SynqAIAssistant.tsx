@@ -197,26 +197,26 @@ const generateResponse = (query: string): { content: string; chart?: Message["ch
     };
   }
 
-  // Compare NCR vs West
-  if (lowerQuery.includes("ncr") && lowerQuery.includes("west")) {
-    const ncrSkus = skuData.filter(s => s.location.includes("NCR"));
-    const westSkus = skuData.filter(s => s.location.includes("West"));
+  // Compare Amazon vs Flipkart
+  if (lowerQuery.includes("amazon") && lowerQuery.includes("flipkart")) {
+    const amazonSkus = skuData.filter(s => s.channel === "Amazon");
+    const flipkartSkus = skuData.filter(s => s.channel === "Flipkart");
     
-    const ncrRevenue = ncrSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
-    const westRevenue = westSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
+    const amazonRevenue = amazonSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
+    const flipkartRevenue = flipkartSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
     
-    const ncrAccuracy = ncrSkus.reduce((sum, s) => sum + parseInt(s.accuracy), 0) / ncrSkus.length;
-    const westAccuracy = westSkus.reduce((sum, s) => sum + parseInt(s.accuracy), 0) / westSkus.length;
+    const amazonAccuracy = amazonSkus.length ? amazonSkus.reduce((sum, s) => sum + parseInt(s.accuracy), 0) / amazonSkus.length : 0;
+    const flipkartAccuracy = flipkartSkus.length ? flipkartSkus.reduce((sum, s) => sum + parseInt(s.accuracy), 0) / flipkartSkus.length : 0;
 
     return {
-      content: `⚖️ **NCR vs West Distribution Center Comparison**\n\n| Metric | NCR | West |\n|--------|-----|------|\n| Revenue | ₹${ncrRevenue.toFixed(1)}M | ₹${westRevenue.toFixed(1)}M |\n| Avg Accuracy | ${ncrAccuracy.toFixed(1)}% | ${westAccuracy.toFixed(1)}% |\n| SKU Count | ${ncrSkus.length} | ${westSkus.length} |\n\n**Winner:** ${ncrRevenue > westRevenue ? "NCR" : "West"} by revenue`,
+      content: `⚖️ **Amazon vs Flipkart Comparison**\n\n| Metric | Amazon | Flipkart |\n|--------|--------|----------|\n| Revenue | ₹${amazonRevenue.toFixed(1)}M | ₹${flipkartRevenue.toFixed(1)}M |\n| Avg Accuracy | ${amazonAccuracy.toFixed(1)}% | ${flipkartAccuracy.toFixed(1)}% |\n| SKU Count | ${amazonSkus.length} | ${flipkartSkus.length} |\n\n**Winner:** ${amazonRevenue > flipkartRevenue ? "Amazon" : "Flipkart"} by revenue`,
       chart: {
         type: "bar",
         data: {
           labels: ["Revenue (₹M)", "Avg Accuracy (%)"],
           datasets: [
-            { label: "NCR", data: [ncrRevenue, ncrAccuracy], backgroundColor: "#3b82f6" },
-            { label: "West", data: [westRevenue, westAccuracy], backgroundColor: "#22c55e" }
+            { label: "Amazon", data: [amazonRevenue, amazonAccuracy], backgroundColor: "#ff9900" },
+            { label: "Flipkart", data: [flipkartRevenue, flipkartAccuracy], backgroundColor: "#047bd5" }
           ]
         }
       }
