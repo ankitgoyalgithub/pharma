@@ -11,6 +11,7 @@ interface DemandAnalysisChartProps {
   storeFilter?: string;
   npiSku?: string;
   showRangeForecast?: boolean;
+  channelFilter?: string;
 }
 
 // Proxy SKU mapping for NPI forecasting - Consumer Electronics
