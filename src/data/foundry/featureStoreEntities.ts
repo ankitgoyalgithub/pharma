@@ -56,8 +56,8 @@ export const featureStoreEntities: EntityModule[] = [
     sourceType: "snowflake",
   },
   {
-    title: "Influencer Campaign Tracker",
-    description: "Active influencer campaigns with reach, engagement, and conversion metrics",
+    title: "Digital Campaign Tracker",
+    description: "Active digital campaigns with reach, engagement, and conversion metrics",
     origin: "third-party",
     route: "/entity-preview/influencer-campaigns",
     recordCount: 85,
