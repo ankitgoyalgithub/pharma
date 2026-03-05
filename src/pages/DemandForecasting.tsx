@@ -3328,7 +3328,7 @@ const DemandForecasting = () => {
                   
                   {/* Stock-out Risk Table */}
                   <div>
-                    <div className="text-[11px] font-semibold text-foreground mb-3">Stock-out Risk (Last Monsoon)</div>
+                    <div className="text-[11px] font-semibold text-foreground mb-3">Stock-out Risk (Last Festive Season)</div>
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border/40 bg-muted/30">
@@ -3340,28 +3340,28 @@ const DemandForecasting = () => {
                       </thead>
                       <tbody>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Chronic Care</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">TWS Earbuds</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">4%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-success/15 text-success border-success/30 text-[10px] px-1.5 py-0.5">Low</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Stable refill patterns</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Stable high-volume SKUs</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Seasonal</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Speakers</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">12%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Med</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Monsoon surge timing</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">BBD/Diwali surge timing</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Outbreak</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Party Speakers</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">22%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">High</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Dengue spike OOS</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Navratri/Diwali spike OOS</td>
                         </tr>
                         <tr>
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Generic Launch</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">New Launches</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">18%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">V. High</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">API supply constraints</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Supply ramp-up constraints</td>
                         </tr>
                       </tbody>
                     </table>
