@@ -171,7 +171,7 @@ const DemandForecasting = () => {
     "Holiday Calendar": "Holiday_Calendar",
     "Promotional Campaigns": "Promotional_Campaigns",
     "Consumer Sentiment Index": "Consumer_Sentiment_Index",
-    "Influencer Campaign Tracker": "Influencer_Campaign_Tracker",
+    "Digital Campaign Tracker": "Digital_Campaign_Tracker",
     "Seasonality Trends": "Seasonality_Trends",
   };
 
