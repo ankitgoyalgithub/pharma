@@ -2983,7 +2983,7 @@ const DemandForecasting = () => {
                 <div className="flex items-center gap-2">
                   <CardTitle className="flex items-center gap-2 text-base font-semibold">
                     <BarChart3 className="w-5 h-5" />
-                    Forecast Accuracy by Therapeutic Category
+                    Forecast Accuracy by Product Category
                   </CardTitle>
                   <Tooltip>
                     <TooltipTrigger>
