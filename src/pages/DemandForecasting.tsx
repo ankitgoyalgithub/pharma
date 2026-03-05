@@ -571,12 +571,10 @@ const DemandForecasting = () => {
     const defaultFilters = {
       skuProduct: 'all',
       location: 'all',
-      store: 'all',
       channel: 'all',
       timePeriod: 'all',
-      businessUnits: 'all',
-      dataAvailability: 'all',
-      npiSku: 'none'
+      npiSku: 'none',
+      store: 'all',
     };
     setFilterValues(defaultFilters);
     setAppliedFilters(defaultFilters);
