@@ -3021,13 +3021,13 @@ const DemandForecasting = () => {
                   <Bar 
                     data={{
                       labels: [
-                        'Antibiotics', 
-                        'Cardiovascular', 
-                        'Respiratory', 
-                        'Diabetes Care', 
-                        'Pain Relief', 
-                        'GI & Antacids',
-                        'Vitamins & Supplements'
+                        'TWS Earbuds', 
+                        'Neckbands', 
+                        'Headphones', 
+                        'Smartwatches', 
+                        'Speakers', 
+                        'Party Speakers',
+                        'Gaming Audio'
                       ],
                       datasets: [
                         {
