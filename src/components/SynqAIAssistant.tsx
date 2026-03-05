@@ -280,45 +280,23 @@ const generateResponse = (query: string): { content: string; chart?: Message["ch
     };
   }
 
-  // Retail vs Hospital
-  if (lowerQuery.includes("retail") && lowerQuery.includes("hospital")) {
-    const retailSkus = skuData.filter(s => s.channel.includes("Retail"));
-    const hospitalSkus = skuData.filter(s => s.channel.includes("Hospital"));
+  // D2C analysis
+  if (lowerQuery.includes("d2c")) {
+    const d2cSkus = skuData.filter(s => s.channel === "D2C");
+    const d2cRevenue = d2cSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
     
-    const retailRevenue = retailSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
-    const hospitalRevenue = hospitalSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
-
     return {
-      content: `🏥 **Retail vs Hospital Pharmacy Comparison**\n\n| Metric | Retail Pharmacy | Hospital Pharmacy |\n|--------|-----------------|-------------------|\n| Revenue | ₹${retailRevenue.toFixed(1)}M | ₹${hospitalRevenue.toFixed(1)}M |\n| SKU Count | ${retailSkus.length} | ${hospitalSkus.length} |\n| Avg per SKU | ₹${(retailRevenue/retailSkus.length).toFixed(1)}M | ₹${(hospitalRevenue/hospitalSkus.length).toFixed(1)}M |`,
-      chart: {
-        type: "bar",
-        data: {
-          labels: ["Retail Pharmacy", "Hospital Pharmacy"],
-          datasets: [{
-            label: "Revenue (₹M)",
-            data: [retailRevenue, hospitalRevenue],
-            backgroundColor: ["#3b82f6", "#22c55e"],
-          }]
-        }
-      }
+      content: `🌐 **D2C Channel Analysis**\n\n${d2cSkus.length > 0 ? d2cSkus.map(s => `• **${s.product}** (${s.sku})\n  Revenue: ${s.actual} | Accuracy: ${s.accuracy} | Variance: ${s.variance}`).join("\n\n") : "No D2C data available"}\n\n**Total D2C Revenue:** ₹${d2cRevenue.toFixed(1)}M\n**Key Insight:** D2C channel shows 42% CAGR growth with 78% higher margins on premium products.`,
     };
   }
 
-  // E-Pharmacy analysis
-  if (lowerQuery.includes("e-pharmacy") || lowerQuery.includes("epharmacy")) {
-    const ePharmacySkus = skuData.filter(s => s.channel.includes("E-Pharmacy"));
+  // Distributor analysis
+  if (lowerQuery.includes("distributor")) {
+    const distSkus = skuData.filter(s => s.channel === "Distributor");
+    const distRevenue = distSkus.reduce((sum, s) => sum + parseFloat(s.actual.replace("₹", "").replace("M", "")), 0);
     
     return {
-      content: `🌐 **E-Pharmacy Channel Analysis**\n\n${ePharmacySkus.length > 0 ? ePharmacySkus.map(s => `• **${s.product}** (${s.sku})\n  Revenue: ${s.actual} | Accuracy: ${s.accuracy} | Variance: ${s.variance}`).join("\n\n") : "No E-Pharmacy data available"}\n\n**Key Insight:** E-Pharmacy shows 35% CAGR growth potential in urban markets.`,
-    };
-  }
-
-  // Government tender
-  if (lowerQuery.includes("government") || lowerQuery.includes("tender")) {
-    const govSkus = skuData.filter(s => s.channel.includes("Government"));
-    
-    return {
-      content: `🏛️ **Government Tender Analysis**\n\n${govSkus.map(s => `• **${s.product}** (${s.sku})\n  Revenue: ${s.actual} | Forecast Variance: ${s.variance}`).join("\n\n")}\n\n**Note:** Government tenders show higher volume volatility due to bulk procurement cycles.`,
+      content: `📦 **Distributor Channel Analysis**\n\n${distSkus.map(s => `• **${s.product}** (${s.sku})\n  Revenue: ${s.actual} | Forecast Variance: ${s.variance}`).join("\n\n")}\n\n**Total Distributor Revenue:** ₹${distRevenue.toFixed(1)}M\n**Note:** Distributor channel serves Tier 2/3 cities with bulk order cycles.`,
     };
   }
 
