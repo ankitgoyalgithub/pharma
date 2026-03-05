@@ -1,4 +1,5 @@
 import { EntityPreviewMap } from "./types";
+import { salesHistoryData } from "./salesHistoryData";
 
 const splashImageUrls = [
   "https://iili.io/f5NFmLN.webp",
