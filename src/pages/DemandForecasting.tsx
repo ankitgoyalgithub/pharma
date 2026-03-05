@@ -3243,19 +3243,19 @@ const DemandForecasting = () => {
                   <ul className="space-y-2">
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">Reliable history</span>
-                      <span className="text-muted-foreground">— Trust data, follow chronic medication patterns.</span>
+                      <span className="text-muted-foreground">— Trust data, follow consistent demand patterns.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
-                      <span className="text-foreground font-medium min-w-[90px]">Outbreak-driven</span>
-                      <span className="text-muted-foreground">— Blend with disease outbreak tracking data.</span>
+                      <span className="text-foreground font-medium min-w-[90px]">Festival-driven</span>
+                      <span className="text-muted-foreground">— Blend with platform sale event & holiday calendar data.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
-                      <span className="text-foreground font-medium min-w-[90px]">Generic launch</span>
-                      <span className="text-muted-foreground">— Start from branded molecule, apply price elasticity.</span>
+                      <span className="text-foreground font-medium min-w-[90px]">Competitor launch</span>
+                      <span className="text-muted-foreground">— Start from comparable SKU, apply price elasticity.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">NPI</span>
-                      <span className="text-muted-foreground">— Use "look-alike" families as launch guide.</span>
+                      <span className="text-muted-foreground">— Use "look-alike" product families as launch guide.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">Stock-out items</span>
@@ -3266,10 +3266,10 @@ const DemandForecasting = () => {
                   <div className="border-t border-border/40 pt-3 mt-3">
                     <div className="text-[10px] text-foreground font-semibold mb-2 uppercase tracking-wider">Launch Playbook</div>
                     <ul className="space-y-1 text-[10px] text-muted-foreground list-disc list-inside">
-                      <li>Hospital pharmacies & large chains get stronger launch quantities.</li>
-                      <li>Cold chain SKUs: extra safety stock in metros with reliable storage.</li>
-                      <li>Outbreak drugs: pre-position 4 weeks before monsoon season.</li>
-                      <li>Generic launches: match distribution to branded molecule footprint.</li>
+                      <li>Amazon & Flipkart get stronger launch quantities due to sale event uplift.</li>
+                      <li>D2C channel: higher margin SKUs with influencer campaign coordination.</li>
+                      <li>Festival SKUs: pre-position 4 weeks before BBD/Diwali/Prime Day.</li>
+                      <li>New launches: match channel mix to comparable product footprint.</li>
                     </ul>
                   </div>
                 </CardContent>
