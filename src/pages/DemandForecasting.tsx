@@ -3131,9 +3131,9 @@ const DemandForecasting = () => {
               <Card className="relative overflow-hidden border-border/40 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Total SKUs in Scope</div>
-                  <div className="text-2xl font-bold text-foreground mb-1">542</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">All pharmacy channels & locations</div>
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Pharmaceuticals</Badge>
+                  <div className="text-2xl font-bold text-foreground mb-1">50</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">All channels & regions</div>
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Consumer Electronics</Badge>
                 </CardContent>
               </Card>
               
