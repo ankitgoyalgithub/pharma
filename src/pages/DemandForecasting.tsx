@@ -3280,7 +3280,7 @@ const DemandForecasting = () => {
             <Card className="border-border/40">
               <CardHeader className="pb-2">
                 <CardTitle className="text-xs font-semibold text-foreground">Mix & Risk View</CardTitle>
-                <p className="text-[10px] text-muted-foreground">SKU group split and stock-out risk from last monsoon season.</p>
+                <p className="text-[10px] text-muted-foreground">SKU group split and stock-out risk from last festive season.</p>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
