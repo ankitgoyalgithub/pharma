@@ -2291,7 +2291,7 @@ const DemandForecasting = () => {
             <div className="flex justify-center">
             <ForecastCard
               title="NPIs & Limited History"
-              value="80"
+              value="5"
               subtitle="New product launches, competitor entries, and trending SKUs. Items requiring manual review."
               icon={Sparkles}
               isActive={selectedScenario === null && activeTab === "npi"}

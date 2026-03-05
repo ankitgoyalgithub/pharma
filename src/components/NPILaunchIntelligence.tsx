@@ -340,35 +340,8 @@ export const NPILaunchIntelligence: React.FC = () => {
         </Card>
       </div>
 
-      {/* ── 5. Launch Readiness + Success Probability + Marketing Uplift ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Launch Readiness Scores */}
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-              Launch Readiness Score
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 space-y-3">
-            {npiProducts.map(p => (
-              <div key={p.sku} className="p-2.5 rounded-lg bg-muted/20 border border-border/20">
-                <div className="flex justify-between items-center mb-1.5">
-                  <span className="text-[10px] font-medium text-foreground">{p.product.split(" ").slice(0, 3).join(" ")}</span>
-                  <span className={`text-sm font-bold ${p.readinessScore >= 80 ? 'text-success' : p.readinessScore >= 65 ? 'text-warning' : 'text-destructive'}`}>{p.readinessScore}%</span>
-                </div>
-                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-1.5">
-                  <div className={`h-full rounded-full ${p.readinessScore >= 80 ? 'bg-success' : p.readinessScore >= 65 ? 'bg-warning' : 'bg-destructive'}`} style={{ width: `${p.readinessScore}%` }} />
-                </div>
-                <div className="flex gap-3 text-[9px]">
-                  <span className="flex items-center gap-0.5"><ReadinessIcon ok={p.readiness.inventory} /> Inventory</span>
-                  <span className="flex items-center gap-0.5"><ReadinessIcon ok={p.readiness.marketing} /> Marketing</span>
-                  <span className="flex items-center gap-0.5"><ReadinessIcon ok={p.readiness.supplier} /> Supplier</span>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+      {/* ── 5. Success Probability + Marketing Uplift ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
         {/* NPI Success Probability */}
         <Card className="border-border/40">
