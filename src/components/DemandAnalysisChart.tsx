@@ -149,8 +149,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       case 'daily':
         const dailyData = [];
         for (let i = 1; i <= 455; i++) {
-          const trendBase = (80 + (i * 0.15)) * storeMultiplier;
-          const seasonality = Math.sin(i / 30) * 8 * storeMultiplier;
+          const trendBase = (80 + (i * 0.15)) * totalMultiplier;
+          const seasonality = Math.sin(i / 30) * 8 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 6;
           
           const periodLabel = i <= 365 ? `Day ${i}` : `Day ${i} (F)`;
