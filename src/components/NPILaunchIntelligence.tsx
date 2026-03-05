@@ -152,8 +152,8 @@ export const NPILaunchIntelligence: React.FC = () => {
       {/* ── 2. Launch Demand & Comparable SKU Table ── */}
       <Card className="border-border/40">
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-semibold flex items-center gap-2">
-            <Target className="w-3.5 h-3.5 text-primary" />
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Target className="w-5 h-5 text-primary" />
             Launch Demand Estimates & Comparable Products
           </CardTitle>
           <p className="text-[10px] text-muted-foreground">Click any row to see detailed launch intelligence.</p>
