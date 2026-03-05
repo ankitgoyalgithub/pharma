@@ -13,6 +13,8 @@ import { Info, FileJson, FormInput, ChevronDown } from "lucide-react";
 interface ModelConfigurationCardProps {
   forecastHorizon: string;
   setForecastHorizon: (value: string) => void;
+  forecastHierarchy: string;
+  setForecastHierarchy: (value: string) => void;
   modelGranularity: string;
   setModelGranularity: (value: string) => void;
   seasonality: string;
