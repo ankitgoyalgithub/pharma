@@ -11,7 +11,7 @@ export const getExternalDrivers = (studyType: string, hasData: boolean = false) 
     { name: "Platform Sale Events", autoSelected: false, icon: "ShoppingCart" },
     { name: "Weather & Climate Data", autoSelected: false, icon: "CloudRain" },
     { name: "Consumer Sentiment Index", autoSelected: false, icon: "BarChart" },
-    { name: "Influencer Campaign Tracker", autoSelected: false, icon: "Users" },
+    { name: "Digital Campaign Tracker", autoSelected: false, icon: "Users" },
   ];
 
   return featureStoreDrivers;
