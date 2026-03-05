@@ -462,9 +462,8 @@ export const NPILaunchIntelligence: React.FC = () => {
                     <div className="text-[10px] text-primary font-medium">{selectedProduct.similarity}% similarity</div>
                   </div>
                   <div className="p-2.5 rounded-lg bg-muted/20 border border-border/20">
-                    <div className="text-[10px] font-semibold text-foreground mb-1">Marketing Uplift</div>
-                    <div className="text-[10px] text-muted-foreground">{selectedProduct.marketingUplift.baseline.toLocaleString()} → {selectedProduct.marketingUplift.withCampaign.toLocaleString()} units</div>
-                    <div className="text-[10px] text-success font-medium">+{selectedProduct.marketingUplift.upliftPct}% with {selectedProduct.marketingUplift.campaignType}</div>
+                    <div className="text-[10px] font-semibold text-foreground mb-1">Channel Strategy</div>
+                    <div className="text-[10px] text-muted-foreground">Amazon {selectedProduct.channelMix.amazon}% · D2C {selectedProduct.channelMix.d2c}% · Retail {selectedProduct.channelMix.retail}%</div>
                   </div>
                 </div>
 
