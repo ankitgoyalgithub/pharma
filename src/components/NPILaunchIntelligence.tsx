@@ -24,7 +24,7 @@ const npiProducts = [
     priceElasticity: "High", festivalDependency: "Medium (Prime Day)",
     readinessScore: 78, readiness: { inventory: true, marketing: true, supplier: false },
     successProbability: 72, successDrivers: ["Similar product success", "Category growth", "Strong online demand"],
-    marketingUplift: { baseline: 18000, withCampaign: 24000, upliftPct: 33, campaignType: "Influencer (Kiara Advani)" },
+    marketingUplift: { baseline: 18000, withCampaign: 24000, upliftPct: 33, campaignType: "Social media + brand campaign" },
     benchmark: { competitor: "Noise Buds VS104", priceGap: -8, batteryGap: 20, featureEdge: "ANC + ENC" }
   },
   {
@@ -38,7 +38,7 @@ const npiProducts = [
     priceElasticity: "Low", festivalDependency: "Low",
     readinessScore: 88, readiness: { inventory: true, marketing: true, supplier: true },
     successProbability: 85, successDrivers: ["Strong brand recall", "Proven form factor", "ANC upgrade demand"],
-    marketingUplift: { baseline: 12500, withCampaign: 15600, upliftPct: 25, campaignType: "Hardik Pandya collab" },
+    marketingUplift: { baseline: 12500, withCampaign: 15600, upliftPct: 25, campaignType: "Brand ambassador campaign" },
     benchmark: { competitor: "JBL Tune 770NC", priceGap: -15, batteryGap: 10, featureEdge: "40mm drivers" }
   },
   {

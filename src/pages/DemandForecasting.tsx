@@ -171,7 +171,7 @@ const DemandForecasting = () => {
     "Holiday Calendar": "Holiday_Calendar",
     "Promotional Campaigns": "Promotional_Campaigns",
     "Consumer Sentiment Index": "Consumer_Sentiment_Index",
-    "Influencer Campaign Tracker": "Influencer_Campaign_Tracker",
+    "Digital Campaign Tracker": "Digital_Campaign_Tracker",
     "Seasonality Trends": "Seasonality_Trends",
   };
 
@@ -464,8 +464,8 @@ const DemandForecasting = () => {
         (lowerQuery.includes("revenue") && lowerQuery.includes("sku")) ||
         (lowerQuery.includes("selling") && lowerQuery.includes("sku"))) {
       const sortedSkus = [...skuData].sort((a, b) => {
-        const aVal = parseFloat(a.actual.replace("₹", "").replace("M", ""));
-        const bVal = parseFloat(b.actual.replace("₹", "").replace("M", ""));
+        const aVal = parseFloat(a.actual.replace("₹", "").replace("Cr", ""));
+        const bVal = parseFloat(b.actual.replace("₹", "").replace("Cr", ""));
         return bVal - aVal;
       }).slice(0, 5);
 
@@ -499,28 +499,28 @@ const DemandForecasting = () => {
       const regionRevenue: Record<string, number> = {};
       skuData.forEach(s => {
         const region = s.location;
-        const revenue = parseFloat(s.actual.replace("₹", "").replace("M", ""));
+        const revenue = parseFloat(s.actual.replace("₹", "").replace("Cr", ""));
         regionRevenue[region] = (regionRevenue[region] || 0) + revenue;
       });
       
       const sortedRegions = Object.entries(regionRevenue).sort((a, b) => b[1] - a[1]);
       const bestRegion = sortedRegions[0];
 
-      return `🗺️ **Regional Sales Performance**\n\n🥇 **Best Region: ${bestRegion[0]}**\nTotal Revenue: ₹${bestRegion[1].toFixed(1)}M\n\n**All Regions Ranking:**\n${sortedRegions.map((r, i) => `${i + 1}. ${r[0]}: ₹${r[1].toFixed(1)}M`).join("\n")}`;
+      return `🗺️ **Regional Sales Performance**\n\n🥇 **Best Region: ${bestRegion[0]}**\nTotal Revenue: ₹${bestRegion[1].toFixed(2)}Cr\n\n**All Regions Ranking:**\n${sortedRegions.map((r, i) => `${i + 1}. ${r[0]}: ₹${r[1].toFixed(2)}Cr`).join("\n")}`;
     }
 
     // Channel revenue
     if (lowerQuery.includes("channel") && (lowerQuery.includes("revenue") || lowerQuery.includes("maximum") || lowerQuery.includes("breakdown"))) {
       const channelRevenue: Record<string, number> = {};
       skuData.forEach(s => {
-        const revenue = parseFloat(s.actual.replace("₹", "").replace("M", ""));
+        const revenue = parseFloat(s.actual.replace("₹", "").replace("Cr", ""));
         channelRevenue[s.channel] = (channelRevenue[s.channel] || 0) + revenue;
       });
       
       const sortedChannels = Object.entries(channelRevenue).sort((a, b) => b[1] - a[1]);
       const totalRevenue = sortedChannels.reduce((sum, c) => sum + c[1], 0);
 
-      return `📦 **Channel Revenue Analysis**\n\n🥇 **Top Channel: ${sortedChannels[0][0]}**\nRevenue: ₹${sortedChannels[0][1].toFixed(1)}M (${((sortedChannels[0][1] / totalRevenue) * 100).toFixed(1)}% share)\n\n**All Channels:**\n${sortedChannels.map((c, i) => `${i + 1}. ${c[0]}: ₹${c[1].toFixed(1)}M (${((c[1] / totalRevenue) * 100).toFixed(1)}%)`).join("\n")}`;
+      return `📦 **Channel Revenue Analysis**\n\n🥇 **Top Channel: ${sortedChannels[0][0]}**\nRevenue: ₹${sortedChannels[0][1].toFixed(2)}Cr (${((sortedChannels[0][1] / totalRevenue) * 100).toFixed(1)}% share)\n\n**All Channels:**\n${sortedChannels.map((c, i) => `${i + 1}. ${c[0]}: ₹${c[1].toFixed(2)}Cr (${((c[1] / totalRevenue) * 100).toFixed(1)}%)`).join("\n")}`;
     }
 
     // Overall forecast accuracy
@@ -2778,7 +2778,7 @@ const DemandForecasting = () => {
                         labels: ['Class A', 'Class B', 'Class C'],
                         datasets: [
                           {
-                            label: 'Revenue ($M)',
+                            label: 'Revenue (₹Cr)',
                             data: [42.3, 18.6, 7.2],
                             backgroundColor: hslVar('--success', 0.7),
                             borderColor: hslVar('--success'),
@@ -2807,7 +2807,7 @@ const DemandForecasting = () => {
                             type: 'linear',
                             position: 'left',
                             beginAtZero: true,
-                            title: { display: true, text: 'Revenue ($M)', font: { size: 10 } }
+                            title: { display: true, text: 'Revenue (₹Cr)', font: { size: 10 } }
                           },
                           y1: {
                             type: 'linear',
@@ -2821,7 +2821,7 @@ const DemandForecasting = () => {
                     />
                   </div>
                   <div className="mt-3 pt-3 border-t">
-                    <div className="text-xl font-bold text-primary">₹82.4Cr</div>
+                    <div className="text-xl font-bold text-primary">₹96.1Cr</div>
                     <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
                   </div>
                 </CardContent>
@@ -2852,7 +2852,7 @@ const DemandForecasting = () => {
                         labels: ['X (Stable)', 'Y (Variable)', 'Z (Erratic)'],
                         datasets: [
                           {
-                            label: 'Revenue ($M)',
+                            label: 'Revenue (₹Cr)',
                             data: [38.4, 21.2, 8.5],
                             backgroundColor: hslVar('--success', 0.7),
                             borderColor: hslVar('--success'),
@@ -2881,7 +2881,7 @@ const DemandForecasting = () => {
                             type: 'linear',
                             position: 'left',
                             beginAtZero: true,
-                            title: { display: true, text: 'Revenue ($M)', font: { size: 10 } }
+                            title: { display: true, text: 'Revenue (₹Cr)', font: { size: 10 } }
                           },
                           y1: {
                             type: 'linear',

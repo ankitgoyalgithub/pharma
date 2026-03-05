@@ -127,7 +127,7 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
     "Prime Day demand boost",
     "Competitor launch impact — JBL Wave Beam",
     "D2C promotion campaign uplift",
-    "Influencer campaign — Technical Guruji",
+    "Digital marketing campaign uplift",
     "Supply constraint — chipset shortage",
     "Warehouse capacity rebalance",
     "Diwali gifting season pre-position",
