@@ -2546,7 +2546,7 @@ const DemandForecasting = () => {
               />
 
               <CompactMetricCard
-                value={appliedFilters.businessUnits === 'enterprise' ? '15.1%' : '17.5%'}
+                value='17.5%'
                 label="VMAPE"
                 tooltip="Volume-weighted MAPE - accuracy metric accounting for volume importance of each forecast."
                 valueColor="info"
