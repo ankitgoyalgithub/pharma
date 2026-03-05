@@ -1661,9 +1661,60 @@ const DemandForecasting = () => {
         issues={dynamicDataQualityIssues}
         onApplyFixes={() => {
           console.log('Applying fixes...');
-          // Here you would apply the fixes to the actual data
         }}
       />
+
+      {/* Data Quality Issues Preview Dialog */}
+      <Dialog open={showDQPreview} onOpenChange={setShowDQPreview}>
+        <DialogContent className="max-w-5xl max-h-[85vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5 text-primary" />
+              Data Quality Issues — All Affected Rows
+            </DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="flex-1 -mx-6 px-6">
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50 sticky top-0">
+                  <tr className="border-b">
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">File</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Row</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Column</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Issue Type</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Severity</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Current Value</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Suggested Fix</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Impact</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dynamicDataQualityIssues.map((issue) => (
+                    <tr key={issue.id} className="border-b hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-mono">{issue.file}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{issue.rowNumber}</td>
+                      <td className="px-4 py-3 font-medium">{issue.column}</td>
+                      <td className="px-4 py-3">{issue.issueType}</td>
+                      <td className="px-4 py-3">
+                        <Badge variant={issue.severity === 'high' ? 'destructive' : issue.severity === 'medium' ? 'default' : 'secondary'} className="text-xs">
+                          {issue.severity}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-muted-foreground">
+                        {issue.currentValue || <span className="italic">null</span>}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-green-700 dark:text-green-400">{issue.suggestedFix}</td>
+                      <td className="px-4 py-3">
+                        <span className="text-xs text-muted-foreground">{issue.impactScore}/10</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
 
       {showImputedReview && (
         <Card>
