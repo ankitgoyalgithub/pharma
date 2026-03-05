@@ -479,7 +479,7 @@ const generateResponse = (query: string): { content: string; chart?: Message["ch
 
   // Default response
   return {
-    content: "I can help you analyze the demand forecast data. Try asking about:\n\n• **SKU Performance:** \"Top 5 SKUs by revenue\", \"Highest accuracy SKU\"\n• **Regional:** \"Best performing region\", \"NCR vs West comparison\"\n• **Channels:** \"Channel revenue breakdown\", \"Retail vs Hospital\"\n• **Trends:** \"Weekly sales trend\", \"Seasonal patterns\"\n\nClick on any suggested question below to get started!",
+    content: "I can help you analyze the demand forecast data. Try asking about:\n\n• **SKU Performance:** \"Top 5 SKUs by revenue\", \"Highest accuracy SKU\"\n• **Regional:** \"Best performing region\", \"Show regional revenue breakdown\"\n• **Channels:** \"Channel revenue breakdown\", \"Amazon vs Flipkart\"\n• **Trends:** \"Weekly sales trend\", \"Seasonal patterns\"\n\nClick on any suggested question below to get started!",
   };
 };
 
