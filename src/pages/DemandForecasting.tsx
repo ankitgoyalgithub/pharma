@@ -258,6 +258,7 @@ const DemandForecasting = () => {
   const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "npi" | "quality">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
   const [showAutoFixDialog, setShowAutoFixDialog] = useState(false);
+  const [showDQPreview, setShowDQPreview] = useState(false);
   
   // Generate dynamic data quality issues based on uploaded files
   const dynamicDataQualityIssues = useMemo(() => {
