@@ -50,52 +50,42 @@ interface ForecastRow {
   }>;
 }
 
-// Pharma SKUs based on actual data from sku_master.csv
+// boAt Consumer Electronics SKUs aligned with dim_product.csv
 const pharmaSKUs = [
-  { sku: "SKU001", name: "Paracetamol 500mg Tablet", category: "Analgesic" },
-  { sku: "SKU002", name: "Azithromycin 500mg Tablet", category: "Antibiotic" },
-  { sku: "SKU003", name: "Cetirizine 10mg Tablet", category: "Antihistamine" },
-  { sku: "SKU004", name: "Insulin Glargine 100U/ml", category: "Diabetes Care" },
-  { sku: "SKU005", name: "Amoxicillin 500mg Capsule", category: "Antibiotic" },
-  { sku: "SKU006", name: "ORS Sachet (WHO Formula)", category: "Rehydration" },
-  { sku: "SKU007", name: "Salbutamol 100mcg Inhaler", category: "Respiratory" },
-  { sku: "SKU008", name: "Cholecalciferol 60K IU", category: "Vitamin" },
-  { sku: "SKU009", name: "Ceftriaxone 1g Injection", category: "Antibiotic" },
-  { sku: "SKU010", name: "Pantoprazole 40mg Tablet", category: "GI Care" },
-  { sku: "SKU011", name: "Metformin 500mg Tablet", category: "Diabetes Care" },
-  { sku: "SKU012", name: "Atorvastatin 10mg Tablet", category: "Cardiac" },
-  { sku: "SKU013", name: "Omeprazole 20mg Capsule", category: "GI Care" },
-  { sku: "SKU014", name: "Losartan 50mg Tablet", category: "Cardiac" },
-  { sku: "SKU015", name: "Montelukast 10mg Tablet", category: "Respiratory" },
-  { sku: "SKU016", name: "Dolo 650mg Tablet", category: "Analgesic" },
-  { sku: "SKU017", name: "Augmentin 625mg Tablet", category: "Antibiotic" },
-  { sku: "SKU018", name: "Pan-D Capsule", category: "GI Care" },
-  { sku: "SKU019", name: "Telmisartan 40mg Tablet", category: "Cardiac" },
-  { sku: "SKU020", name: "Crocin Advance 500mg", category: "Analgesic" },
+  { sku: "SKU_001", name: "Airdopes 141 (Earbuds)", category: "Earbuds" },
+  { sku: "SKU_005", name: "Stone 352 (Speakers)", category: "Speakers" },
+  { sku: "SKU_007", name: "Rockerz 255 Pro+ (Neckband)", category: "Headphones" },
+  { sku: "SKU_012", name: "PartyPal 300 (Party Speaker)", category: "Speakers" },
+  { sku: "SKU_021", name: "Rockerz 450 (Headphones)", category: "Headphones" },
+  { sku: "SKU_029", name: "Stone 1200F (Speaker)", category: "Speakers" },
+  { sku: "SKU_035", name: "Rockerz 238 (Neckband)", category: "Headphones" },
+  { sku: "SKU_038", name: "Lunar Discovery (Smartwatch)", category: "Wearables" },
+  { sku: "SKU_040", name: "Airdopes Alpha (TWS)", category: "Earbuds" },
+  { sku: "SKU_043", name: "Lunar Fit (Smartwatch)", category: "Wearables" },
+  { sku: "SKU_049", name: "Nirvana Ion ANC (TWS)", category: "Earbuds" },
+  { sku: "SKU_003", name: "Lunar Pro (Smartwatch)", category: "Wearables" },
+  { sku: "SKU_011", name: "Rockerz 330 (Neckband)", category: "Earbuds" },
+  { sku: "SKU_022", name: "Airdopes 161 (TWS)", category: "Earbuds" },
+  { sku: "SKU_017", name: "Airdopes 131 (TWS)", category: "Earbuds" },
+  { sku: "SKU_009", name: "Stone 180 (Speaker)", category: "Speakers" },
+  { sku: "SKU_044", name: "Rockerz 650 Pro (Headphones)", category: "Headphones" },
+  { sku: "SKU_046", name: "Immortal 201 (Gaming TWS)", category: "Wearables" },
+  { sku: "SKU_027", name: "Airdopes 441 Pro (TWS)", category: "Earbuds" },
+  { sku: "SKU_050", name: "Rockerz 510 (Neckband)", category: "Earbuds" },
 ];
 
-// India Pharma Distribution Nodes
+// boAt distribution & channel nodes
 const pharmaNodes = [
-  "Mumbai Central WH",
-  "Delhi North Hub",
-  "Chennai Distribution",
-  "Kolkata East Hub",
-  "Bengaluru South WH",
-  "Ahmedabad West Hub",
-  "Pune Regional WH",
-  "Hyderabad Hub",
-  "Jaipur North WH",
-  "Lucknow Distribution",
-  "Apollo Hospitals Mumbai",
-  "Fortis Healthcare Delhi",
-  "Max Hospital Chain",
-  "Medplus Retail Chain",
-  "Apollo Pharmacy Network",
-  "Netmeds E-Pharmacy",
-  "PharmEasy Hub",
-  "1mg Distribution",
-  "Govt Hospital Tender",
-  "CGHS Distribution"
+  "WH_North — Delhi Hub",
+  "WH_South — Chennai DC",
+  "WH_West — Mumbai Hub",
+  "Amazon FC — Bhiwandi",
+  "Flipkart WH — Bengaluru",
+  "D2C Fulfillment — Pune",
+  "Distributor Hub — Ahmedabad",
+  "Retail Partner — Hyderabad",
+  "Amazon FC — Delhi NCR",
+  "Flipkart WH — Kolkata",
 ];
 
 const plannerNames = [
@@ -109,52 +99,50 @@ const approverNames = [
   "Anil Kapoor", "Nirmala Sitharaman", "Rajiv Gandhi", "Dr. Shyam Sundar"
 ];
 
-// Generate realistic forecast data based on pharma demand patterns
+// Generate realistic forecast data based on consumer electronics demand patterns
 const generateWeeklyForecast = (baseValue: number, weekIndex: number) => {
-  // Pharma seasonality adjustments (monsoon, winter flu season)
-  const seasonalFactors = [0.95, 0.92, 0.98, 1.02, 1.18, 1.25, 1.22, 1.15, 1.08, 0.98, 0.96, 1.05];
+  // Consumer electronics seasonality (festival season Q4 spike, Prime Day July)
+  const seasonalFactors = [0.85, 0.82, 0.88, 0.92, 0.95, 0.90, 1.15, 1.05, 0.95, 1.55, 1.20, 1.10];
   return Math.round(baseValue * seasonalFactors[weekIndex] * (0.9 + Math.random() * 0.2));
 };
 
 const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
-  const baseValue = 500 + Math.floor(Math.random() * 1500); // 500-2000 units base
+  const baseValue = 500 + Math.floor(Math.random() * 1500);
   const nodeIndex = index % pharmaNodes.length;
   const channels: ("Online" | "Retail" | "B2B" | "Direct")[] = ["Online", "Retail", "B2B", "Direct"];
   const channel = channels[index % 4];
   const owner = plannerNames[index % plannerNames.length];
   const approver = approverNames[index % approverNames.length];
   
-  // Generate 12 weeks of forecast data
   const weeks: { [key: string]: { forecast: number; plannerInput?: number; reason?: string } } = {};
   for (let w = 1; w <= 12; w++) {
     const forecast = generateWeeklyForecast(baseValue, w - 1);
     weeks[`week${w}`] = { forecast };
   }
   
-  // Add planner adjustments for some weeks with pharma-relevant reasons
-  const pharmaReasons = [
-    "Monsoon outbreak surge expected",
-    "Flu season demand boost",
-    "Generic drug launch impact",
-    "Hospital tender fulfillment",
-    "E-pharmacy promotion campaign",
-    "API supply constraint adjustment",
-    "Cold chain capacity limitation",
-    "Medical conference Rx uplift",
-    "Disease outbreak pre-positioning",
-    "Chronic care refill cycle peak"
+  // boAt-relevant planner adjustment reasons
+  const boatReasons = [
+    "Big Billion Days surge expected",
+    "Prime Day demand boost",
+    "Competitor launch impact — JBL Wave Beam",
+    "D2C promotion campaign uplift",
+    "Influencer campaign — Technical Guruji",
+    "Supply constraint — chipset shortage",
+    "Warehouse capacity rebalance",
+    "Diwali gifting season pre-position",
+    "New product launch cannibalization",
+    "Flipkart flash sale allocation"
   ];
   
-  // Add 1-2 planner adjustments per SKU
   const adjustmentWeeks = [3, 5, 7, 9, 11];
   const adjustWeek = adjustmentWeeks[index % adjustmentWeeks.length];
   const weekKey = `week${adjustWeek}`;
   const currentForecast = weeks[weekKey].forecast;
-  const adjustmentFactor = 1 + (Math.random() * 0.3 - 0.1); // -10% to +20%
+  const adjustmentFactor = 1 + (Math.random() * 0.3 - 0.1);
   weeks[weekKey] = {
     forecast: currentForecast,
     plannerInput: Math.round(currentForecast * adjustmentFactor),
-    reason: pharmaReasons[index % pharmaReasons.length]
+    reason: boatReasons[index % boatReasons.length]
   };
   
   const isApproved = Math.random() > 0.15; // 85% approval rate
@@ -174,18 +162,18 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
     approvalDetails: isApproved
       ? {
           approvedBy: approver,
-          approvedAt: "2024-10-15 14:30",
-          remarks: "Forecast aligned with seasonal illness patterns and historical data"
+          approvedAt: "2025-10-15 14:30",
+          remarks: "Forecast aligned with seasonal demand and sale event patterns"
         }
       : {
           rejectedBy: approver,
-          rejectedAt: "2024-10-14 16:45",
-          remarks: "Requires adjustment for API supply constraints"
+          rejectedAt: "2025-10-14 16:45",
+          remarks: "Requires adjustment for supply constraints"
         },
     allRemarks: [
-      { date: "2024-10-12 10:00", user: owner, comment: `Adjusted ${sku.category} forecast based on disease seasonality` },
-      { date: "2024-10-13 14:15", user: approver, comment: isApproved ? "Reviewed - aligned with outbreak tracking data" : "Needs revision - check cold chain capacity" },
-      { date: "2024-10-15 14:30", user: approver, comment: isApproved ? "Approved with seasonal adjustments" : "Pending further review" }
+      { date: "2025-10-12 10:00", user: owner, comment: `Adjusted ${sku.category} forecast based on platform sale calendar` },
+      { date: "2025-10-13 14:15", user: approver, comment: isApproved ? "Reviewed — aligned with search trends & competitor data" : "Needs revision — check warehouse capacity" },
+      { date: "2025-10-15 14:30", user: approver, comment: isApproved ? "Approved with seasonal adjustments" : "Pending further review" }
     ]
   } as ForecastRow;
 });
@@ -345,11 +333,11 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All SKUs</SelectItem>
-              <SelectItem value="SKU001">Paracetamol 500mg</SelectItem>
-              <SelectItem value="SKU002">Azithromycin 500mg</SelectItem>
-              <SelectItem value="SKU004">Insulin Glargine</SelectItem>
-              <SelectItem value="SKU007">Salbutamol Inhaler</SelectItem>
-              <SelectItem value="SKU010">Pantoprazole 40mg</SelectItem>
+              <SelectItem value="SKU_001">Airdopes 141</SelectItem>
+              <SelectItem value="SKU_005">Stone 352</SelectItem>
+              <SelectItem value="SKU_007">Rockerz 255 Pro+</SelectItem>
+              <SelectItem value="SKU_021">Rockerz 450</SelectItem>
+              <SelectItem value="SKU_049">Nirvana Ion ANC</SelectItem>
             </SelectContent>
           </Select>
           
@@ -359,11 +347,11 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Locations</SelectItem>
-              <SelectItem value="Mumbai Central WH">Mumbai Central WH</SelectItem>
-              <SelectItem value="Delhi North Hub">Delhi North Hub</SelectItem>
-              <SelectItem value="Apollo Hospitals">Apollo Hospitals</SelectItem>
-              <SelectItem value="Netmeds">Netmeds E-Pharmacy</SelectItem>
-              <SelectItem value="Govt Hospital">Govt Hospital Tender</SelectItem>
+              <SelectItem value="WH_North">WH_North — Delhi Hub</SelectItem>
+              <SelectItem value="WH_South">WH_South — Chennai DC</SelectItem>
+              <SelectItem value="WH_West">WH_West — Mumbai Hub</SelectItem>
+              <SelectItem value="Amazon">Amazon FC</SelectItem>
+              <SelectItem value="Flipkart">Flipkart WH</SelectItem>
             </SelectContent>
           </Select>
           
@@ -373,10 +361,10 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Channels</SelectItem>
-              <SelectItem value="Online">E-Pharmacy</SelectItem>
-              <SelectItem value="Retail">Retail Pharmacy</SelectItem>
-              <SelectItem value="B2B">Hospital</SelectItem>
-              <SelectItem value="Direct">Distributor</SelectItem>
+              <SelectItem value="Online">Amazon / Flipkart</SelectItem>
+              <SelectItem value="Retail">Retail</SelectItem>
+              <SelectItem value="B2B">Distributor</SelectItem>
+              <SelectItem value="Direct">D2C</SelectItem>
             </SelectContent>
           </Select>
         </div>

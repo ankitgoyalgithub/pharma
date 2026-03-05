@@ -273,11 +273,11 @@ const DemandForecasting = () => {
     
     // Map static issue file references to dynamic uploaded file names
     const fileMapping: Record<string, string> = {
-      'sales_history.csv': fileNames.find(f => f.toLowerCase().includes('sales') || f.toLowerCase().includes('history')) || fileNames[0],
+      'fact_sales_history.csv': fileNames.find(f => f.toLowerCase().includes('sales') || f.toLowerCase().includes('history')) || fileNames[0],
       'location_master.csv': fileNames.find(f => f.toLowerCase().includes('location') || f.toLowerCase().includes('store')) || fileNames[Math.min(1, fileNames.length - 1)],
-      'product_master.csv': fileNames.find(f => f.toLowerCase().includes('product') || f.toLowerCase().includes('sku')) || fileNames[Math.min(2, fileNames.length - 1)],
-      'mapping_master.csv': fileNames.find(f => f.toLowerCase().includes('mapping')) || fileNames[Math.min(3, fileNames.length - 1)],
-      'channel_master.csv': fileNames.find(f => f.toLowerCase().includes('channel')) || fileNames[Math.min(4, fileNames.length - 1)],
+      'dim_product.csv': fileNames.find(f => f.toLowerCase().includes('product') || f.toLowerCase().includes('sku')) || fileNames[Math.min(2, fileNames.length - 1)],
+      'dim_channel.csv': fileNames.find(f => f.toLowerCase().includes('channel')) || fileNames[Math.min(3, fileNames.length - 1)],
+      'cost_parameters.csv': fileNames.find(f => f.toLowerCase().includes('cost')) || fileNames[Math.min(4, fileNames.length - 1)],
     };
     
     return dataQualityIssues.map(issue => ({
@@ -388,7 +388,7 @@ const DemandForecasting = () => {
       setDriversLoading(true);
       setTimeout(() => {
         const driversToSelect = [
-          { name: "Promotions & Discounts", autoSelected: true, icon: "Tag" },
+          { name: "Promotional Campaigns", autoSelected: true, icon: "Tag" },
           { name: "Seasonality Trends", autoSelected: true, icon: "CalendarDays" },
         ];
         setSelectedDrivers(driversToSelect.filter(d => d.autoSelected).map(d => d.name));
@@ -3008,7 +3008,7 @@ const DemandForecasting = () => {
                       <Info className="w-4 h-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Compares forecast accuracy and bias across therapeutic categories to identify improvement areas.</p>
+                      <p>Compares forecast accuracy and bias across product categories to identify improvement areas.</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -3021,13 +3021,13 @@ const DemandForecasting = () => {
                   <Bar 
                     data={{
                       labels: [
-                        'Antibiotics', 
-                        'Cardiovascular', 
-                        'Respiratory', 
-                        'Diabetes Care', 
-                        'Pain Relief', 
-                        'GI & Antacids',
-                        'Vitamins & Supplements'
+                        'TWS Earbuds', 
+                        'Neckbands', 
+                        'Headphones', 
+                        'Smartwatches', 
+                        'Speakers', 
+                        'Party Speakers',
+                        'Gaming Audio'
                       ],
                       datasets: [
                         {
@@ -3098,15 +3098,15 @@ const DemandForecasting = () => {
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                   <div className="p-3 rounded-lg bg-success/10 border border-success/20">
                     <div className="font-medium text-success mb-1">Best Performing</div>
-                    <div className="text-muted-foreground">Diabetes Care (91.3%) - stable demand patterns</div>
+                    <div className="text-muted-foreground">Smartwatches (91.3%) - stable demand patterns</div>
                   </div>
                   <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
                     <div className="font-medium text-warning mb-1">Needs Attention</div>
-                    <div className="text-muted-foreground">Respiratory (79.5%) - high seasonality variance</div>
+                    <div className="text-muted-foreground">Party Speakers (79.5%) - high seasonality variance</div>
                   </div>
                   <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
                     <div className="font-medium text-destructive mb-1">Action Required</div>
-                    <div className="text-muted-foreground">Vitamins (77.2%) - review external drivers</div>
+                    <div className="text-muted-foreground">Gaming Audio (77.2%) - review external drivers</div>
                   </div>
                 </div>
               </CardContent>
@@ -3150,16 +3150,16 @@ const DemandForecasting = () => {
                 <CardContent className="p-4">
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Limited / Unreliable</div>
                   <div className="text-2xl font-bold text-warning mb-1">142</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">Outbreak-driven or seasonal gaps</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">Festival-spike or seasonal gaps</div>
                   <Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Needs similar items</Badge>
                 </CardContent>
               </Card>
               
               <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">New / Generic Launch</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">New / Product Launch</div>
                   <div className="text-2xl font-bold text-destructive mb-1">80</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">New formulations & generic entries</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">New product launches & line extensions</div>
                   <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">Manual review</Badge>
                 </CardContent>
               </Card>
@@ -3188,9 +3188,8 @@ const DemandForecasting = () => {
                       </thead>
                     <tbody>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">GEN-VD3-001</td>
                           <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-TWS-001</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">ANC Earbuds Pro</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Airdopes Prime 701 ANC</td>
                           <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Launch</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">None</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">New Feb 2025</td>
@@ -3198,35 +3197,35 @@ const DemandForecasting = () => {
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
                           <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-HP-002</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Studio Headphones X1</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Rockerz 650 Pro ANC</td>
                           <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Product</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">3 months</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">Limited launch</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× SKU_021 baseline</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">TREND-SPK-003</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Party Speaker Max</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-SPK-003</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">PartyPal 500 Speaker</td>
                           <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Trending SKU</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">6 months</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">Festival spike</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with search trends</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">RE-CET-004</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Cetirizine 10mg (Re-entry)</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">RE-NB-004</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Rockerz 255 v3 (Re-entry)</td>
                           <td className="py-2 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Re-entry</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">6 months</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Sold out allergy season</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Sold out during BBD</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">Relaunch +25% safety stock</td>
                         </tr>
                         <tr className="hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">BDL-ORS-005</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">ORS + Zinc Combo Pack</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Bundle</Badge></td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">8 months</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">BDL-GM-005</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Immortal 350 Gaming TWS</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Segment</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">None</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">N/A</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use ORS history + outbreak factor</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use gaming headset analogue + influencer lift</td>
                         </tr>
                       </tbody>
                     </table>
@@ -3244,19 +3243,19 @@ const DemandForecasting = () => {
                   <ul className="space-y-2">
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">Reliable history</span>
-                      <span className="text-muted-foreground">— Trust data, follow chronic medication patterns.</span>
+                      <span className="text-muted-foreground">— Trust data, follow consistent demand patterns.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
-                      <span className="text-foreground font-medium min-w-[90px]">Outbreak-driven</span>
-                      <span className="text-muted-foreground">— Blend with disease outbreak tracking data.</span>
+                      <span className="text-foreground font-medium min-w-[90px]">Festival-driven</span>
+                      <span className="text-muted-foreground">— Blend with platform sale event & holiday calendar data.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
-                      <span className="text-foreground font-medium min-w-[90px]">Generic launch</span>
-                      <span className="text-muted-foreground">— Start from branded molecule, apply price elasticity.</span>
+                      <span className="text-foreground font-medium min-w-[90px]">Competitor launch</span>
+                      <span className="text-muted-foreground">— Start from comparable SKU, apply price elasticity.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">NPI</span>
-                      <span className="text-muted-foreground">— Use "look-alike" families as launch guide.</span>
+                      <span className="text-muted-foreground">— Use "look-alike" product families as launch guide.</span>
                     </li>
                     <li className="flex gap-2 text-[11px]">
                       <span className="text-foreground font-medium min-w-[90px]">Stock-out items</span>
@@ -3267,10 +3266,10 @@ const DemandForecasting = () => {
                   <div className="border-t border-border/40 pt-3 mt-3">
                     <div className="text-[10px] text-foreground font-semibold mb-2 uppercase tracking-wider">Launch Playbook</div>
                     <ul className="space-y-1 text-[10px] text-muted-foreground list-disc list-inside">
-                      <li>Hospital pharmacies & large chains get stronger launch quantities.</li>
-                      <li>Cold chain SKUs: extra safety stock in metros with reliable storage.</li>
-                      <li>Outbreak drugs: pre-position 4 weeks before monsoon season.</li>
-                      <li>Generic launches: match distribution to branded molecule footprint.</li>
+                      <li>Amazon & Flipkart get stronger launch quantities due to sale event uplift.</li>
+                      <li>D2C channel: higher margin SKUs with influencer campaign coordination.</li>
+                      <li>Festival SKUs: pre-position 4 weeks before BBD/Diwali/Prime Day.</li>
+                      <li>New launches: match channel mix to comparable product footprint.</li>
                     </ul>
                   </div>
                 </CardContent>
@@ -3281,7 +3280,7 @@ const DemandForecasting = () => {
             <Card className="border-border/40">
               <CardHeader className="pb-2">
                 <CardTitle className="text-xs font-semibold text-foreground">Mix & Risk View</CardTitle>
-                <p className="text-[10px] text-muted-foreground">SKU group split and stock-out risk from last monsoon season.</p>
+                <p className="text-[10px] text-muted-foreground">SKU group split and stock-out risk from last festive season.</p>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -3329,7 +3328,7 @@ const DemandForecasting = () => {
                   
                   {/* Stock-out Risk Table */}
                   <div>
-                    <div className="text-[11px] font-semibold text-foreground mb-3">Stock-out Risk (Last Monsoon)</div>
+                    <div className="text-[11px] font-semibold text-foreground mb-3">Stock-out Risk (Last Festive Season)</div>
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border/40 bg-muted/30">
@@ -3341,28 +3340,28 @@ const DemandForecasting = () => {
                       </thead>
                       <tbody>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Chronic Care</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">TWS Earbuds</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">4%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-success/15 text-success border-success/30 text-[10px] px-1.5 py-0.5">Low</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Stable refill patterns</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Stable high-volume SKUs</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Seasonal</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Speakers</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">12%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Med</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Monsoon surge timing</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">BBD/Diwali surge timing</td>
                         </tr>
                         <tr className="border-b border-border/20">
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Outbreak</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">Party Speakers</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">22%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">High</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Dengue spike OOS</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Navratri/Diwali spike OOS</td>
                         </tr>
                         <tr>
-                          <td className="py-1.5 px-2 text-[10px] text-foreground">Generic Launch</td>
+                          <td className="py-1.5 px-2 text-[10px] text-foreground">New Launches</td>
                           <td className="py-1.5 px-2 text-[10px] text-foreground">18%</td>
                           <td className="py-1.5 px-2"><Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">V. High</Badge></td>
-                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">API supply constraints</td>
+                          <td className="py-1.5 px-2 text-[10px] text-muted-foreground">Supply ramp-up constraints</td>
                         </tr>
                       </tbody>
                     </table>
@@ -3754,11 +3753,11 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Channels</SelectItem>
-                        <SelectItem value="retail">Retail Pharmacy</SelectItem>
-                        <SelectItem value="hospital">Hospital Pharmacy</SelectItem>
-                        <SelectItem value="epharmacy">E-Pharmacy</SelectItem>
-                        <SelectItem value="distributor">Distributor/Stockist</SelectItem>
-                        <SelectItem value="govt">Government Tender</SelectItem>
+                        <SelectItem value="amazon">Amazon</SelectItem>
+                        <SelectItem value="flipkart">Flipkart</SelectItem>
+                        <SelectItem value="d2c">D2C</SelectItem>
+                        <SelectItem value="retail">Retail</SelectItem>
+                        <SelectItem value="distributor">Distributor</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -3800,10 +3799,10 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Periods</SelectItem>
-                        <SelectItem value="q1">Q1 2024</SelectItem>
-                        <SelectItem value="q2">Q2 2024</SelectItem>
-                        <SelectItem value="q3">Q3 2024</SelectItem>
-                        <SelectItem value="q4">Q4 2024</SelectItem>
+                        <SelectItem value="q1">Q1 2025</SelectItem>
+                        <SelectItem value="q2">Q2 2025</SelectItem>
+                        <SelectItem value="q3">Q3 2025</SelectItem>
+                        <SelectItem value="q4">Q4 2025</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

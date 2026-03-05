@@ -1,4 +1,4 @@
-// Pharma Demand Forecasting Metrics
+// Consumer Electronics Demand Forecasting Metrics
 export const forecastMetrics = [
   { label: "MODEL ACCURACY", value: "91%", trend: "+4.2%" },
   { label: "MAPE", value: "5.8%", trend: "-2.1%" },

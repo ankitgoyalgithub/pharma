@@ -1,4 +1,4 @@
-// Pharma Historical vs Forecast Data (Units in '000s)
+// Consumer Electronics Historical vs Forecast Data (Units)
 export const historicalForecastData = [
   { period: "Week 1", historical: 85000, forecast: 83500, optimized: 84800 },
   { period: "Week 2", historical: 87500, forecast: 86200, optimized: 87400 },
