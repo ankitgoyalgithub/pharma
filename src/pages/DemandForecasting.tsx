@@ -89,6 +89,7 @@ import { dataQualityIssues, dataQualitySummary } from '@/data/demandForecasting/
 import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
 import { AutoFixDialog } from '@/components/AutoFixDialog';
 import { NPILaunchIntelligence } from '@/components/NPILaunchIntelligence';
+import { DataRepositoryTab } from '@/components/DataRepositoryTab';
 
 // ---- Chart.js imports (replaces Recharts) ----
 import {
