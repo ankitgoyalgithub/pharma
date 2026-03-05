@@ -1189,12 +1189,12 @@ const DemandForecasting = () => {
                                 <tr>
                                   <th className="text-left px-3 py-2">SKU</th>
                                   <th className="text-left px-3 py-2">Product</th>
-                                  <th className="text-left px-3 py-2">Location</th>
                                   <th className="text-left px-3 py-2">Channel</th>
+                                  <th className="text-left px-3 py-2">Region</th>
                                   <th className="text-left px-3 py-2">Date</th>
-                                  <th className="text-left px-3 py-2">Sales</th>
+                                  <th className="text-left px-3 py-2">Units Sold</th>
                                   <th className="text-left px-3 py-2">Revenue</th>
-                                  <th className="text-left px-3 py-2">Stock</th>
+                                  <th className="text-left px-3 py-2">Price</th>
                                 </tr>
                               </thead>
                               <tbody>
