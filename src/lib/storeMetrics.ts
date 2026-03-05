@@ -1,5 +1,5 @@
 // Distribution node metrics for boAt consumer electronics warehouse network
-// Total across all warehouses & channels: ₹82.4Cr revenue, 1,207,560 units
+// Total across all warehouses & channels: ₹96.1Cr revenue, 1,207,560 units
 
 const distributionNodes: Record<string, { size: number; name: string }> = {
   S001: { size: 2350, name: "WH_North — Delhi Hub" },
@@ -18,7 +18,7 @@ const distributionNodes: Record<string, { size: number; name: string }> = {
 const totalSize = Object.values(distributionNodes).reduce((sum, node) => sum + node.size, 0);
 
 // Baseline metrics for ALL nodes (Indian consumer electronics market in Crores)
-const allNodesRevenue = 82.4; // Crores ₹
+const allNodesRevenue = 96.1; // Crores ₹ — aligned with ABC-XYZ matrix total
 const allNodesUnits = 1207560; // Total units
 
 // Calculate metrics for each distribution node based on proportional size
@@ -57,7 +57,7 @@ export const getStoreMetrics = (nodeId: string) => {
 // ABC Analysis - Total Revenue Impact (in Crores)
 export const getABCRevenueImpact = (nodeId: string) => {
   if (nodeId === 'all') {
-    return { formatted: '₹52.8Cr', value: 52.8 };
+    return { formatted: '₹61.6Cr', value: 61.6 };
   }
 
   const metrics = getStoreMetrics(nodeId);
