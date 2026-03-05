@@ -102,7 +102,7 @@ import {
   Filler,
   Title,
 } from "chart.js";
-import { Line, Bar, Pie, Scatter } from "react-chartjs-2";
+import { Line, Bar, Pie } from "react-chartjs-2";
 import ReactMarkdown from "react-markdown";
 import { CompactMetricCard } from "@/components/CompactMetricCard";
 import { CompactProjectionCard } from "@/components/CompactProjectionCard";
