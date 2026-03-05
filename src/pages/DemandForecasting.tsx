@@ -561,10 +561,30 @@ const DemandForecasting = () => {
     setAiPrompt('');
   };
 
+  const filteredSkuData = useMemo(() => {
+    return skuData.filter(s => {
+      if (appliedFilters.skuProduct !== 'all' && s.sku !== appliedFilters.skuProduct) return false;
+      if (appliedFilters.location !== 'all') {
+        const regionMap: Record<string, string> = { north: 'WH_North', south: 'WH_South', east: 'WH_East', west: 'WH_West' };
+        if (s.location !== regionMap[appliedFilters.location]) return false;
+      }
+      if (appliedFilters.channel !== 'all' && s.channel.toLowerCase() !== appliedFilters.channel) return false;
+      return true;
+    });
+  }, [appliedFilters]);
+
   const applyFilters = (scope: 'local' | 'global') => {
     console.log('Filters applied:', filterValues, 'Scope:', scope);
     setAppliedFilters(filterValues);
-    toast.success(`Filters applied ${scope === 'local' ? 'locally' : 'globally'}`);
+    toast.success(`Filters applied ${scope === 'local' ? 'locally' : 'globally'} — ${skuData.filter(s => {
+      if (filterValues.skuProduct !== 'all' && s.sku !== filterValues.skuProduct) return false;
+      if (filterValues.location !== 'all') {
+        const regionMap: Record<string, string> = { north: 'WH_North', south: 'WH_South', east: 'WH_East', west: 'WH_West' };
+        if (s.location !== regionMap[filterValues.location]) return false;
+      }
+      if (filterValues.channel !== 'all' && s.channel.toLowerCase() !== filterValues.channel) return false;
+      return true;
+    }).length} products matched`);
   };
 
   const resetFilters = () => {
