@@ -202,8 +202,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
         const monthlyData = [];
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         for (let i = 1; i <= 15; i++) {
-          const trendBase = (90 + (i * 4)) * storeMultiplier;
-          const seasonality = Math.sin(i / 3) * 15 * storeMultiplier;
+          const trendBase = (90 + (i * 4)) * totalMultiplier;
+          const seasonality = Math.sin(i / 3) * 15 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 10;
           
           const periodLabel = i <= 12 ? monthNames[i - 1] : `${monthNames[(i - 1) % 12]} (F)`;
