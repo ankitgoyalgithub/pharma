@@ -44,6 +44,15 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
 
   const data = React.useMemo(() => {
     const storeMultiplier = getChartMultiplier(storeFilter);
+    // Channel filter adjusts demand levels
+    const channelMultiplier = channelFilter === 'all' ? 1.0 
+      : channelFilter === 'amazon' ? 0.35 
+      : channelFilter === 'flipkart' ? 0.25 
+      : channelFilter === 'd2c' ? 0.15 
+      : channelFilter === 'retail' ? 0.15 
+      : channelFilter === 'distributor' ? 0.10 
+      : 1.0;
+    const totalMultiplier = storeMultiplier * channelMultiplier;
     
     // Helper to calculate range bounds (10-15% variance for range forecast)
     const getRangeBounds = (value: number) => {
