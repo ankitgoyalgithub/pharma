@@ -1067,7 +1067,7 @@ export default function Foundry() {
                     <Select value={f.column} onValueChange={(v) => updateFileFilter(i, { column: v })}>
                       <SelectTrigger><SelectValue placeholder="Column" /></SelectTrigger>
                       <SelectContent className="bg-background z-50">
-                        {commonColumns.map((c) => (
+                        {(source === "s3" ? s3AvailableColumns : commonColumns).map((c) => (
                           <SelectItem key={c} value={c}>{c}</SelectItem>
                         ))}
                       </SelectContent>
