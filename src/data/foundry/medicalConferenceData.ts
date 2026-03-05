@@ -1,6 +1,7 @@
+// Consumer Electronics - Tech Events Calendar (replaces medicalConferenceData)
 export const medicalConferenceData = [
-  { event_name: "API Annual Conference (India)", city: "New Delhi", start_date: "2025-02-16", end_date: "2025-02-18", therapy_area: "General Medicine", expected_rx_uplift_pct: 2 },
-  { event_name: "Respiratory Summit", city: "Mumbai", start_date: "2025-08-09", end_date: "2025-08-10", therapy_area: "Respiratory", expected_rx_uplift_pct: 3 },
-  { event_name: "Diabetology Congress", city: "Hyderabad", start_date: "2025-11-22", end_date: "2025-11-24", therapy_area: "Diabetes", expected_rx_uplift_pct: 2 },
-  { event_name: "Cardiology Update Forum", city: "Chennai", start_date: "2026-03-14", end_date: "2026-03-16", therapy_area: "Cardiology", expected_rx_uplift_pct: 3 },
+  { event_name: "CES (Consumer Electronics Show)", city: "Las Vegas", start_date: "2025-01-07", end_date: "2025-01-10", therapy_area: "All Categories", expected_rx_uplift_pct: 5 },
+  { event_name: "MWC (Mobile World Congress)", city: "Barcelona", start_date: "2025-02-24", end_date: "2025-02-27", therapy_area: "Wearables", expected_rx_uplift_pct: 3 },
+  { event_name: "IFA Berlin", city: "Berlin", start_date: "2025-09-05", end_date: "2025-09-09", therapy_area: "Audio", expected_rx_uplift_pct: 4 },
+  { event_name: "India Audio Summit", city: "New Delhi", start_date: "2026-03-14", end_date: "2026-03-16", therapy_area: "Earbuds/Headphones", expected_rx_uplift_pct: 2 },
 ];
