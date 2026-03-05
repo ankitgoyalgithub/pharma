@@ -2821,7 +2821,7 @@ const DemandForecasting = () => {
                     />
                   </div>
                   <div className="mt-3 pt-3 border-t">
-                    <div className="text-xl font-bold text-primary">₹82.4Cr</div>
+                    <div className="text-xl font-bold text-primary">₹96.1Cr</div>
                     <p className="text-xs text-muted-foreground">Total Revenue Impact</p>
                   </div>
                 </CardContent>
