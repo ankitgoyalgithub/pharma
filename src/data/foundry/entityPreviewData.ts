@@ -1,5 +1,6 @@
 import { EntityPreviewMap } from "./types";
 import { salesHistoryData } from "./salesHistoryData";
+import { productImageMap } from "./productImages";
 
 const splashImageUrls = [
   "https://iili.io/f5NFmLN.webp",
@@ -16,6 +17,7 @@ export const entityPreviewData: EntityPreviewMap = {
     title: "Product Master",
     description: "Consumer electronics SKU catalog with category, price segment, and lifecycle attributes",
     columns: [
+      { accessorKey: "imageUrl", header: "Image" },
       { accessorKey: "id", header: "Product ID" },
       { accessorKey: "name", header: "Product Name" },
       { accessorKey: "category", header: "Category" },
@@ -30,16 +32,16 @@ export const entityPreviewData: EntityPreviewMap = {
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "SKU_001", name: "Product_1", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 3872, costPerUnit: 1128, weightGrams: 91, launchDate: "2022-04-25", lifecycleStage: "New", discontinued: false, status: "Active" },
-      { id: "SKU_002", name: "Product_2", category: "Wearables", subCategory: "Neckband", priceSegment: "Budget", mrp: 3913, costPerUnit: 791, weightGrams: 112, launchDate: "2022-03-19", lifecycleStage: "New", discontinued: false, status: "Active" },
-      { id: "SKU_003", name: "Product_3", category: "Wearables", subCategory: "Smartwatch", priceSegment: "Mid", mrp: 5646, costPerUnit: 750, weightGrams: 120, launchDate: "2022-12-06", lifecycleStage: "New", discontinued: false, status: "Active" },
-      { id: "SKU_004", name: "Product_4", category: "Wearables", subCategory: "OverEar", priceSegment: "Mid", mrp: 4866, costPerUnit: 1007, weightGrams: 106, launchDate: "2022-08-02", lifecycleStage: "Mature", discontinued: false, status: "Active" },
-      { id: "SKU_005", name: "Product_5", category: "Speakers", subCategory: "TWS", priceSegment: "Premium", mrp: 4657, costPerUnit: 1262, weightGrams: 294, launchDate: "2022-12-25", lifecycleStage: "Growth", discontinued: false, status: "Active" },
-      { id: "SKU_006", name: "Product_6", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 4101, costPerUnit: 792, weightGrams: 242, launchDate: "2022-12-03", lifecycleStage: "Growth", discontinued: false, status: "Active" },
-      { id: "SKU_007", name: "Product_7", category: "Headphones", subCategory: "Neckband", priceSegment: "Premium", mrp: 4296, costPerUnit: 1072, weightGrams: 216, launchDate: "2022-10-13", lifecycleStage: "Mature", discontinued: false, status: "Active" },
-      { id: "SKU_008", name: "Product_8", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 1656, costPerUnit: 2189, weightGrams: 163, launchDate: "2022-03-24", lifecycleStage: "Mature", discontinued: false, status: "Active" },
-      { id: "SKU_009", name: "Product_9", category: "Speakers", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 4947, costPerUnit: 692, weightGrams: 81, launchDate: "2022-08-13", lifecycleStage: "New", discontinued: false, status: "Active" },
-      { id: "SKU_010", name: "Product_10", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 5770, costPerUnit: 708, weightGrams: 279, launchDate: "2022-06-17", lifecycleStage: "Growth", discontinued: false, status: "Active" }
+      { imageUrl: productImageMap["SKU_001"], id: "SKU_001", name: "Product_1", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 3872, costPerUnit: 1128, weightGrams: 91, launchDate: "2022-04-25", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_002"], id: "SKU_002", name: "Product_2", category: "Wearables", subCategory: "Neckband", priceSegment: "Budget", mrp: 3913, costPerUnit: 791, weightGrams: 112, launchDate: "2022-03-19", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_003"], id: "SKU_003", name: "Product_3", category: "Wearables", subCategory: "Smartwatch", priceSegment: "Mid", mrp: 5646, costPerUnit: 750, weightGrams: 120, launchDate: "2022-12-06", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_004"], id: "SKU_004", name: "Product_4", category: "Wearables", subCategory: "OverEar", priceSegment: "Mid", mrp: 4866, costPerUnit: 1007, weightGrams: 106, launchDate: "2022-08-02", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_005"], id: "SKU_005", name: "Product_5", category: "Speakers", subCategory: "TWS", priceSegment: "Premium", mrp: 4657, costPerUnit: 1262, weightGrams: 294, launchDate: "2022-12-25", lifecycleStage: "Growth", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_006"], id: "SKU_006", name: "Product_6", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 4101, costPerUnit: 792, weightGrams: 242, launchDate: "2022-12-03", lifecycleStage: "Growth", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_007"], id: "SKU_007", name: "Product_7", category: "Headphones", subCategory: "Neckband", priceSegment: "Premium", mrp: 4296, costPerUnit: 1072, weightGrams: 216, launchDate: "2022-10-13", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_008"], id: "SKU_008", name: "Product_8", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 1656, costPerUnit: 2189, weightGrams: 163, launchDate: "2022-03-24", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_009"], id: "SKU_009", name: "Product_9", category: "Speakers", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 4947, costPerUnit: 692, weightGrams: 81, launchDate: "2022-08-13", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { imageUrl: productImageMap["SKU_010"], id: "SKU_010", name: "Product_10", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 5770, costPerUnit: 708, weightGrams: 279, launchDate: "2022-06-17", lifecycleStage: "Growth", discontinued: false, status: "Active" }
     ],
     stats: { totalRecords: 50, lastSync: "2025-01-15 09:30", source: "CSV Upload" }
   },
