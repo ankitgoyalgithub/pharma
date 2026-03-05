@@ -254,7 +254,7 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       default:
         return [];
     }
-  }, [chartGranularity, storeFilter, npiSku, isNpiMode]);
+  }, [chartGranularity, storeFilter, npiSku, isNpiMode, channelFilter]);
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '320px' }}>
