@@ -2807,7 +2807,7 @@ const DemandForecasting = () => {
                             type: 'linear',
                             position: 'left',
                             beginAtZero: true,
-                            title: { display: true, text: 'Revenue ($M)', font: { size: 10 } }
+                            title: { display: true, text: 'Revenue (₹Cr)', font: { size: 10 } }
                           },
                           y1: {
                             type: 'linear',
