@@ -228,8 +228,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       case 'quarterly':
         const quarterlyData = [];
         for (let i = 1; i <= 6; i++) {
-          const trendBase = (95 + (i * 12)) * storeMultiplier;
-          const seasonality = Math.sin(i / 1.5) * 20 * storeMultiplier;
+          const trendBase = (95 + (i * 12)) * totalMultiplier;
+          const seasonality = Math.sin(i / 1.5) * 20 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 12;
           
           const periodLabel = i <= 4 ? `Q${i}` : `Q${i - 4} (F)`;
