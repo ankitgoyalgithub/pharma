@@ -2722,7 +2722,7 @@ const DemandForecasting = () => {
                         <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2025</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Competitor launching Budget TWS Earbuds expected to trigger 22% volume surge and 15% price erosion. SKU_001 (Earbuds) faces direct competition. Increase marketing spend and build 6 weeks safety stock to capture market opportunity.
+                        Competitor launching Budget TWS Earbuds expected to cause 15% price erosion and 22% volume shift in the segment. SKU_001 (Earbuds) faces direct competition. Recommend aggressive pricing, increased marketing spend, and 6 weeks safety stock to defend market share.
                       </p>
                     </div>
                   </div>

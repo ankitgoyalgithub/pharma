@@ -340,58 +340,30 @@ export const NPILaunchIntelligence: React.FC = () => {
         </Card>
       </div>
 
-      {/* ── 5. Success Probability + Marketing Uplift ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-        {/* NPI Success Probability */}
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <Target className="w-3.5 h-3.5 text-success" />
-              Launch Success Probability
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <ResponsiveContainer width="100%" height={180}>
-              <BarChart data={npiProducts.map(p => ({ name: p.product.split(" ").slice(0, 2).join(" "), probability: p.successProbability }))} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 9 }} stroke="hsl(var(--muted-foreground))" />
-                <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={70} stroke="hsl(var(--muted-foreground))" />
-                <RechartsTooltip contentStyle={{ fontSize: 10, borderRadius: 8 }} formatter={(v: number) => `${v}%`} />
-                <Bar dataKey="probability" radius={[0, 4, 4, 0]}>
-                  {npiProducts.map((p, i) => (
-                    <Cell key={i} fill={p.successProbability >= 80 ? "hsl(var(--success))" : p.successProbability >= 65 ? "hsl(var(--warning))" : "hsl(var(--destructive))"} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Marketing Uplift Simulation */}
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <TrendingUp className="w-3.5 h-3.5 text-primary" />
-              Marketing Uplift Simulation
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 space-y-2.5">
-            {npiProducts.map(p => (
-              <div key={p.sku} className="p-2 rounded-lg bg-muted/20 border border-border/20">
-                <div className="text-[10px] font-medium text-foreground mb-1">{p.product.split(" ").slice(0, 3).join(" ")}</div>
-                <div className="flex items-center gap-2 text-[10px]">
-                  <span className="text-muted-foreground">{p.marketingUplift.baseline.toLocaleString()}</span>
-                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-success font-semibold">{p.marketingUplift.withCampaign.toLocaleString()}</span>
-                  <Badge className="bg-success/15 text-success border-success/30 text-[9px] px-1 py-0">+{p.marketingUplift.upliftPct}%</Badge>
-                </div>
-                <div className="text-[9px] text-muted-foreground mt-0.5">{p.marketingUplift.campaignType}</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+      {/* ── 5. Success Probability ── */}
+      <Card className="border-border/40">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xs font-semibold flex items-center gap-2">
+            <Target className="w-3.5 h-3.5 text-success" />
+            Launch Success Probability
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={npiProducts.map(p => ({ name: p.product.split(" ").slice(0, 2).join(" "), probability: p.successProbability }))} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+              <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 9 }} stroke="hsl(var(--muted-foreground))" />
+              <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={70} stroke="hsl(var(--muted-foreground))" />
+              <RechartsTooltip contentStyle={{ fontSize: 10, borderRadius: 8 }} formatter={(v: number) => `${v}%`} />
+              <Bar dataKey="probability" radius={[0, 4, 4, 0]}>
+                {npiProducts.map((p, i) => (
+                  <Cell key={i} fill={p.successProbability >= 80 ? "hsl(var(--success))" : p.successProbability >= 65 ? "hsl(var(--warning))" : "hsl(var(--destructive))"} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
 
       {/* ── 6. Market Benchmark ── */}
       <Card className="border-border/40">
@@ -490,9 +462,8 @@ export const NPILaunchIntelligence: React.FC = () => {
                     <div className="text-[10px] text-primary font-medium">{selectedProduct.similarity}% similarity</div>
                   </div>
                   <div className="p-2.5 rounded-lg bg-muted/20 border border-border/20">
-                    <div className="text-[10px] font-semibold text-foreground mb-1">Marketing Uplift</div>
-                    <div className="text-[10px] text-muted-foreground">{selectedProduct.marketingUplift.baseline.toLocaleString()} → {selectedProduct.marketingUplift.withCampaign.toLocaleString()} units</div>
-                    <div className="text-[10px] text-success font-medium">+{selectedProduct.marketingUplift.upliftPct}% with {selectedProduct.marketingUplift.campaignType}</div>
+                    <div className="text-[10px] font-semibold text-foreground mb-1">Channel Strategy</div>
+                    <div className="text-[10px] text-muted-foreground">Amazon {selectedProduct.channelMix.amazon}% · D2C {selectedProduct.channelMix.d2c}% · Retail {selectedProduct.channelMix.retail}%</div>
                   </div>
                 </div>
 
