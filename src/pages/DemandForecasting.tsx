@@ -273,11 +273,11 @@ const DemandForecasting = () => {
     
     // Map static issue file references to dynamic uploaded file names
     const fileMapping: Record<string, string> = {
-      'sales_history.csv': fileNames.find(f => f.toLowerCase().includes('sales') || f.toLowerCase().includes('history')) || fileNames[0],
+      'fact_sales_history.csv': fileNames.find(f => f.toLowerCase().includes('sales') || f.toLowerCase().includes('history')) || fileNames[0],
       'location_master.csv': fileNames.find(f => f.toLowerCase().includes('location') || f.toLowerCase().includes('store')) || fileNames[Math.min(1, fileNames.length - 1)],
-      'product_master.csv': fileNames.find(f => f.toLowerCase().includes('product') || f.toLowerCase().includes('sku')) || fileNames[Math.min(2, fileNames.length - 1)],
-      'mapping_master.csv': fileNames.find(f => f.toLowerCase().includes('mapping')) || fileNames[Math.min(3, fileNames.length - 1)],
-      'channel_master.csv': fileNames.find(f => f.toLowerCase().includes('channel')) || fileNames[Math.min(4, fileNames.length - 1)],
+      'dim_product.csv': fileNames.find(f => f.toLowerCase().includes('product') || f.toLowerCase().includes('sku')) || fileNames[Math.min(2, fileNames.length - 1)],
+      'dim_channel.csv': fileNames.find(f => f.toLowerCase().includes('channel')) || fileNames[Math.min(3, fileNames.length - 1)],
+      'cost_parameters.csv': fileNames.find(f => f.toLowerCase().includes('cost')) || fileNames[Math.min(4, fileNames.length - 1)],
     };
     
     return dataQualityIssues.map(issue => ({
