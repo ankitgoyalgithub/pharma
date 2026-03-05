@@ -33,7 +33,7 @@ const analyticalQuestions = {
   ],
   "Regional Analysis": [
     "Which region has the best sales performance?",
-    "Compare NCR vs West distribution centers",
+    "Compare Amazon vs Flipkart channels",
     "Which location has highest forecast variance?",
     "Show regional revenue breakdown",
   ],
