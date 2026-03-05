@@ -2524,7 +2524,7 @@ const DemandForecasting = () => {
             {/* Top KPI Row - 3 Cards */}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3 mb-4">
               <CompactMetricCard
-                value={appliedFilters.businessUnits === 'enterprise' ? '16.4%' : '18.2%'}
+                value='18.2%'
                 label="MAPE"
                 tooltip="Mean Absolute Percentage Error - average forecast error as percentage. Lower is better."
                 valueColor="primary"
