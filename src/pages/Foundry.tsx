@@ -723,6 +723,62 @@ export default function Foundry() {
   const sampleGDriveFiles = ["Products_2025_Q2.csv", "Locations_master.xlsx", "Sales_History_July.csv"];
   const commonColumns = ["product_id", "product_name", "uom", "price"];
 
+  // S3 bucket sample files with file-specific columns and preview data
+  const s3BucketFiles: Record<string, { columns: string[]; preview: SourcePreviewRow[] }> = {
+    "s3://synq-data-lake/raw/sales_history_2025.csv": {
+      columns: ["date", "sku", "location_id", "units_sold", "revenue", "channel"],
+      preview: [
+        { date: "2025-01-15", sku: "SKU-1001", location_id: "LOC-01", units_sold: 245, revenue: 12250.0, channel: "Online" },
+        { date: "2025-01-15", sku: "SKU-1002", location_id: "LOC-03", units_sold: 132, revenue: 5280.0, channel: "Retail" },
+        { date: "2025-01-16", sku: "SKU-1001", location_id: "LOC-02", units_sold: 189, revenue: 9450.0, channel: "Online" },
+      ],
+    },
+    "s3://synq-data-lake/raw/product_master.csv": {
+      columns: ["product_id", "product_name", "category", "sub_category", "uom", "price", "active"],
+      preview: [
+        { product_id: "P-1001", product_name: "Widget A", category: "Electronics", sub_category: "Sensors", uom: "EA", price: 12.5, active: "Y" },
+        { product_id: "P-1002", product_name: "Widget B", category: "Electronics", sub_category: "Actuators", uom: "EA", price: 17.0, active: "Y" },
+        { product_id: "P-1003", product_name: "Widget C", category: "Accessories", sub_category: "Cables", uom: "EA", price: 9.99, active: "N" },
+      ],
+    },
+    "s3://synq-data-lake/raw/inventory_snapshot.csv": {
+      columns: ["snapshot_date", "sku", "warehouse_id", "on_hand_qty", "in_transit_qty", "reserved_qty"],
+      preview: [
+        { snapshot_date: "2025-02-01", sku: "SKU-1001", warehouse_id: "WH-01", on_hand_qty: 1520, in_transit_qty: 300, reserved_qty: 120 },
+        { snapshot_date: "2025-02-01", sku: "SKU-1002", warehouse_id: "WH-01", on_hand_qty: 870, in_transit_qty: 150, reserved_qty: 45 },
+        { snapshot_date: "2025-02-01", sku: "SKU-1003", warehouse_id: "WH-02", on_hand_qty: 2340, in_transit_qty: 0, reserved_qty: 200 },
+      ],
+    },
+    "s3://synq-data-lake/raw/location_master.csv": {
+      columns: ["location_id", "location_name", "city", "state", "region", "type"],
+      preview: [
+        { location_id: "LOC-01", location_name: "Downtown Store", city: "New York", state: "NY", region: "East", type: "Retail" },
+        { location_id: "LOC-02", location_name: "West Coast DC", city: "Los Angeles", state: "CA", region: "West", type: "Warehouse" },
+        { location_id: "LOC-03", location_name: "Central Hub", city: "Chicago", state: "IL", region: "Central", type: "Distribution" },
+      ],
+    },
+    "s3://synq-data-lake/raw/channel_master.csv": {
+      columns: ["channel_id", "channel_name", "channel_type", "is_active", "priority"],
+      preview: [
+        { channel_id: "CH-01", channel_name: "Amazon", channel_type: "Marketplace", is_active: "Y", priority: 1 },
+        { channel_id: "CH-02", channel_name: "Flipkart", channel_type: "Marketplace", is_active: "Y", priority: 2 },
+        { channel_id: "CH-03", channel_name: "Direct Web", channel_type: "D2C", is_active: "Y", priority: 3 },
+      ],
+    },
+  };
+
+  const s3FileKeys = Object.keys(s3BucketFiles);
+
+  // Get columns for S3 based on selected file
+  const getS3Columns = (): string[] => {
+    if (source === "s3" && filePath && s3BucketFiles[filePath]) {
+      return s3BucketFiles[filePath].columns;
+    }
+    return commonColumns;
+  };
+
+  const s3AvailableColumns = getS3Columns();
+
   const toggleFromList = (list: string[], setList: (v: string[]) => void, value: string) => {
     setList(list.includes(value) ? list.filter((x) => x !== value) : [...list, value]);
     softResetPreview();
