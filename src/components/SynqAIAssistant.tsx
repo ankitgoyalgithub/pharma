@@ -39,9 +39,9 @@ const analyticalQuestions = {
   ],
   "Channel Insights": [
     "Which channel generates maximum revenue?",
-    "Compare Retail vs Hospital pharmacy performance",
-    "E-Pharmacy growth analysis",
-    "Government tender performance",
+    "Compare Amazon vs Flipkart performance",
+    "D2C channel analysis",
+    "Distributor channel performance",
   ],
   "Forecast Analysis": [
     "What is the overall forecast accuracy?",
