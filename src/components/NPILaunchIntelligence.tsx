@@ -281,8 +281,8 @@ export const NPILaunchIntelligence: React.FC = () => {
       {/* ── 5. Success Probability ── */}
       <Card className="border-border/40">
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-semibold flex items-center gap-2">
-            <Target className="w-3.5 h-3.5 text-success" />
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Target className="w-5 h-5 text-success" />
             Launch Success Probability
           </CardTitle>
         </CardHeader>
