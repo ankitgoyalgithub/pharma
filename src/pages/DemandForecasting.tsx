@@ -60,6 +60,7 @@ import {
   Box,
   MapPin,
   XCircle,
+  Eye,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -257,6 +258,7 @@ const DemandForecasting = () => {
   const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "npi" | "quality">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
   const [showAutoFixDialog, setShowAutoFixDialog] = useState(false);
+  const [showDQPreview, setShowDQPreview] = useState(false);
   
   // Generate dynamic data quality issues based on uploaded files
   const dynamicDataQualityIssues = useMemo(() => {
@@ -1359,18 +1361,22 @@ const DemandForecasting = () => {
             <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
             <p className="text-sm text-muted-foreground">AI detected missing data and suggested imputed values.</p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <div className="text-sm font-medium">{dynamicDataQualityIssues.length} Issues Detected</div>
-              <div className="text-xs text-muted-foreground">
-                {dynamicDataQualityIssues.filter(i => i.severity === 'high').length} high · {dynamicDataQualityIssues.filter(i => i.severity === 'medium').length} medium · {dynamicDataQualityIssues.filter(i => i.severity === 'low').length} low
+           <div className="flex items-center gap-3">
+              <div className="text-right">
+                <div className="text-sm font-medium">{dynamicDataQualityIssues.length} Issues Detected</div>
+                <div className="text-xs text-muted-foreground">
+                  {dynamicDataQualityIssues.filter(i => i.severity === 'high').length} high · {dynamicDataQualityIssues.filter(i => i.severity === 'medium').length} medium · {dynamicDataQualityIssues.filter(i => i.severity === 'low').length} low
+                </div>
               </div>
+              <Button size="sm" variant="outline" onClick={() => setShowDQPreview(true)}>
+                <Eye className="w-4 h-4 mr-2" />
+                Preview Issues
+              </Button>
+              <Button size="sm" onClick={() => setShowAutoFixDialog(true)}>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Auto Fix with AI
+              </Button>
             </div>
-            <Button size="sm" onClick={() => setShowAutoFixDialog(true)}>
-              <Sparkles className="w-4 h-4 mr-2" />
-              Auto Fix with AI
-            </Button>
-          </div>
         </div>
       </div>
       
@@ -1655,9 +1661,60 @@ const DemandForecasting = () => {
         issues={dynamicDataQualityIssues}
         onApplyFixes={() => {
           console.log('Applying fixes...');
-          // Here you would apply the fixes to the actual data
         }}
       />
+
+      {/* Data Quality Issues Preview Dialog */}
+      <Dialog open={showDQPreview} onOpenChange={setShowDQPreview}>
+        <DialogContent className="max-w-5xl max-h-[85vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5 text-primary" />
+              Data Quality Issues — All Affected Rows
+            </DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="flex-1 -mx-6 px-6">
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50 sticky top-0">
+                  <tr className="border-b">
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">File</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Row</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Column</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Issue Type</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Severity</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Current Value</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Suggested Fix</th>
+                    <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wider">Impact</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dynamicDataQualityIssues.map((issue) => (
+                    <tr key={issue.id} className="border-b hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-mono">{issue.file}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{issue.rowNumber}</td>
+                      <td className="px-4 py-3 font-medium">{issue.column}</td>
+                      <td className="px-4 py-3">{issue.issueType}</td>
+                      <td className="px-4 py-3">
+                        <Badge variant={issue.severity === 'high' ? 'destructive' : issue.severity === 'medium' ? 'default' : 'secondary'} className="text-xs">
+                          {issue.severity}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-muted-foreground">
+                        {issue.currentValue || <span className="italic">null</span>}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-green-700 dark:text-green-400">{issue.suggestedFix}</td>
+                      <td className="px-4 py-3">
+                        <span className="text-xs text-muted-foreground">{issue.impactScore}/10</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
 
       {showImputedReview && (
         <Card>
