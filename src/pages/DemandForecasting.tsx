@@ -1342,115 +1342,13 @@ const DemandForecasting = () => {
     plugins: { legend: { position: "top" as const } },
   });
 
-  // Generate realistic scatter data for forecastability chart - memoized to prevent re-generation
-  const scatterPoints = React.useMemo(() => {
-    const data = [];
-    // Generate points across different quadrants
-    for (let i = 0; i < 60; i++) {
-      const x = Math.random() * 1.8; // ADI from 0 to 1.8
-      const y = Math.random() * 4; // CV² from 0 to 4
-      
-      // Color based on quadrants with gradient
-      let pointColor;
-      if (x < 1.3 && y < 1.3) {
-        // Smooth quadrant - light blue
-        pointColor = `hsl(200 70% ${60 + Math.random() * 20}%)`;
-      } else if (x < 1.3 && y >= 1.3) {
-        // Erratic quadrant - medium blue
-        pointColor = `hsl(220 60% ${40 + Math.random() * 20}%)`;
-      } else if (x >= 1.3 && y < 1.3) {
-        // Intermittent quadrant - dark blue
-        pointColor = `hsl(240 70% ${25 + Math.random() * 15}%)`;
-      } else {
-        // Lumpy quadrant - very dark blue
-        pointColor = `hsl(260 80% ${15 + Math.random() * 15}%)`;
-      }
-      
-      data.push({ x, y, pointColor });
-    }
-    return data;
-  }, []); // Empty dependency array ensures this only runs once
-
-  const forecastabilityData = {
-    datasets: [
-      {
-        label: "Products",
-        data: scatterPoints.map(point => ({ x: point.x, y: point.y })),
-        backgroundColor: scatterPoints.map(point => point.pointColor),
-        borderColor: scatterPoints.map(point => point.pointColor),
-        borderWidth: 1,
-        pointRadius: 6,
-        pointHoverRadius: 6, // Same as regular radius to prevent animation
-        pointBorderWidth: 1,
-        pointHoverBorderWidth: 1, // Same as regular border width
-      },
-      // Add the curved separation line
-      {
-        label: "Separation Line",
-        data: Array.from({ length: 100 }, (_, i) => {
-          const x = (i / 99) * 1.8;
-          const y = 1.3 / (x + 0.1); // Hyperbola-like curve
-          return { x, y: Math.min(y, 4) };
-        }),
-        borderColor: hslVar("--foreground"),
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        showLine: true,
-        fill: false,
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const forecastabilityOptions: any = buildChartOptions({
-    animation: false, // Completely disable all animations
-    animations: false, // Alternative way to disable animations
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      intersect: false,
-      mode: 'point' as const
-    },
-    hover: {
-      mode: null as any // Disable hover completely
-    },
-    onHover: null, // Disable hover events
-    scales: {
-      x: { 
-        title: { display: true, text: "ADI", color: hslVar("--foreground") },
-        min: 0,
-        max: 1.8,
-        grid: { color: hslVar("--border") },
-        ticks: { stepSize: 0.5 }
-      },
-      y: { 
-        title: { display: true, text: "CV²", color: hslVar("--foreground") },
-        min: 0,
-        max: 4,
-        grid: { color: hslVar("--border") },
-        ticks: { stepSize: 1 }
-      },
-    },
-    plugins: { 
-      legend: { display: false },
-      tooltip: {
-        enabled: false // Completely disable tooltips to prevent hover animations
-      }
-    },
-    elements: {
-      line: {
-        tension: 0
-      },
-      point: {
-        hoverRadius: 6, // Keep same radius on hover
-        radius: 6,
-        borderWidth: 1,
-        hoverBorderWidth: 1
-      }
-    }
-  });
+  // Forecastability quadrant data - memoized
+  const forecastabilityQuadrants = React.useMemo(() => [
+    { label: "Smooth", skuCount: 22, pct: 44, avgAccuracy: 95.2, model: "Exponential Smoothing", color: "hsl(142, 76%, 36%)", bgClass: "bg-green-500/10 border-green-500/20", textClass: "text-green-600 dark:text-green-400", desc: "Low ADI, Low CV²" },
+    { label: "Intermittent", skuCount: 12, pct: 24, avgAccuracy: 88.4, model: "Croston's Method", color: "hsl(200, 70%, 50%)", bgClass: "bg-blue-500/10 border-blue-500/20", textClass: "text-blue-600 dark:text-blue-400", desc: "High ADI, Low CV²" },
+    { label: "Erratic", skuCount: 10, pct: 20, avgAccuracy: 82.1, model: "ARIMA / ML Hybrid", color: "hsl(45, 93%, 47%)", bgClass: "bg-amber-500/10 border-amber-500/20", textClass: "text-amber-600 dark:text-amber-400", desc: "Low ADI, High CV²" },
+    { label: "Lumpy", skuCount: 6, pct: 12, avgAccuracy: 74.5, model: "Bootstrapping", color: "hsl(0, 72%, 51%)", bgClass: "bg-red-500/10 border-red-500/20", textClass: "text-red-600 dark:text-red-400", desc: "High ADI, High CV²" },
+  ], []);
 
   const renderStep2 = () => (
     <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
