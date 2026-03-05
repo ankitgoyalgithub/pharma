@@ -561,14 +561,22 @@ export default function Foundry() {
       return;
     }
 
-    // Simulate preview by projecting MOCK_PREVIEW using selected columns per source
+    // Use S3-specific preview data when available
+    let baseRows: SourcePreviewRow[] = MOCK_PREVIEW;
     let selectedCols: string[] | null = null;
-    if (source === "salesforce") selectedCols = sfFields.length ? sfFields : null;
-    else if (source === "gdrive") selectedCols = gdColumns.length ? gdColumns : null;
-    else if (["csv", "s3", "upload_csv"].includes(source)) selectedCols = fileColumns.length ? fileColumns : null;
-    else selectedCols = null; // SQL-like uses whatever query returns (use all mock columns)
 
-    const rows = projectRows(MOCK_PREVIEW, selectedCols);
+    if (source === "s3" && filePath && s3BucketFiles[filePath]) {
+      baseRows = s3BucketFiles[filePath].preview;
+      selectedCols = fileColumns.length ? fileColumns : null;
+    } else if (source === "salesforce") {
+      selectedCols = sfFields.length ? sfFields : null;
+    } else if (source === "gdrive") {
+      selectedCols = gdColumns.length ? gdColumns : null;
+    } else if (["csv", "upload_csv"].includes(source)) {
+      selectedCols = fileColumns.length ? fileColumns : null;
+    }
+
+    const rows = projectRows(baseRows, selectedCols);
     setPreviewRows(rows);
     setHasPreview(true);
     const inferred = inferFieldsFromPreview(rows);
