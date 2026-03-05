@@ -1,96 +1,96 @@
 export const abcXyzMatrixData = [
-  // Row A (80% Value) - Critical Medicines
+  // Row A (80% Value) - Premium High-Volume Products
   {
     segment: "AX",
     row: "A",
     col: "X",
-    skuCount: 45,
+    skuCount: 12,
     revenue: "₹42.3Cr",
-    label: "Essential medicines",
+    label: "Star performers",
     priority: "high",
-    description: "Stable high-value chronic care drugs (Diabetes, Cardiac) - ensure 99% availability"
+    description: "Stable high-value SKUs (Premium Earbuds, Headphones) - ensure 99% availability across Amazon & Flipkart"
   },
   {
     segment: "AY",
     row: "A",
     col: "Y",
-    skuCount: 32,
+    skuCount: 8,
     revenue: "₹18.6Cr",
-    label: "Seasonal therapeutics",
+    label: "Festival spikes",
     priority: "medium",
-    description: "Variable high-value items - adjust for disease seasonality patterns"
+    description: "Variable high-value items - adjust for sale events (BBD, Prime Day, Diwali)"
   },
   {
     segment: "AZ",
     row: "A",
     col: "Z",
-    skuCount: 18,
+    skuCount: 5,
     revenue: "₹7.2Cr",
-    label: "Outbreak response",
+    label: "New launches",
     priority: "risk",
-    description: "Erratic high-value drugs (epidemic-driven) - monitor outbreak alerts closely"
+    description: "Erratic high-value new products - closely monitor D2C and marketplace performance"
   },
-  // Row B (15% Value) - Regular Medicines
+  // Row B (15% Value) - Mid-Range Products
   {
     segment: "BX",
     row: "B",
     col: "X",
-    skuCount: 86,
+    skuCount: 15,
     revenue: "₹12.4Cr",
-    label: "OTC essentials",
+    label: "Steady sellers",
     priority: "medium",
-    description: "Stable mid-value OTC products - standard replenishment protocols"
+    description: "Stable mid-value products (Budget Earbuds, Neckbands) - standard replenishment"
   },
   {
     segment: "BY",
     row: "B",
     col: "Y",
-    skuCount: 72,
+    skuCount: 10,
     revenue: "₹8.8Cr",
-    label: "Respiratory & Allergy",
+    label: "Seasonal audio",
     priority: "medium",
-    description: "Variable mid-value seasonal drugs - balance availability and expiry risk"
+    description: "Variable mid-value items (Speakers, Party range) - seasonal demand patterns"
   },
   {
     segment: "BZ",
     row: "B",
     col: "Z",
-    skuCount: 28,
+    skuCount: 6,
     revenue: "₹2.4Cr",
     label: "Watch closely",
     priority: "risk",
-    description: "Erratic demand patterns - monitor for near-expiry clearance"
+    description: "Erratic demand patterns - monitor for competitor impact and clearance"
   },
-  // Row C (5% Value) - Low-Movement Items
+  // Row C (5% Value) - Long-Tail Products
   {
     segment: "CX",
     row: "C",
     col: "X",
-    skuCount: 124,
+    skuCount: 18,
     revenue: "₹3.2Cr",
-    label: "Vitamins & Supplements",
+    label: "Budget basics",
     priority: "low",
-    description: "Stable low-value supplements - minimal safety stock needed"
+    description: "Stable low-value accessories and budget items - minimal safety stock"
   },
   {
     segment: "CY",
     row: "C",
     col: "Y",
-    skuCount: 95,
+    skuCount: 12,
     revenue: "₹2.1Cr",
-    label: "Generic alternatives",
+    label: "Niche products",
     priority: "low",
-    description: "Variable low-value generics - periodic bulk procurement"
+    description: "Variable low-value niche wearables - periodic bulk orders"
   },
   {
     segment: "CZ",
     row: "C",
     col: "Z",
-    skuCount: 42,
+    skuCount: 8,
     revenue: "₹1.1Cr",
     label: "Phase-out candidates",
     priority: "low",
-    description: "Erratic low-value items - consider SKU rationalization"
+    description: "Erratic low-value items - consider SKU rationalization and clearance sales"
   },
 ];
 
@@ -109,7 +109,7 @@ export const abcXyzHeaders = {
 
 export const abcXyzLegend = [
   { label: "High Priority", color: "success", description: "Ensure availability" },
-  { label: "Medium Priority", color: "warning", description: "Balance service & expiry" },
+  { label: "Medium Priority", color: "warning", description: "Balance service & inventory" },
   { label: "Risk Items", color: "destructive", description: "Monitor closely" },
   { label: "Low Priority", color: "muted", description: "Minimize inventory" },
 ];

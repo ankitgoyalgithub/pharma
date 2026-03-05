@@ -3,19 +3,19 @@ import { EntityModule } from "./types";
 export const timeseriesEntities: EntityModule[] = [
   {
     title: "Sales History",
-    description: "Weekly sales by store and SKU",
+    description: "Daily sales by product, channel, and region with revenue and discount data",
     origin: "csv",
     route: "/entity-preview/sales-history",
-    recordCount: 60000,
+    recordCount: 12000,
     lastSync: "2025-12-11T15:00:00Z",
     sourceType: "csv",
   },
   {
     title: "Inventory Snapshot",
-    description: "Batch-wise inventory with expiry and quarantine tracking",
+    description: "Warehouse-wise inventory with on-hand, in-transit, reserved, and damaged quantities",
     origin: "csv",
     route: "/entity-preview/inventory-levels",
-    recordCount: 32,
+    recordCount: 150,
     lastSync: "2025-01-01T16:30:00Z",
     sourceType: "snowflake",
   },

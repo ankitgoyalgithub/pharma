@@ -34,13 +34,13 @@ export const foundryDataMapper = {
   "Sales_Historical": salesHistoryData,
   "Inventory_Data": inventoryLevelsData,
   "Price_History": [
-    { date: "2025-07-01", product: "Widget A", price: 29.99, currency: "USD" },
-    { date: "2025-07-02", product: "Widget A", price: 30.25, currency: "USD" },
-    { date: "2025-07-03", product: "Component B", price: 15.50, currency: "USD" }
+    { date: "2023-07-01", product: "Product_1 Earbuds", price: 3872, currency: "INR" },
+    { date: "2023-07-02", product: "Product_1 Earbuds", price: 3699, currency: "INR" },
+    { date: "2023-07-03", product: "Product_5 Speakers", price: 4657, currency: "INR" }
   ],
   "Promotion_Data": [
-    { date: "2025-07-01", product: "Widget A", discount: 10, type: "Percentage" },
-    { date: "2025-07-15", product: "Component B", discount: 5, type: "Percentage" }
+    { date: "2025-07-01", product: "Product_1 Earbuds", discount: 15, type: "Flash Sale" },
+    { date: "2025-07-15", product: "Product_5 Speakers", discount: 20, type: "Prime Day" }
   ],
   
   // Feature Store Data
@@ -48,11 +48,17 @@ export const foundryDataMapper = {
   "Crude_Oil_Prices": crudeOilPricesData,
   "Weather_Data": weatherData,
   "Weather_Climate_Data": weatherClimateData,
-  "Disease_Illness_Patterns": [...seasonalIllnessData.map(s => ({ ...s, type: "Seasonal Illness" })), ...diseaseOutbreakData.map(d => ({ ...d, type: "Outbreak" }))],
-  "Prescription_Trends": prescriptionTrendsData,
-  "Medical_Conference_Calendar": medicalConferenceData,
-  "Healthcare_Policy_Changes": healthcarePolicyData,
-  "Generic_Drug_Launches": genericDrugLaunchesData,
+  "Search_Trends": [
+    { date: "2023-01-01", search_keyword: "wireless earbuds", geo: "IN", category: "Earbuds", trend_score: 38 },
+    { date: "2023-01-01", search_keyword: "bluetooth speaker", geo: "IN", category: "Speakers", trend_score: 22 },
+    { date: "2023-01-01", search_keyword: "noise cancelling headphones", geo: "IN", category: "Headphones", trend_score: 41 },
+  ],
+  "Platform_Sale_Events": [...seasonalIllnessData.map(s => ({ ...s, type: "Sale Event" }))],
+  "Competitor_Pricing": prescriptionTrendsData,
+  "Social_Media_Sentiment": medicalConferenceData,
+  "Consumer_Sentiment_Index": healthcarePolicyData,
+  "New_Product_Launches": genericDrugLaunchesData,
+  "Competitor_Activity": diseaseOutbreakData,
   "Seasonality_Trends": seasonalityTrendsData,
   "Promotional_Campaigns": promotionalCampaignsData,
   "Promotions_Discounts": promotionalCampaignsData,
@@ -63,44 +69,6 @@ export const foundryDataMapper = {
   "NASDAQ_Index": [
     { date: "2025-07-01", index: "NASDAQ", value: 18200, change: 85.2 },
     { date: "2025-07-02", index: "NASDAQ", value: 18150, change: -50.0 }
-  ],
-  "Search_Trends": [
-    { date: "2023-01-01", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 38 },
-    { date: "2023-01-01", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 22 },
-    { date: "2023-01-01", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 41 },
-    { date: "2023-01-08", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 42 },
-    { date: "2023-01-08", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 25 },
-    { date: "2023-01-08", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 47 },
-    { date: "2023-01-15", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 45 },
-    { date: "2023-01-15", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 29 },
-    { date: "2023-01-15", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 50 },
-    { date: "2023-01-22", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 52 },
-    { date: "2023-01-22", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 35 },
-    { date: "2023-01-22", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 58 },
-    { date: "2023-01-29", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 57 },
-    { date: "2023-01-29", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 39 },
-    { date: "2023-01-29", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 61 },
-    { date: "2023-02-05", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 61 },
-    { date: "2023-02-05", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 45 },
-    { date: "2023-02-05", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 66 },
-    { date: "2023-02-12", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 68 },
-    { date: "2023-02-12", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 51 },
-    { date: "2023-02-12", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 72 },
-    { date: "2023-02-19", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 72 },
-    { date: "2023-02-19", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 57 },
-    { date: "2023-02-19", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 75 },
-    { date: "2023-02-26", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 76 },
-    { date: "2023-02-26", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 63 },
-    { date: "2023-02-26", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 78 },
-    { date: "2023-03-05", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 82 },
-    { date: "2023-03-05", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 71 },
-    { date: "2023-03-05", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 83 },
-    { date: "2023-03-12", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 88 },
-    { date: "2023-03-12", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 78 },
-    { date: "2023-03-12", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 89 },
-    { date: "2023-03-19", search_keyword: "men tshirts", geo: "IN", category: "apparel", trend_score: 94 },
-    { date: "2023-03-19", search_keyword: "summer dresses", geo: "IN", category: "apparel", trend_score: 84 },
-    { date: "2023-03-19", search_keyword: "sports shoes", geo: "IN", category: "footwear", trend_score: 93 }
   ],
   
   // External Drivers Data (matching Foundry format)

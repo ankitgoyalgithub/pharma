@@ -1,0 +1,6 @@
+CHANNEL_ID,REGION,SERVICE_LEVEL_TARGET,LEAD_TIME_DAYS,MIN_ORDER_QTY
+Amazon,West,0.91,12,137
+Flipkart,Central,0.91,7,87
+D2C,East,0.9,10,179
+Retail,Central,0.97,9,70
+Distributor,Central,0.95,6,107

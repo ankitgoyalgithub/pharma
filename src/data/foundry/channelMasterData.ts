@@ -1,37 +1,52 @@
 export const channelMasterData = [
   {
-    id: "CH01",
-    name: "Retail Pharmacy",
-    channelGroup: "Trade",
-    serviceLevelTarget: 0.95,
+    id: "Amazon",
+    name: "Amazon",
+    channelGroup: "Ecommerce",
+    region: "West",
+    serviceLevelTarget: 0.91,
+    leadTimeDays: 12,
+    minOrderQty: 137,
     status: "Active"
   },
   {
-    id: "CH02",
-    name: "Hospital Pharmacy",
-    channelGroup: "Institutional",
+    id: "Flipkart",
+    name: "Flipkart",
+    channelGroup: "Ecommerce",
+    region: "Central",
+    serviceLevelTarget: 0.91,
+    leadTimeDays: 7,
+    minOrderQty: 87,
+    status: "Active"
+  },
+  {
+    id: "D2C",
+    name: "D2C",
+    channelGroup: "Direct",
+    region: "East",
+    serviceLevelTarget: 0.90,
+    leadTimeDays: 10,
+    minOrderQty: 179,
+    status: "Active"
+  },
+  {
+    id: "Retail",
+    name: "Retail",
+    channelGroup: "Offline",
+    region: "Central",
     serviceLevelTarget: 0.97,
+    leadTimeDays: 9,
+    minOrderQty: 70,
     status: "Active"
   },
   {
-    id: "CH03",
-    name: "E-Pharmacy",
-    channelGroup: "Online",
-    serviceLevelTarget: 0.96,
-    status: "Active"
-  },
-  {
-    id: "CH04",
-    name: "Distributor / Stockist",
-    channelGroup: "Trade",
-    serviceLevelTarget: 0.94,
-    status: "Active"
-  },
-  {
-    id: "CH05",
-    name: "Government Tender",
-    channelGroup: "Institutional",
-    serviceLevelTarget: 0.98,
+    id: "Distributor",
+    name: "Distributor",
+    channelGroup: "Wholesale",
+    region: "Central",
+    serviceLevelTarget: 0.95,
+    leadTimeDays: 6,
+    minOrderQty: 107,
     status: "Active"
   }
 ];

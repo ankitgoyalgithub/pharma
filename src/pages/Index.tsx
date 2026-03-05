@@ -52,9 +52,9 @@ const analyticalQuestions = {
   ],
   "Channel Insights": [
     "Which channel generates maximum revenue?",
-    "Compare Retail vs Hospital pharmacy performance",
-    "E-Pharmacy growth analysis",
-    "Government tender performance",
+    "Compare Amazon vs Flipkart performance",
+    "D2C channel growth analysis",
+    "Distributor channel performance",
   ],
   "Forecast Analysis": [
     "What is the overall forecast accuracy?",
@@ -346,20 +346,20 @@ const generateResponse = (query: string): { text: string; chart?: Message['chart
     };
   }
   
-  if (lowerQuery.includes('retail') && lowerQuery.includes('hospital')) {
-    const retailData = skuData.filter(s => s.channel.includes('Retail'));
-    const hospitalData = skuData.filter(s => s.channel.includes('Hospital'));
-    const retailTotal = retailData.reduce((sum, s) => sum + parseRevenue(s.actual), 0);
-    const hospitalTotal = hospitalData.reduce((sum, s) => sum + parseRevenue(s.actual), 0);
+  if (lowerQuery.includes('amazon') && lowerQuery.includes('flipkart')) {
+    const amazonData = skuData.filter(s => s.channel.includes('Amazon'));
+    const flipkartData = skuData.filter(s => s.channel.includes('Flipkart'));
+    const amazonTotal = amazonData.reduce((sum, s) => sum + parseRevenue(s.actual), 0);
+    const flipkartTotal = flipkartData.reduce((sum, s) => sum + parseRevenue(s.actual), 0);
     return {
-      text: `**Retail vs Hospital Pharmacy:**\n\n• **Retail Pharmacy**: ₹${retailTotal.toFixed(1)}M (${retailData.length} SKUs)\n• **Hospital Pharmacy**: ₹${hospitalTotal.toFixed(1)}M (${hospitalData.length} SKUs)\n\n${retailTotal > hospitalTotal ? 'Retail' : 'Hospital'} channel dominates.`,
+      text: `**Amazon vs Flipkart:**\n\n• **Amazon**: ₹${amazonTotal.toFixed(1)}M (${amazonData.length} SKUs)\n• **Flipkart**: ₹${flipkartTotal.toFixed(1)}M (${flipkartData.length} SKUs)\n\n${amazonTotal > flipkartTotal ? 'Amazon' : 'Flipkart'} channel dominates.`,
       chart: {
         type: 'bar',
         data: {
-          labels: ['Retail Pharmacy', 'Hospital Pharmacy'],
+          labels: ['Amazon', 'Flipkart'],
           datasets: [{
             label: 'Revenue (₹M)',
-            data: [retailTotal, hospitalTotal],
+            data: [amazonTotal, flipkartTotal],
             backgroundColor: ['hsl(225, 84%, 55%)', 'hsl(142, 76%, 36%)'],
           }]
         },
@@ -368,18 +368,18 @@ const generateResponse = (query: string): { text: string; chart?: Message['chart
     };
   }
   
-  if (lowerQuery.includes('e-pharmacy') || lowerQuery.includes('epharmacy')) {
-    const ePharmData = skuData.filter(s => s.channel.includes('E-Pharmacy'));
+  if (lowerQuery.includes('d2c') || lowerQuery.includes('direct')) {
+    const d2cData = skuData.filter(s => s.channel.includes('D2C'));
     return {
-      text: `**E-Pharmacy Channel Analysis:**\n\n${ePharmData.map(s => `• **${s.product}**\n  Revenue: ${s.actual} | Accuracy: ${s.accuracy}`).join('\n')}\n\nE-Pharmacy showing ${ePharmData[0]?.variance.startsWith('+') ? 'growth' : 'adjustment needed'}.`,
+      text: `**D2C Channel Analysis:**\n\n${d2cData.map(s => `• **${s.product}**\n  Revenue: ${s.actual} | Accuracy: ${s.accuracy}`).join('\n')}\n\nD2C showing ${d2cData[0]?.variance.startsWith('+') ? 'growth' : 'adjustment needed'}.`,
       chart: {
         type: 'bar',
         data: {
-          labels: ePharmData.map(s => s.sku),
+          labels: d2cData.map(s => s.sku),
           datasets: [{
             label: 'Revenue (₹M)',
-            data: ePharmData.map(s => parseRevenue(s.actual)),
-            backgroundColor: 'hsl(280, 65%, 55%)',
+            data: d2cData.map(s => parseRevenue(s.actual)),
+            backgroundColor: 'hsl(262, 83%, 58%)',
           }]
         },
         options: chartOptions

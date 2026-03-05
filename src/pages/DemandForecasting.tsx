@@ -159,16 +159,18 @@ const DemandForecasting = () => {
 
   // Map external driver display names to Foundry object keys
   const driverToFoundryKey: Record<string, string> = {
-    // Pharma industry external drivers
-    "Seasonal Illness Patterns": "Seasonal_Illness_Patterns",
-    "Disease Outbreak Tracking": "Disease_Outbreak_Tracking",
+    // Consumer electronics external drivers
+    "Search Trends (Google)": "Search_Trends",
+    "Platform Sale Events": "Platform_Sale_Events",
     "Weather & Climate Data": "Weather_Climate_Data",
-    "Healthcare Policy Changes": "Healthcare_Policy_Changes",
-    "Generic Drug Launches": "Generic_Drug_Launches",
-    "Medical Conference Calendar": "Medical_Conference_Calendar",
-    "Prescription Trends": "Prescription_Trends",
+    "Competitor Pricing": "Competitor_Pricing",
+    "New Product Launches": "New_Product_Launches",
+    "Social Media Sentiment": "Social_Media_Sentiment",
     "Holiday Calendar": "Holiday_Calendar",
-    "Promotions & Discounts": "Promotions_Discounts",
+    "Promotional Campaigns": "Promotional_Campaigns",
+    "Consumer Sentiment Index": "Consumer_Sentiment_Index",
+    "Influencer Campaign Tracker": "Influencer_Campaign_Tracker",
+    "Seasonality Trends": "Seasonality_Trends",
   };
 
   // Stepper configuration
@@ -1189,12 +1191,12 @@ const DemandForecasting = () => {
                                 <tr>
                                   <th className="text-left px-3 py-2">SKU</th>
                                   <th className="text-left px-3 py-2">Product</th>
-                                  <th className="text-left px-3 py-2">Location</th>
                                   <th className="text-left px-3 py-2">Channel</th>
+                                  <th className="text-left px-3 py-2">Region</th>
                                   <th className="text-left px-3 py-2">Date</th>
-                                  <th className="text-left px-3 py-2">Sales</th>
+                                  <th className="text-left px-3 py-2">Units Sold</th>
                                   <th className="text-left px-3 py-2">Revenue</th>
-                                  <th className="text-left px-3 py-2">Stock</th>
+                                  <th className="text-left px-3 py-2">Price</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1202,15 +1204,15 @@ const DemandForecasting = () => {
                                   <tr key={idx} className="hover:bg-muted/20 border-t">
                                     <td className="px-3 py-2 font-mono">{row.sku}</td>
                                     <td className="px-3 py-2 font-medium">{row.product}</td>
-                                    <td className="px-3 py-2">{row.location}</td>
+                                    <td className="px-3 py-2">{row.region}</td>
                                     <td className="px-3 py-2">
                                    <Badge variant="outline" className="text-xs">{row.channel}</Badge>
                                 </td>
                                 <td className="px-3 py-2 text-xs">{row.date}</td>
-                                <td className="px-3 py-2 font-medium">{row.sales}</td>
+                                <td className="px-3 py-2 font-medium">{row.unitsSold}</td>
                                 <td className="px-3 py-2 text-success font-medium">{row.revenue}</td>
                                 <td className="px-3 py-2">
-                                  <Badge variant="secondary" className="text-xs">{row.stock}</Badge>
+                                  <Badge variant="secondary" className="text-xs">₹{row.price}</Badge>
                                 </td>
                               </tr>
                             ))}
@@ -2171,12 +2173,12 @@ const DemandForecasting = () => {
                               <tr>
                                 <th className="text-left p-2 font-medium">SKU</th>
                                 <th className="text-left p-2 font-medium">Product</th>
-                                <th className="text-left p-2 font-medium">Location</th>
                                 <th className="text-left p-2 font-medium">Channel</th>
+                                <th className="text-left p-2 font-medium">Region</th>
                                 <th className="text-left p-2 font-medium">Date</th>
-                                <th className="text-left p-2 font-medium">Sales</th>
+                                <th className="text-left p-2 font-medium">Units Sold</th>
                                 <th className="text-left p-2 font-medium">Revenue</th>
-                                <th className="text-left p-2 font-medium">Stock</th>
+                                <th className="text-left p-2 font-medium">Price</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -2184,16 +2186,16 @@ const DemandForecasting = () => {
                                 <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
                                   <td className="p-2 text-xs font-mono">{row.sku}</td>
                                   <td className="p-2 font-medium">{row.product}</td>
-                                  <td className="p-2">{row.location}</td>
+                                  <td className="p-2">{row.region}</td>
                                   <td className="p-2">
                                     <Badge variant="outline" className="text-xs">{row.channel}</Badge>
                                   </td>
                                   <td className="p-2 text-xs">{row.date}</td>
-                                  <td className="p-2 font-medium">{row.sales}</td>
+                                  <td className="p-2 font-medium">{row.unitsSold}</td>
                                   <td className="p-2 font-medium text-success">{row.revenue}</td>
                                   <td className="p-2">
                                     <Badge variant="secondary" className="text-xs">
-                                      {row.stock}
+                                      ₹{row.price}
                                     </Badge>
                                   </td>
                                 </tr>
@@ -2295,7 +2297,7 @@ const DemandForecasting = () => {
             <ForecastCard
               title="NPIs & Limited History"
               value="80"
-              subtitle="New molecules, generic launches, and outbreak-sensitive SKUs. Items requiring manual review."
+              subtitle="New product launches, competitor entries, and trending SKUs. Items requiring manual review."
               icon={Sparkles}
               isActive={selectedScenario === null && activeTab === "npi"}
               onClick={() => {
@@ -2651,10 +2653,10 @@ const DemandForecasting = () => {
                 <CardContent>
                   <div className="space-y-2">
                     {[
-                      { sku: 'Insulin Glargine SKU004', issue: 'Cold Chain Variability', priority: 'high', variance: '+34%' },
-                      { sku: 'Azithromycin SKU002', issue: 'Outbreak Spike', priority: 'medium', variance: '+18%' },
-                      { sku: 'Cetirizine SKU003', issue: 'Seasonal Shift', priority: 'medium', variance: '-12%' },
-                      { sku: 'Pantoprazole SKU010', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
+                      { sku: 'Product_21 SKU_021', issue: 'Competitor Launch Impact', priority: 'high', variance: '+34%' },
+                      { sku: 'Product_7 SKU_007', issue: 'Platform Sale Spike', priority: 'medium', variance: '+18%' },
+                      { sku: 'Product_1 SKU_001', issue: 'Seasonal Shift', priority: 'medium', variance: '-12%' },
+                      { sku: 'Product_49 SKU_049', issue: 'Low Confidence', priority: 'low', variance: '+8%' },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex items-center gap-2">
@@ -2709,7 +2711,7 @@ const DemandForecasting = () => {
                         <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">₹52.8Cr Impact</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Class A items (Insulin Glargine SKU004, Azithromycin SKU002, Amoxicillin SKU005) drive 68.5% revenue but show 12% forecast variance in Delhi and Mumbai hospital chains. Recommend daily inventory reviews and +22% safety stock for Q1 2025 to prevent ₹2.4Cr stockout risk on life-saving medications.
+                        Class A items (Product_21 OverEar Headphones, Product_29 Premium Speakers, Product_12 TWS Speakers) drive 62% revenue but show 14% forecast variance on Amazon and Flipkart. Recommend weekly inventory reviews and +18% safety stock for Q4 sale season to prevent ₹3.1Cr stockout risk.
                       </p>
                     </div>
                   </div>
@@ -2720,11 +2722,11 @@ const DemandForecasting = () => {
                     <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-semibold text-sm">Generic Drug Launch Alert - Cholecalciferol</span>
-                        <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2024</Badge>
+                        <span className="font-semibold text-sm">Competitor Launch Alert - Budget TWS</span>
+                        <Badge variant="outline" className="text-xs bg-warning/15 text-warning border-warning/30 shadow-sm">Nov 2025</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Generic Vitamin D3 launch expected to trigger 18% volume surge and 12% price erosion. D3Max (SKU008) faces competition. Secure API supply now and build 8 weeks safety stock to capture market opportunity.
+                        Competitor launching Budget TWS Earbuds expected to trigger 22% volume surge and 15% price erosion. SKU_001 (Earbuds) faces direct competition. Increase marketing spend and build 6 weeks safety stock to capture market opportunity.
                       </p>
                     </div>
                   </div>
@@ -2735,11 +2737,11 @@ const DemandForecasting = () => {
                     <Activity className="w-5 h-5 text-info mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-semibold text-sm">Monsoon Disease Outbreak Intelligence</span>
-                        <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+42% Peak</Badge>
+                        <span className="font-semibold text-sm">Festive Season Demand Intelligence</span>
+                        <Badge variant="outline" className="text-xs bg-info/15 text-info border-info/30 shadow-sm">+38% Peak</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Seasonal illness data shows 42% surge in respiratory medications during winter (Nov-Feb) and dengue outbreak spike in monsoon (Jul-Sep). Pre-position Azithromycin (SKU002), Paracetamol (SKU001), and Cetirizine (SKU003) in affected regions 4 weeks ahead.
+                        Sales data shows 38% surge in Earbuds and Headphones during Oct-Nov (Big Billion Days, Diwali) and 25% spike during Jan (Republic Day sales). Pre-position SKU_001 (Earbuds), SKU_021 (Headphones), and SKU_029 (Speakers) inventory 4 weeks ahead of sale events.
                       </p>
                     </div>
                   </div>
@@ -3129,9 +3131,9 @@ const DemandForecasting = () => {
               <Card className="relative overflow-hidden border-border/40 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Total SKUs in Scope</div>
-                  <div className="text-2xl font-bold text-foreground mb-1">542</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">All pharmacy channels & locations</div>
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Pharmaceuticals</Badge>
+                  <div className="text-2xl font-bold text-foreground mb-1">50</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">All channels & regions</div>
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">Consumer Electronics</Badge>
                 </CardContent>
               </Card>
               
@@ -3187,27 +3189,28 @@ const DemandForecasting = () => {
                     <tbody>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
                           <td className="py-2 px-2 font-mono text-[10px] text-foreground">GEN-VD3-001</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Generic Cholecalciferol 60K IU</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Generic Launch</Badge></td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-TWS-001</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">ANC Earbuds Pro</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Launch</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">None</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">New Nov 2024</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use D3Max history +18%</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">New Feb 2025</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Use SKU_001 history +18%</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-INS-002</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Insulin Degludec 100U/ml</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Molecule</Badge></td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">NEW-HP-002</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Studio Headphones X1</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">New Product</Badge></td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">3 months</td>
                           <td className="py-2 px-2 text-[10px] text-muted-foreground">Limited launch</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× Glargine baseline</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Start 1.3× SKU_021 baseline</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
-                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">OB-AZI-003</td>
-                          <td className="py-2 px-2 text-[10px] text-foreground">Azithromycin 500mg (Outbreak)</td>
-                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Outbreak SKU</Badge></td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">12 months</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">OOS monsoon</td>
-                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with outbreak tracking</td>
+                          <td className="py-2 px-2 font-mono text-[10px] text-foreground">TREND-SPK-003</td>
+                          <td className="py-2 px-2 text-[10px] text-foreground">Party Speaker Max</td>
+                          <td className="py-2 px-2"><Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5 whitespace-nowrap">Trending SKU</Badge></td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">6 months</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Festival spike</td>
+                          <td className="py-2 px-2 text-[10px] text-muted-foreground">Blend with search trends</td>
                         </tr>
                         <tr className="border-b border-border/20 hover:bg-muted/20">
                           <td className="py-2 px-2 font-mono text-[10px] text-foreground">RE-CET-004</td>
