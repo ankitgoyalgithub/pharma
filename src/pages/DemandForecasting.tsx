@@ -3492,33 +3492,6 @@ const DemandForecasting = () => {
 
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
-                      Store
-                    </label>
-                    <Select value={filterValues.store} onValueChange={(value) => setFilterValues(prev => ({ ...prev, store: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select store" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-[300px]">
-                        <SelectItem value="all">All Stores</SelectItem>
-                        <SelectItem value="L001">Pune Store L001</SelectItem>
-                        <SelectItem value="L002">Mumbai Store L002</SelectItem>
-                        <SelectItem value="L003">Delhi Store L003</SelectItem>
-                        <SelectItem value="L004">Kolkata Store L004</SelectItem>
-                        <SelectItem value="L005">Mumbai Store L005</SelectItem>
-                        <SelectItem value="L006">Chennai Store L006</SelectItem>
-                        <SelectItem value="L007">Kolkata Store L007</SelectItem>
-                        <SelectItem value="L008">Bengaluru Store L008</SelectItem>
-                        <SelectItem value="L009">Bengaluru Store L009</SelectItem>
-                        <SelectItem value="L010">Chennai Store L010</SelectItem>
-                        <SelectItem value="L015">Mumbai Store L015</SelectItem>
-                        <SelectItem value="L020">Ahmedabad Store L020</SelectItem>
-                        <SelectItem value="L030">Mumbai Store L030</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
                       Time Period
                     </label>
                     <Select value={filterValues.timePeriod} onValueChange={(value) => setFilterValues(prev => ({ ...prev, timePeriod: value }))}>
