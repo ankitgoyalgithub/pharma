@@ -208,6 +208,7 @@ const DemandForecasting = () => {
 
   // Model configuration state
   const [forecastHorizon, setForecastHorizon] = useState("12");
+  const [forecastHierarchy, setForecastHierarchy] = useState("sku");
   const [modelGranularity, setModelGranularity] = useState("Weekly");
   const [seasonality, setSeasonality] = useState("Auto-detect");
   const [confidenceLevel, setConfidenceLevel] = useState("95");
@@ -1963,8 +1964,8 @@ const DemandForecasting = () => {
               <CalendarIcon className="w-4 h-4 text-primary" />
               <div className="text-xs font-medium text-muted-foreground">Data Period</div>
             </div>
-            <div className="text-base font-bold text-foreground">Jan 2024 - Dec 2024</div>
-            <div className="text-xs text-muted-foreground">12 months</div>
+            <div className="text-base font-bold text-foreground">Jan 2025 – Dec 2025</div>
+            <div className="text-xs text-muted-foreground">52 weeks</div>
           </CardContent>
         </Card>
         
@@ -1974,8 +1975,8 @@ const DemandForecasting = () => {
               <Database className="w-4 h-4 text-accent" />
               <div className="text-xs font-medium text-muted-foreground">Total Records</div>
             </div>
-            <div className="text-base font-bold text-foreground">82,577</div>
-            <div className="text-xs text-muted-foreground">Across all sources</div>
+            <div className="text-base font-bold text-foreground">82,576</div>
+            <div className="text-xs text-muted-foreground">Across 3 channels</div>
           </CardContent>
         </Card>
         
@@ -2006,6 +2007,8 @@ const DemandForecasting = () => {
       <ModelConfigurationCard
         forecastHorizon={forecastHorizon}
         setForecastHorizon={setForecastHorizon}
+        forecastHierarchy={forecastHierarchy}
+        setForecastHierarchy={setForecastHierarchy}
         modelGranularity={modelGranularity}
         setModelGranularity={setModelGranularity}
         seasonality={seasonality}

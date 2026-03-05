@@ -13,6 +13,8 @@ import { Info, FileJson, FormInput, ChevronDown } from "lucide-react";
 interface ModelConfigurationCardProps {
   forecastHorizon: string;
   setForecastHorizon: (value: string) => void;
+  forecastHierarchy: string;
+  setForecastHierarchy: (value: string) => void;
   modelGranularity: string;
   setModelGranularity: (value: string) => void;
   seasonality: string;
@@ -40,6 +42,8 @@ interface ModelConfigurationCardProps {
 export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
   forecastHorizon,
   setForecastHorizon,
+  forecastHierarchy,
+  setForecastHierarchy,
   modelGranularity,
   setModelGranularity,
   seasonality,
@@ -72,6 +76,7 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
   const configObject = {
     primarySettings: {
       forecastHorizon: `${forecastHorizon} Months`,
+      forecastHierarchy: forecastHierarchy,
       dataGranularity: modelGranularity,
       seasonalityDetection: seasonality,
       confidenceLevel: `${confidenceLevel}%`,
@@ -206,7 +211,7 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-2">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mt-2">
                   <div className="space-y-2">
                     <Label htmlFor="forecast-horizon">Forecast Horizon</Label>
                     <Select value={forecastHorizon} onValueChange={setForecastHorizon}>
@@ -219,6 +224,21 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
                         <SelectItem value="12">12 Months</SelectItem>
                         <SelectItem value="18">18 Months</SelectItem>
                         <SelectItem value="24">24 Months</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="forecast-hierarchy">Forecast Hierarchy</Label>
+                    <Select value={forecastHierarchy} onValueChange={setForecastHierarchy}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="category">Category (5)</SelectItem>
+                        <SelectItem value="subcategory">Subcategory (20)</SelectItem>
+                        <SelectItem value="brand">Brand (5)</SelectItem>
+                        <SelectItem value="sku">SKU (100)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
