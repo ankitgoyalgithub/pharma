@@ -356,22 +356,18 @@ const DemandForecasting = () => {
   const [filterValues, setFilterValues] = useState({
     skuProduct: 'all',
     location: 'all',
-    store: 'all',
     channel: 'all',
     timePeriod: 'all',
-    businessUnits: 'all',
-    dataAvailability: 'all',
-    npiSku: 'none'
+    npiSku: 'none',
+    store: 'all',
   });
   const [appliedFilters, setAppliedFilters] = useState({
     skuProduct: 'all',
     location: 'all',
-    store: 'all',
     channel: 'all',
     timePeriod: 'all',
-    businessUnits: 'all',
-    dataAvailability: 'all',
-    npiSku: 'none'
+    npiSku: 'none',
+    store: 'all',
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiMessages, setAiMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
@@ -575,12 +571,10 @@ const DemandForecasting = () => {
     const defaultFilters = {
       skuProduct: 'all',
       location: 'all',
-      store: 'all',
       channel: 'all',
       timePeriod: 'all',
-      businessUnits: 'all',
-      dataAvailability: 'all',
-      npiSku: 'none'
+      npiSku: 'none',
+      store: 'all',
     };
     setFilterValues(defaultFilters);
     setAppliedFilters(defaultFilters);
@@ -2231,9 +2225,9 @@ const DemandForecasting = () => {
               title="Forecast Snapshot"
               value="82%"
               subtitle={(() => {
-                const metrics = getStoreMetrics(appliedFilters.store);
-                return `Backtested Accuracy • $${metrics.revenueFormatted}M Value • ${metrics.unitsFormatted} Units
-                        12-Week Horizon • ${appliedFilters.store === 'all' ? '50' : '1'} Active Store${appliedFilters.store === 'all' ? 's' : ''} • 4 Channels`;
+                const metrics = getStoreMetrics('all');
+                return `Backtested Accuracy • ₹${metrics.revenueFormatted}Cr Value • ${metrics.unitsFormatted} Units
+                        12-Week Horizon • 100 Active SKUs • 4 Channels`;
               })()}
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
@@ -2530,7 +2524,7 @@ const DemandForecasting = () => {
             {/* Top KPI Row - 3 Cards */}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3 mb-4">
               <CompactMetricCard
-                value={appliedFilters.businessUnits === 'enterprise' ? '16.4%' : '18.2%'}
+                value='18.2%'
                 label="MAPE"
                 tooltip="Mean Absolute Percentage Error - average forecast error as percentage. Lower is better."
                 valueColor="primary"
@@ -2552,7 +2546,7 @@ const DemandForecasting = () => {
               />
 
               <CompactMetricCard
-                value={appliedFilters.businessUnits === 'enterprise' ? '15.1%' : '17.5%'}
+                value='17.5%'
                 label="VMAPE"
                 tooltip="Volume-weighted MAPE - accuracy metric accounting for volume importance of each forecast."
                 valueColor="info"
@@ -3419,16 +3413,18 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent className="max-h-[300px]">
                         <SelectItem value="all">All Products</SelectItem>
-                        <SelectItem value="SKU001">Paracetamol 500mg Tablet</SelectItem>
-                        <SelectItem value="SKU002">Azithromycin 500mg Tablet</SelectItem>
-                        <SelectItem value="SKU003">Cetirizine 10mg Tablet</SelectItem>
-                        <SelectItem value="SKU004">Insulin Glargine 100U/ml</SelectItem>
-                        <SelectItem value="SKU005">Amoxicillin 500mg Capsule</SelectItem>
-                        <SelectItem value="SKU006">ORS Sachet (WHO Formula)</SelectItem>
-                        <SelectItem value="SKU007">Salbutamol 100mcg Inhaler</SelectItem>
-                        <SelectItem value="SKU008">Cholecalciferol 60K IU</SelectItem>
-                        <SelectItem value="SKU009">Ceftriaxone 1g Injection</SelectItem>
-                        <SelectItem value="SKU010">Pantoprazole 40mg Tablet</SelectItem>
+                        <SelectItem value="P0001">ComfortWear Sports Shoes</SelectItem>
+                        <SelectItem value="P0003">MetroStyle Frock</SelectItem>
+                        <SelectItem value="P0006">PrimeBasics Kurti</SelectItem>
+                        <SelectItem value="P0011">StreetLine Chinos</SelectItem>
+                        <SelectItem value="P0016">MetroStyle Jeans</SelectItem>
+                        <SelectItem value="P0024">ComfortWear Jeans</SelectItem>
+                        <SelectItem value="P0033">MetroStyle Handbag</SelectItem>
+                        <SelectItem value="P0040">UrbanEdge Sports Shoes</SelectItem>
+                        <SelectItem value="P0048">ComfortWear T-Shirt</SelectItem>
+                        <SelectItem value="P0067">ComfortWear Casual Shoes</SelectItem>
+                        <SelectItem value="P0087">MetroStyle Top</SelectItem>
+                        <SelectItem value="P0098">StreetLine Jeans</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -3496,33 +3492,6 @@ const DemandForecasting = () => {
 
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
-                      Store
-                    </label>
-                    <Select value={filterValues.store} onValueChange={(value) => setFilterValues(prev => ({ ...prev, store: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select store" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-[300px]">
-                        <SelectItem value="all">All Stores</SelectItem>
-                        <SelectItem value="L001">Pune Store L001</SelectItem>
-                        <SelectItem value="L002">Mumbai Store L002</SelectItem>
-                        <SelectItem value="L003">Delhi Store L003</SelectItem>
-                        <SelectItem value="L004">Kolkata Store L004</SelectItem>
-                        <SelectItem value="L005">Mumbai Store L005</SelectItem>
-                        <SelectItem value="L006">Chennai Store L006</SelectItem>
-                        <SelectItem value="L007">Kolkata Store L007</SelectItem>
-                        <SelectItem value="L008">Bengaluru Store L008</SelectItem>
-                        <SelectItem value="L009">Bengaluru Store L009</SelectItem>
-                        <SelectItem value="L010">Chennai Store L010</SelectItem>
-                        <SelectItem value="L015">Mumbai Store L015</SelectItem>
-                        <SelectItem value="L020">Ahmedabad Store L020</SelectItem>
-                        <SelectItem value="L030">Mumbai Store L030</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
                       Time Period
                     </label>
                     <Select value={filterValues.timePeriod} onValueChange={(value) => setFilterValues(prev => ({ ...prev, timePeriod: value }))}>
@@ -3539,39 +3508,6 @@ const DemandForecasting = () => {
                     </Select>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Business Units
-                    </label>
-                    <Select value={filterValues.businessUnits} onValueChange={(value) => setFilterValues(prev => ({ ...prev, businessUnits: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select business unit" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Units</SelectItem>
-                        <SelectItem value="consumer">Consumer</SelectItem>
-                        <SelectItem value="enterprise">Enterprise</SelectItem>
-                        <SelectItem value="industrial">Industrial</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Data Availability
-                    </label>
-                    <Select value={filterValues.dataAvailability} onValueChange={(value) => setFilterValues(prev => ({ ...prev, dataAvailability: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select availability" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Data</SelectItem>
-                        <SelectItem value="complete">Complete Data</SelectItem>
-                        <SelectItem value="partial">Partial Data</SelectItem>
-                        <SelectItem value="limited">Limited Data</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
 
                   <div className="flex gap-2 pt-4">
                     <Button onClick={() => applyFilters('local')} className="flex-1">
