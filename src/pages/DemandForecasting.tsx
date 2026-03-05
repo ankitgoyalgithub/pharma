@@ -3437,16 +3437,11 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent className="max-h-[300px]">
                         <SelectItem value="none">None</SelectItem>
-                        <SelectItem value="NPI001">Generic Cholecalciferol 60K IU</SelectItem>
-                        <SelectItem value="NPI002">Insulin Degludec 100U/ml</SelectItem>
-                        <SelectItem value="NPI003">Favipiravir 200mg Tablet</SelectItem>
-                        <SelectItem value="NPI004">Remdesivir 100mg Injection</SelectItem>
-                        <SelectItem value="NPI005">Molnupiravir 200mg Capsule</SelectItem>
-                        <SelectItem value="NPI006">Ivermectin 12mg Tablet</SelectItem>
-                        <SelectItem value="NPI007">Dexamethasone 6mg Tablet</SelectItem>
-                        <SelectItem value="NPI008">Tocilizumab 400mg Injection</SelectItem>
-                        <SelectItem value="NPI009">Baricitinib 4mg Tablet</SelectItem>
-                        <SelectItem value="NPI010">Enoxaparin 60mg Injection</SelectItem>
+                        <SelectItem value="NEW-TWS-001">Airdopes Prime 701 ANC</SelectItem>
+                        <SelectItem value="NEW-HP-002">Rockerz 650 Pro ANC</SelectItem>
+                        <SelectItem value="NEW-SPK-003">PartyPal 500 Speaker</SelectItem>
+                        <SelectItem value="RE-NB-004">Rockerz 255 v3 (Re-entry)</SelectItem>
+                        <SelectItem value="BDL-GM-005">Immortal 350 Gaming TWS</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

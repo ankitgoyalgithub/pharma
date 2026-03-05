@@ -1,5 +1,5 @@
 // Distribution node metrics for boAt consumer electronics warehouse network
-// Total across all warehouses & channels: ₹82.4Cr revenue, 1,207,560 units
+// Total across all warehouses & channels: ₹96.1Cr revenue, 1,207,560 units
 
 const distributionNodes: Record<string, { size: number; name: string }> = {
   S001: { size: 2350, name: "WH_North — Delhi Hub" },
