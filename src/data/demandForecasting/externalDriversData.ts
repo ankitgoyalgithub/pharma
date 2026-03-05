@@ -1,9 +1,9 @@
-// External drivers data for Pharmaceutical Industry - India
+// External drivers data for Consumer Electronics Industry
 import { promotionsData } from './promotionsData';
 
 // Helper function to get external driver data by name
 export const getExternalDriverData = (driverName: string) => {
-  const key = driverName.replace(/\s+/g, '_').replace(/&/g, '');
+  const key = driverName.replace(/\s+/g, '_').replace(/&/g, '').replace(/\(|\)/g, '');
   return externalDriversData[key as keyof typeof externalDriversData] || [];
 };
 import { weatherClimateData } from '../foundry/weatherClimateData';
@@ -15,6 +15,20 @@ import { genericDrugLaunchesData } from '../foundry/genericDrugLaunchesData';
 import { diseaseOutbreakData } from '../foundry/diseaseOutbreakData';
 
 export const externalDriversData = {
+  // Search Trends (Google)
+  "Search_Trends_Google": [
+    { date: "2023-01-01", search_keyword: "wireless earbuds", geo: "IN", category: "Earbuds", trend_score: 38 },
+    { date: "2023-01-01", search_keyword: "bluetooth speaker", geo: "IN", category: "Speakers", trend_score: 22 },
+    { date: "2023-01-01", search_keyword: "noise cancelling headphones", geo: "IN", category: "Headphones", trend_score: 41 },
+    { date: "2023-01-08", search_keyword: "wireless earbuds", geo: "IN", category: "Earbuds", trend_score: 42 },
+    { date: "2023-01-08", search_keyword: "smartwatch under 5000", geo: "IN", category: "Wearables", trend_score: 55 },
+    { date: "2023-01-08", search_keyword: "bluetooth speaker", geo: "IN", category: "Speakers", trend_score: 47 },
+    { date: "2023-02-05", search_keyword: "wireless earbuds", geo: "IN", category: "Earbuds", trend_score: 61 },
+    { date: "2023-02-05", search_keyword: "neckband earphones", geo: "IN", category: "Earbuds", trend_score: 45 },
+    { date: "2023-03-05", search_keyword: "wireless earbuds", geo: "IN", category: "Earbuds", trend_score: 82 },
+    { date: "2023-03-12", search_keyword: "noise cancelling headphones", geo: "IN", category: "Headphones", trend_score: 89 },
+  ],
+
   // Weather & Climate Data - from Feature Store
   "Weather_Climate_Data": weatherClimateData.map(w => ({
     month: w.month,
@@ -23,77 +37,74 @@ export const externalDriversData = {
     humidityIndex: w.humidity_index,
     rainfallMm: w.rainfall_mm,
     demandImpact: w.humidity_index > 0.65 ? "High" : w.humidity_index > 0.5 ? "Medium" : "Low",
-    affectedCategories: w.humidity_index > 0.65 ? ["Respiratory", "Antibiotic", "ORS"] : ["Vitamins", "GI"]
+    affectedCategories: w.humidity_index > 0.65 ? ["Speakers", "Headphones"] : ["Earbuds", "Wearables"]
   })),
 
-  // Seasonal Illness Patterns - from Feature Store
-  "Seasonal_Illness_Patterns": seasonalIllnessData.map(s => ({
-    month: s.month,
-    fluIndex: s.flu_index,
-    dengueIndex: s.dengue_index,
-    allergyIndex: s.allergy_index,
-    primaryCategory: s.flu_index > 0.6 ? "Respiratory/Antibiotic" : s.dengue_index > 0.3 ? "Antipyretic/ORS" : "Allergy",
-    demandMultiplier: Math.max(s.flu_index, s.dengue_index, s.allergy_index) + 0.5
-  })),
+  // Platform Sale Events (replaces Seasonal Illness Patterns)
+  "Platform_Sale_Events": [
+    { eventName: "Republic Day Sale", platform: "Amazon + Flipkart", startDate: "2025-01-20", endDate: "2025-01-28", expectedUplift: 45, affectedCategories: ["All"] },
+    { eventName: "Prime Day", platform: "Amazon", startDate: "2025-07-15", endDate: "2025-07-17", expectedUplift: 120, affectedCategories: ["All"] },
+    { eventName: "Big Billion Days", platform: "Flipkart", startDate: "2025-10-05", endDate: "2025-10-12", expectedUplift: 180, affectedCategories: ["All"] },
+    { eventName: "Great Indian Festival", platform: "Amazon", startDate: "2025-10-08", endDate: "2025-10-15", expectedUplift: 160, affectedCategories: ["All"] },
+    { eventName: "Black Friday", platform: "All", startDate: "2025-11-28", endDate: "2025-12-02", expectedUplift: 85, affectedCategories: ["Premium"] },
+    { eventName: "Year End Sale", platform: "All", startDate: "2025-12-20", endDate: "2025-12-31", expectedUplift: 65, affectedCategories: ["All"] },
+  ],
 
-  // Disease Outbreak Tracking - from Feature Store
-  "Disease_Outbreak_Tracking": diseaseOutbreakData.map(d => ({
+  // Competitor Activity Tracking (replaces Disease Outbreak Tracking)
+  "Competitor_Activity": diseaseOutbreakData.map(d => ({
     weekStart: d.week_start,
-    state: d.state,
-    disease: d.disease,
-    reportedCases: d.reported_cases,
-    severityIndex: d.severity_index,
-    affectedSKUs: d.disease === "Dengue" ? ["SKU001", "SKU006"] : 
-                  d.disease === "Influenza-like illness" ? ["SKU001", "SKU002", "SKU007"] :
-                  d.disease === "Chikungunya" ? ["SKU001", "SKU003", "SKU006"] : ["SKU001"],
-    demandUpliftPct: Math.round(d.severity_index * 50)
+    region: d.state,
+    activity: d.disease,
+    impactScore: d.severity_index,
+    affectedSKUs: ["SKU_001", "SKU_007", "SKU_021"],
+    demandImpactPct: Math.round(d.severity_index * 30)
   })),
 
-  // Prescription Trends - from Feature Store
-  "Prescription_Trends": prescriptionTrendsData.map(p => ({
+  // Category Demand Trends (replaces Prescription Trends)
+  "Category_Demand_Trends": prescriptionTrendsData.map(p => ({
     month: p.month,
-    antibioticIndex: p.rx_index_antibiotic,
-    respiratoryIndex: p.rx_index_respiratory,
-    diabetesIndex: p.rx_index_diabetes,
-    topMovers: p.rx_index_respiratory > 1.0 ? "Respiratory" : 
-               p.rx_index_antibiotic > 1.0 ? "Antibiotic" : "Diabetes",
+    earbudsIndex: p.rx_index_antibiotic,
+    headphonesIndex: p.rx_index_respiratory,
+    wearablesIndex: p.rx_index_diabetes,
+    topCategory: p.rx_index_respiratory > 1.0 ? "Headphones" : 
+               p.rx_index_antibiotic > 1.0 ? "Earbuds" : "Wearables",
     trendDirection: p.rx_index_respiratory > 1.05 || p.rx_index_antibiotic > 1.05 ? "Rising" : "Stable"
   })),
 
-  // Medical Conference Calendar - from Feature Store
-  "Medical_Conference_Calendar": medicalConferenceData.map(m => ({
+  // Tech Events Calendar (replaces Medical Conference Calendar)
+  "Tech_Events_Calendar": medicalConferenceData.map(m => ({
     eventName: m.event_name,
     city: m.city,
     startDate: m.start_date,
     endDate: m.end_date,
-    therapyArea: m.therapy_area,
-    expectedRxUpliftPct: m.expected_rx_uplift_pct,
-    affectedSKUs: m.therapy_area === "Respiratory" ? ["SKU002", "SKU007"] :
-                  m.therapy_area === "Diabetes" ? ["SKU004"] :
-                  m.therapy_area === "General Medicine" ? ["SKU001", "SKU002", "SKU005"] : ["SKU001"]
+    category: m.therapy_area,
+    expectedSalesUpliftPct: m.expected_rx_uplift_pct,
+    affectedSKUs: m.therapy_area === "Audio" ? ["SKU_001", "SKU_007", "SKU_029"] :
+                  m.therapy_area === "Wearables" ? ["SKU_003", "SKU_038"] :
+                  ["SKU_001", "SKU_005", "SKU_021"]
   })),
 
-  // Healthcare Policy Changes - from Feature Store
-  "Healthcare_Policy_Changes": healthcarePolicyData.map(h => ({
+  // Regulatory Changes (replaces Healthcare Policy Changes)
+  "Regulatory_Changes": healthcarePolicyData.map(h => ({
     effectiveDate: h.effective_date,
     policyType: h.policy_type,
     agency: h.agency,
-    affectedTherapyArea: h.affected_therapy_area,
+    affectedCategory: h.affected_therapy_area,
     expectedDemandImpactPct: h.expected_demand_impact_pct,
-    affectedSKUs: h.affected_therapy_area === "Analgesic/Antibiotic" ? ["SKU001", "SKU002", "SKU005", "SKU009"] :
-                  h.affected_therapy_area === "Diabetes/GI" ? ["SKU004", "SKU006", "SKU010"] :
-                  h.affected_therapy_area === "Antibiotic" ? ["SKU002", "SKU005", "SKU009"] : []
+    affectedSKUs: h.affected_therapy_area === "Earbuds/Headphones" ? ["SKU_001", "SKU_007", "SKU_021", "SKU_035"] :
+                  h.affected_therapy_area === "Wearables/Speakers" ? ["SKU_003", "SKU_005", "SKU_029"] :
+                  ["SKU_001", "SKU_005", "SKU_007", "SKU_021"]
   })),
 
-  // Generic Drug Launches - from Feature Store
-  "Generic_Drug_Launches": genericDrugLaunchesData.map(g => ({
+  // Competitor Launches (replaces Generic Drug Launches)
+  "Competitor_Launches": genericDrugLaunchesData.map(g => ({
     launchMonth: g.launch_month,
-    molecule: g.molecule,
-    therapyArea: g.therapy_area,
+    productType: g.molecule,
+    category: g.therapy_area,
     expectedPriceDropPct: g.expected_price_drop_pct,
     expectedVolumeUpliftPct: g.expected_volume_uplift_pct,
-    competingWithSKU: g.molecule === "Cholecalciferol" ? "SKU008" : 
-                      g.molecule === "Paracetamol" ? "SKU001" : null
+    competingWithSKU: g.therapy_area === "Earbuds" ? "SKU_001" : 
+                      g.therapy_area === "Wearables" ? "SKU_003" : "SKU_021"
   })),
 
   // Promotional Campaigns - using promotions data
@@ -106,75 +117,70 @@ export const externalDriversData = {
     startWeek: p.startWeek,
     endWeek: p.endWeek,
     description: p.description,
-    estimatedLift: Math.round(p.discountPct * 1.5)
+    estimatedLift: Math.round(p.discountPct * 1.8)
   })),
 
-  // Holiday Calendar (India focused for Pharma)
+  // Holiday Calendar (India focused for Consumer Electronics)
   "Holiday_Calendar": [
     { date: "2025-01-14", event: "Makar Sankranti", type: "Festival", region: "Pan-India", impact: "Medium", salesLift: 1.15, duration: 2 },
-    { date: "2025-01-26", event: "Republic Day", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.85, duration: 1 },
-    { date: "2025-03-14", event: "Holi", type: "Festival", region: "North/West", impact: "Medium", salesLift: 1.20, duration: 2 },
-    { date: "2025-03-31", event: "Eid ul-Fitr", type: "Festival", region: "Pan-India", impact: "High", salesLift: 1.35, duration: 3 },
-    { date: "2025-04-14", event: "Ambedkar Jayanti", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.90, duration: 1 },
-    { date: "2025-08-15", event: "Independence Day", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.85, duration: 1 },
-    { date: "2025-08-16", event: "Janmashtami", type: "Festival", region: "North/West", impact: "Medium", salesLift: 1.18, duration: 2 },
+    { date: "2025-01-26", event: "Republic Day Sale", type: "Sale Event", region: "Pan-India", impact: "High", salesLift: 1.45, duration: 5 },
+    { date: "2025-03-14", event: "Holi", type: "Festival", region: "North/West", impact: "Medium", salesLift: 1.25, duration: 2 },
+    { date: "2025-03-31", event: "Eid ul-Fitr", type: "Festival", region: "Pan-India", impact: "Medium", salesLift: 1.20, duration: 3 },
+    { date: "2025-07-15", event: "Amazon Prime Day", type: "Sale Event", region: "Pan-India", impact: "Very High", salesLift: 2.20, duration: 3 },
+    { date: "2025-08-15", event: "Independence Day Sale", type: "Sale Event", region: "Pan-India", impact: "High", salesLift: 1.55, duration: 5 },
     { date: "2025-10-02", event: "Gandhi Jayanti", type: "Public Holiday", region: "Pan-India", impact: "Low", salesLift: 0.88, duration: 1 },
-    { date: "2025-10-01", event: "Durga Puja/Navratri", type: "Festival", region: "East/West", impact: "High", salesLift: 1.40, duration: 9 },
-    { date: "2025-10-20", event: "Diwali", type: "Festival", region: "Pan-India", impact: "Very High", salesLift: 1.65, duration: 5 },
-    { date: "2025-11-05", event: "Guru Nanak Jayanti", type: "Festival", region: "North", impact: "Medium", salesLift: 1.12, duration: 1 },
-    { date: "2025-12-25", event: "Christmas", type: "Commercial", region: "Metro Cities", impact: "Medium", salesLift: 1.15, duration: 3 },
+    { date: "2025-10-05", event: "Big Billion Days", type: "Sale Event", region: "Pan-India", impact: "Very High", salesLift: 2.80, duration: 7 },
+    { date: "2025-10-20", event: "Diwali", type: "Festival", region: "Pan-India", impact: "Very High", salesLift: 2.50, duration: 5 },
+    { date: "2025-11-28", event: "Black Friday", type: "Sale Event", region: "Metro Cities", impact: "High", salesLift: 1.85, duration: 4 },
+    { date: "2025-12-25", event: "Christmas", type: "Commercial", region: "Metro Cities", impact: "High", salesLift: 1.65, duration: 5 },
   ],
 
-  // Government Tender Schedule
-  "Government_Tender_Schedule": [
-    { tenderId: "CGHS-2025-Q1", authority: "CGHS", category: "Essential Medicines", openDate: "2025-01-15", closeDate: "2025-02-15", estimatedValue: "₹45Cr", affectedSKUs: ["SKU001", "SKU006", "SKU010"] },
-    { tenderId: "ESIC-2025-01", authority: "ESIC", category: "Antibiotics", openDate: "2025-02-01", closeDate: "2025-03-01", estimatedValue: "₹28Cr", affectedSKUs: ["SKU002", "SKU005", "SKU009"] },
-    { tenderId: "MH-PHD-2025", authority: "Maharashtra State", category: "Diabetes Care", openDate: "2025-03-15", closeDate: "2025-04-15", estimatedValue: "₹18Cr", affectedSKUs: ["SKU004"] },
-    { tenderId: "TNMSC-2025-Q2", authority: "Tamil Nadu MSC", category: "ORS & Rehydration", openDate: "2025-04-01", closeDate: "2025-05-01", estimatedValue: "₹12Cr", affectedSKUs: ["SKU006"] },
-    { tenderId: "CGHS-2025-Q2", authority: "CGHS", category: "Respiratory", openDate: "2025-05-15", closeDate: "2025-06-15", estimatedValue: "₹22Cr", affectedSKUs: ["SKU007", "SKU003"] },
-    { tenderId: "Army-MH-2025", authority: "Army Medical", category: "Injectables", openDate: "2025-06-01", closeDate: "2025-07-01", estimatedValue: "₹35Cr", affectedSKUs: ["SKU004", "SKU009"] },
+  // Social Media Sentiment
+  "Social_Media_Sentiment": [
+    { date: "2025-01-15", platform: "Twitter", sentiment_score: 0.72, brand_mentions: 4500, category: "Earbuds" },
+    { date: "2025-01-15", platform: "Instagram", sentiment_score: 0.85, brand_mentions: 8200, category: "Wearables" },
+    { date: "2025-02-15", platform: "YouTube", sentiment_score: 0.78, brand_mentions: 12000, category: "Headphones" },
+    { date: "2025-02-15", platform: "Twitter", sentiment_score: 0.65, brand_mentions: 3800, category: "Speakers" },
+    { date: "2025-03-15", platform: "Instagram", sentiment_score: 0.88, brand_mentions: 9500, category: "Earbuds" },
+    { date: "2025-03-15", platform: "YouTube", sentiment_score: 0.82, brand_mentions: 15000, category: "Headphones" },
   ],
 
-  // Hospital Procurement Cycles
-  "Hospital_Procurement_Cycles": [
-    { hospitalGroup: "Apollo Hospitals", procurementFrequency: "Monthly", avgOrderValue: "₹2.8Cr", paymentTerms: "45 days", topCategories: ["Diabetes", "Cardiac", "Antibiotic"] },
-    { hospitalGroup: "Fortis Healthcare", procurementFrequency: "Bi-weekly", avgOrderValue: "₹1.9Cr", paymentTerms: "60 days", topCategories: ["Antibiotic", "Respiratory", "GI"] },
-    { hospitalGroup: "Max Healthcare", procurementFrequency: "Monthly", avgOrderValue: "₹2.2Cr", paymentTerms: "45 days", topCategories: ["Diabetes", "Vitamins", "Antibiotic"] },
-    { hospitalGroup: "Manipal Hospitals", procurementFrequency: "Bi-weekly", avgOrderValue: "₹1.5Cr", paymentTerms: "30 days", topCategories: ["Emergency Care", "Antibiotic", "ORS"] },
-    { hospitalGroup: "AIIMS Network", procurementFrequency: "Quarterly", avgOrderValue: "₹8.5Cr", paymentTerms: "90 days", topCategories: ["Essential Medicines", "Injectables", "Cold Chain"] },
+  // Consumer Sentiment Index
+  "Consumer_Sentiment_Index": [
+    { month: "2025-01", region: "North", confidence_index: 72, spending_propensity: 0.65, electronics_intent: 0.58 },
+    { month: "2025-01", region: "South", confidence_index: 78, spending_propensity: 0.72, electronics_intent: 0.65 },
+    { month: "2025-01", region: "West", confidence_index: 75, spending_propensity: 0.68, electronics_intent: 0.62 },
+    { month: "2025-02", region: "North", confidence_index: 70, spending_propensity: 0.62, electronics_intent: 0.55 },
+    { month: "2025-02", region: "South", confidence_index: 76, spending_propensity: 0.70, electronics_intent: 0.63 },
+    { month: "2025-03", region: "North", confidence_index: 68, spending_propensity: 0.58, electronics_intent: 0.50 },
+    { month: "2025-10", region: "Pan-India", confidence_index: 88, spending_propensity: 0.85, electronics_intent: 0.82 },
+    { month: "2025-11", region: "Pan-India", confidence_index: 82, spending_propensity: 0.78, electronics_intent: 0.75 },
+    { month: "2025-12", region: "Pan-India", confidence_index: 85, spending_propensity: 0.82, electronics_intent: 0.78 },
   ],
 
-  // Vaccination Drives
-  "Vaccination_Drives": [
-    { driveName: "Universal Immunization Program", region: "Pan-India", startDate: "2025-01-01", endDate: "2025-12-31", demandImpact: "Sustained", affectedCategories: ["Vitamins", "ORS"] },
-    { driveName: "Pulse Polio", region: "Pan-India", startDate: "2025-01-28", endDate: "2025-01-30", demandImpact: "Spike", affectedCategories: ["ORS", "Vitamins"] },
-    { driveName: "Mission Indradhanush", region: "Underserved Districts", startDate: "2025-04-07", endDate: "2025-04-14", demandImpact: "Moderate", affectedCategories: ["Antipyretic", "ORS"] },
-    { driveName: "Dengue Prevention Campaign", region: "Endemic States", startDate: "2025-06-15", endDate: "2025-10-15", demandImpact: "High", affectedCategories: ["ORS", "Antipyretic", "Allergy"] },
-  ],
-
-  // API Price Index
-  "API_Price_Index": [
-    { month: "2025-01", molecule: "Paracetamol", priceIndex: 1.0, trend: "Stable", importDependency: "Low" },
-    { month: "2025-02", molecule: "Azithromycin", priceIndex: 1.02, trend: "Rising", importDependency: "Medium" },
-    { month: "2025-03", molecule: "Cetirizine", priceIndex: 0.98, trend: "Declining", importDependency: "Low" },
-    { month: "2025-04", molecule: "Insulin Glargine", priceIndex: 1.05, trend: "Rising", importDependency: "High" },
-    { month: "2025-05", molecule: "Amoxicillin", priceIndex: 1.01, trend: "Stable", importDependency: "Medium" },
-    { month: "2025-06", molecule: "Ceftriaxone", priceIndex: 1.08, trend: "Rising", importDependency: "High" },
-  ],
-
-  // Insurance Coverage Updates
-  "Insurance_Coverage_Updates": [
-    { effectiveDate: "2025-01-01", insurer: "Star Health", changeType: "Coverage Expansion", therapyArea: "Diabetes", expectedDemandImpact: "+8%", affectedSKUs: ["SKU004", "SKU010"] },
-    { effectiveDate: "2025-04-01", insurer: "ICICI Lombard", changeType: "OPD Coverage", therapyArea: "General", expectedDemandImpact: "+5%", affectedSKUs: ["SKU001", "SKU003", "SKU008"] },
-    { effectiveDate: "2025-07-01", insurer: "Ayushman Bharat", changeType: "Hospital Rate Revision", therapyArea: "Critical Care", expectedDemandImpact: "+12%", affectedSKUs: ["SKU004", "SKU009"] },
-    { effectiveDate: "2025-10-01", insurer: "HDFC Ergo", changeType: "Preventive Care", therapyArea: "Vitamins", expectedDemandImpact: "+6%", affectedSKUs: ["SKU008"] },
+  // Influencer Campaign Tracker
+  "Influencer_Campaign_Tracker": [
+    { campaignId: "INF001", influencer: "TechBar", platform: "YouTube", category: "Earbuds", reach: 2500000, engagementRate: 4.5, startDate: "2025-01-10", endDate: "2025-01-25", estimatedSalesLift: 12 },
+    { campaignId: "INF002", influencer: "GadgetGuru", platform: "Instagram", category: "Wearables", reach: 1800000, engagementRate: 6.2, startDate: "2025-02-14", endDate: "2025-02-28", estimatedSalesLift: 8 },
+    { campaignId: "INF003", influencer: "SoundCheck", platform: "YouTube", category: "Headphones", reach: 3200000, engagementRate: 5.1, startDate: "2025-03-01", endDate: "2025-03-15", estimatedSalesLift: 15 },
+    { campaignId: "INF004", influencer: "TechBurner", platform: "YouTube", category: "Speakers", reach: 5000000, engagementRate: 3.8, startDate: "2025-07-10", endDate: "2025-07-20", estimatedSalesLift: 18 },
   ],
 
   // New Product Launches
   "New_Product_Launches": [
-    { launchId: "NPL001", productName: "Paracetamol 650mg FD Tablet", brand: "Calmofen Plus", launchDate: "2025-02-01", therapyArea: "Analgesic", expectedVolume: 50000, cannibalizationRisk: "SKU001" },
-    { launchId: "NPL002", productName: "Azithromycin 250mg Suspension", brand: "AziSure Junior", launchDate: "2025-03-15", therapyArea: "Antibiotic", expectedVolume: 25000, cannibalizationRisk: "None" },
-    { launchId: "NPL003", productName: "Insulin Aspart Pen", brand: "Rapidis", launchDate: "2025-05-01", therapyArea: "Diabetes", expectedVolume: 8000, cannibalizationRisk: "SKU004" },
-    { launchId: "NPL004", productName: "Vitamin D3 + K2 Combo", brand: "D3Max Plus", launchDate: "2025-09-01", therapyArea: "Vitamins", expectedVolume: 35000, cannibalizationRisk: "SKU008" },
+    { launchId: "NPL001", productName: "ANC Earbuds Pro", brand: "Product Line A", launchDate: "2025-02-01", category: "Earbuds", expectedVolume: 50000, cannibalizationRisk: "SKU_001" },
+    { launchId: "NPL002", productName: "Budget Fitness Band v3", brand: "Product Line B", launchDate: "2025-03-15", category: "Wearables", expectedVolume: 25000, cannibalizationRisk: "None" },
+    { launchId: "NPL003", productName: "Studio Headphones X1", brand: "Product Line C", launchDate: "2025-05-01", category: "Headphones", expectedVolume: 15000, cannibalizationRisk: "SKU_021" },
+    { launchId: "NPL004", productName: "Party Speaker Max", brand: "Product Line D", launchDate: "2025-09-01", category: "Speakers", expectedVolume: 35000, cannibalizationRisk: "SKU_029" },
+  ],
+
+  // Competitor Pricing Data
+  "Competitor_Pricing": [
+    { month: "2025-01", competitor: "boAt", category: "Earbuds", avgPrice: 1499, priceChange: -5, marketShare: 28 },
+    { month: "2025-01", competitor: "JBL", category: "Speakers", avgPrice: 3999, priceChange: 0, marketShare: 22 },
+    { month: "2025-02", competitor: "Noise", category: "Wearables", avgPrice: 2499, priceChange: -8, marketShare: 18 },
+    { month: "2025-02", competitor: "Sony", category: "Headphones", avgPrice: 8999, priceChange: -3, marketShare: 15 },
+    { month: "2025-03", competitor: "boAt", category: "Earbuds", avgPrice: 1399, priceChange: -7, marketShare: 30 },
+    { month: "2025-03", competitor: "Samsung", category: "Wearables", avgPrice: 4999, priceChange: -10, marketShare: 12 },
   ],
 };
