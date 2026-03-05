@@ -210,7 +210,7 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
                 </div>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-2">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mt-2">
                   <div className="space-y-2">
                     <Label htmlFor="forecast-horizon">Forecast Horizon</Label>
                     <Select value={forecastHorizon} onValueChange={setForecastHorizon}>
