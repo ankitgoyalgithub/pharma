@@ -356,22 +356,18 @@ const DemandForecasting = () => {
   const [filterValues, setFilterValues] = useState({
     skuProduct: 'all',
     location: 'all',
-    store: 'all',
     channel: 'all',
     timePeriod: 'all',
-    businessUnits: 'all',
-    dataAvailability: 'all',
-    npiSku: 'none'
+    npiSku: 'none',
+    store: 'all',
   });
   const [appliedFilters, setAppliedFilters] = useState({
     skuProduct: 'all',
     location: 'all',
-    store: 'all',
     channel: 'all',
     timePeriod: 'all',
-    businessUnits: 'all',
-    dataAvailability: 'all',
-    npiSku: 'none'
+    npiSku: 'none',
+    store: 'all',
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiMessages, setAiMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
