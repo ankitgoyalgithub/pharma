@@ -76,6 +76,7 @@ export const ModelConfigurationCard: React.FC<ModelConfigurationCardProps> = ({
   const configObject = {
     primarySettings: {
       forecastHorizon: `${forecastHorizon} Months`,
+      forecastHierarchy: forecastHierarchy,
       dataGranularity: modelGranularity,
       seasonalityDetection: seasonality,
       confidenceLevel: `${confidenceLevel}%`,
