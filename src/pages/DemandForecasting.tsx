@@ -3933,15 +3933,8 @@ const DemandForecasting = () => {
                   !col.toLowerCase().includes('affectedcategories')
                 );
                 
-                // Apply filters
-                let filteredData = driverData.filter((row: any) => {
-                  return columns.every((col) => {
-                    const filterValue = driverFilters[col];
-                    if (!filterValue) return true;
-                    const cellValue = String(row[col]).toLowerCase();
-                    return cellValue.includes(filterValue.toLowerCase());
-                  });
-                });
+                // Use data directly (no filters)
+                let filteredData = [...driverData];
 
                 // Apply sorting
                 if (driverSortConfig) {
@@ -4011,16 +4004,6 @@ const DemandForecasting = () => {
                                       )}
                                     </button>
                                   </div>
-                                  <Input
-                                    placeholder="Filter..."
-                                    value={driverFilters[col] || ''}
-                                    onChange={(e) => setDriverFilters(prev => ({
-                                      ...prev,
-                                      [col]: e.target.value
-                                    }))}
-                                    className="mt-1 h-7 text-xs bg-background"
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
                                 </th>
                               ))}
                             </tr>
