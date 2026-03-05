@@ -3799,10 +3799,10 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Periods</SelectItem>
-                        <SelectItem value="q1">Q1 2024</SelectItem>
-                        <SelectItem value="q2">Q2 2024</SelectItem>
-                        <SelectItem value="q3">Q3 2024</SelectItem>
-                        <SelectItem value="q4">Q4 2024</SelectItem>
+                        <SelectItem value="q1">Q1 2025</SelectItem>
+                        <SelectItem value="q2">Q2 2025</SelectItem>
+                        <SelectItem value="q3">Q3 2025</SelectItem>
+                        <SelectItem value="q4">Q4 2025</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
