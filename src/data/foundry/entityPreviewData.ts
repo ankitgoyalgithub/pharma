@@ -68,20 +68,20 @@ export const entityPreviewData: EntityPreviewMap = {
   },
   "channel": {
     title: "Channel Master",
-    description: "Sales channels with service level targets for pharmaceutical distribution",
+    description: "Sales channels — Amazon, Flipkart, D2C, Retail, Distributor",
     columns: [
       { accessorKey: "id", header: "Channel ID" },
-      { accessorKey: "name", header: "Channel Name" },
-      { accessorKey: "channelGroup", header: "Channel Group" },
-      { accessorKey: "serviceLevelTarget", header: "SLA Target" },
-      { accessorKey: "status", header: "Status" }
+      { accessorKey: "region", header: "Region" },
+      { accessorKey: "serviceLevelTarget", header: "Service Level Target" },
+      { accessorKey: "leadTimeDays", header: "Lead Time (Days)" },
+      { accessorKey: "minOrderQty", header: "Min Order Qty" }
     ],
     rows: [
-      { id: "CH01", name: "Retail Pharmacy", channelGroup: "Trade", serviceLevelTarget: "95%", status: "Active" },
-      { id: "CH02", name: "Hospital Pharmacy", channelGroup: "Institutional", serviceLevelTarget: "97%", status: "Active" },
-      { id: "CH03", name: "E-Pharmacy", channelGroup: "Online", serviceLevelTarget: "96%", status: "Active" },
-      { id: "CH04", name: "Distributor / Stockist", channelGroup: "Trade", serviceLevelTarget: "94%", status: "Active" },
-      { id: "CH05", name: "Government Tender", channelGroup: "Institutional", serviceLevelTarget: "98%", status: "Active" }
+      { id: "Amazon", region: "West", serviceLevelTarget: 0.91, leadTimeDays: 12, minOrderQty: 137 },
+      { id: "Flipkart", region: "Central", serviceLevelTarget: 0.91, leadTimeDays: 7, minOrderQty: 87 },
+      { id: "D2C", region: "East", serviceLevelTarget: 0.90, leadTimeDays: 10, minOrderQty: 179 },
+      { id: "Retail", region: "Central", serviceLevelTarget: 0.97, leadTimeDays: 9, minOrderQty: 70 },
+      { id: "Distributor", region: "Central", serviceLevelTarget: 0.95, leadTimeDays: 6, minOrderQty: 107 }
     ],
     stats: { totalRecords: 5, lastSync: "2025-01-10 14:00", source: "CSV Upload" }
   },
