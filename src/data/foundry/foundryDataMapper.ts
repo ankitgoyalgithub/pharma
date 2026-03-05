@@ -58,7 +58,7 @@ export const foundryDataMapper = {
   "Social_Media_Sentiment": medicalConferenceData,
   "Consumer_Sentiment_Index": healthcarePolicyData,
   "New_Product_Launches": genericDrugLaunchesData,
-  "Competitor_Activity": diseaseOutbreakData,
+  
   "Seasonality_Trends": seasonalityTrendsData,
   "Promotional_Campaigns": promotionalCampaignsData,
   "Promotions_Discounts": promotionalCampaignsData,
