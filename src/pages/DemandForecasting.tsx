@@ -3150,16 +3150,16 @@ const DemandForecasting = () => {
                 <CardContent className="p-4">
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Limited / Unreliable</div>
                   <div className="text-2xl font-bold text-warning mb-1">142</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">Outbreak-driven or seasonal gaps</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">Festival-spike or seasonal gaps</div>
                   <Badge className="bg-warning/15 text-warning border-warning/30 text-[10px] px-1.5 py-0.5">Needs similar items</Badge>
                 </CardContent>
               </Card>
               
               <Card className="relative overflow-hidden bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">New / Generic Launch</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">New / Product Launch</div>
                   <div className="text-2xl font-bold text-destructive mb-1">80</div>
-                  <div className="text-[10px] text-muted-foreground mb-2">New formulations & generic entries</div>
+                  <div className="text-[10px] text-muted-foreground mb-2">New product launches & line extensions</div>
                   <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">Manual review</Badge>
                 </CardContent>
               </Card>
