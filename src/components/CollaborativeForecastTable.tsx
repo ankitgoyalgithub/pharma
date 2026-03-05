@@ -447,7 +447,16 @@ export const CollaborativeForecastTable: React.FC = () => {
                         </td>
                         <td className="p-3 font-medium text-xs">{r.sku}</td>
                         <td className="p-3">
-                          <span className="text-sm line-clamp-2">{r.productName}</span>
+                          <div className="flex items-center gap-2">
+                            {productImageMap[r.sku] && (
+                              <img 
+                                src={productImageMap[r.sku]} 
+                                alt={r.productName}
+                                className="w-8 h-8 rounded object-cover border flex-shrink-0"
+                              />
+                            )}
+                            <span className="text-sm line-clamp-2">{r.productName}</span>
+                          </div>
                         </td>
                         <td className="p-3 text-sm">{r.node}</td>
                         <td className="p-3">
