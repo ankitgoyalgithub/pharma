@@ -27,7 +27,7 @@ export const foundryDataMapper = {
   "Location_Master": locationMasterData,
   "Customer_Master": customerMasterData,
   "Supplier_Master": supplierMasterData,
-  "Employee_Master": employeeMasterData,
+  "Cost_Parameters": costParametersData,
   "Channel_Master": channelMasterData,
   
   // Time Series Data  
