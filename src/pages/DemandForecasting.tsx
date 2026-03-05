@@ -2537,6 +2537,7 @@ const DemandForecasting = () => {
                   storeFilter={appliedFilters.store}
                   npiSku={appliedFilters.npiSku}
                   showRangeForecast={showRangeForecast}
+                  channelFilter={appliedFilters.channel}
                 />
               </CardContent>
             </Card>
