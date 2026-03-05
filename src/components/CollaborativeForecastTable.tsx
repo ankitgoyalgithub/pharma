@@ -162,18 +162,18 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
     approvalDetails: isApproved
       ? {
           approvedBy: approver,
-          approvedAt: "2024-10-15 14:30",
-          remarks: "Forecast aligned with seasonal illness patterns and historical data"
+          approvedAt: "2025-10-15 14:30",
+          remarks: "Forecast aligned with seasonal demand and sale event patterns"
         }
       : {
           rejectedBy: approver,
-          rejectedAt: "2024-10-14 16:45",
-          remarks: "Requires adjustment for API supply constraints"
+          rejectedAt: "2025-10-14 16:45",
+          remarks: "Requires adjustment for supply constraints"
         },
     allRemarks: [
-      { date: "2024-10-12 10:00", user: owner, comment: `Adjusted ${sku.category} forecast based on disease seasonality` },
-      { date: "2024-10-13 14:15", user: approver, comment: isApproved ? "Reviewed - aligned with outbreak tracking data" : "Needs revision - check cold chain capacity" },
-      { date: "2024-10-15 14:30", user: approver, comment: isApproved ? "Approved with seasonal adjustments" : "Pending further review" }
+      { date: "2025-10-12 10:00", user: owner, comment: `Adjusted ${sku.category} forecast based on platform sale calendar` },
+      { date: "2025-10-13 14:15", user: approver, comment: isApproved ? "Reviewed — aligned with search trends & competitor data" : "Needs revision — check warehouse capacity" },
+      { date: "2025-10-15 14:30", user: approver, comment: isApproved ? "Approved with seasonal adjustments" : "Pending further review" }
     ]
   } as ForecastRow;
 });
