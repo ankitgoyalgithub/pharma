@@ -2977,7 +2977,7 @@ const DemandForecasting = () => {
               </Card>
             </div>
 
-            {/* Forecast Accuracy by Therapeutic Category */}
+            {/* Forecast Accuracy by Product Category */}
             <Card className="shadow-elevated border border-border/40 hover:shadow-glow transition-all duration-300">
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
