@@ -152,8 +152,8 @@ export const NPILaunchIntelligence: React.FC = () => {
       {/* ── 2. Launch Demand & Comparable SKU Table ── */}
       <Card className="border-border/40">
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-semibold flex items-center gap-2">
-            <Target className="w-3.5 h-3.5 text-primary" />
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Target className="w-5 h-5 text-primary" />
             Launch Demand Estimates & Comparable Products
           </CardTitle>
           <p className="text-[10px] text-muted-foreground">Click any row to see detailed launch intelligence.</p>
@@ -195,39 +195,13 @@ export const NPILaunchIntelligence: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* ── 3. Three-Column Insights: Launch Curves, Channel Mix, Risk Signals ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Launch Curve Prediction */}
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <TrendingUp className="w-3.5 h-3.5 text-primary" />
-              Launch Ramp-Up Curves
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 h-52">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={Array.from({ length: 8 }, (_, i) => ({
-                week: `W${i + 1}`,
-                ...Object.fromEntries(npiProducts.slice(0, 3).map(p => [p.product.split(" ").slice(0, 2).join(" "), p.launchCurve[i]]))
-              }))}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                <XAxis dataKey="week" tick={{ fontSize: 9 }} stroke="hsl(var(--muted-foreground))" />
-                <YAxis tick={{ fontSize: 9 }} stroke="hsl(var(--muted-foreground))" />
-                <RechartsTooltip contentStyle={{ fontSize: 10, borderRadius: 8, border: '1px solid hsl(var(--border))' }} />
-                {npiProducts.slice(0, 3).map((p, i) => (
-                  <Line key={p.sku} type="monotone" dataKey={p.product.split(" ").slice(0, 2).join(" ")} stroke={["hsl(var(--primary))", "hsl(var(--success))", "hsl(var(--warning))"][i]} strokeWidth={2} dot={{ r: 2 }} />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
+      {/* ── 3. Two-Column Insights: Channel Mix, Risk Signals ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Channel Launch Allocation */}
         <Card className="border-border/40">
           <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <BarChart3 className="w-3.5 h-3.5 text-primary" />
+            <CardTitle className="text-base font-semibold flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-primary" />
               Channel Launch Allocation
             </CardTitle>
           </CardHeader>
@@ -255,8 +229,8 @@ export const NPILaunchIntelligence: React.FC = () => {
         {/* Launch Risk Signals */}
         <Card className="border-border/40">
           <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <AlertTriangle className="w-3.5 h-3.5 text-destructive" />
+            <CardTitle className="text-base font-semibold flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-destructive" />
               Launch Risk Signals
             </CardTitle>
           </CardHeader>
@@ -281,70 +255,34 @@ export const NPILaunchIntelligence: React.FC = () => {
         </Card>
       </div>
 
-      {/* ── 4. Cannibalization + Price Elasticity + Festival Dependency ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Cannibalization Risk */}
-        <Card className="border-border/40 border-destructive/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <Zap className="w-3.5 h-3.5 text-destructive" />
-              Cannibalization Risk
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 space-y-2">
-            {npiProducts.filter(p => p.cannibalizationPct > 0).map(p => (
-              <div key={p.sku} className="p-2.5 rounded-lg bg-destructive/5 border border-destructive/15">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-[10px] font-medium text-foreground">{p.product.split(" ").slice(0, 3).join(" ")}</span>
-                  <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">-{p.cannibalizationPct}%</Badge>
-                </div>
-                <div className="text-[9px] text-muted-foreground">
-                  May reduce <span className="text-foreground font-medium">{p.cannibalizationTarget}</span> demand by {p.cannibalizationPct}%
-                </div>
+      {/* ── 4. Cannibalization Risk ── */}
+      <Card className="border-border/40 border-destructive/20">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Zap className="w-5 h-5 text-destructive" />
+            Cannibalization Risk
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0 space-y-2">
+          {npiProducts.filter(p => p.cannibalizationPct > 0).map(p => (
+            <div key={p.sku} className="p-2.5 rounded-lg bg-destructive/5 border border-destructive/15">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-[10px] font-medium text-foreground">{p.product.split(" ").slice(0, 3).join(" ")}</span>
+                <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-[10px] px-1.5 py-0.5">-{p.cannibalizationPct}%</Badge>
               </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <Flame className="w-3.5 h-3.5 text-warning" />
-              Festival Dependency
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border/40">
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Product</th>
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Dependency</th>
-                </tr>
-              </thead>
-              <tbody>
-                {npiProducts.map(p => (
-                  <tr key={p.sku} className="border-b border-border/20">
-                    <td className="py-1.5 px-1 text-[10px] text-foreground">{p.product.split(" ").slice(0, 3).join(" ")}</td>
-                    <td className="py-1.5 px-1">
-                      <Badge className={`text-[9px] px-1.5 py-0.5 ${
-                        p.festivalDependency.startsWith("High") ? "bg-destructive/15 text-destructive border-destructive/30" :
-                        p.festivalDependency.startsWith("Medium") ? "bg-warning/15 text-warning border-warning/30" :
-                        "bg-success/15 text-success border-success/30"
-                      }`}>{p.festivalDependency}</Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-      </div>
+              <div className="text-[9px] text-muted-foreground">
+                May reduce <span className="text-foreground font-medium">{p.cannibalizationTarget}</span> demand by {p.cannibalizationPct}%
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
 
       {/* ── 5. Success Probability ── */}
       <Card className="border-border/40">
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-semibold flex items-center gap-2">
-            <Target className="w-3.5 h-3.5 text-success" />
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Target className="w-5 h-5 text-success" />
             Launch Success Probability
           </CardTitle>
         </CardHeader>
@@ -368,8 +306,8 @@ export const NPILaunchIntelligence: React.FC = () => {
       {/* ── 6. Market Benchmark ── */}
       <Card className="border-border/40">
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-semibold flex items-center gap-2">
-            <BarChart3 className="w-3.5 h-3.5 text-primary" />
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-primary" />
             Competitive Benchmark
           </CardTitle>
           <p className="text-[10px] text-muted-foreground">boAt NPI vs closest competitor comparison.</p>
