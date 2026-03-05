@@ -306,43 +306,6 @@ export const NPILaunchIntelligence: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Price Elasticity */}
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <DollarSign className="w-3.5 h-3.5 text-primary" />
-              Price Elasticity Insight
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border/40">
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Product</th>
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Price</th>
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Sensitivity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {npiProducts.map(p => (
-                  <tr key={p.sku} className="border-b border-border/20">
-                    <td className="py-1.5 px-1 text-[10px] text-foreground">{p.product.split(" ").slice(0, 3).join(" ")}</td>
-                    <td className="py-1.5 px-1 text-[10px] text-foreground font-medium">₹{p.price.toLocaleString()}</td>
-                    <td className="py-1.5 px-1">
-                      <Badge className={`text-[9px] px-1.5 py-0.5 ${
-                        p.priceElasticity === "High" ? "bg-destructive/15 text-destructive border-destructive/30" :
-                        p.priceElasticity === "Medium" ? "bg-warning/15 text-warning border-warning/30" :
-                        "bg-success/15 text-success border-success/30"
-                      }`}>{p.priceElasticity} sensitivity</Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-
-        {/* Festival Dependency */}
         <Card className="border-border/40">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs font-semibold flex items-center gap-2">
@@ -377,35 +340,8 @@ export const NPILaunchIntelligence: React.FC = () => {
         </Card>
       </div>
 
-      {/* ── 5. Launch Readiness + Success Probability + Marketing Uplift ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Launch Readiness Scores */}
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-              Launch Readiness Score
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 space-y-3">
-            {npiProducts.map(p => (
-              <div key={p.sku} className="p-2.5 rounded-lg bg-muted/20 border border-border/20">
-                <div className="flex justify-between items-center mb-1.5">
-                  <span className="text-[10px] font-medium text-foreground">{p.product.split(" ").slice(0, 3).join(" ")}</span>
-                  <span className={`text-sm font-bold ${p.readinessScore >= 80 ? 'text-success' : p.readinessScore >= 65 ? 'text-warning' : 'text-destructive'}`}>{p.readinessScore}%</span>
-                </div>
-                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-1.5">
-                  <div className={`h-full rounded-full ${p.readinessScore >= 80 ? 'bg-success' : p.readinessScore >= 65 ? 'bg-warning' : 'bg-destructive'}`} style={{ width: `${p.readinessScore}%` }} />
-                </div>
-                <div className="flex gap-3 text-[9px]">
-                  <span className="flex items-center gap-0.5"><ReadinessIcon ok={p.readiness.inventory} /> Inventory</span>
-                  <span className="flex items-center gap-0.5"><ReadinessIcon ok={p.readiness.marketing} /> Marketing</span>
-                  <span className="flex items-center gap-0.5"><ReadinessIcon ok={p.readiness.supplier} /> Supplier</span>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+      {/* ── 5. Success Probability + Marketing Uplift ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
         {/* NPI Success Probability */}
         <Card className="border-border/40">
