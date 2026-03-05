@@ -333,11 +333,11 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All SKUs</SelectItem>
-              <SelectItem value="SKU001">Paracetamol 500mg</SelectItem>
-              <SelectItem value="SKU002">Azithromycin 500mg</SelectItem>
-              <SelectItem value="SKU004">Insulin Glargine</SelectItem>
-              <SelectItem value="SKU007">Salbutamol Inhaler</SelectItem>
-              <SelectItem value="SKU010">Pantoprazole 40mg</SelectItem>
+              <SelectItem value="SKU_001">Airdopes 141</SelectItem>
+              <SelectItem value="SKU_005">Stone 352</SelectItem>
+              <SelectItem value="SKU_007">Rockerz 255 Pro+</SelectItem>
+              <SelectItem value="SKU_021">Rockerz 450</SelectItem>
+              <SelectItem value="SKU_049">Nirvana Ion ANC</SelectItem>
             </SelectContent>
           </Select>
           
@@ -347,11 +347,11 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Locations</SelectItem>
-              <SelectItem value="Mumbai Central WH">Mumbai Central WH</SelectItem>
-              <SelectItem value="Delhi North Hub">Delhi North Hub</SelectItem>
-              <SelectItem value="Apollo Hospitals">Apollo Hospitals</SelectItem>
-              <SelectItem value="Netmeds">Netmeds E-Pharmacy</SelectItem>
-              <SelectItem value="Govt Hospital">Govt Hospital Tender</SelectItem>
+              <SelectItem value="WH_North">WH_North — Delhi Hub</SelectItem>
+              <SelectItem value="WH_South">WH_South — Chennai DC</SelectItem>
+              <SelectItem value="WH_West">WH_West — Mumbai Hub</SelectItem>
+              <SelectItem value="Amazon">Amazon FC</SelectItem>
+              <SelectItem value="Flipkart">Flipkart WH</SelectItem>
             </SelectContent>
           </Select>
           
@@ -361,10 +361,10 @@ export const CollaborativeForecastTable: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Channels</SelectItem>
-              <SelectItem value="Online">E-Pharmacy</SelectItem>
-              <SelectItem value="Retail">Retail Pharmacy</SelectItem>
-              <SelectItem value="B2B">Hospital</SelectItem>
-              <SelectItem value="Direct">Distributor</SelectItem>
+              <SelectItem value="Online">Amazon / Flipkart</SelectItem>
+              <SelectItem value="Retail">Retail</SelectItem>
+              <SelectItem value="B2B">Distributor</SelectItem>
+              <SelectItem value="Direct">D2C</SelectItem>
             </SelectContent>
           </Select>
         </div>
