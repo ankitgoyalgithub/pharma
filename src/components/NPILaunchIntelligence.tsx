@@ -24,7 +24,7 @@ const npiProducts = [
     priceElasticity: "High", festivalDependency: "Medium (Prime Day)",
     readinessScore: 78, readiness: { inventory: true, marketing: true, supplier: false },
     successProbability: 72, successDrivers: ["Similar product success", "Category growth", "Strong online demand"],
-    marketingUplift: { baseline: 18000, withCampaign: 24000, upliftPct: 33, campaignType: "Influencer (Kiara Advani)" },
+    marketingUplift: { baseline: 18000, withCampaign: 24000, upliftPct: 33, campaignType: "Social media + brand campaign" },
     benchmark: { competitor: "Noise Buds VS104", priceGap: -8, batteryGap: 20, featureEdge: "ANC + ENC" }
   },
   {
