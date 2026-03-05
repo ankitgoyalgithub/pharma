@@ -499,14 +499,14 @@ const DemandForecasting = () => {
       const regionRevenue: Record<string, number> = {};
       skuData.forEach(s => {
         const region = s.location;
-        const revenue = parseFloat(s.actual.replace("₹", "").replace("M", ""));
+        const revenue = parseFloat(s.actual.replace("₹", "").replace("Cr", ""));
         regionRevenue[region] = (regionRevenue[region] || 0) + revenue;
       });
       
       const sortedRegions = Object.entries(regionRevenue).sort((a, b) => b[1] - a[1]);
       const bestRegion = sortedRegions[0];
 
-      return `🗺️ **Regional Sales Performance**\n\n🥇 **Best Region: ${bestRegion[0]}**\nTotal Revenue: ₹${bestRegion[1].toFixed(1)}M\n\n**All Regions Ranking:**\n${sortedRegions.map((r, i) => `${i + 1}. ${r[0]}: ₹${r[1].toFixed(1)}M`).join("\n")}`;
+      return `🗺️ **Regional Sales Performance**\n\n🥇 **Best Region: ${bestRegion[0]}**\nTotal Revenue: ₹${bestRegion[1].toFixed(2)}Cr\n\n**All Regions Ranking:**\n${sortedRegions.map((r, i) => `${i + 1}. ${r[0]}: ₹${r[1].toFixed(2)}Cr`).join("\n")}`;
     }
 
     // Channel revenue
