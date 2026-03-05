@@ -4004,16 +4004,6 @@ const DemandForecasting = () => {
                                       )}
                                     </button>
                                   </div>
-                                  <Input
-                                    placeholder="Filter..."
-                                    value={driverFilters[col] || ''}
-                                    onChange={(e) => setDriverFilters(prev => ({
-                                      ...prev,
-                                      [col]: e.target.value
-                                    }))}
-                                    className="mt-1 h-7 text-xs bg-background"
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
                                 </th>
                               ))}
                             </tr>
