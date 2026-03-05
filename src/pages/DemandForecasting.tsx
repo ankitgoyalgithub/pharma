@@ -60,6 +60,7 @@ import {
   Box,
   MapPin,
   XCircle,
+  Eye,
 } from "lucide-react";
 import {
   DropdownMenu,
