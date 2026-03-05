@@ -3098,15 +3098,15 @@ const DemandForecasting = () => {
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                   <div className="p-3 rounded-lg bg-success/10 border border-success/20">
                     <div className="font-medium text-success mb-1">Best Performing</div>
-                    <div className="text-muted-foreground">Diabetes Care (91.3%) - stable demand patterns</div>
+                    <div className="text-muted-foreground">Smartwatches (91.3%) - stable demand patterns</div>
                   </div>
                   <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
                     <div className="font-medium text-warning mb-1">Needs Attention</div>
-                    <div className="text-muted-foreground">Respiratory (79.5%) - high seasonality variance</div>
+                    <div className="text-muted-foreground">Party Speakers (79.5%) - high seasonality variance</div>
                   </div>
                   <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
                     <div className="font-medium text-destructive mb-1">Action Required</div>
-                    <div className="text-muted-foreground">Vitamins (77.2%) - review external drivers</div>
+                    <div className="text-muted-foreground">Gaming Audio (77.2%) - review external drivers</div>
                   </div>
                 </div>
               </CardContent>
