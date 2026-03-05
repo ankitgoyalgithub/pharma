@@ -2184,7 +2184,7 @@ const DemandForecasting = () => {
                                 <tr key={index} className="border-b border-border/40 hover:bg-muted/20">
                                   <td className="p-2 text-xs font-mono">{row.sku}</td>
                                   <td className="p-2 font-medium">{row.product}</td>
-                                  <td className="p-2">{row.location}</td>
+                                  <td className="p-2">{row.region}</td>
                                   <td className="p-2">
                                     <Badge variant="outline" className="text-xs">{row.channel}</Badge>
                                   </td>
