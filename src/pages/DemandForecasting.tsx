@@ -464,8 +464,8 @@ const DemandForecasting = () => {
         (lowerQuery.includes("revenue") && lowerQuery.includes("sku")) ||
         (lowerQuery.includes("selling") && lowerQuery.includes("sku"))) {
       const sortedSkus = [...skuData].sort((a, b) => {
-        const aVal = parseFloat(a.actual.replace("₹", "").replace("M", ""));
-        const bVal = parseFloat(b.actual.replace("₹", "").replace("M", ""));
+        const aVal = parseFloat(a.actual.replace("₹", "").replace("Cr", ""));
+        const bVal = parseFloat(b.actual.replace("₹", "").replace("Cr", ""));
         return bVal - aVal;
       }).slice(0, 5);
 
