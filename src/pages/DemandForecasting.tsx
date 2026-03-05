@@ -1359,18 +1359,22 @@ const DemandForecasting = () => {
             <h2 className="text-xl font-semibold text-foreground mb-1">Resolve Data Gaps</h2>
             <p className="text-sm text-muted-foreground">AI detected missing data and suggested imputed values.</p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <div className="text-sm font-medium">{dynamicDataQualityIssues.length} Issues Detected</div>
-              <div className="text-xs text-muted-foreground">
-                {dynamicDataQualityIssues.filter(i => i.severity === 'high').length} high · {dynamicDataQualityIssues.filter(i => i.severity === 'medium').length} medium · {dynamicDataQualityIssues.filter(i => i.severity === 'low').length} low
+           <div className="flex items-center gap-3">
+              <div className="text-right">
+                <div className="text-sm font-medium">{dynamicDataQualityIssues.length} Issues Detected</div>
+                <div className="text-xs text-muted-foreground">
+                  {dynamicDataQualityIssues.filter(i => i.severity === 'high').length} high · {dynamicDataQualityIssues.filter(i => i.severity === 'medium').length} medium · {dynamicDataQualityIssues.filter(i => i.severity === 'low').length} low
+                </div>
               </div>
+              <Button size="sm" variant="outline" onClick={() => setShowDQPreview(true)}>
+                <Eye className="w-4 h-4 mr-2" />
+                Preview Issues
+              </Button>
+              <Button size="sm" onClick={() => setShowAutoFixDialog(true)}>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Auto Fix with AI
+              </Button>
             </div>
-            <Button size="sm" onClick={() => setShowAutoFixDialog(true)}>
-              <Sparkles className="w-4 h-4 mr-2" />
-              Auto Fix with AI
-            </Button>
-          </div>
         </div>
       </div>
       
