@@ -5,10 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare, Maximize, Minimize, CheckCircle2, XCircle } from "lucide-react";
+import { Search, Save, Edit3, MessageSquare, Maximize, Minimize, CheckCircle2, XCircle, ChevronRight, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { productImageMap } from "@/data/foundry/productImages";
@@ -18,6 +17,7 @@ interface ForecastRow {
   id: string;
   sku: string;
   productName: string;
+  category: string;
   node: string;
   channel: "Online" | "Retail" | "B2B" | "Direct";
   owner: string;
@@ -75,7 +75,6 @@ const pharmaSKUs = [
   { sku: "SKU_050", name: "Rockerz 510 (Neckband)", category: "Earbuds" },
 ];
 
-// boAt distribution & channel nodes
 const pharmaNodes = [
   "WH_North — Delhi Hub",
   "WH_South — Chennai DC",
@@ -100,9 +99,7 @@ const approverNames = [
   "Anil Kapoor", "Nirmala Sitharaman", "Rajiv Gandhi", "Dr. Shyam Sundar"
 ];
 
-// Generate realistic forecast data based on consumer electronics demand patterns
 const generateWeeklyForecast = (baseValue: number, weekIndex: number) => {
-  // Consumer electronics seasonality (festival season Q4 spike, Prime Day July)
   const seasonalFactors = [0.85, 0.82, 0.88, 0.92, 0.95, 0.90, 1.15, 1.05, 0.95, 1.55, 1.20, 1.10];
   return Math.round(baseValue * seasonalFactors[weekIndex] * (0.9 + Math.random() * 0.2));
 };
@@ -121,7 +118,6 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
     weeks[`week${w}`] = { forecast };
   }
   
-  // boAt-relevant planner adjustment reasons
   const boatReasons = [
     "Big Billion Days surge expected",
     "Prime Day demand boost",
@@ -146,12 +142,13 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
     reason: boatReasons[index % boatReasons.length]
   };
   
-  const isApproved = Math.random() > 0.15; // 85% approval rate
+  const isApproved = Math.random() > 0.15;
   
   return {
     id: String(index + 1),
     sku: sku.sku,
     productName: sku.name,
+    category: sku.category,
     node: pharmaNodes[nodeIndex],
     channel,
     owner,
@@ -179,6 +176,27 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   } as ForecastRow;
 });
 
+// Helper to get the effective value for a week
+const getWeekValue = (row: ForecastRow, weekIndex: number): number => {
+  const weekKey = `week${weekIndex}` as keyof ForecastRow;
+  const weekData = row[weekKey] as any;
+  return weekData.plannerInput !== undefined ? weekData.plannerInput : weekData.forecast;
+};
+
+// Aggregate week values for a group of rows
+const aggregateWeeks = (rows: ForecastRow[]): number[] => {
+  return Array.from({ length: 12 }, (_, i) =>
+    rows.reduce((sum, row) => sum + getWeekValue(row, i + 1), 0)
+  );
+};
+
+const categoryColors: Record<string, string> = {
+  Earbuds: "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30",
+  Speakers: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+  Headphones: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30",
+  Wearables: "bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30",
+};
+
 export const CollaborativeForecastTable: React.FC = () => {
   const [rows, setRows] = useState<ForecastRow[]>(sampleForecastData);
   const [selected, setSelected] = useState<string[]>([]);
@@ -189,8 +207,10 @@ export const CollaborativeForecastTable: React.FC = () => {
   const [sortKey, setSortKey] = useState<keyof ForecastRow | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    Earbuds: true, Speakers: true, Headphones: true, Wearables: true
+  });
   
-  // Edit dialog states
   const [editDialog, setEditDialog] = useState<{
     open: boolean;
     rowId: string;
@@ -200,13 +220,11 @@ export const CollaborativeForecastTable: React.FC = () => {
     reason: string;
   }>({ open: false, rowId: "", week: "", currentValue: 0, plannerInput: "", reason: "" });
 
-  // Approval dialog states
   const [approvalDialog, setApprovalDialog] = useState<{
     open: boolean;
     data: ForecastRow | null;
   }>({ open: false, data: null });
 
-  // Remarks dialog states
   const [remarksDialog, setRemarksDialog] = useState<{
     open: boolean;
     data: ForecastRow | null;
@@ -214,6 +232,10 @@ export const CollaborativeForecastTable: React.FC = () => {
 
   const toggleAll = (checked: boolean) => setSelected(checked ? filteredSorted.map((r) => r.id) : []);
   const toggleOne = (id: string, checked: boolean) => setSelected((prev) => (checked ? [...prev, id] : prev.filter((x) => x !== id)));
+
+  const toggleCategory = (cat: string) => {
+    setExpandedCategories(prev => ({ ...prev, [cat]: !prev[cat] }));
+  };
 
   const filteredSorted = useMemo(() => {
     let data = rows.filter((r) =>
@@ -233,6 +255,19 @@ export const CollaborativeForecastTable: React.FC = () => {
     }
     return data;
   }, [rows, search, filterSKU, filterNode, filterChannel, sortKey, sortDir]);
+
+  // Group by category
+  const groupedData = useMemo(() => {
+    const groups: Record<string, ForecastRow[]> = {};
+    filteredSorted.forEach(row => {
+      if (!groups[row.category]) groups[row.category] = [];
+      groups[row.category].push(row);
+    });
+    return groups;
+  }, [filteredSorted]);
+
+  const categoryOrder = ["Earbuds", "Speakers", "Headphones", "Wearables"];
+  const grandTotals = useMemo(() => aggregateWeeks(filteredSorted), [filteredSorted]);
 
   const sortBy = (key: keyof ForecastRow) => {
     if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
@@ -282,322 +317,415 @@ export const CollaborativeForecastTable: React.FC = () => {
     toast.success("Forecast updated successfully");
   };
 
-  const exportCSV = () => {
-    const headers = [
-      "SKU",
-      "Node",
-      "Channel", 
-      "Owner",
-      ...Array.from({ length: 12 }, (_, i) => `Week ${i + 1} Forecast`),
-      ...Array.from({ length: 12 }, (_, i) => `Week ${i + 1} Planner Input`),
-      ...Array.from({ length: 12 }, (_, i) => `Week ${i + 1} Reason`),
-    ];
-    
-    const rowsCsv = filteredSorted.map((r) => {
-      const forecastValues = [];
-      const plannerValues = [];
-      const reasonValues = [];
-      
-      for (let i = 1; i <= 12; i++) {
-        const weekKey = `week${i}` as keyof ForecastRow;
-        const weekData = r[weekKey] as any;
-        forecastValues.push(weekData.forecast);
-        plannerValues.push(weekData.plannerInput || "");
-        reasonValues.push(weekData.reason || "");
-      }
-      
-      return [r.sku, r.node, r.channel, r.owner, ...forecastValues, ...plannerValues, ...reasonValues].join(",");
-    }).join("\n");
-    
-    const blob = new Blob([[headers.join(","), "\n", rowsCsv].join("")], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "collaborative-forecast-workbook.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   const getInitials = (name: string) => {
     return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   };
 
+  // Render a category group header row (left fixed)
+  const renderCategoryHeaderLeft = (category: string, catRows: ForecastRow[]) => {
+    const isExpanded = expandedCategories[category];
+    return (
+      <tr
+        key={`cat-${category}-left`}
+        className="bg-muted/40 border-b cursor-pointer hover:bg-muted/60 transition-colors"
+        onClick={() => toggleCategory(category)}
+      >
+        <td className="p-3" colSpan={6}>
+          <div className="flex items-center gap-2">
+            {isExpanded ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+            <Badge variant="outline" className={`text-xs font-semibold ${categoryColors[category] || ""}`}>
+              {category}
+            </Badge>
+            <span className="text-xs font-semibold text-foreground">{catRows.length} SKUs</span>
+            <span className="text-xs text-muted-foreground ml-1">
+              — Total: ₹{aggregateWeeks(catRows).reduce((a, b) => a + b, 0).toLocaleString()} units (12W)
+            </span>
+          </div>
+        </td>
+      </tr>
+    );
+  };
+
+  // Render category header for the scrollable middle
+  const renderCategoryHeaderMiddle = (category: string, catRows: ForecastRow[]) => {
+    const totals = aggregateWeeks(catRows);
+    const isExpanded = expandedCategories[category];
+    return (
+      <tr
+        key={`cat-${category}-mid`}
+        className="bg-muted/40 border-b cursor-pointer hover:bg-muted/60 transition-colors"
+        onClick={() => toggleCategory(category)}
+      >
+        {totals.map((total, i) => (
+          <td key={i} className="p-2 text-center border-l">
+            <span className="text-xs font-bold text-foreground">{total.toLocaleString()}</span>
+          </td>
+        ))}
+      </tr>
+    );
+  };
+
+  // Render category header for the fixed right
+  const renderCategoryHeaderRight = (category: string, catRows: ForecastRow[]) => {
+    const approved = catRows.filter(r => r.approvalStatus === "approved").length;
+    return (
+      <tr
+        key={`cat-${category}-right`}
+        className="bg-muted/40 border-b cursor-pointer hover:bg-muted/60 transition-colors"
+        onClick={() => toggleCategory(category)}
+      >
+        <td className="p-3 text-center text-xs text-muted-foreground">—</td>
+        <td className="p-3 text-center">
+          <span className="text-xs font-medium text-muted-foreground">{approved}/{catRows.length}</span>
+        </td>
+      </tr>
+    );
+  };
+
+  // Build render order for each section
+  const buildRenderItems = () => {
+    const leftItems: React.ReactNode[] = [];
+    const midItems: React.ReactNode[] = [];
+    const rightItems: React.ReactNode[] = [];
+
+    categoryOrder.forEach(category => {
+      const catRows = groupedData[category];
+      if (!catRows || catRows.length === 0) return;
+
+      leftItems.push(renderCategoryHeaderLeft(category, catRows));
+      midItems.push(renderCategoryHeaderMiddle(category, catRows));
+      rightItems.push(renderCategoryHeaderRight(category, catRows));
+
+      if (expandedCategories[category]) {
+        catRows.forEach(r => {
+          const initials = getInitials(r.owner);
+          leftItems.push(
+            <tr key={`${r.id}-fixed`} className="border-b hover:bg-muted/30 h-16">
+              <td className="p-3">
+                <input
+                  type="checkbox"
+                  className="rounded border-border"
+                  checked={selected.includes(r.id)}
+                  onChange={(e) => toggleOne(r.id, e.target.checked)}
+                  aria-label={`Select row for ${r.sku}`}
+                />
+              </td>
+              <td className="p-3 font-medium text-xs">{r.sku}</td>
+              <td className="p-3">
+                <div className="flex items-center gap-2">
+                  {productImageMap[r.sku] && (
+                    <img 
+                      src={productImageMap[r.sku]} 
+                      alt={r.productName}
+                      className="w-8 h-8 rounded object-cover border flex-shrink-0"
+                    />
+                  )}
+                  <span className="text-sm line-clamp-2">{r.productName}</span>
+                </div>
+              </td>
+              <td className="p-3 text-sm">{r.node}</td>
+              <td className="p-3">
+                <Badge variant="outline" className="text-xs">{r.channel}</Badge>
+              </td>
+              <td className="p-3">
+                <div className="flex items-center gap-2">
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src="" alt={r.owner} />
+                    <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm">{r.owner}</span>
+                </div>
+              </td>
+            </tr>
+          );
+
+          midItems.push(
+            <tr key={`${r.id}-weeks`} className="border-b hover:bg-muted/30 h-16">
+              {Array.from({ length: 12 }, (_, i) => {
+                const weekKey = `week${i + 1}` as keyof ForecastRow;
+                const weekData = r[weekKey] as any;
+                const hasEdit = weekData.plannerInput !== undefined;
+                const displayValue = hasEdit ? weekData.plannerInput : weekData.forecast;
+                
+                return (
+                  <td key={`${r.id}-week-${i + 1}`} className="p-2 text-center border-l">
+                    <div className="space-y-1">
+                      <div className={`text-sm font-medium ${hasEdit ? 'text-primary' : 'text-foreground'}`}>
+                        {displayValue.toLocaleString()}
+                      </div>
+                      <div className="flex items-center justify-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => handleEditClick(r.id, weekKey, weekData.forecast, weekData.plannerInput, weekData.reason)}
+                        >
+                          <Edit3 className="w-3 h-3" />
+                        </Button>
+                        {hasEdit && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0 text-muted-foreground"
+                            title={weekData.reason || "No reason provided"}
+                          >
+                            <MessageSquare className="w-3 h-3" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                );
+              })}
+            </tr>
+          );
+
+          rightItems.push(
+            <tr key={`${r.id}-approval`} className="border-b hover:bg-muted/30 h-16">
+              <td className="p-3 text-center">
+                <Button 
+                  variant="link" 
+                  className="text-sm p-0 h-auto"
+                  onClick={() => setRemarksDialog({ open: true, data: r })}
+                >
+                  View ({r.allRemarks?.length || 0})
+                </Button>
+              </td>
+              <td className="p-3">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div 
+                      className="flex justify-center cursor-pointer transition-transform hover:scale-110" 
+                      onClick={() => setApprovalDialog({ open: true, data: r })}
+                    >
+                      {r.approvalStatus === "approved" ? (
+                        <CheckCircle2 className="w-6 h-6 text-success" />
+                      ) : (
+                        <XCircle className="w-6 h-6 text-destructive" />
+                      )}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-medium">{r.approverRole || "Approver"}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {r.approvalStatus === "approved" ? "Approved" : "Rejected"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </td>
+            </tr>
+          );
+        });
+      }
+    });
+
+    return { leftItems, midItems, rightItems };
+  };
+
+  const { leftItems, midItems, rightItems } = buildRenderItems();
+
   return (
     <TooltipProvider>
       <div className={`space-y-4 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : ''}`}>
-        {/* Toolbar with Filters */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Select value={filterSKU} onValueChange={setFilterSKU}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="All SKUs" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All SKUs</SelectItem>
-              <SelectItem value="SKU_001">Airdopes 141</SelectItem>
-              <SelectItem value="SKU_005">Stone 352</SelectItem>
-              <SelectItem value="SKU_007">Rockerz 255 Pro+</SelectItem>
-              <SelectItem value="SKU_021">Rockerz 450</SelectItem>
-              <SelectItem value="SKU_049">Nirvana Ion ANC</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Toolbar */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Select value={filterSKU} onValueChange={setFilterSKU}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="All SKUs" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All SKUs</SelectItem>
+                <SelectItem value="SKU_001">Airdopes 141</SelectItem>
+                <SelectItem value="SKU_005">Stone 352</SelectItem>
+                <SelectItem value="SKU_007">Rockerz 255 Pro+</SelectItem>
+                <SelectItem value="SKU_021">Rockerz 450</SelectItem>
+                <SelectItem value="SKU_049">Nirvana Ion ANC</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Select value={filterNode} onValueChange={setFilterNode}>
+              <SelectTrigger className="w-44">
+                <SelectValue placeholder="All Locations" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All Locations</SelectItem>
+                <SelectItem value="WH_North">WH_North — Delhi Hub</SelectItem>
+                <SelectItem value="WH_South">WH_South — Chennai DC</SelectItem>
+                <SelectItem value="WH_West">WH_West — Mumbai Hub</SelectItem>
+                <SelectItem value="Amazon">Amazon FC</SelectItem>
+                <SelectItem value="Flipkart">Flipkart WH</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Select value={filterChannel} onValueChange={setFilterChannel}>
+              <SelectTrigger className="w-36">
+                <SelectValue placeholder="All Channels" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All Channels</SelectItem>
+                <SelectItem value="Online">Amazon / Flipkart</SelectItem>
+                <SelectItem value="Retail">Retail</SelectItem>
+                <SelectItem value="B2B">Distributor</SelectItem>
+                <SelectItem value="Direct">D2C</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Expand / Collapse All */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const allExpanded = categoryOrder.every(c => expandedCategories[c]);
+                const newState: Record<string, boolean> = {};
+                categoryOrder.forEach(c => newState[c] = !allExpanded);
+                setExpandedCategories(newState);
+              }}
+            >
+              {categoryOrder.every(c => expandedCategories[c]) ? (
+                <><ChevronDown className="w-4 h-4 mr-1" /> Collapse All</>
+              ) : (
+                <><ChevronRight className="w-4 h-4 mr-1" /> Expand All</>
+              )}
+            </Button>
+          </div>
           
-          <Select value={filterNode} onValueChange={setFilterNode}>
-            <SelectTrigger className="w-44">
-              <SelectValue placeholder="All Locations" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All Locations</SelectItem>
-              <SelectItem value="WH_North">WH_North — Delhi Hub</SelectItem>
-              <SelectItem value="WH_South">WH_South — Chennai DC</SelectItem>
-              <SelectItem value="WH_West">WH_West — Mumbai Hub</SelectItem>
-              <SelectItem value="Amazon">Amazon FC</SelectItem>
-              <SelectItem value="Flipkart">Flipkart WH</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select value={filterChannel} onValueChange={setFilterChannel}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="All Channels" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All Channels</SelectItem>
-              <SelectItem value="Online">Amazon / Flipkart</SelectItem>
-              <SelectItem value="Retail">Retail</SelectItem>
-              <SelectItem value="B2B">Distributor</SelectItem>
-              <SelectItem value="Direct">D2C</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 w-56" />
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 w-56" />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Table */}
-      <Card className="border bg-card shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center justify-between text-lg">
-            Collaborative Forecast Workbook
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsFullscreen(!isFullscreen)}
-              >
-                {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
-                {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-              </Button>
-              <div className="text-sm font-normal text-muted-foreground">
-                {selected.length > 0 && `${selected.length} rows selected`}
+        {/* Table */}
+        <Card className="border bg-card shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center justify-between text-lg">
+              Collaborative Forecast Workbook
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsFullscreen(!isFullscreen)}
+                >
+                  {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+                  {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+                </Button>
+                <div className="text-sm font-normal text-muted-foreground">
+                  {selected.length > 0 && `${selected.length} rows selected`}
+                </div>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="flex">
+              {/* Fixed Left */}
+              <div className="flex-shrink-0 border-r bg-background">
+                <table className="table-fixed">
+                  <thead className="bg-muted/50 border-b">
+                    <tr className="text-xs h-12">
+                      <th className="w-10 p-3 align-middle">
+                        <input
+                          type="checkbox"
+                          className="rounded border-border"
+                          onChange={(e) => toggleAll(e.target.checked)}
+                          checked={selected.length > 0 && selected.length === filteredSorted.length}
+                          aria-label="Select all rows"
+                        />
+                      </th>
+                      <th className="text-left p-3 cursor-pointer hover:bg-muted w-[100px]" onClick={() => sortBy("sku")}>
+                        SKU
+                      </th>
+                      <th className="text-left p-3 w-[160px]">Product</th>
+                      <th className="text-left p-3 cursor-pointer hover:bg-muted w-[140px]" onClick={() => sortBy("node")}>
+                        Store
+                      </th>
+                      <th className="text-left p-3 cursor-pointer hover:bg-muted w-[80px]" onClick={() => sortBy("channel")}>
+                        Channel
+                      </th>
+                      <th className="text-left p-3 cursor-pointer hover:bg-muted w-[140px]" onClick={() => sortBy("owner")}>
+                        Owner
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leftItems}
+                    {/* Grand Total Footer */}
+                    <tr className="bg-primary/10 border-t-2 border-primary/30 font-bold h-14">
+                      <td className="p-3" colSpan={6}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-foreground">Grand Total</span>
+                          <Badge className="text-xs bg-primary/20 text-primary border-primary/30">{filteredSorted.length} SKUs</Badge>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Scrollable Middle */}
+              <div className="flex-1 overflow-x-auto">
+                <table className="table-fixed">
+                  <thead className="bg-muted/50 border-b">
+                    <tr className="text-xs h-12">
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <th key={`week-${i + 1}`} className="text-center p-2 w-[100px] border-l">
+                          <div className="text-xs font-medium">Week {i + 1}</div>
+                          <div className="text-xs text-muted-foreground">Forecast | Input</div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {midItems}
+                    {/* Grand Total Footer */}
+                    <tr className="bg-primary/10 border-t-2 border-primary/30 font-bold h-14">
+                      {grandTotals.map((total, i) => (
+                        <td key={i} className="p-2 text-center border-l">
+                          <span className="text-sm font-bold text-primary">{total.toLocaleString()}</span>
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Fixed Right */}
+              <div className="flex-shrink-0 border-l bg-background">
+                <table className="table-fixed">
+                  <thead className="bg-muted/50 border-b">
+                    <tr className="text-xs h-12">
+                      <th className="text-center p-3 w-[120px]">Remarks</th>
+                      <th className="text-center p-3 w-[120px]">Approval</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rightItems}
+                    {/* Grand Total Footer */}
+                    <tr className="bg-primary/10 border-t-2 border-primary/30 font-bold h-14">
+                      <td className="p-3 text-center text-xs text-muted-foreground">—</td>
+                      <td className="p-3 text-center">
+                        <span className="text-xs font-bold text-foreground">
+                          {filteredSorted.filter(r => r.approvalStatus === "approved").length}/{filteredSorted.length}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="flex">
-            {/* Fixed Left Columns */}
-            <div className="flex-shrink-0 border-r bg-background">
-              <table className="table-fixed">
-                <thead className="bg-muted/50 border-b">
-                  <tr className="text-xs h-12">
-                    <th className="w-10 p-3 align-middle">
-                      <input
-                        type="checkbox"
-                        className="rounded border-border"
-                        onChange={(e) => toggleAll(e.target.checked)}
-                        checked={selected.length > 0 && selected.length === filteredSorted.length}
-                        aria-label="Select all rows"
-                      />
-                    </th>
-                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[100px]" onClick={() => sortBy("sku")}>
-                      SKU
-                    </th>
-                    <th className="text-left p-3 w-[160px]">
-                      Product
-                    </th>
-                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[140px]" onClick={() => sortBy("node")}>
-                      Store
-                    </th>
-                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[80px]" onClick={() => sortBy("channel")}>
-                      Channel
-                    </th>
-                    <th className="text-left p-3 cursor-pointer hover:bg-muted w-[140px]" onClick={() => sortBy("owner")}>
-                      Owner
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredSorted.map((r) => {
-                    const initials = getInitials(r.owner);
-                    return (
-                      <tr key={`${r.id}-fixed`} className="border-b hover:bg-muted/30 h-16">
-                        <td className="p-3">
-                          <input
-                            type="checkbox"
-                            className="rounded border-border"
-                            checked={selected.includes(r.id)}
-                            onChange={(e) => toggleOne(r.id, e.target.checked)}
-                            aria-label={`Select row for ${r.sku}`}
-                          />
-                        </td>
-                        <td className="p-3 font-medium text-xs">{r.sku}</td>
-                        <td className="p-3">
-                          <div className="flex items-center gap-2">
-                            {productImageMap[r.sku] && (
-                              <img 
-                                src={productImageMap[r.sku]} 
-                                alt={r.productName}
-                                className="w-8 h-8 rounded object-cover border flex-shrink-0"
-                              />
-                            )}
-                            <span className="text-sm line-clamp-2">{r.productName}</span>
-                          </div>
-                        </td>
-                        <td className="p-3 text-sm">{r.node}</td>
-                        <td className="p-3">
-                          <Badge variant="outline" className="text-xs">
-                            {r.channel}
-                          </Badge>
-                        </td>
-                        <td className="p-3">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-6 w-6">
-                              <AvatarImage src="" alt={r.owner} />
-                              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-                            </Avatar>
-                            <span className="text-sm">{r.owner}</span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+          </CardContent>
+        </Card>
 
-            {/* Scrollable Middle Section */}
-            <div className="flex-1 overflow-x-auto">
-              <table className="table-fixed">
-                <thead className="bg-muted/50 border-b">
-                  <tr className="text-xs h-12">
-                    {Array.from({ length: 12 }, (_, i) => (
-                      <th key={`week-${i + 1}`} className="text-center p-2 w-[100px] border-l">
-                        <div className="text-xs font-medium">Week {i + 1}</div>
-                        <div className="text-xs text-muted-foreground">Forecast | Input</div>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredSorted.map((r) => (
-                    <tr key={`${r.id}-weeks`} className="border-b hover:bg-muted/30 h-16">
-                      {Array.from({ length: 12 }, (_, i) => {
-                        const weekKey = `week${i + 1}` as keyof ForecastRow;
-                        const weekData = r[weekKey] as any;
-                        const hasEdit = weekData.plannerInput !== undefined;
-                        const displayValue = hasEdit ? weekData.plannerInput : weekData.forecast;
-                        
-                        return (
-                          <td key={`${r.id}-week-${i + 1}`} className="p-2 text-center border-l">
-                            <div className="space-y-1">
-                              <div className={`text-sm font-medium ${hasEdit ? 'text-primary' : 'text-foreground'}`}>
-                                {displayValue.toLocaleString()}
-                              </div>
-                              <div className="flex items-center justify-center gap-1">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 w-6 p-0"
-                                  onClick={() => handleEditClick(r.id, weekKey, weekData.forecast, weekData.plannerInput, weekData.reason)}
-                                >
-                                  <Edit3 className="w-3 h-3" />
-                                </Button>
-                                {hasEdit && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-6 w-6 p-0 text-muted-foreground"
-                                    title={weekData.reason || "No reason provided"}
-                                  >
-                                    <MessageSquare className="w-3 h-3" />
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Fixed Right Columns */}
-            <div className="flex-shrink-0 border-l bg-background">
-              <table className="table-fixed">
-                <thead className="bg-muted/50 border-b">
-                  <tr className="text-xs h-12">
-                    <th className="text-center p-3 w-[120px]">Remarks</th>
-                    <th className="text-center p-3 w-[120px]">Approval</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredSorted.map((r) => (
-                    <tr key={`${r.id}-approval`} className="border-b hover:bg-muted/30 h-16">
-                      <td className="p-3 text-center">
-                        <Button 
-                          variant="link" 
-                          className="text-sm p-0 h-auto"
-                          onClick={() => setRemarksDialog({ open: true, data: r })}
-                        >
-                          View ({r.allRemarks?.length || 0})
-                        </Button>
-                      </td>
-                      <td className="p-3">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div 
-                              className="flex justify-center cursor-pointer transition-transform hover:scale-110" 
-                              onClick={() => setApprovalDialog({ open: true, data: r })}
-                            >
-                              {r.approvalStatus === "approved" ? (
-                                <CheckCircle2 className="w-6 h-6 text-success" />
-                              ) : (
-                                <XCircle className="w-6 h-6 text-destructive" />
-                              )}
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="font-medium">{r.approverRole || "Approver"}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {r.approvalStatus === "approved" ? "Approved" : "Rejected"}
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* Footer */}
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <div>{selected.length > 0 ? `${selected.length} selected` : `${filteredSorted.length} rows across ${Object.keys(groupedData).length} categories`}</div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm">Previous</Button>
+            <Button variant="outline" size="sm">Next</Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <div>{selected.length > 0 ? `${selected.length} selected` : `${filteredSorted.length} rows`}</div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">Previous</Button>
-          <Button variant="outline" size="sm">Next</Button>
         </div>
-      </div>
 
       {/* Edit Dialog */}
       <Dialog open={editDialog.open} onOpenChange={(open) => setEditDialog(prev => ({ ...prev, open }))}>
@@ -644,7 +772,7 @@ export const CollaborativeForecastTable: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Approval Flow Dialog */}
+      {/* Approval Dialog */}
       <Dialog open={approvalDialog.open} onOpenChange={(open) => setApprovalDialog({ open, data: null })}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -669,12 +797,10 @@ export const CollaborativeForecastTable: React.FC = () => {
                   {approvalDialog.data.approvalStatus.charAt(0).toUpperCase() + approvalDialog.data.approvalStatus.slice(1)}
                 </Badge>
               </div>
-
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
                 <span className="font-medium">Role:</span>
                 <span className="text-sm">{approvalDialog.data.approverRole || "N/A"}</span>
               </div>
-              
               {approvalDialog.data.approvalDetails?.approvedBy && (
                 <div className="space-y-2">
                   <h4 className="font-medium text-sm">Approval Information</h4>
@@ -690,7 +816,6 @@ export const CollaborativeForecastTable: React.FC = () => {
                   </div>
                 </div>
               )}
-              
               {approvalDialog.data.approvalDetails?.rejectedBy && (
                 <div className="space-y-2">
                   <h4 className="font-medium text-sm">Rejection Information</h4>
@@ -706,7 +831,6 @@ export const CollaborativeForecastTable: React.FC = () => {
                   </div>
                 </div>
               )}
-              
               {approvalDialog.data.approvalDetails?.remarks && (
                 <div className="space-y-2">
                   <h4 className="font-medium text-sm">Remarks</h4>
@@ -715,7 +839,6 @@ export const CollaborativeForecastTable: React.FC = () => {
                   </p>
                 </div>
               )}
-              
               <div className="flex justify-end">
                 <Button variant="outline" onClick={() => setApprovalDialog({ open: false, data: null })}>
                   Close
@@ -752,7 +875,6 @@ export const CollaborativeForecastTable: React.FC = () => {
                   No remarks available for this SKU
                 </p>
               )}
-              
               <div className="flex justify-end pt-2">
                 <Button variant="outline" onClick={() => setRemarksDialog({ open: false, data: null })}>
                   Close
