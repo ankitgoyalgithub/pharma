@@ -306,43 +306,6 @@ export const NPILaunchIntelligence: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Price Elasticity */}
-        <Card className="border-border/40">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold flex items-center gap-2">
-              <DollarSign className="w-3.5 h-3.5 text-primary" />
-              Price Elasticity Insight
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border/40">
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Product</th>
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Price</th>
-                  <th className="text-left py-1.5 px-1 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Sensitivity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {npiProducts.map(p => (
-                  <tr key={p.sku} className="border-b border-border/20">
-                    <td className="py-1.5 px-1 text-[10px] text-foreground">{p.product.split(" ").slice(0, 3).join(" ")}</td>
-                    <td className="py-1.5 px-1 text-[10px] text-foreground font-medium">₹{p.price.toLocaleString()}</td>
-                    <td className="py-1.5 px-1">
-                      <Badge className={`text-[9px] px-1.5 py-0.5 ${
-                        p.priceElasticity === "High" ? "bg-destructive/15 text-destructive border-destructive/30" :
-                        p.priceElasticity === "Medium" ? "bg-warning/15 text-warning border-warning/30" :
-                        "bg-success/15 text-success border-success/30"
-                      }`}>{p.priceElasticity} sensitivity</Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-
-        {/* Festival Dependency */}
         <Card className="border-border/40">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs font-semibold flex items-center gap-2">
