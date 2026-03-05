@@ -44,11 +44,11 @@ export const entityPreviewData: EntityPreviewMap = {
   },
   "location": {
     title: "Location Master",
-    description: "Network of plants, DCs, depots, and stockists across India",
+    description: "Warehouses across North, South, and West regions in India",
     columns: [
-      { accessorKey: "id", header: "Node ID" },
-      { accessorKey: "name", header: "Node Name" },
-      { accessorKey: "type", header: "Node Type" },
+      { accessorKey: "id", header: "Warehouse ID" },
+      { accessorKey: "name", header: "Warehouse Name" },
+      { accessorKey: "type", header: "Type" },
       { accessorKey: "city", header: "City" },
       { accessorKey: "state", header: "State" },
       { accessorKey: "country", header: "Country" },
@@ -60,17 +60,11 @@ export const entityPreviewData: EntityPreviewMap = {
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "PLT_BHI", name: "Bhiwadi Formulations Plant", type: "PLANT", city: "Bhiwadi", state: "Rajasthan", country: "India", pincode: "301019", storageType: "Ambient", coldStorageAvailable: "N", latitude: 27.566, longitude: 76.609, status: "Active" },
-      { id: "PLT_HYD", name: "Hyderabad Injectables Plant", type: "PLANT", city: "Hyderabad", state: "Telangana", country: "India", pincode: "500072", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 17.494, longitude: 78.399, status: "Active" },
-      { id: "DC_NCR", name: "NCR Distribution Center", type: "DC", city: "Gurugram", state: "Haryana", country: "India", pincode: "122001", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 28.459, longitude: 77.026, status: "Active" },
-      { id: "DC_WEST", name: "West Distribution Center", type: "DC", city: "Bhiwandi", state: "Maharashtra", country: "India", pincode: "421302", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 19.281, longitude: 73.058, status: "Active" },
-      { id: "DC_SOUTH", name: "South Distribution Center", type: "DC", city: "Bengaluru", state: "Karnataka", country: "India", pincode: "560066", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 12.971, longitude: 77.594, status: "Active" },
-      { id: "DEP_EAST", name: "East Depot", type: "DEPOT", city: "Kolkata", state: "West Bengal", country: "India", pincode: "700091", storageType: "Ambient", coldStorageAvailable: "N", latitude: 22.572, longitude: 88.363, status: "Active" },
-      { id: "STK_PUN", name: "Punjab Super Stockist", type: "STOCKIST", city: "Ludhiana", state: "Punjab", country: "India", pincode: "141001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 30.901, longitude: 75.857, status: "Active" },
-      { id: "STK_GUJ", name: "Gujarat Super Stockist", type: "STOCKIST", city: "Ahmedabad", state: "Gujarat", country: "India", pincode: "380015", storageType: "Ambient", coldStorageAvailable: "N", latitude: 23.022, longitude: 72.571, status: "Active" },
-      { id: "STK_TN", name: "Tamil Nadu Super Stockist", type: "STOCKIST", city: "Chennai", state: "Tamil Nadu", country: "India", pincode: "600096", storageType: "Ambient", coldStorageAvailable: "N", latitude: 13.083, longitude: 80.27, status: "Active" }
+      { id: "WH_North", name: "North Warehouse", type: "WAREHOUSE", city: "Delhi", state: "Delhi", country: "India", pincode: "110001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 28.613, longitude: 77.209, status: "Active" },
+      { id: "WH_South", name: "South Warehouse", type: "WAREHOUSE", city: "Bengaluru", state: "Karnataka", country: "India", pincode: "560001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 12.971, longitude: 77.594, status: "Active" },
+      { id: "WH_West", name: "West Warehouse", type: "WAREHOUSE", city: "Mumbai", state: "Maharashtra", country: "India", pincode: "400001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 19.076, longitude: 72.877, status: "Active" }
     ],
-    stats: { totalRecords: 9, lastSync: "2025-01-12 09:45", source: "CSV Upload" }
+    stats: { totalRecords: 3, lastSync: "2025-01-12 09:45", source: "CSV Upload" }
   },
   "channel": {
     title: "Channel Master",
