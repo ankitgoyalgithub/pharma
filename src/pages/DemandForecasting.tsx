@@ -102,7 +102,7 @@ import {
   Filler,
   Title,
 } from "chart.js";
-import { Line, Bar, Pie, Scatter } from "react-chartjs-2";
+import { Line, Bar, Pie } from "react-chartjs-2";
 import ReactMarkdown from "react-markdown";
 import { CompactMetricCard } from "@/components/CompactMetricCard";
 import { CompactProjectionCard } from "@/components/CompactProjectionCard";
@@ -1342,115 +1342,13 @@ const DemandForecasting = () => {
     plugins: { legend: { position: "top" as const } },
   });
 
-  // Generate realistic scatter data for forecastability chart - memoized to prevent re-generation
-  const scatterPoints = React.useMemo(() => {
-    const data = [];
-    // Generate points across different quadrants
-    for (let i = 0; i < 60; i++) {
-      const x = Math.random() * 1.8; // ADI from 0 to 1.8
-      const y = Math.random() * 4; // CV² from 0 to 4
-      
-      // Color based on quadrants with gradient
-      let pointColor;
-      if (x < 1.3 && y < 1.3) {
-        // Smooth quadrant - light blue
-        pointColor = `hsl(200 70% ${60 + Math.random() * 20}%)`;
-      } else if (x < 1.3 && y >= 1.3) {
-        // Erratic quadrant - medium blue
-        pointColor = `hsl(220 60% ${40 + Math.random() * 20}%)`;
-      } else if (x >= 1.3 && y < 1.3) {
-        // Intermittent quadrant - dark blue
-        pointColor = `hsl(240 70% ${25 + Math.random() * 15}%)`;
-      } else {
-        // Lumpy quadrant - very dark blue
-        pointColor = `hsl(260 80% ${15 + Math.random() * 15}%)`;
-      }
-      
-      data.push({ x, y, pointColor });
-    }
-    return data;
-  }, []); // Empty dependency array ensures this only runs once
-
-  const forecastabilityData = {
-    datasets: [
-      {
-        label: "Products",
-        data: scatterPoints.map(point => ({ x: point.x, y: point.y })),
-        backgroundColor: scatterPoints.map(point => point.pointColor),
-        borderColor: scatterPoints.map(point => point.pointColor),
-        borderWidth: 1,
-        pointRadius: 6,
-        pointHoverRadius: 6, // Same as regular radius to prevent animation
-        pointBorderWidth: 1,
-        pointHoverBorderWidth: 1, // Same as regular border width
-      },
-      // Add the curved separation line
-      {
-        label: "Separation Line",
-        data: Array.from({ length: 100 }, (_, i) => {
-          const x = (i / 99) * 1.8;
-          const y = 1.3 / (x + 0.1); // Hyperbola-like curve
-          return { x, y: Math.min(y, 4) };
-        }),
-        borderColor: hslVar("--foreground"),
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        showLine: true,
-        fill: false,
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const forecastabilityOptions: any = buildChartOptions({
-    animation: false, // Completely disable all animations
-    animations: false, // Alternative way to disable animations
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      intersect: false,
-      mode: 'point' as const
-    },
-    hover: {
-      mode: null as any // Disable hover completely
-    },
-    onHover: null, // Disable hover events
-    scales: {
-      x: { 
-        title: { display: true, text: "ADI", color: hslVar("--foreground") },
-        min: 0,
-        max: 1.8,
-        grid: { color: hslVar("--border") },
-        ticks: { stepSize: 0.5 }
-      },
-      y: { 
-        title: { display: true, text: "CV²", color: hslVar("--foreground") },
-        min: 0,
-        max: 4,
-        grid: { color: hslVar("--border") },
-        ticks: { stepSize: 1 }
-      },
-    },
-    plugins: { 
-      legend: { display: false },
-      tooltip: {
-        enabled: false // Completely disable tooltips to prevent hover animations
-      }
-    },
-    elements: {
-      line: {
-        tension: 0
-      },
-      point: {
-        hoverRadius: 6, // Keep same radius on hover
-        radius: 6,
-        borderWidth: 1,
-        hoverBorderWidth: 1
-      }
-    }
-  });
+  // Forecastability quadrant data - memoized
+  const forecastabilityQuadrants = React.useMemo(() => [
+    { label: "Smooth", skuCount: 22, pct: 44, avgAccuracy: 95.2, model: "Exponential Smoothing", color: "hsl(142, 76%, 36%)", bgClass: "bg-green-500/10 border-green-500/20", textClass: "text-green-600 dark:text-green-400", desc: "Low ADI, Low CV²" },
+    { label: "Intermittent", skuCount: 12, pct: 24, avgAccuracy: 88.4, model: "Croston's Method", color: "hsl(200, 70%, 50%)", bgClass: "bg-blue-500/10 border-blue-500/20", textClass: "text-blue-600 dark:text-blue-400", desc: "High ADI, Low CV²" },
+    { label: "Erratic", skuCount: 10, pct: 20, avgAccuracy: 82.1, model: "ARIMA / ML Hybrid", color: "hsl(45, 93%, 47%)", bgClass: "bg-amber-500/10 border-amber-500/20", textClass: "text-amber-600 dark:text-amber-400", desc: "Low ADI, High CV²" },
+    { label: "Lumpy", skuCount: 6, pct: 12, avgAccuracy: 74.5, model: "Bootstrapping", color: "hsl(0, 72%, 51%)", bgClass: "bg-red-500/10 border-red-500/20", textClass: "text-red-600 dark:text-red-400", desc: "High ADI, High CV²" },
+  ], []);
 
   const renderStep2 = () => (
     <div className="relative flex flex-col min-h-[calc(100vh-var(--topbar-height,64px))] max-h-[calc(100vh-var(--topbar-height,64px))] w-full min-w-0 overflow-hidden">
@@ -1623,36 +1521,58 @@ const DemandForecasting = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-medium text-foreground">Forecastability Chart (ADI vs CV²)</h3>
+              <h3 className="text-base font-medium text-foreground">Demand Forecastability</h3>
               <Tooltip>
                 <TooltipTrigger>
                   <Info className="w-4 h-4 text-muted-foreground" />
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Classification of products based on demand patterns. ADI (Average Demand Interval) vs CV² (Coefficient of Variation squared) helps identify the best forecast methods for each product category.</p>
+                <TooltipContent className="max-w-xs">
+                  <p>SKUs classified by demand pattern using ADI (Average Demand Interval) and CV² (Coefficient of Variation squared). Each quadrant suggests the optimal forecasting method.</p>
                 </TooltipContent>
               </Tooltip>
             </div>
           </CardHeader>
-          <CardContent className="h-[300px] relative">
-            <div className="h-full relative">
-              <Scatter data={forecastabilityData} options={forecastabilityOptions} />
-              
-              {/* Quadrant Labels */}
-              <div className="absolute top-4 left-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Smooth
+          <CardContent className="space-y-4">
+            {/* Stacked Horizontal Bar */}
+            <div className="space-y-1.5">
+              <div className="flex h-3 rounded-full overflow-hidden">
+                {forecastabilityQuadrants.map((q) => (
+                  <div
+                    key={q.label}
+                    style={{ width: `${q.pct}%`, backgroundColor: q.color }}
+                    className="transition-all"
+                    title={`${q.label}: ${q.pct}%`}
+                  />
+                ))}
               </div>
-              <div className="absolute top-4 right-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Intermittent
+              <div className="flex justify-between text-[10px] text-muted-foreground">
+                {forecastabilityQuadrants.map((q) => (
+                  <span key={q.label}>{q.label} {q.pct}%</span>
+                ))}
               </div>
-              <div className="absolute bottom-16 left-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Erratic
-              </div>
-              <div className="absolute bottom-16 right-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Lumpy
-              </div>
+            </div>
+
+            {/* Quadrant Cards */}
+            <div className="grid grid-cols-2 gap-2.5">
+              {forecastabilityQuadrants.map((q) => (
+                <div key={q.label} className={`border rounded-lg p-3 ${q.bgClass}`}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className={`text-sm font-semibold ${q.textClass}`}>{q.label}</span>
+                    <span className="text-lg font-bold text-foreground">{q.skuCount}</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mb-1">{q.desc}</p>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Accuracy</span>
+                    <span className="font-medium text-foreground">{q.avgAccuracy}%</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs mt-0.5">
+                    <span className="text-muted-foreground">Model</span>
+                    <span className="font-medium text-foreground text-[10px]">{q.model}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
