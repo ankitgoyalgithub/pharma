@@ -368,18 +368,18 @@ const generateResponse = (query: string): { text: string; chart?: Message['chart
     };
   }
   
-  if (lowerQuery.includes('e-pharmacy') || lowerQuery.includes('epharmacy')) {
-    const ePharmData = skuData.filter(s => s.channel.includes('E-Pharmacy'));
+  if (lowerQuery.includes('d2c') || lowerQuery.includes('direct')) {
+    const d2cData = skuData.filter(s => s.channel.includes('D2C'));
     return {
-      text: `**E-Pharmacy Channel Analysis:**\n\n${ePharmData.map(s => `• **${s.product}**\n  Revenue: ${s.actual} | Accuracy: ${s.accuracy}`).join('\n')}\n\nE-Pharmacy showing ${ePharmData[0]?.variance.startsWith('+') ? 'growth' : 'adjustment needed'}.`,
+      text: `**D2C Channel Analysis:**\n\n${d2cData.map(s => `• **${s.product}**\n  Revenue: ${s.actual} | Accuracy: ${s.accuracy}`).join('\n')}\n\nD2C showing ${d2cData[0]?.variance.startsWith('+') ? 'growth' : 'adjustment needed'}.`,
       chart: {
         type: 'bar',
         data: {
-          labels: ePharmData.map(s => s.sku),
+          labels: d2cData.map(s => s.sku),
           datasets: [{
             label: 'Revenue (₹M)',
-            data: ePharmData.map(s => parseRevenue(s.actual)),
-            backgroundColor: 'hsl(280, 65%, 55%)',
+            data: d2cData.map(s => parseRevenue(s.actual)),
+            backgroundColor: 'hsl(262, 83%, 58%)',
           }]
         },
         options: chartOptions
