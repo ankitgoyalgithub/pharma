@@ -3508,39 +3508,6 @@ const DemandForecasting = () => {
                     </Select>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Business Units
-                    </label>
-                    <Select value={filterValues.businessUnits} onValueChange={(value) => setFilterValues(prev => ({ ...prev, businessUnits: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select business unit" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Units</SelectItem>
-                        <SelectItem value="consumer">Consumer</SelectItem>
-                        <SelectItem value="enterprise">Enterprise</SelectItem>
-                        <SelectItem value="industrial">Industrial</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-2 block">
-                      Data Availability
-                    </label>
-                    <Select value={filterValues.dataAvailability} onValueChange={(value) => setFilterValues(prev => ({ ...prev, dataAvailability: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select availability" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Data</SelectItem>
-                        <SelectItem value="complete">Complete Data</SelectItem>
-                        <SelectItem value="partial">Partial Data</SelectItem>
-                        <SelectItem value="limited">Limited Data</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
 
                   <div className="flex gap-2 pt-4">
                     <Button onClick={() => applyFilters('local')} className="flex-1">
