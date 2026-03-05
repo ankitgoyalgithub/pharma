@@ -3413,18 +3413,16 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent className="max-h-[300px]">
                         <SelectItem value="all">All Products</SelectItem>
-                        <SelectItem value="P0001">ComfortWear Sports Shoes</SelectItem>
-                        <SelectItem value="P0003">MetroStyle Frock</SelectItem>
-                        <SelectItem value="P0006">PrimeBasics Kurti</SelectItem>
-                        <SelectItem value="P0011">StreetLine Chinos</SelectItem>
-                        <SelectItem value="P0016">MetroStyle Jeans</SelectItem>
-                        <SelectItem value="P0024">ComfortWear Jeans</SelectItem>
-                        <SelectItem value="P0033">MetroStyle Handbag</SelectItem>
-                        <SelectItem value="P0040">UrbanEdge Sports Shoes</SelectItem>
-                        <SelectItem value="P0048">ComfortWear T-Shirt</SelectItem>
-                        <SelectItem value="P0067">ComfortWear Casual Shoes</SelectItem>
-                        <SelectItem value="P0087">MetroStyle Top</SelectItem>
-                        <SelectItem value="P0098">StreetLine Jeans</SelectItem>
+                        <SelectItem value="SKU_001">Product_1 (Earbuds)</SelectItem>
+                        <SelectItem value="SKU_005">Product_5 (Speakers)</SelectItem>
+                        <SelectItem value="SKU_007">Product_7 (Headphones)</SelectItem>
+                        <SelectItem value="SKU_012">Product_12 (Speakers)</SelectItem>
+                        <SelectItem value="SKU_021">Product_21 (Headphones)</SelectItem>
+                        <SelectItem value="SKU_029">Product_29 (Speakers)</SelectItem>
+                        <SelectItem value="SKU_035">Product_35 (Headphones)</SelectItem>
+                        <SelectItem value="SKU_040">Product_40 (Earbuds)</SelectItem>
+                        <SelectItem value="SKU_043">Product_43 (Wearables)</SelectItem>
+                        <SelectItem value="SKU_049">Product_49 (Earbuds)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
