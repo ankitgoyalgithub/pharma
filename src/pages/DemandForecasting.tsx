@@ -1210,7 +1210,7 @@ const DemandForecasting = () => {
                                 <td className="px-3 py-2 font-medium">{row.unitsSold}</td>
                                 <td className="px-3 py-2 text-success font-medium">{row.revenue}</td>
                                 <td className="px-3 py-2">
-                                  <Badge variant="secondary" className="text-xs">{row.stock}</Badge>
+                                  <Badge variant="secondary" className="text-xs">₹{row.price}</Badge>
                                 </td>
                               </tr>
                             ))}
