@@ -11,6 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Download, MoreHorizontal, Search, Save, Edit3, MessageSquare, Maximize, Minimize, CheckCircle2, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { productImageMap } from "@/data/foundry/productImages";
 
 
 interface ForecastRow {
