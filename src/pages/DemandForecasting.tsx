@@ -513,14 +513,14 @@ const DemandForecasting = () => {
     if (lowerQuery.includes("channel") && (lowerQuery.includes("revenue") || lowerQuery.includes("maximum") || lowerQuery.includes("breakdown"))) {
       const channelRevenue: Record<string, number> = {};
       skuData.forEach(s => {
-        const revenue = parseFloat(s.actual.replace("₹", "").replace("M", ""));
+        const revenue = parseFloat(s.actual.replace("₹", "").replace("Cr", ""));
         channelRevenue[s.channel] = (channelRevenue[s.channel] || 0) + revenue;
       });
       
       const sortedChannels = Object.entries(channelRevenue).sort((a, b) => b[1] - a[1]);
       const totalRevenue = sortedChannels.reduce((sum, c) => sum + c[1], 0);
 
-      return `📦 **Channel Revenue Analysis**\n\n🥇 **Top Channel: ${sortedChannels[0][0]}**\nRevenue: ₹${sortedChannels[0][1].toFixed(1)}M (${((sortedChannels[0][1] / totalRevenue) * 100).toFixed(1)}% share)\n\n**All Channels:**\n${sortedChannels.map((c, i) => `${i + 1}. ${c[0]}: ₹${c[1].toFixed(1)}M (${((c[1] / totalRevenue) * 100).toFixed(1)}%)`).join("\n")}`;
+      return `📦 **Channel Revenue Analysis**\n\n🥇 **Top Channel: ${sortedChannels[0][0]}**\nRevenue: ₹${sortedChannels[0][1].toFixed(2)}Cr (${((sortedChannels[0][1] / totalRevenue) * 100).toFixed(1)}% share)\n\n**All Channels:**\n${sortedChannels.map((c, i) => `${i + 1}. ${c[0]}: ₹${c[1].toFixed(2)}Cr (${((c[1] / totalRevenue) * 100).toFixed(1)}%)`).join("\n")}`;
     }
 
     // Overall forecast accuracy
