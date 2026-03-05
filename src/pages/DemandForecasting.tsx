@@ -2711,7 +2711,7 @@ const DemandForecasting = () => {
                         <Badge variant="outline" className="text-xs bg-success/15 text-success border-success/30 shadow-sm">₹52.8Cr Impact</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Class A items (Insulin Glargine SKU004, Azithromycin SKU002, Amoxicillin SKU005) drive 68.5% revenue but show 12% forecast variance in Delhi and Mumbai hospital chains. Recommend daily inventory reviews and +22% safety stock for Q1 2025 to prevent ₹2.4Cr stockout risk on life-saving medications.
+                        Class A items (Product_21 OverEar Headphones, Product_29 Premium Speakers, Product_12 TWS Speakers) drive 62% revenue but show 14% forecast variance on Amazon and Flipkart. Recommend weekly inventory reviews and +18% safety stock for Q4 sale season to prevent ₹3.1Cr stockout risk.
                       </p>
                     </div>
                   </div>
