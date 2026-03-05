@@ -208,6 +208,7 @@ const DemandForecasting = () => {
 
   // Model configuration state
   const [forecastHorizon, setForecastHorizon] = useState("12");
+  const [forecastHierarchy, setForecastHierarchy] = useState("sku");
   const [modelGranularity, setModelGranularity] = useState("Weekly");
   const [seasonality, setSeasonality] = useState("Auto-detect");
   const [confidenceLevel, setConfidenceLevel] = useState("95");
