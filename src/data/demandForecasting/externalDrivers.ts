@@ -1,6 +1,5 @@
-// External drivers aligned with Feature Store entities - Consumer Electronics Industry
+// External drivers aligned with Feature Store entities — boAt Lifestyle
 export const getExternalDrivers = (studyType: string, hasData: boolean = false) => {
-  // Consumer electronics feature store drivers
   const featureStoreDrivers = [
     { name: "Search Trends (Google)", autoSelected: true, icon: "TrendingUp" },
     { name: "Promotional Campaigns", autoSelected: true, icon: "Tag" },
@@ -13,8 +12,8 @@ export const getExternalDrivers = (studyType: string, hasData: boolean = false) 
     { name: "Weather & Climate Data", autoSelected: false, icon: "CloudRain" },
     { name: "Consumer Sentiment Index", autoSelected: false, icon: "BarChart" },
     { name: "Influencer Campaign Tracker", autoSelected: false, icon: "Users" },
+    { name: "Competitor Activity", autoSelected: false, icon: "Eye" },
   ];
 
-  // Return feature store drivers for all study types to maintain consistency
   return featureStoreDrivers;
 };
