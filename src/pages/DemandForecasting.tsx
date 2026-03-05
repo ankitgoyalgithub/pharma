@@ -89,6 +89,7 @@ import { dataQualityIssues, dataQualitySummary } from '@/data/demandForecasting/
 import { DataQualityIssuesTable } from '@/components/DataQualityIssuesTable';
 import { AutoFixDialog } from '@/components/AutoFixDialog';
 import { NPILaunchIntelligence } from '@/components/NPILaunchIntelligence';
+import { DataRepositoryTab } from '@/components/DataRepositoryTab';
 
 // ---- Chart.js imports (replaces Recharts) ----
 import {
@@ -257,7 +258,7 @@ const DemandForecasting = () => {
       setTimeout(() => setPreviewLoading(false), 700);
     }
   };
-  const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "npi" | "quality">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "insights" | "workbook" | "impact" | "npi" | "repository">("overview");
   const [showImputedReview, setShowImputedReview] = useState(false);
   const [showAutoFixDialog, setShowAutoFixDialog] = useState(false);
   const [showDQPreview, setShowDQPreview] = useState(false);
@@ -2304,14 +2305,14 @@ const DemandForecasting = () => {
 
             <div className="flex justify-center">
             <ForecastCard
-              title="Data Quality Review"
-              value="97.4%"
-              subtitle="Completeness score, 1 missing value imputed, 2 duplicates resolved. AI-enhanced data integrity verified."
-              icon={Shield}
-              isActive={selectedScenario === null && activeTab === "quality"}
+              title="Data Repository"
+              value="6"
+              subtitle="Browse all input datasets, forecast outputs, outlier detection, and feature importance tables."
+              icon={Database}
+              isActive={selectedScenario === null && activeTab === "repository"}
               onClick={() => {
                 setSelectedScenario(null);
-                setActiveTab("quality");
+                setActiveTab("repository");
               }}
             />
             </div>
@@ -2354,7 +2355,7 @@ const DemandForecasting = () => {
              activeTab === "insights" ? "Insights & Impact Analysis" :
              activeTab === "workbook" ? "Collaborative Workbook" :
              activeTab === "npi" ? "New & Limited History Forecast" :
-             activeTab === "quality" ? "Data Quality Review" : "Results"}
+             activeTab === "repository" ? "Data Repository" : "Results"}
           </h1>
           <div className="flex items-center gap-2">
             {!isShareMode && (
@@ -3104,151 +3105,8 @@ const DemandForecasting = () => {
         {activeTab === "npi" && (
           <NPILaunchIntelligence />
         )}
-        {activeTab === "quality" && (
-          <div className="space-y-6 animate-fade-in">
-            {/* Data Quality Metrics Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <Card className="relative overflow-hidden bg-gradient-to-br from-success/10 to-success/5 border-success/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-success/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="w-4 h-4 text-success" />
-                    <div className="text-xs text-muted-foreground">Completeness</div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Percentage of data points that are present and valid across all time periods and dimensions.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <div className="text-2xl font-bold text-success">97.4%</div>
-                </CardContent>
-              </Card>
-              
-              <Card className="relative overflow-hidden bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-warning/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="w-4 h-4 text-warning" />
-                    <div className="text-xs text-muted-foreground">Missing Values</div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Number of missing data points that were imputed using AI algorithms.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <div className="text-2xl font-bold text-warning">1</div>
-                  <div className="text-xs text-muted-foreground mt-1">Successfully imputed</div>
-                </CardContent>
-              </Card>
-              
-              <Card className="relative overflow-hidden bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-accent/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Copy className="w-4 h-4 text-accent" />
-                    <div className="text-xs text-muted-foreground">Duplicates</div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Number of duplicate records that were identified and resolved.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <div className="text-2xl font-bold text-accent">2</div>
-                  <div className="text-xs text-muted-foreground mt-1">Automatically resolved</div>
-                </CardContent>
-              </Card>
-              
-              <Card className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 hover:shadow-lg transition-shadow">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/20 to-transparent rounded-bl-full" />
-                <CardContent className="p-4 relative">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Shield className="w-4 h-4 text-primary" />
-                    <div className="text-xs text-muted-foreground">AI Quality Score</div>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Overall data quality score calculated by AI analysis including pattern validation and anomaly detection.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <div className="text-2xl font-bold text-primary">A+</div>
-                  <div className="text-xs text-muted-foreground mt-1">High confidence</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Additional Insights */}
-            <Card className="shadow-card border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="w-5 h-5" />
-                  AI-Enhanced Data Quality Insights
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-primary">Data Validation Results</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 bg-success/10 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-success" />
-                          <span className="text-sm">Pattern Consistency</span>
-                        </div>
-                        <Badge variant="secondary" className="bg-success/10 text-success">Excellent</Badge>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-success/10 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-success" />
-                          <span className="text-sm">Seasonal Alignment</span>
-                        </div>
-                        <Badge variant="secondary" className="bg-success/10 text-success">Validated</Badge>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-warning/10 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <AlertTriangle className="w-4 h-4 text-warning" />
-                          <span className="text-sm">Outlier Detection</span>
-                        </div>
-                        <Badge variant="secondary" className="bg-warning/10 text-warning">3 Flagged</Badge>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-primary">Imputation Quality</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Method Used</span>
-                        <span className="font-medium">Linear Interpolation + Seasonal Adjustment</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Confidence Level</span>
-                        <span className="font-medium text-success">94.2%</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Cross-Validation Score</span>
-                        <span className="font-medium text-success">0.96</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Impact on Forecast</span>
-                        <Badge variant="secondary" className="bg-success/10 text-success">Minimal</Badge>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        {activeTab === "repository" && (
+          <DataRepositoryTab />
         )}
           </div>
         </div>
