@@ -3008,7 +3008,7 @@ const DemandForecasting = () => {
                       <Info className="w-4 h-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Compares forecast accuracy and bias across therapeutic categories to identify improvement areas.</p>
+                      <p>Compares forecast accuracy and bias across product categories to identify improvement areas.</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
