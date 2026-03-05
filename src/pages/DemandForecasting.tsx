@@ -3413,16 +3413,18 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent className="max-h-[300px]">
                         <SelectItem value="all">All Products</SelectItem>
-                        <SelectItem value="SKU001">Paracetamol 500mg Tablet</SelectItem>
-                        <SelectItem value="SKU002">Azithromycin 500mg Tablet</SelectItem>
-                        <SelectItem value="SKU003">Cetirizine 10mg Tablet</SelectItem>
-                        <SelectItem value="SKU004">Insulin Glargine 100U/ml</SelectItem>
-                        <SelectItem value="SKU005">Amoxicillin 500mg Capsule</SelectItem>
-                        <SelectItem value="SKU006">ORS Sachet (WHO Formula)</SelectItem>
-                        <SelectItem value="SKU007">Salbutamol 100mcg Inhaler</SelectItem>
-                        <SelectItem value="SKU008">Cholecalciferol 60K IU</SelectItem>
-                        <SelectItem value="SKU009">Ceftriaxone 1g Injection</SelectItem>
-                        <SelectItem value="SKU010">Pantoprazole 40mg Tablet</SelectItem>
+                        <SelectItem value="P0001">ComfortWear Sports Shoes</SelectItem>
+                        <SelectItem value="P0003">MetroStyle Frock</SelectItem>
+                        <SelectItem value="P0006">PrimeBasics Kurti</SelectItem>
+                        <SelectItem value="P0011">StreetLine Chinos</SelectItem>
+                        <SelectItem value="P0016">MetroStyle Jeans</SelectItem>
+                        <SelectItem value="P0024">ComfortWear Jeans</SelectItem>
+                        <SelectItem value="P0033">MetroStyle Handbag</SelectItem>
+                        <SelectItem value="P0040">UrbanEdge Sports Shoes</SelectItem>
+                        <SelectItem value="P0048">ComfortWear T-Shirt</SelectItem>
+                        <SelectItem value="P0067">ComfortWear Casual Shoes</SelectItem>
+                        <SelectItem value="P0087">MetroStyle Top</SelectItem>
+                        <SelectItem value="P0098">StreetLine Jeans</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
