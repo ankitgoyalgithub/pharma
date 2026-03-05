@@ -2778,7 +2778,7 @@ const DemandForecasting = () => {
                         labels: ['Class A', 'Class B', 'Class C'],
                         datasets: [
                           {
-                            label: 'Revenue ($M)',
+                            label: 'Revenue (₹Cr)',
                             data: [42.3, 18.6, 7.2],
                             backgroundColor: hslVar('--success', 0.7),
                             borderColor: hslVar('--success'),
