@@ -13,44 +13,42 @@ const splashImageUrls = [
 export const entityPreviewData: EntityPreviewMap = {
   "product": {
     title: "Product Master",
-    description: "Pharmaceutical SKU catalog with molecule, therapy area, and compliance attributes",
+    description: "Consumer electronics SKU catalog with category, price segment, and lifecycle attributes",
     columns: [
-      { accessorKey: "id", header: "SKU ID" },
+      { accessorKey: "id", header: "Product ID" },
       { accessorKey: "name", header: "Product Name" },
-      { accessorKey: "brand", header: "Brand" },
-      { accessorKey: "molecule", header: "Molecule" },
-      { accessorKey: "therapyArea", header: "Therapy Area" },
-      { accessorKey: "dosageForm", header: "Dosage Form" },
-      { accessorKey: "strength", header: "Strength" },
-      { accessorKey: "packSize", header: "Pack Size" },
-      { accessorKey: "hsnCode", header: "HSN Code" },
-      { accessorKey: "gstRate", header: "GST Rate %" },
+      { accessorKey: "category", header: "Category" },
+      { accessorKey: "subCategory", header: "Sub Category" },
+      { accessorKey: "priceSegment", header: "Price Segment" },
       { accessorKey: "mrp", header: "MRP (₹)" },
-      { accessorKey: "coldChainRequired", header: "Cold Chain" },
-      { accessorKey: "shelfLifeMonths", header: "Shelf Life (Months)" },
+      { accessorKey: "costPerUnit", header: "Cost/Unit (₹)" },
+      { accessorKey: "weightGrams", header: "Weight (g)" },
+      { accessorKey: "launchDate", header: "Launch Date" },
+      { accessorKey: "lifecycleStage", header: "Lifecycle Stage" },
+      { accessorKey: "discontinued", header: "Discontinued" },
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "SKU001", name: "Paracetamol 500mg Tablet 10s", brand: "Calmofen", molecule: "Paracetamol", therapyArea: "Analgesic/Antipyretic", dosageForm: "Tablet", strength: "500 mg", packSize: "10 Tablets", hsnCode: "300450", gstRate: 12, mrp: 32, coldChainRequired: "N", shelfLifeMonths: 36, status: "Active" },
-      { id: "SKU002", name: "Azithromycin 500mg Tablet 3s", brand: "AziSure", molecule: "Azithromycin", therapyArea: "Antibiotic", dosageForm: "Tablet", strength: "500 mg", packSize: "3 Tablets", hsnCode: "300420", gstRate: 12, mrp: 98, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU003", name: "Cetirizine 10mg Tablet 10s", brand: "CetiClear", molecule: "Cetirizine", therapyArea: "Allergy", dosageForm: "Tablet", strength: "10 mg", packSize: "10 Tablets", hsnCode: "300490", gstRate: 12, mrp: 45, coldChainRequired: "N", shelfLifeMonths: 36, status: "Active" },
-      { id: "SKU004", name: "Insulin Glargine 100IU/ml 3ml Pen", brand: "Glaris", molecule: "Insulin Glargine", therapyArea: "Diabetes", dosageForm: "Pen", strength: "100 IU/ml", packSize: "1 Pen (3ml)", hsnCode: "300431", gstRate: 5, mrp: 680, coldChainRequired: "Y", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU005", name: "Amoxicillin+Clav 625mg Tablet 10s", brand: "MoxiClav", molecule: "Amoxicillin+Clavulanate", therapyArea: "Antibiotic", dosageForm: "Tablet", strength: "625 mg", packSize: "10 Tablets", hsnCode: "300420", gstRate: 12, mrp: 210, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU006", name: "ORS Sachet 21g", brand: "Rehydra", molecule: "Oral Rehydration Salts", therapyArea: "GI", dosageForm: "Sachet", strength: "21 g", packSize: "1 Sachet", hsnCode: "300490", gstRate: 12, mrp: 18, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU007", name: "Salbutamol Inhaler 100mcg 200md", brand: "BreatheEZ", molecule: "Salbutamol", therapyArea: "Respiratory", dosageForm: "Inhaler", strength: "100 mcg", packSize: "200 metered doses", hsnCode: "300490", gstRate: 12, mrp: 155, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU008", name: "Vitamin D3 60000 IU Sachet", brand: "D3Max", molecule: "Cholecalciferol", therapyArea: "Vitamins", dosageForm: "Sachet", strength: "60000 IU", packSize: "1 Sachet", hsnCode: "300450", gstRate: 12, mrp: 42, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU009", name: "Ceftriaxone 1g Injection Vial", brand: "Ceftron", molecule: "Ceftriaxone", therapyArea: "Antibiotic", dosageForm: "Injection", strength: "1 g", packSize: "1 Vial", hsnCode: "300420", gstRate: 12, mrp: 118, coldChainRequired: "N", shelfLifeMonths: 24, status: "Active" },
-      { id: "SKU010", name: "Pantoprazole 40mg Tablet 10s", brand: "PantoCare", molecule: "Pantoprazole", therapyArea: "GI", dosageForm: "Tablet", strength: "40 mg", packSize: "10 Tablets", hsnCode: "300490", gstRate: 12, mrp: 68, coldChainRequired: "N", shelfLifeMonths: 36, status: "Active" }
+      { id: "SKU_001", name: "Product_1", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 3872, costPerUnit: 1128, weightGrams: 91, launchDate: "2022-04-25", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_002", name: "Product_2", category: "Wearables", subCategory: "Neckband", priceSegment: "Budget", mrp: 3913, costPerUnit: 791, weightGrams: 112, launchDate: "2022-03-19", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_003", name: "Product_3", category: "Wearables", subCategory: "Smartwatch", priceSegment: "Mid", mrp: 5646, costPerUnit: 750, weightGrams: 120, launchDate: "2022-12-06", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_004", name: "Product_4", category: "Wearables", subCategory: "OverEar", priceSegment: "Mid", mrp: 4866, costPerUnit: 1007, weightGrams: 106, launchDate: "2022-08-02", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { id: "SKU_005", name: "Product_5", category: "Speakers", subCategory: "TWS", priceSegment: "Premium", mrp: 4657, costPerUnit: 1262, weightGrams: 294, launchDate: "2022-12-25", lifecycleStage: "Growth", discontinued: false, status: "Active" },
+      { id: "SKU_006", name: "Product_6", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 4101, costPerUnit: 792, weightGrams: 242, launchDate: "2022-12-03", lifecycleStage: "Growth", discontinued: false, status: "Active" },
+      { id: "SKU_007", name: "Product_7", category: "Headphones", subCategory: "Neckband", priceSegment: "Premium", mrp: 4296, costPerUnit: 1072, weightGrams: 216, launchDate: "2022-10-13", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { id: "SKU_008", name: "Product_8", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Premium", mrp: 1656, costPerUnit: 2189, weightGrams: 163, launchDate: "2022-03-24", lifecycleStage: "Mature", discontinued: false, status: "Active" },
+      { id: "SKU_009", name: "Product_9", category: "Speakers", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 4947, costPerUnit: 692, weightGrams: 81, launchDate: "2022-08-13", lifecycleStage: "New", discontinued: false, status: "Active" },
+      { id: "SKU_010", name: "Product_10", category: "Earbuds", subCategory: "Smartwatch", priceSegment: "Budget", mrp: 5770, costPerUnit: 708, weightGrams: 279, launchDate: "2022-06-17", lifecycleStage: "Growth", discontinued: false, status: "Active" }
     ],
-    stats: { totalRecords: 10, lastSync: "2025-01-15 09:30", source: "Pharma ERP" }
+    stats: { totalRecords: 50, lastSync: "2025-01-15 09:30", source: "CSV Upload" }
   },
   "location": {
     title: "Location Master",
-    description: "Network of plants, DCs, depots, and stockists across India",
+    description: "Warehouses across North, South, and West regions in India",
     columns: [
-      { accessorKey: "id", header: "Node ID" },
-      { accessorKey: "name", header: "Node Name" },
-      { accessorKey: "type", header: "Node Type" },
+      { accessorKey: "id", header: "Warehouse ID" },
+      { accessorKey: "name", header: "Warehouse Name" },
+      { accessorKey: "type", header: "Type" },
       { accessorKey: "city", header: "City" },
       { accessorKey: "state", header: "State" },
       { accessorKey: "country", header: "Country" },
@@ -62,34 +60,28 @@ export const entityPreviewData: EntityPreviewMap = {
       { accessorKey: "status", header: "Status" }
     ],
     rows: [
-      { id: "PLT_BHI", name: "Bhiwadi Formulations Plant", type: "PLANT", city: "Bhiwadi", state: "Rajasthan", country: "India", pincode: "301019", storageType: "Ambient", coldStorageAvailable: "N", latitude: 27.566, longitude: 76.609, status: "Active" },
-      { id: "PLT_HYD", name: "Hyderabad Injectables Plant", type: "PLANT", city: "Hyderabad", state: "Telangana", country: "India", pincode: "500072", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 17.494, longitude: 78.399, status: "Active" },
-      { id: "DC_NCR", name: "NCR Distribution Center", type: "DC", city: "Gurugram", state: "Haryana", country: "India", pincode: "122001", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 28.459, longitude: 77.026, status: "Active" },
-      { id: "DC_WEST", name: "West Distribution Center", type: "DC", city: "Bhiwandi", state: "Maharashtra", country: "India", pincode: "421302", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 19.281, longitude: 73.058, status: "Active" },
-      { id: "DC_SOUTH", name: "South Distribution Center", type: "DC", city: "Bengaluru", state: "Karnataka", country: "India", pincode: "560066", storageType: "Ambient", coldStorageAvailable: "Y", latitude: 12.971, longitude: 77.594, status: "Active" },
-      { id: "DEP_EAST", name: "East Depot", type: "DEPOT", city: "Kolkata", state: "West Bengal", country: "India", pincode: "700091", storageType: "Ambient", coldStorageAvailable: "N", latitude: 22.572, longitude: 88.363, status: "Active" },
-      { id: "STK_PUN", name: "Punjab Super Stockist", type: "STOCKIST", city: "Ludhiana", state: "Punjab", country: "India", pincode: "141001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 30.901, longitude: 75.857, status: "Active" },
-      { id: "STK_GUJ", name: "Gujarat Super Stockist", type: "STOCKIST", city: "Ahmedabad", state: "Gujarat", country: "India", pincode: "380015", storageType: "Ambient", coldStorageAvailable: "N", latitude: 23.022, longitude: 72.571, status: "Active" },
-      { id: "STK_TN", name: "Tamil Nadu Super Stockist", type: "STOCKIST", city: "Chennai", state: "Tamil Nadu", country: "India", pincode: "600096", storageType: "Ambient", coldStorageAvailable: "N", latitude: 13.083, longitude: 80.27, status: "Active" }
+      { id: "WH_North", name: "North Warehouse", type: "WAREHOUSE", city: "Delhi", state: "Delhi", country: "India", pincode: "110001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 28.613, longitude: 77.209, status: "Active" },
+      { id: "WH_South", name: "South Warehouse", type: "WAREHOUSE", city: "Bengaluru", state: "Karnataka", country: "India", pincode: "560001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 12.971, longitude: 77.594, status: "Active" },
+      { id: "WH_West", name: "West Warehouse", type: "WAREHOUSE", city: "Mumbai", state: "Maharashtra", country: "India", pincode: "400001", storageType: "Ambient", coldStorageAvailable: "N", latitude: 19.076, longitude: 72.877, status: "Active" }
     ],
-    stats: { totalRecords: 9, lastSync: "2025-01-12 09:45", source: "CSV Upload" }
+    stats: { totalRecords: 3, lastSync: "2025-01-12 09:45", source: "CSV Upload" }
   },
   "channel": {
     title: "Channel Master",
-    description: "Sales channels with service level targets for pharmaceutical distribution",
+    description: "Sales channels — Amazon, Flipkart, D2C, Retail, Distributor",
     columns: [
       { accessorKey: "id", header: "Channel ID" },
-      { accessorKey: "name", header: "Channel Name" },
-      { accessorKey: "channelGroup", header: "Channel Group" },
-      { accessorKey: "serviceLevelTarget", header: "SLA Target" },
-      { accessorKey: "status", header: "Status" }
+      { accessorKey: "region", header: "Region" },
+      { accessorKey: "serviceLevelTarget", header: "Service Level Target" },
+      { accessorKey: "leadTimeDays", header: "Lead Time (Days)" },
+      { accessorKey: "minOrderQty", header: "Min Order Qty" }
     ],
     rows: [
-      { id: "CH01", name: "Retail Pharmacy", channelGroup: "Trade", serviceLevelTarget: "95%", status: "Active" },
-      { id: "CH02", name: "Hospital Pharmacy", channelGroup: "Institutional", serviceLevelTarget: "97%", status: "Active" },
-      { id: "CH03", name: "E-Pharmacy", channelGroup: "Online", serviceLevelTarget: "96%", status: "Active" },
-      { id: "CH04", name: "Distributor / Stockist", channelGroup: "Trade", serviceLevelTarget: "94%", status: "Active" },
-      { id: "CH05", name: "Government Tender", channelGroup: "Institutional", serviceLevelTarget: "98%", status: "Active" }
+      { id: "Amazon", region: "West", serviceLevelTarget: 0.91, leadTimeDays: 12, minOrderQty: 137 },
+      { id: "Flipkart", region: "Central", serviceLevelTarget: 0.91, leadTimeDays: 7, minOrderQty: 87 },
+      { id: "D2C", region: "East", serviceLevelTarget: 0.90, leadTimeDays: 10, minOrderQty: 179 },
+      { id: "Retail", region: "Central", serviceLevelTarget: 0.97, leadTimeDays: 9, minOrderQty: 70 },
+      { id: "Distributor", region: "Central", serviceLevelTarget: 0.95, leadTimeDays: 6, minOrderQty: 107 }
     ],
     stats: { totalRecords: 5, lastSync: "2025-01-10 14:00", source: "CSV Upload" }
   },
@@ -134,46 +126,32 @@ export const entityPreviewData: EntityPreviewMap = {
   },
   "sales-history": {
     title: "Sales History",
-    description: "Weekly sales transactions by store and SKU from Splash ERP",
+    description: "Daily sales by product, channel, and region with revenue and discount data",
     columns: [
-      { accessorKey: "storeId", header: "Store ID" },
-      { accessorKey: "sku", header: "SKU" },
-      { accessorKey: "week", header: "Week" },
-      { accessorKey: "unitsSold", header: "Units Sold" }
+      { accessorKey: "date", header: "Date" },
+      { accessorKey: "productId", header: "Product ID" },
+      { accessorKey: "channelId", header: "Channel" },
+      { accessorKey: "region", header: "Region" },
+      { accessorKey: "unitsSold", header: "Units Sold" },
+      { accessorKey: "revenue", header: "Revenue (₹)" },
+      { accessorKey: "discountPercent", header: "Discount %" },
+      { accessorKey: "promotionFlag", header: "Promotion" },
+      { accessorKey: "stockoutFlag", header: "Stockout" },
+      { accessorKey: "price", header: "Price (₹)" }
     ],
     rows: [
-      { storeId: "STR001", sku: "SKU00597", week: "2025-W01", unitsSold: 22 },
-      { storeId: "STR001", sku: "SKU00597", week: "2025-W02", unitsSold: 17 },
-      { storeId: "STR001", sku: "SKU00597", week: "2025-W03", unitsSold: 5 },
-      { storeId: "STR001", sku: "SKU00597", week: "2025-W04", unitsSold: 19 },
-      { storeId: "STR001", sku: "SKU00597", week: "2025-W05", unitsSold: 16 },
-      { storeId: "STR001", sku: "SKU00847", week: "2025-W01", unitsSold: 13 },
-      { storeId: "STR001", sku: "SKU00847", week: "2025-W02", unitsSold: 17 },
-      { storeId: "STR001", sku: "SKU00847", week: "2025-W03", unitsSold: 16 },
-      { storeId: "STR001", sku: "SKU00847", week: "2025-W04", unitsSold: 12 },
-      { storeId: "STR001", sku: "SKU00847", week: "2025-W05", unitsSold: 14 },
-      { storeId: "STR001", sku: "SKU01074", week: "2025-W01", unitsSold: 33 },
-      { storeId: "STR001", sku: "SKU01074", week: "2025-W02", unitsSold: 35 },
-      { storeId: "STR001", sku: "SKU01074", week: "2025-W03", unitsSold: 25 },
-      { storeId: "STR001", sku: "SKU01074", week: "2025-W04", unitsSold: 18 },
-      { storeId: "STR001", sku: "SKU01074", week: "2025-W05", unitsSold: 24 },
-      { storeId: "STR001", sku: "SKU00354", week: "2025-W01", unitsSold: 35 },
-      { storeId: "STR001", sku: "SKU00354", week: "2025-W02", unitsSold: 24 },
-      { storeId: "STR001", sku: "SKU00354", week: "2025-W03", unitsSold: 29 },
-      { storeId: "STR001", sku: "SKU00354", week: "2025-W04", unitsSold: 20 },
-      { storeId: "STR001", sku: "SKU00354", week: "2025-W05", unitsSold: 25 },
-      { storeId: "STR002", sku: "SKU00597", week: "2025-W01", unitsSold: 18 },
-      { storeId: "STR002", sku: "SKU00597", week: "2025-W02", unitsSold: 21 },
-      { storeId: "STR002", sku: "SKU00597", week: "2025-W03", unitsSold: 15 },
-      { storeId: "STR002", sku: "SKU00847", week: "2025-W01", unitsSold: 28 },
-      { storeId: "STR002", sku: "SKU00847", week: "2025-W02", unitsSold: 31 },
-      { storeId: "STR002", sku: "SKU00847", week: "2025-W03", unitsSold: 22 },
-      { storeId: "STR003", sku: "SKU01074", week: "2025-W01", unitsSold: 41 },
-      { storeId: "STR003", sku: "SKU01074", week: "2025-W02", unitsSold: 38 },
-      { storeId: "STR003", sku: "SKU01074", week: "2025-W03", unitsSold: 29 },
-      { storeId: "STR003", sku: "SKU00354", week: "2025-W01", unitsSold: 19 }
+      { date: "2023-01-13", productId: "SKU_022", channelId: "Flipkart", region: "South", unitsSold: 0, revenue: 0, discountPercent: 0.23, promotionFlag: 1, stockoutFlag: 1, price: 1366 },
+      { date: "2023-02-10", productId: "SKU_037", channelId: "Flipkart", region: "East", unitsSold: 69, revenue: 82003.05, discountPercent: 0.05, promotionFlag: 0, stockoutFlag: 1, price: 1251 },
+      { date: "2023-06-13", productId: "SKU_035", channelId: "Flipkart", region: "West", unitsSold: 66, revenue: 85922.10, discountPercent: 0.01, promotionFlag: 0, stockoutFlag: 0, price: 1315 },
+      { date: "2023-05-25", productId: "SKU_012", channelId: "Amazon", region: "Central", unitsSold: 19, revenue: 57197.79, discountPercent: 0.07, promotionFlag: 1, stockoutFlag: 1, price: 3237 },
+      { date: "2023-03-23", productId: "SKU_008", channelId: "Amazon", region: "North", unitsSold: 41, revenue: 69844.32, discountPercent: 0.28, promotionFlag: 1, stockoutFlag: 0, price: 2366 },
+      { date: "2023-03-26", productId: "SKU_011", channelId: "Distributor", region: "West", unitsSold: 35, revenue: 69978.30, discountPercent: 0.06, promotionFlag: 0, stockoutFlag: 1, price: 2127 },
+      { date: "2023-01-26", productId: "SKU_023", channelId: "Retail", region: "East", unitsSold: 35, revenue: 115522.40, discountPercent: 0.02, promotionFlag: 1, stockoutFlag: 1, price: 3368 },
+      { date: "2023-01-04", productId: "SKU_044", channelId: "Retail", region: "West", unitsSold: 7, revenue: 21574.70, discountPercent: 0.02, promotionFlag: 0, stockoutFlag: 0, price: 3145 },
+      { date: "2023-01-31", productId: "SKU_021", channelId: "Flipkart", region: "Central", unitsSold: 37, revenue: 141406.60, discountPercent: 0.03, promotionFlag: 1, stockoutFlag: 1, price: 3940 },
+      { date: "2023-02-06", productId: "SKU_043", channelId: "D2C", region: "South", unitsSold: 61, revenue: 182311.92, discountPercent: 0.16, promotionFlag: 1, stockoutFlag: 0, price: 3558 }
     ],
-    stats: { totalRecords: 60000, lastSync: "2025-12-11 15:00", source: "Splash ERP" }
+    stats: { totalRecords: 12000, lastSync: "2025-12-11 15:00", source: "CSV Upload" }
   },
   "copper-prices": {
     title: "Copper Prices",
@@ -473,33 +451,53 @@ export const entityPreviewData: EntityPreviewMap = {
   },
   "inventory-levels": {
     title: "Inventory Snapshot",
-    description: "Batch-wise inventory with expiry and quarantine tracking across pharma supply chain",
+    description: "Warehouse-wise inventory with on-hand, in-transit, reserved, and damaged quantities",
     columns: [
-      { accessorKey: "asOfDate", header: "As Of Date" },
-      { accessorKey: "nodeId", header: "Node ID" },
-      { accessorKey: "skuId", header: "SKU ID" },
-      { accessorKey: "batchNo", header: "Batch No" },
-      { accessorKey: "mfgDate", header: "Mfg Date" },
-      { accessorKey: "expiryDate", header: "Expiry Date" },
+      { accessorKey: "date", header: "Date" },
+      { accessorKey: "productId", header: "Product ID" },
+      { accessorKey: "warehouseId", header: "Warehouse ID" },
       { accessorKey: "onHandQty", header: "On Hand Qty" },
+      { accessorKey: "inTransitQty", header: "In Transit Qty" },
       { accessorKey: "reservedQty", header: "Reserved Qty" },
-      { accessorKey: "availableQty", header: "Available Qty" },
-      { accessorKey: "quarantineQty", header: "Quarantine Qty" },
-      { accessorKey: "uom", header: "UoM" }
+      { accessorKey: "damagedQty", header: "Damaged Qty" }
     ],
     rows: [
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU001", batchNo: "B33393", mfgDate: "2024-06-14", expiryDate: "2025-08-31", onHandQty: 6070, reservedQty: 775, availableQty: 5214, quarantineQty: 81, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU002", batchNo: "B13352", mfgDate: "2025-06-03", expiryDate: "2026-04-11", onHandQty: 8531, reservedQty: 387, availableQty: 7908, quarantineQty: 236, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU003", batchNo: "B63532", mfgDate: "2024-04-15", expiryDate: "2026-01-30", onHandQty: 1737, reservedQty: 229, availableQty: 1487, quarantineQty: 21, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU004", batchNo: "B72284", mfgDate: "2024-10-04", expiryDate: "2026-03-10", onHandQty: 3248, reservedQty: 188, availableQty: 2934, quarantineQty: 126, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_WEST", skuId: "SKU001", batchNo: "B76610", mfgDate: "2025-02-04", expiryDate: "2026-05-01", onHandQty: 7676, reservedQty: 423, availableQty: 7083, quarantineQty: 170, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_WEST", skuId: "SKU002", batchNo: "B42890", mfgDate: "2024-04-23", expiryDate: "2025-07-14", onHandQty: 7796, reservedQty: 269, availableQty: 7464, quarantineQty: 63, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_SOUTH", skuId: "SKU001", batchNo: "B65555", mfgDate: "2024-06-04", expiryDate: "2025-05-11", onHandQty: 6115, reservedQty: 526, availableQty: 5375, quarantineQty: 214, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_SOUTH", skuId: "SKU002", batchNo: "B31615", mfgDate: "2025-02-28", expiryDate: "2026-03-21", onHandQty: 3173, reservedQty: 104, availableQty: 2934, quarantineQty: 135, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DEP_EAST", skuId: "SKU001", batchNo: "B18471", mfgDate: "2025-05-19", expiryDate: "2026-02-08", onHandQty: 2673, reservedQty: 242, availableQty: 2384, quarantineQty: 47, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DEP_EAST", skuId: "SKU002", batchNo: "B74541", mfgDate: "2024-09-23", expiryDate: "2025-06-01", onHandQty: 6984, reservedQty: 502, availableQty: 6391, quarantineQty: 91, uom: "EA" }
+      { date: "2024-01-01", productId: "SKU_001", warehouseId: "WH_North", onHandQty: 235, inTransitQty: 298, reservedQty: 119, damagedQty: 42 },
+      { date: "2024-01-01", productId: "SKU_001", warehouseId: "WH_South", onHandQty: 987, inTransitQty: 191, reservedQty: 22, damagedQty: 40 },
+      { date: "2024-01-01", productId: "SKU_001", warehouseId: "WH_West", onHandQty: 141, inTransitQty: 69, reservedQty: 165, damagedQty: 34 },
+      { date: "2024-01-01", productId: "SKU_002", warehouseId: "WH_North", onHandQty: 615, inTransitQty: 349, reservedQty: 121, damagedQty: 18 },
+      { date: "2024-01-01", productId: "SKU_002", warehouseId: "WH_South", onHandQty: 1845, inTransitQty: 480, reservedQty: 103, damagedQty: 18 },
+      { date: "2024-01-01", productId: "SKU_002", warehouseId: "WH_West", onHandQty: 1595, inTransitQty: 430, reservedQty: 153, damagedQty: 36 },
+      { date: "2024-01-01", productId: "SKU_003", warehouseId: "WH_North", onHandQty: 563, inTransitQty: 148, reservedQty: 144, damagedQty: 4 },
+      { date: "2024-01-01", productId: "SKU_003", warehouseId: "WH_South", onHandQty: 1744, inTransitQty: 259, reservedQty: 99, damagedQty: 25 },
+      { date: "2024-01-01", productId: "SKU_003", warehouseId: "WH_West", onHandQty: 1508, inTransitQty: 101, reservedQty: 56, damagedQty: 47 },
+      { date: "2024-01-01", productId: "SKU_004", warehouseId: "WH_North", onHandQty: 1827, inTransitQty: 195, reservedQty: 175, damagedQty: 18 }
     ],
-    stats: { totalRecords: 32, lastSync: "2025-01-01 16:30", source: "ERP System" }
+    stats: { totalRecords: 150, lastSync: "2025-01-01 16:30", source: "CSV Upload" }
+  },
+  "cost-parameters": {
+    title: "Cost Parameters",
+    description: "SKU-wise holding, stockout, ordering, and transport cost parameters",
+    columns: [
+      { accessorKey: "productId", header: "Product ID" },
+      { accessorKey: "holdingCostPerUnitPerDay", header: "Holding Cost/Unit/Day (₹)" },
+      { accessorKey: "stockoutCostPerUnit", header: "Stockout Cost/Unit (₹)" },
+      { accessorKey: "orderingCost", header: "Ordering Cost (₹)" },
+      { accessorKey: "transportCostPerUnit", header: "Transport Cost/Unit (₹)" }
+    ],
+    rows: [
+      { productId: "SKU_001", holdingCostPerUnitPerDay: 0.62, stockoutCostPerUnit: 189.20, orderingCost: 1726.21, transportCostPerUnit: 41.13 },
+      { productId: "SKU_002", holdingCostPerUnitPerDay: 0.84, stockoutCostPerUnit: 270.74, orderingCost: 1053.33, transportCostPerUnit: 45.76 },
+      { productId: "SKU_003", holdingCostPerUnitPerDay: 0.71, stockoutCostPerUnit: 126.84, orderingCost: 940.70, transportCostPerUnit: 38.98 },
+      { productId: "SKU_004", holdingCostPerUnitPerDay: 2.61, stockoutCostPerUnit: 223.00, orderingCost: 1742.19, transportCostPerUnit: 28.61 },
+      { productId: "SKU_005", holdingCostPerUnitPerDay: 0.53, stockoutCostPerUnit: 238.24, orderingCost: 1457.79, transportCostPerUnit: 13.46 },
+      { productId: "SKU_006", holdingCostPerUnitPerDay: 2.65, stockoutCostPerUnit: 87.87, orderingCost: 1847.39, transportCostPerUnit: 12.28 },
+      { productId: "SKU_007", holdingCostPerUnitPerDay: 1.63, stockoutCostPerUnit: 150.15, orderingCost: 1444.83, transportCostPerUnit: 24.97 },
+      { productId: "SKU_008", holdingCostPerUnitPerDay: 0.51, stockoutCostPerUnit: 170.70, orderingCost: 1611.23, transportCostPerUnit: 28.55 },
+      { productId: "SKU_009", holdingCostPerUnitPerDay: 1.50, stockoutCostPerUnit: 138.92, orderingCost: 1754.67, transportCostPerUnit: 34.36 },
+      { productId: "SKU_010", holdingCostPerUnitPerDay: 0.97, stockoutCostPerUnit: 130.53, orderingCost: 582.11, transportCostPerUnit: 10.26 }
+    ],
+    stats: { totalRecords: 50, lastSync: "2025-01-15 10:00", source: "CSV Upload" }
   },
   "weather-climate-data": {
     title: "Weather & Climate Data",

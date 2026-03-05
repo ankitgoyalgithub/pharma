@@ -10,7 +10,7 @@ export { productMasterData } from "./productMasterData";
 export { locationMasterData } from "./locationMasterData";
 export { customerMasterData } from "./customerMasterData";
 export { supplierMasterData } from "./supplierMasterData";
-export { employeeMasterData } from "./employeeMasterData";
+export { costParametersData } from "./costParametersData";
 export { salesHistoryData } from "./salesHistoryData";
 export { inventoryLevelsData } from "./inventoryLevelsData";
 export { holidayCalendarData } from "./holidayCalendarData";
