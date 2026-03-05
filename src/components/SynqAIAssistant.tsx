@@ -402,14 +402,15 @@ const generateResponse = (query: string): { content: string; chart?: Message["ch
   // Seasonal patterns
   if (lowerQuery.includes("seasonal") || lowerQuery.includes("pattern")) {
     return {
-      content: `🌡️ **Seasonal Demand Patterns**\n\n**Q1 (Jan-Mar):** Flu season drives 42% surge in respiratory meds\n• Salbutamol, Azithromycin demand peaks\n\n**Q2 (Apr-Jun):** Summer allergies boost antihistamines\n• Cetirizine sales up 28%\n\n**Q3 (Jul-Sep):** Monsoon brings dengue/malaria spike\n• ORS, Paracetamol surge 6x\n\n**Q4 (Oct-Dec):** Year-end hospital procurement\n• Insulin, chronic medication stocking`,
+      content: `🌡️ **Seasonal Demand Patterns**\n\n**Q1 (Jan-Mar):** Republic Day & budget season drives 25% spike\n• Earbuds and Speakers demand peaks\n\n**Q2 (Apr-Jun):** Back-to-college & summer gifting\n• Headphones and Wearables up 18%\n\n**Q3 (Jul-Sep):** Prime Day & Great Indian Sale\n• TWS Earbuds surge 45%, Speakers up 30%\n\n**Q4 (Oct-Dec):** Diwali, Big Billion Days, Christmas\n• All categories peak — 38% overall surge`,
       chart: {
         type: "line",
         data: {
           labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
           datasets: [
-            { label: "Respiratory", data: [120, 130, 110, 80, 70, 75, 85, 95, 100, 90, 105, 115], borderColor: "#3b82f6", tension: 0.4 },
-            { label: "Antibiotics", data: [90, 85, 80, 85, 90, 100, 140, 150, 130, 95, 90, 85], borderColor: "#22c55e", tension: 0.4 },
+            { label: "Earbuds", data: [95, 85, 80, 85, 90, 88, 110, 105, 130, 145, 140, 120], borderColor: "#3b82f6", tension: 0.4 },
+            { label: "Speakers", data: [80, 75, 78, 82, 85, 80, 95, 90, 115, 130, 125, 110], borderColor: "#22c55e", tension: 0.4 },
+            { label: "Headphones", data: [70, 72, 75, 88, 92, 90, 85, 82, 100, 115, 110, 95], borderColor: "#8b5cf6", tension: 0.4 },
           ]
         }
       }
