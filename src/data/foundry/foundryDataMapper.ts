@@ -3,7 +3,7 @@ import { productMasterData } from "./productMasterData";
 import { locationMasterData } from "./locationMasterData"; 
 import { customerMasterData } from "./customerMasterData";
 import { supplierMasterData } from "./supplierMasterData";
-import { employeeMasterData } from "./employeeMasterData";
+import { costParametersData } from "./costParametersData";
 import { salesHistoryData } from "./salesHistoryData";
 import { inventoryLevelsData } from "./inventoryLevelsData";
 import { holidayCalendarData } from "./holidayCalendarData";

@@ -451,33 +451,53 @@ export const entityPreviewData: EntityPreviewMap = {
   },
   "inventory-levels": {
     title: "Inventory Snapshot",
-    description: "Batch-wise inventory with expiry and quarantine tracking across pharma supply chain",
+    description: "Warehouse-wise inventory with on-hand, in-transit, reserved, and damaged quantities",
     columns: [
-      { accessorKey: "asOfDate", header: "As Of Date" },
-      { accessorKey: "nodeId", header: "Node ID" },
-      { accessorKey: "skuId", header: "SKU ID" },
-      { accessorKey: "batchNo", header: "Batch No" },
-      { accessorKey: "mfgDate", header: "Mfg Date" },
-      { accessorKey: "expiryDate", header: "Expiry Date" },
+      { accessorKey: "date", header: "Date" },
+      { accessorKey: "productId", header: "Product ID" },
+      { accessorKey: "warehouseId", header: "Warehouse ID" },
       { accessorKey: "onHandQty", header: "On Hand Qty" },
+      { accessorKey: "inTransitQty", header: "In Transit Qty" },
       { accessorKey: "reservedQty", header: "Reserved Qty" },
-      { accessorKey: "availableQty", header: "Available Qty" },
-      { accessorKey: "quarantineQty", header: "Quarantine Qty" },
-      { accessorKey: "uom", header: "UoM" }
+      { accessorKey: "damagedQty", header: "Damaged Qty" }
     ],
     rows: [
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU001", batchNo: "B33393", mfgDate: "2024-06-14", expiryDate: "2025-08-31", onHandQty: 6070, reservedQty: 775, availableQty: 5214, quarantineQty: 81, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU002", batchNo: "B13352", mfgDate: "2025-06-03", expiryDate: "2026-04-11", onHandQty: 8531, reservedQty: 387, availableQty: 7908, quarantineQty: 236, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU003", batchNo: "B63532", mfgDate: "2024-04-15", expiryDate: "2026-01-30", onHandQty: 1737, reservedQty: 229, availableQty: 1487, quarantineQty: 21, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_NCR", skuId: "SKU004", batchNo: "B72284", mfgDate: "2024-10-04", expiryDate: "2026-03-10", onHandQty: 3248, reservedQty: 188, availableQty: 2934, quarantineQty: 126, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_WEST", skuId: "SKU001", batchNo: "B76610", mfgDate: "2025-02-04", expiryDate: "2026-05-01", onHandQty: 7676, reservedQty: 423, availableQty: 7083, quarantineQty: 170, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_WEST", skuId: "SKU002", batchNo: "B42890", mfgDate: "2024-04-23", expiryDate: "2025-07-14", onHandQty: 7796, reservedQty: 269, availableQty: 7464, quarantineQty: 63, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_SOUTH", skuId: "SKU001", batchNo: "B65555", mfgDate: "2024-06-04", expiryDate: "2025-05-11", onHandQty: 6115, reservedQty: 526, availableQty: 5375, quarantineQty: 214, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DC_SOUTH", skuId: "SKU002", batchNo: "B31615", mfgDate: "2025-02-28", expiryDate: "2026-03-21", onHandQty: 3173, reservedQty: 104, availableQty: 2934, quarantineQty: 135, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DEP_EAST", skuId: "SKU001", batchNo: "B18471", mfgDate: "2025-05-19", expiryDate: "2026-02-08", onHandQty: 2673, reservedQty: 242, availableQty: 2384, quarantineQty: 47, uom: "EA" },
-      { asOfDate: "2025-01-01", nodeId: "DEP_EAST", skuId: "SKU002", batchNo: "B74541", mfgDate: "2024-09-23", expiryDate: "2025-06-01", onHandQty: 6984, reservedQty: 502, availableQty: 6391, quarantineQty: 91, uom: "EA" }
+      { date: "2024-01-01", productId: "SKU_001", warehouseId: "WH_North", onHandQty: 235, inTransitQty: 298, reservedQty: 119, damagedQty: 42 },
+      { date: "2024-01-01", productId: "SKU_001", warehouseId: "WH_South", onHandQty: 987, inTransitQty: 191, reservedQty: 22, damagedQty: 40 },
+      { date: "2024-01-01", productId: "SKU_001", warehouseId: "WH_West", onHandQty: 141, inTransitQty: 69, reservedQty: 165, damagedQty: 34 },
+      { date: "2024-01-01", productId: "SKU_002", warehouseId: "WH_North", onHandQty: 615, inTransitQty: 349, reservedQty: 121, damagedQty: 18 },
+      { date: "2024-01-01", productId: "SKU_002", warehouseId: "WH_South", onHandQty: 1845, inTransitQty: 480, reservedQty: 103, damagedQty: 18 },
+      { date: "2024-01-01", productId: "SKU_002", warehouseId: "WH_West", onHandQty: 1595, inTransitQty: 430, reservedQty: 153, damagedQty: 36 },
+      { date: "2024-01-01", productId: "SKU_003", warehouseId: "WH_North", onHandQty: 563, inTransitQty: 148, reservedQty: 144, damagedQty: 4 },
+      { date: "2024-01-01", productId: "SKU_003", warehouseId: "WH_South", onHandQty: 1744, inTransitQty: 259, reservedQty: 99, damagedQty: 25 },
+      { date: "2024-01-01", productId: "SKU_003", warehouseId: "WH_West", onHandQty: 1508, inTransitQty: 101, reservedQty: 56, damagedQty: 47 },
+      { date: "2024-01-01", productId: "SKU_004", warehouseId: "WH_North", onHandQty: 1827, inTransitQty: 195, reservedQty: 175, damagedQty: 18 }
     ],
-    stats: { totalRecords: 32, lastSync: "2025-01-01 16:30", source: "ERP System" }
+    stats: { totalRecords: 150, lastSync: "2025-01-01 16:30", source: "CSV Upload" }
+  },
+  "cost-parameters": {
+    title: "Cost Parameters",
+    description: "SKU-wise holding, stockout, ordering, and transport cost parameters",
+    columns: [
+      { accessorKey: "productId", header: "Product ID" },
+      { accessorKey: "holdingCostPerUnitPerDay", header: "Holding Cost/Unit/Day (₹)" },
+      { accessorKey: "stockoutCostPerUnit", header: "Stockout Cost/Unit (₹)" },
+      { accessorKey: "orderingCost", header: "Ordering Cost (₹)" },
+      { accessorKey: "transportCostPerUnit", header: "Transport Cost/Unit (₹)" }
+    ],
+    rows: [
+      { productId: "SKU_001", holdingCostPerUnitPerDay: 0.62, stockoutCostPerUnit: 189.20, orderingCost: 1726.21, transportCostPerUnit: 41.13 },
+      { productId: "SKU_002", holdingCostPerUnitPerDay: 0.84, stockoutCostPerUnit: 270.74, orderingCost: 1053.33, transportCostPerUnit: 45.76 },
+      { productId: "SKU_003", holdingCostPerUnitPerDay: 0.71, stockoutCostPerUnit: 126.84, orderingCost: 940.70, transportCostPerUnit: 38.98 },
+      { productId: "SKU_004", holdingCostPerUnitPerDay: 2.61, stockoutCostPerUnit: 223.00, orderingCost: 1742.19, transportCostPerUnit: 28.61 },
+      { productId: "SKU_005", holdingCostPerUnitPerDay: 0.53, stockoutCostPerUnit: 238.24, orderingCost: 1457.79, transportCostPerUnit: 13.46 },
+      { productId: "SKU_006", holdingCostPerUnitPerDay: 2.65, stockoutCostPerUnit: 87.87, orderingCost: 1847.39, transportCostPerUnit: 12.28 },
+      { productId: "SKU_007", holdingCostPerUnitPerDay: 1.63, stockoutCostPerUnit: 150.15, orderingCost: 1444.83, transportCostPerUnit: 24.97 },
+      { productId: "SKU_008", holdingCostPerUnitPerDay: 0.51, stockoutCostPerUnit: 170.70, orderingCost: 1611.23, transportCostPerUnit: 28.55 },
+      { productId: "SKU_009", holdingCostPerUnitPerDay: 1.50, stockoutCostPerUnit: 138.92, orderingCost: 1754.67, transportCostPerUnit: 34.36 },
+      { productId: "SKU_010", holdingCostPerUnitPerDay: 0.97, stockoutCostPerUnit: 130.53, orderingCost: 582.11, transportCostPerUnit: 10.26 }
+    ],
+    stats: { totalRecords: 50, lastSync: "2025-01-15 10:00", source: "CSV Upload" }
   },
   "weather-climate-data": {
     title: "Weather & Climate Data",
