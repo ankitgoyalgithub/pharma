@@ -2852,7 +2852,7 @@ const DemandForecasting = () => {
                         labels: ['X (Stable)', 'Y (Variable)', 'Z (Erratic)'],
                         datasets: [
                           {
-                            label: 'Revenue ($M)',
+                            label: 'Revenue (₹Cr)',
                             data: [38.4, 21.2, 8.5],
                             backgroundColor: hslVar('--success', 0.7),
                             borderColor: hslVar('--success'),
