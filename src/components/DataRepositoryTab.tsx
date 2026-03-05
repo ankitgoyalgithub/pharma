@@ -78,12 +78,13 @@ const featureImportanceData = [
 ];
 
 interface DataTableProps {
-  columns: string[];
+  headers: string[];
+  keys: string[];
   data: Record<string, any>[];
   searchKey?: string;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ columns, data, searchKey }) => {
+const DataTable: React.FC<DataTableProps> = ({ headers, keys, data, searchKey }) => {
   const [search, setSearch] = useState("");
   const filtered = searchKey
     ? data.filter(row => String(row[searchKey]).toLowerCase().includes(search.toLowerCase()))
@@ -107,7 +108,7 @@ const DataTable: React.FC<DataTableProps> = ({ columns, data, searchKey }) => {
           <table className="w-full">
             <thead className="sticky top-0 z-10">
               <tr className="border-b border-border/40 bg-muted/50">
-                {columns.map(col => (
+                {headers.map(col => (
                   <th key={col} className="text-left py-2.5 px-3 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold whitespace-nowrap">{col}</th>
                 ))}
               </tr>
@@ -115,15 +116,10 @@ const DataTable: React.FC<DataTableProps> = ({ columns, data, searchKey }) => {
             <tbody>
               {filtered.map((row, i) => (
                 <tr key={i} className="border-b border-border/20 hover:bg-muted/20 transition-colors">
-                  {columns.map(col => {
-                    const key = col.replace(/ /g, '_').replace(/[()%]/g, '').toLowerCase();
-                    // Find the matching key in the row
-                    const matchedKey = Object.keys(row).find(k => 
-                      k.toLowerCase().replace(/_/g, '') === key.replace(/_/g, '')
-                    ) || Object.keys(row)[columns.indexOf(col)];
-                    const val = row[matchedKey];
+                  {keys.map((key, ci) => {
+                    const val = row[key];
                     return (
-                      <td key={col} className="py-2 px-3 text-xs text-foreground whitespace-nowrap">
+                      <td key={ci} className="py-2 px-3 text-xs text-foreground whitespace-nowrap">
                         {typeof val === 'number' ? val.toLocaleString() : String(val ?? '')}
                       </td>
                     );
