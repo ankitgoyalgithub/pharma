@@ -175,8 +175,8 @@ export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locat
       case 'weekly':
         const weeklyData = [];
         for (let i = 1; i <= 65; i++) {
-          const trendBase = (85 + (i * 1.2)) * storeMultiplier;
-          const seasonality = Math.sin(i / 8) * 12 * storeMultiplier;
+          const trendBase = (85 + (i * 1.2)) * totalMultiplier;
+          const seasonality = Math.sin(i / 8) * 12 * totalMultiplier;
           const noise = (Math.random() - 0.5) * 8;
           
           const periodLabel = i <= 52 ? `W${i}` : `W${i} (F)`;
