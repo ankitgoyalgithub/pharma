@@ -1974,8 +1974,8 @@ const DemandForecasting = () => {
               <Database className="w-4 h-4 text-accent" />
               <div className="text-xs font-medium text-muted-foreground">Total Records</div>
             </div>
-            <div className="text-base font-bold text-foreground">82,577</div>
-            <div className="text-xs text-muted-foreground">Across all sources</div>
+            <div className="text-base font-bold text-foreground">82,576</div>
+            <div className="text-xs text-muted-foreground">Across 3 channels</div>
           </CardContent>
         </Card>
         
