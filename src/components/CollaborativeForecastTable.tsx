@@ -99,52 +99,50 @@ const approverNames = [
   "Anil Kapoor", "Nirmala Sitharaman", "Rajiv Gandhi", "Dr. Shyam Sundar"
 ];
 
-// Generate realistic forecast data based on pharma demand patterns
+// Generate realistic forecast data based on consumer electronics demand patterns
 const generateWeeklyForecast = (baseValue: number, weekIndex: number) => {
-  // Pharma seasonality adjustments (monsoon, winter flu season)
-  const seasonalFactors = [0.95, 0.92, 0.98, 1.02, 1.18, 1.25, 1.22, 1.15, 1.08, 0.98, 0.96, 1.05];
+  // Consumer electronics seasonality (festival season Q4 spike, Prime Day July)
+  const seasonalFactors = [0.85, 0.82, 0.88, 0.92, 0.95, 0.90, 1.15, 1.05, 0.95, 1.55, 1.20, 1.10];
   return Math.round(baseValue * seasonalFactors[weekIndex] * (0.9 + Math.random() * 0.2));
 };
 
 const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
-  const baseValue = 500 + Math.floor(Math.random() * 1500); // 500-2000 units base
+  const baseValue = 500 + Math.floor(Math.random() * 1500);
   const nodeIndex = index % pharmaNodes.length;
   const channels: ("Online" | "Retail" | "B2B" | "Direct")[] = ["Online", "Retail", "B2B", "Direct"];
   const channel = channels[index % 4];
   const owner = plannerNames[index % plannerNames.length];
   const approver = approverNames[index % approverNames.length];
   
-  // Generate 12 weeks of forecast data
   const weeks: { [key: string]: { forecast: number; plannerInput?: number; reason?: string } } = {};
   for (let w = 1; w <= 12; w++) {
     const forecast = generateWeeklyForecast(baseValue, w - 1);
     weeks[`week${w}`] = { forecast };
   }
   
-  // Add planner adjustments for some weeks with pharma-relevant reasons
-  const pharmaReasons = [
-    "Monsoon outbreak surge expected",
-    "Flu season demand boost",
-    "Generic drug launch impact",
-    "Hospital tender fulfillment",
-    "E-pharmacy promotion campaign",
-    "API supply constraint adjustment",
-    "Cold chain capacity limitation",
-    "Medical conference Rx uplift",
-    "Disease outbreak pre-positioning",
-    "Chronic care refill cycle peak"
+  // boAt-relevant planner adjustment reasons
+  const boatReasons = [
+    "Big Billion Days surge expected",
+    "Prime Day demand boost",
+    "Competitor launch impact — JBL Wave Beam",
+    "D2C promotion campaign uplift",
+    "Influencer campaign — Technical Guruji",
+    "Supply constraint — chipset shortage",
+    "Warehouse capacity rebalance",
+    "Diwali gifting season pre-position",
+    "New product launch cannibalization",
+    "Flipkart flash sale allocation"
   ];
   
-  // Add 1-2 planner adjustments per SKU
   const adjustmentWeeks = [3, 5, 7, 9, 11];
   const adjustWeek = adjustmentWeeks[index % adjustmentWeeks.length];
   const weekKey = `week${adjustWeek}`;
   const currentForecast = weeks[weekKey].forecast;
-  const adjustmentFactor = 1 + (Math.random() * 0.3 - 0.1); // -10% to +20%
+  const adjustmentFactor = 1 + (Math.random() * 0.3 - 0.1);
   weeks[weekKey] = {
     forecast: currentForecast,
     plannerInput: Math.round(currentForecast * adjustmentFactor),
-    reason: pharmaReasons[index % pharmaReasons.length]
+    reason: boatReasons[index % boatReasons.length]
   };
   
   const isApproved = Math.random() > 0.15; // 85% approval rate
