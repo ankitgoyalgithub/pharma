@@ -1001,15 +1001,24 @@ export default function Foundry() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>{source === "upload_csv" ? "Upload CSV" : "Path / Bucket / Key"}</Label>
+              <Label>{source === "upload_csv" ? "Upload CSV" : source === "s3" ? "S3 Bucket File" : "Path / Bucket / Key"}</Label>
               {source === "upload_csv" ? (
                 <Button variant="outline">
                   <FileUp className="h-4 w-4 mr-1" />
                   Upload File
                 </Button>
+              ) : source === "s3" ? (
+                <Select value={filePath} onValueChange={(v) => { setFilePath(v); setFileColumns([]); softResetPreview(); }}>
+                  <SelectTrigger><SelectValue placeholder="Select file from bucket" /></SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    {s3FileKeys.map((f) => (
+                      <SelectItem key={f} value={f}>{f}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               ) : (
                 <Input
-                  placeholder={source === "s3" ? "s3://bucket/path/to/file.csv" : "/path/to/file.csv"}
+                  placeholder="/path/to/file.csv"
                   value={filePath}
                   onChange={(e) => { setFilePath(e.target.value); softResetPreview(); }}
                 />
@@ -1018,7 +1027,7 @@ export default function Foundry() {
             <div className="space-y-2 md:col-span-2">
               <Label>Columns</Label>
               <div className="flex flex-wrap gap-2 p-2 border rounded-md bg-muted/40">
-                {commonColumns.map((c) => (
+                {(source === "s3" ? s3AvailableColumns : commonColumns).map((c) => (
                   <button
                     key={c}
                     type="button"
@@ -1031,6 +1040,7 @@ export default function Foundry() {
                     {c}
                   </button>
                 ))}
+                {source === "s3" && !filePath && <span className="text-xs text-muted-foreground">Select a file to see its columns</span>}
               </div>
             </div>
           </div>
