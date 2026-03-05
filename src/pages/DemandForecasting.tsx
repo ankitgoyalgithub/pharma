@@ -3753,11 +3753,11 @@ const DemandForecasting = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Channels</SelectItem>
-                        <SelectItem value="retail">Retail Pharmacy</SelectItem>
-                        <SelectItem value="hospital">Hospital Pharmacy</SelectItem>
-                        <SelectItem value="epharmacy">E-Pharmacy</SelectItem>
-                        <SelectItem value="distributor">Distributor/Stockist</SelectItem>
-                        <SelectItem value="govt">Government Tender</SelectItem>
+                        <SelectItem value="amazon">Amazon</SelectItem>
+                        <SelectItem value="flipkart">Flipkart</SelectItem>
+                        <SelectItem value="d2c">D2C</SelectItem>
+                        <SelectItem value="retail">Retail</SelectItem>
+                        <SelectItem value="distributor">Distributor</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
