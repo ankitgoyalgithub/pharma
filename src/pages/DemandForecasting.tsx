@@ -1463,9 +1463,9 @@ const DemandForecasting = () => {
           </div>
           <div className="flex items-center gap-3">
             <div className="text-right">
-              <div className="text-sm font-medium">{dataQualitySummary.totalIssues} Issues Detected</div>
+              <div className="text-sm font-medium">{dynamicDataQualityIssues.length} Issues Detected</div>
               <div className="text-xs text-muted-foreground">
-                {dataQualitySummary.highSeverity} high · {dataQualitySummary.mediumSeverity} medium · {dataQualitySummary.lowSeverity} low
+                {dynamicDataQualityIssues.filter(i => i.severity === 'high').length} high · {dynamicDataQualityIssues.filter(i => i.severity === 'medium').length} medium · {dynamicDataQualityIssues.filter(i => i.severity === 'low').length} low
               </div>
             </div>
             <Button size="sm" onClick={() => setShowAutoFixDialog(true)}>
