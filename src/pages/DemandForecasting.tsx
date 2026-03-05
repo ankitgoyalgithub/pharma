@@ -2189,7 +2189,7 @@ const DemandForecasting = () => {
                                     <Badge variant="outline" className="text-xs">{row.channel}</Badge>
                                   </td>
                                   <td className="p-2 text-xs">{row.date}</td>
-                                  <td className="p-2 font-medium">{row.sales}</td>
+                                  <td className="p-2 font-medium">{row.unitsSold}</td>
                                   <td className="p-2 font-medium text-success">{row.revenue}</td>
                                   <td className="p-2">
                                     <Badge variant="secondary" className="text-xs">
