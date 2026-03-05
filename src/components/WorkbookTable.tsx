@@ -87,7 +87,7 @@ export const WorkbookTable: React.FC = () => {
     }
   };
 
-  const toCurrency = (v: number) => `₹ ${v.toLocaleString(undefined, { maximumFractionDigits: 1 })}M`;
+  const toCurrency = (v: number) => `₹${(v / 10).toLocaleString(undefined, { maximumFractionDigits: 2 })}Cr`;
 
   const exportCSV = () => {
     const headers = [
