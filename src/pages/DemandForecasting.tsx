@@ -1521,36 +1521,58 @@ const DemandForecasting = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-medium text-foreground">Forecastability Chart (ADI vs CV²)</h3>
+              <h3 className="text-base font-medium text-foreground">Demand Forecastability</h3>
               <Tooltip>
                 <TooltipTrigger>
                   <Info className="w-4 h-4 text-muted-foreground" />
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Classification of products based on demand patterns. ADI (Average Demand Interval) vs CV² (Coefficient of Variation squared) helps identify the best forecast methods for each product category.</p>
+                <TooltipContent className="max-w-xs">
+                  <p>SKUs classified by demand pattern using ADI (Average Demand Interval) and CV² (Coefficient of Variation squared). Each quadrant suggests the optimal forecasting method.</p>
                 </TooltipContent>
               </Tooltip>
             </div>
           </CardHeader>
-          <CardContent className="h-[300px] relative">
-            <div className="h-full relative">
-              <Scatter data={forecastabilityData} options={forecastabilityOptions} />
-              
-              {/* Quadrant Labels */}
-              <div className="absolute top-4 left-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Smooth
+          <CardContent className="space-y-4">
+            {/* Stacked Horizontal Bar */}
+            <div className="space-y-1.5">
+              <div className="flex h-3 rounded-full overflow-hidden">
+                {forecastabilityQuadrants.map((q) => (
+                  <div
+                    key={q.label}
+                    style={{ width: `${q.pct}%`, backgroundColor: q.color }}
+                    className="transition-all"
+                    title={`${q.label}: ${q.pct}%`}
+                  />
+                ))}
               </div>
-              <div className="absolute top-4 right-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Intermittent
+              <div className="flex justify-between text-[10px] text-muted-foreground">
+                {forecastabilityQuadrants.map((q) => (
+                  <span key={q.label}>{q.label} {q.pct}%</span>
+                ))}
               </div>
-              <div className="absolute bottom-16 left-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Erratic
-              </div>
-              <div className="absolute bottom-16 right-4 text-xs font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                Lumpy
-              </div>
+            </div>
+
+            {/* Quadrant Cards */}
+            <div className="grid grid-cols-2 gap-2.5">
+              {forecastabilityQuadrants.map((q) => (
+                <div key={q.label} className={`border rounded-lg p-3 ${q.bgClass}`}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className={`text-sm font-semibold ${q.textClass}`}>{q.label}</span>
+                    <span className="text-lg font-bold text-foreground">{q.skuCount}</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mb-1">{q.desc}</p>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Accuracy</span>
+                    <span className="font-medium text-foreground">{q.avgAccuracy}%</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs mt-0.5">
+                    <span className="text-muted-foreground">Model</span>
+                    <span className="font-medium text-foreground text-[10px]">{q.model}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
