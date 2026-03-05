@@ -137,78 +137,19 @@ const DataTable: React.FC<DataTableProps> = ({ headers, keys, data, searchKey })
   );
 };
 
+const toHeader = (key: string) => key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).replace(/_/g, ' ');
+
 const datasetConfigs = [
-  {
-    id: "sales",
-    label: "Sales History",
-    icon: FileSpreadsheet,
-    badge: `${salesHistoryData.length} rows`,
-    badgeClass: "bg-primary/15 text-primary border-primary/30",
-    columns: Object.keys(salesHistoryData[0]),
-    data: salesHistoryData,
-    searchKey: "sku",
-    description: "Historical sales transactions by SKU, channel, and region",
-  },
-  {
-    id: "products",
-    label: "Product Master",
-    icon: Database,
-    badge: `${productMasterData.length} rows`,
-    badgeClass: "bg-success/15 text-success border-success/30",
-    columns: Object.keys(productMasterData[0]),
-    data: productMasterData,
-    searchKey: "sku",
-    description: "Product catalog with categories, pricing, and status",
-  },
-  {
-    id: "channels",
-    label: "Channel Master",
-    icon: Database,
-    badge: `${channelMasterData.length} rows`,
-    badgeClass: "bg-warning/15 text-warning border-warning/30",
-    columns: Object.keys(channelMasterData[0]),
-    data: channelMasterData,
-    searchKey: "channel",
-    description: "Sales channels with type and regional contribution",
-  },
-  {
-    id: "forecast",
-    label: "Forecast Output",
-    icon: TrendingUp,
-    badge: `${forecastOutputData.length} rows`,
-    badgeClass: "bg-primary/15 text-primary border-primary/30",
-    columns: Object.keys(forecastOutputData[0]),
-    data: forecastOutputData,
-    searchKey: "sku",
-    description: "4-week demand forecast with model accuracy (MAPE)",
-  },
-  {
-    id: "outliers",
-    label: "Outlier Detection",
-    icon: AlertTriangle,
-    badge: `${outlierData.length} flagged`,
-    badgeClass: "bg-destructive/15 text-destructive border-destructive/30",
-    columns: Object.keys(outlierData[0]),
-    data: outlierData,
-    searchKey: "sku",
-    description: "Detected anomalies with deviation analysis and root causes",
-  },
-  {
-    id: "features",
-    label: "Feature Importance",
-    icon: Sparkles,
-    badge: `${featureImportanceData.length} features`,
-    badgeClass: "bg-accent/15 text-accent-foreground border-accent/30",
-    columns: Object.keys(featureImportanceData[0]),
-    data: featureImportanceData,
-    searchKey: "feature",
-    description: "ML model feature rankings with contribution scores",
-  },
+  { id: "sales", label: "Sales History", icon: FileSpreadsheet, badge: `${salesHistoryData.length} rows`, badgeClass: "bg-primary/15 text-primary border-primary/30", keys: Object.keys(salesHistoryData[0]), data: salesHistoryData as Record<string,any>[], searchKey: "sku", description: "Historical sales transactions by SKU, channel, and region" },
+  { id: "products", label: "Product Master", icon: Database, badge: `${productMasterData.length} rows`, badgeClass: "bg-success/15 text-success border-success/30", keys: Object.keys(productMasterData[0]), data: productMasterData as Record<string,any>[], searchKey: "sku", description: "Product catalog with categories, pricing, and status" },
+  { id: "channels", label: "Channel Master", icon: Database, badge: `${channelMasterData.length} rows`, badgeClass: "bg-warning/15 text-warning border-warning/30", keys: Object.keys(channelMasterData[0]), data: channelMasterData as Record<string,any>[], searchKey: "channel", description: "Sales channels with type and regional contribution" },
+  { id: "forecast", label: "Forecast Output", icon: TrendingUp, badge: `${forecastOutputData.length} rows`, badgeClass: "bg-primary/15 text-primary border-primary/30", keys: Object.keys(forecastOutputData[0]), data: forecastOutputData as Record<string,any>[], searchKey: "sku", description: "4-week demand forecast with model accuracy (MAPE)" },
+  { id: "outliers", label: "Outlier Detection", icon: AlertTriangle, badge: `${outlierData.length} flagged`, badgeClass: "bg-destructive/15 text-destructive border-destructive/30", keys: Object.keys(outlierData[0]), data: outlierData as Record<string,any>[], searchKey: "sku", description: "Detected anomalies with deviation analysis and root causes" },
+  { id: "features", label: "Feature Importance", icon: Sparkles, badge: `${featureImportanceData.length} features`, badgeClass: "bg-accent/15 text-accent-foreground border-accent/30", keys: Object.keys(featureImportanceData[0]), data: featureImportanceData as Record<string,any>[], searchKey: "feature", description: "ML model feature rankings with contribution scores" },
 ];
 
 export const DataRepositoryTab: React.FC = () => {
   const [activeDataset, setActiveDataset] = useState("sales");
-  const config = datasetConfigs.find(d => d.id === activeDataset)!;
 
   return (
     <div className="space-y-5 animate-fade-in">
@@ -265,7 +206,8 @@ export const DataRepositoryTab: React.FC = () => {
               <TabsContent key={d.id} value={d.id} className="mt-0">
                 <p className="text-[11px] text-muted-foreground mb-3">{d.description}</p>
                 <DataTable
-                  columns={d.columns.map(c => c.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).replace(/_/g, ' '))}
+                  headers={d.keys.map(toHeader)}
+                  keys={d.keys}
                   data={d.data}
                   searchKey={d.searchKey}
                 />
