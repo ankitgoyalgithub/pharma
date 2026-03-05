@@ -23,7 +23,7 @@ export const npiProxyMapping: Record<string, { proxySku: string; proxyName: stri
   'BDL-GM-005': { proxySku: 'SKU_018', proxyName: 'Immortal 121 (Earbuds)', npiName: 'Immortal 350 Gaming TWS' },
 };
 
-export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none', showRangeForecast = false }: DemandAnalysisChartProps) => {
+export const DemandAnalysisChart = ({ granularity, valueMode, classFilter, locationFilter, chartGranularity, storeFilter = 'all', npiSku = 'none', showRangeForecast = false, channelFilter = 'all' }: DemandAnalysisChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [renderWidth, setRenderWidth] = useState(0);
 
