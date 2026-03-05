@@ -18,7 +18,7 @@ const distributionNodes: Record<string, { size: number; name: string }> = {
 const totalSize = Object.values(distributionNodes).reduce((sum, node) => sum + node.size, 0);
 
 // Baseline metrics for ALL nodes (Indian consumer electronics market in Crores)
-const allNodesRevenue = 82.4; // Crores ₹
+const allNodesRevenue = 96.1; // Crores ₹ — aligned with ABC-XYZ matrix total
 const allNodesUnits = 1207560; // Total units
 
 // Calculate metrics for each distribution node based on proportional size
