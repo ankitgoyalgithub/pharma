@@ -2231,9 +2231,9 @@ const DemandForecasting = () => {
               title="Forecast Snapshot"
               value="82%"
               subtitle={(() => {
-                const metrics = getStoreMetrics(appliedFilters.store);
-                return `Backtested Accuracy • $${metrics.revenueFormatted}M Value • ${metrics.unitsFormatted} Units
-                        12-Week Horizon • ${appliedFilters.store === 'all' ? '50' : '1'} Active Store${appliedFilters.store === 'all' ? 's' : ''} • 4 Channels`;
+                const metrics = getStoreMetrics('all');
+                return `Backtested Accuracy • ₹${metrics.revenueFormatted}Cr Value • ${metrics.unitsFormatted} Units
+                        12-Week Horizon • 100 Active SKUs • 4 Channels`;
               })()}
               icon={TrendingUp}
               isActive={selectedScenario === null && activeTab === "overview"}
