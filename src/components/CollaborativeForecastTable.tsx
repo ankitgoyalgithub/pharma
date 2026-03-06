@@ -21,18 +21,18 @@ interface ForecastRow {
   node: string;
   channel: "Online" | "Retail" | "B2B" | "Direct";
   owner: string;
-  week1: { forecast: number; plannerInput?: number; reason?: string };
-  week2: { forecast: number; plannerInput?: number; reason?: string };
-  week3: { forecast: number; plannerInput?: number; reason?: string };
-  week4: { forecast: number; plannerInput?: number; reason?: string };
-  week5: { forecast: number; plannerInput?: number; reason?: string };
-  week6: { forecast: number; plannerInput?: number; reason?: string };
-  week7: { forecast: number; plannerInput?: number; reason?: string };
-  week8: { forecast: number; plannerInput?: number; reason?: string };
-  week9: { forecast: number; plannerInput?: number; reason?: string };
-  week10: { forecast: number; plannerInput?: number; reason?: string };
-  week11: { forecast: number; plannerInput?: number; reason?: string };
-  week12: { forecast: number; plannerInput?: number; reason?: string };
+  week1: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week2: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week3: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week4: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week5: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week6: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week7: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week8: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week9: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week10: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week11: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
+  week12: { forecast: number; plannerInput?: number; reason?: string; lastYear: number };
   label?: string;
   remarks?: string;
   approvalStatus: "approved" | "rejected";
@@ -104,6 +104,12 @@ const generateWeeklyForecast = (baseValue: number, weekIndex: number) => {
   return Math.round(baseValue * seasonalFactors[weekIndex] * (0.9 + Math.random() * 0.2));
 };
 
+const generateLastYearValue = (currentForecast: number, weekIndex: number) => {
+  // Last year values are typically 10-25% lower (business growth), with slight variation
+  const growthFactors = [0.78, 0.80, 0.75, 0.82, 0.77, 0.79, 0.85, 0.81, 0.76, 0.83, 0.80, 0.78];
+  return Math.round(currentForecast * growthFactors[weekIndex] * (0.95 + Math.random() * 0.1));
+};
+
 const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   const baseValue = 500 + Math.floor(Math.random() * 1500);
   const nodeIndex = index % pharmaNodes.length;
@@ -112,10 +118,11 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   const owner = plannerNames[index % plannerNames.length];
   const approver = approverNames[index % approverNames.length];
   
-  const weeks: { [key: string]: { forecast: number; plannerInput?: number; reason?: string } } = {};
+  const weeks: { [key: string]: { forecast: number; plannerInput?: number; reason?: string; lastYear: number } } = {};
   for (let w = 1; w <= 12; w++) {
     const forecast = generateWeeklyForecast(baseValue, w - 1);
-    weeks[`week${w}`] = { forecast };
+    const lastYear = generateLastYearValue(forecast, w - 1);
+    weeks[`week${w}`] = { forecast, lastYear };
   }
   
   const boatReasons = [
@@ -134,12 +141,14 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   const adjustmentWeeks = [3, 5, 7, 9, 11];
   const adjustWeek = adjustmentWeeks[index % adjustmentWeeks.length];
   const weekKey = `week${adjustWeek}`;
-  const currentForecast = weeks[weekKey].forecast;
+  const currentWeekData = weeks[weekKey];
+  const currentForecast = currentWeekData.forecast;
   const adjustmentFactor = 1 + (Math.random() * 0.3 - 0.1);
   weeks[weekKey] = {
     forecast: currentForecast,
     plannerInput: Math.round(currentForecast * adjustmentFactor),
-    reason: boatReasons[index % boatReasons.length]
+    reason: boatReasons[index % boatReasons.length],
+    lastYear: currentWeekData.lastYear
   };
   
   const isApproved = Math.random() > 0.15;
@@ -215,10 +224,14 @@ export const CollaborativeForecastTable: React.FC = () => {
     open: boolean;
     rowId: string;
     week: string;
+    weekIndex: number;
     currentValue: number;
+    lastYear: number;
     plannerInput: string;
     reason: string;
-  }>({ open: false, rowId: "", week: "", currentValue: 0, plannerInput: "", reason: "" });
+    productName: string;
+    sku: string;
+  }>({ open: false, rowId: "", week: "", weekIndex: 0, currentValue: 0, lastYear: 0, plannerInput: "", reason: "", productName: "", sku: "" });
 
   const [approvalDialog, setApprovalDialog] = useState<{
     open: boolean;
@@ -277,14 +290,18 @@ export const CollaborativeForecastTable: React.FC = () => {
     }
   };
 
-  const handleEditClick = (rowId: string, week: string, currentValue: number, plannerInput?: number, reason?: string) => {
+  const handleEditClick = (rowId: string, week: string, weekIndex: number, currentValue: number, lastYear: number, productName: string, sku: string, plannerInput?: number, reason?: string) => {
     setEditDialog({
       open: true,
       rowId,
       week,
+      weekIndex,
       currentValue,
+      lastYear,
       plannerInput: plannerInput?.toString() || "",
-      reason: reason || ""
+      reason: reason || "",
+      productName,
+      sku
     });
   };
 
@@ -313,7 +330,7 @@ export const CollaborativeForecastTable: React.FC = () => {
       return row;
     }));
 
-    setEditDialog({ open: false, rowId: "", week: "", currentValue: 0, plannerInput: "", reason: "" });
+    setEditDialog({ open: false, rowId: "", week: "", weekIndex: 0, currentValue: 0, lastYear: 0, plannerInput: "", reason: "", productName: "", sku: "" });
     toast.success("Forecast updated successfully");
   };
 
@@ -446,19 +463,29 @@ export const CollaborativeForecastTable: React.FC = () => {
                 const weekData = r[weekKey] as any;
                 const hasEdit = weekData.plannerInput !== undefined;
                 const displayValue = hasEdit ? weekData.plannerInput : weekData.forecast;
+                const lyValue = weekData.lastYear;
+                const yoyChange = lyValue > 0 ? ((displayValue - lyValue) / lyValue * 100).toFixed(0) : null;
                 
                 return (
-                  <td key={`${r.id}-week-${i + 1}`} className="p-2 text-center border-l">
-                    <div className="space-y-1">
+                  <td key={`${r.id}-week-${i + 1}`} className="p-1.5 text-center border-l">
+                    <div className="space-y-0.5">
                       <div className={`text-sm font-medium ${hasEdit ? 'text-primary' : 'text-foreground'}`}>
                         {displayValue.toLocaleString()}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground flex items-center justify-center gap-1">
+                        <span>LY: {lyValue.toLocaleString()}</span>
+                        {yoyChange && (
+                          <span className={`font-medium ${Number(yoyChange) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                            ({Number(yoyChange) >= 0 ? '+' : ''}{yoyChange}%)
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center justify-center gap-1">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={() => handleEditClick(r.id, weekKey, weekData.forecast, weekData.plannerInput, weekData.reason)}
+                          className="h-5 w-5 p-0"
+                          onClick={() => handleEditClick(r.id, weekKey, i + 1, weekData.forecast, lyValue, r.productName, r.sku, weekData.plannerInput, weekData.reason)}
                         >
                           <Edit3 className="w-3 h-3" />
                         </Button>
@@ -466,7 +493,7 @@ export const CollaborativeForecastTable: React.FC = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-6 w-6 p-0 text-muted-foreground"
+                            className="h-5 w-5 p-0 text-muted-foreground"
                             title={weekData.reason || "No reason provided"}
                           >
                             <MessageSquare className="w-3 h-3" />
@@ -670,9 +697,9 @@ export const CollaborativeForecastTable: React.FC = () => {
                   <thead className="bg-muted/50 border-b">
                     <tr className="text-xs h-12">
                       {Array.from({ length: 12 }, (_, i) => (
-                        <th key={`week-${i + 1}`} className="text-center p-2 w-[100px] border-l">
+                        <th key={`week-${i + 1}`} className="text-center p-2 w-[110px] border-l">
                           <div className="text-xs font-medium">Week {i + 1}</div>
-                          <div className="text-xs text-muted-foreground">Forecast | Input</div>
+                          <div className="text-[10px] text-muted-foreground">Fcst | LY</div>
                         </th>
                       ))}
                     </tr>
@@ -729,21 +756,57 @@ export const CollaborativeForecastTable: React.FC = () => {
 
       {/* Edit Dialog */}
       <Dialog open={editDialog.open} onOpenChange={(open) => setEditDialog(prev => ({ ...prev, open }))}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit Forecast Value</DialogTitle>
+            <DialogTitle>Edit Forecast — {editDialog.sku}</DialogTitle>
             <DialogDescription>
-              Modify the forecast for {editDialog.week} and provide a reason for the change.
+              {editDialog.productName} · Week {editDialog.weekIndex}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Last Year Context */}
+            <div className="bg-muted/30 rounded-lg p-3 space-y-2">
+              <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Historical Context (Last Year)</h4>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="space-y-0.5">
+                  <div className="text-[10px] text-muted-foreground">LY Same Week</div>
+                  <div className="text-sm font-semibold">{editDialog.lastYear.toLocaleString()}</div>
+                </div>
+                <div className="space-y-0.5">
+                  <div className="text-[10px] text-muted-foreground">LY Monthly Avg</div>
+                  <div className="text-sm font-semibold">{Math.round(editDialog.lastYear * 4.2).toLocaleString()}</div>
+                  <div className="text-[10px] text-muted-foreground">~4 weeks</div>
+                </div>
+                <div className="space-y-0.5">
+                  <div className="text-[10px] text-muted-foreground">YoY Growth</div>
+                  <div className={`text-sm font-semibold ${editDialog.lastYear > 0 && ((editDialog.currentValue - editDialog.lastYear) / editDialog.lastYear * 100) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                    {editDialog.lastYear > 0 ? `${((editDialog.currentValue - editDialog.lastYear) / editDialog.lastYear * 100).toFixed(1)}%` : '—'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-muted/20 rounded-lg p-3">
+                <div className="text-[10px] text-muted-foreground">AI Forecast (This Year)</div>
+                <div className="text-lg font-bold">{editDialog.currentValue.toLocaleString()}</div>
+              </div>
+              <div className="bg-muted/20 rounded-lg p-3">
+                <div className="text-[10px] text-muted-foreground">Forecast vs LY</div>
+                <div className="text-lg font-bold">
+                  {editDialog.lastYear > 0 ? `+${(editDialog.currentValue - editDialog.lastYear).toLocaleString()}` : '—'}
+                </div>
+                <div className="text-[10px] text-muted-foreground">units above LY</div>
+              </div>
+            </div>
+
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">
-                Original Forecast: {editDialog.currentValue.toLocaleString()}
+                Planner Override
               </label>
               <Input
                 type="number"
-                placeholder="Enter new forecast value"
+                placeholder="Enter adjusted forecast value"
                 value={editDialog.plannerInput}
                 onChange={(e) => setEditDialog(prev => ({ ...prev, plannerInput: e.target.value }))}
               />
