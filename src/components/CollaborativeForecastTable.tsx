@@ -118,10 +118,11 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   const owner = plannerNames[index % plannerNames.length];
   const approver = approverNames[index % approverNames.length];
   
-  const weeks: { [key: string]: { forecast: number; plannerInput?: number; reason?: string } } = {};
+  const weeks: { [key: string]: { forecast: number; plannerInput?: number; reason?: string; lastYear: number } } = {};
   for (let w = 1; w <= 12; w++) {
     const forecast = generateWeeklyForecast(baseValue, w - 1);
-    weeks[`week${w}`] = { forecast };
+    const lastYear = generateLastYearValue(forecast, w - 1);
+    weeks[`week${w}`] = { forecast, lastYear };
   }
   
   const boatReasons = [
