@@ -1,5 +1,5 @@
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,8 @@ import {
   Calendar,
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { ModernStepper } from "@/components/ModernStepper";
+import { useStepper } from "@/hooks/useStepper";
+import { useStepperContext } from "@/contexts/StepperContext";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Tooltip as ChartTooltip, Legend as ChartLegend, Filler, Title } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
@@ -174,7 +175,7 @@ function ProcurementWorkbookTable({ rows }: { rows: ProcLine[] }) {
       <div className="border rounded-lg overflow-hidden">
         <div className="max-w-full overflow-x-auto" style={{ maxHeight: 360, overflowY: "auto" }}>
           <table className="min-w-[1400px] w-full text-xs">
-            <thead className="sticky top-16 z-10 bg-muted/60 backdrop-blur">
+            <thead className="sticky top-0 z-10 bg-muted/60 backdrop-blur">
               <tr className="border-b">
                 <th className="px-3 py-2 text-left">Item</th>
                 <th className="px-3 py-2 text-left">Description</th>
@@ -250,7 +251,7 @@ function SuppliersTable({ rows }: { rows: Supplier[] }) {
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto" style={{ maxHeight: 280, overflowY: "auto" }}>
           <table className="min-w-[1000px] w-full text-xs">
-            <thead className="sticky top-16 z-10 bg-muted/60 backdrop-blur">
+            <thead className="sticky top-0 z-10 bg-muted/60 backdrop-blur">
               <tr className="border-b">
                 <th className="px-3 py-2 text-left">Supplier</th>
                 <th className="px-3 py-2 text-left">Country</th>
@@ -297,12 +298,32 @@ const ProcurementPlanning = () => {
     items: null, suppliers: null, leadtimes: null, prices: null, inventory: null, demand: null, pos: null,
   });
 
+  // Stepper configuration — matching Demand Forecasting pattern
   const stepperSteps = [
-    { id: 1, title: "Add Data", status: currentStep > 1 ? "completed" : currentStep === 1 ? "active" : "pending" },
-    { id: 2, title: "Data Gaps", status: currentStep > 2 ? "completed" : currentStep === 2 ? "active" : "pending" },
-    { id: 3, title: "Review Data", status: currentStep > 3 ? "completed" : currentStep === 3 ? "active" : "pending" },
-    { id: 4, title: "Results", status: currentStep === 4 ? "active" : "pending" },
-  ] as const;
+    { id: 1, title: "Add Data", status: currentStep > 1 ? ("completed" as const) : currentStep === 1 ? ("active" as const) : ("pending" as const) },
+    { id: 2, title: "Data Gaps", status: currentStep > 2 ? ("completed" as const) : currentStep === 2 ? ("active" as const) : ("pending" as const) },
+    { id: 3, title: "Review Data", status: currentStep > 3 ? ("completed" as const) : currentStep === 3 ? ("active" as const) : ("pending" as const) },
+    { id: 4, title: "Results", status: currentStep === 4 ? ("active" as const) : ("pending" as const) },
+  ];
+
+  const stepperHook = useStepper({
+    steps: stepperSteps,
+    title: "Procurement Planning",
+    initialStep: currentStep
+  });
+
+  const { setOnStepClick } = useStepperContext();
+
+  const handleStepClick = useCallback((stepId: number) => {
+    const targetStep = stepperSteps.find(s => s.id === stepId);
+    if (targetStep && (targetStep.status === 'completed' || stepId === currentStep + 1 || stepId === currentStep)) {
+      setCurrentStep(stepId);
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    setOnStepClick(() => handleStepClick);
+  }, [handleStepClick, setOnStepClick]);
 
   // KPIs
   const totalItems = procLines.length;
@@ -325,23 +346,6 @@ const ProcurementPlanning = () => {
     ],
   };
   const leadTimeOptions = buildChartOptions({ plugins: { legend: { position: "bottom" as const } }, scales: { y: { beginAtZero: true } } });
-
-  // Timeline (PO schedule)
-  const timelineColumns = [
-    { type: "string", id: "PO" },
-    { type: "string", id: "Item" },
-    { type: "string", role: "style" },
-    { type: "string", role: "tooltip", p: { html: true } },
-    { type: "date", id: "Start" },
-    { type: "date", id: "End" },
-  ] as const;
-
-  const poRows = [
-    ["PO-9001", "RM-1001", "color: #3b82f6", `<div style='padding:8px;font-size:12px'><b>PO-9001</b><br/>SteelWorks Ltd<br/>Qty 5000, USD 1.80<br/>ETA: Aug 18</div>`, new Date("2025-08-02"), new Date("2025-08-18")],
-    ["PO-9002", "RM-1002", "color: #f59e0b", `<div style='padding:8px;font-size:12px'><b>PO-9002</b><br/>AluPrime<br/>Qty 3000, USD 2.40<br/>ETA: Aug 24</div>`, new Date("2025-08-04"), new Date("2025-08-24")],
-    ["PO-9003", "RM-2001", "color: #10b981", `<div style='padding:8px;font-size:12px'><b>PO-9003</b><br/>ElectroMotion<br/>Qty 100, INR 3800<br/>ETA: Aug 14</div>`, new Date("2025-08-03"), new Date("2025-08-14")],
-    ["PO-9004", "PK-5001", "color: #8b5cf6", `<div style='padding:8px;font-size:12px'><b>PO-9004</b><br/>PackRight<br/>Qty 800, INR 38.5<br/>ETA: Aug 13</div>`, new Date("2025-08-07"), new Date("2025-08-13")],
-  ];
 
   const renderStep1 = () => (
     <div className="space-y-6 p-6">
@@ -526,13 +530,14 @@ const ProcurementPlanning = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <ModernStepper steps={stepperSteps as any} title="Procurement Planning" />
-      <div className="p-8">
-        {currentStep === 1 && renderStep1()}
-        {currentStep === 2 && renderStep2()}
-        {currentStep === 3 && renderStep3()}
-        {currentStep === 4 && renderStep4()}
+    <div className="h-screen bg-gradient-subtle overflow-hidden">
+      <div className="h-full px-4 py-0 overflow-hidden">
+        <div className="h-full w-full overflow-hidden">
+          {currentStep === 1 && renderStep1()}
+          {currentStep === 2 && renderStep2()}
+          {currentStep === 3 && renderStep3()}
+          {currentStep === 4 && renderStep4()}
+        </div>
       </div>
     </div>
   );

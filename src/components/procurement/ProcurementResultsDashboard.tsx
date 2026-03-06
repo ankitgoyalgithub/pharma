@@ -5,22 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import {
-  AlertTriangle, Shield, Globe, TrendingUp, DollarSign, Package, Info,
-  ChevronRight, ArrowRight, Download, Share, Zap, Target, BarChart3, Layers,
-  Activity, Settings, FileText
+  AlertTriangle, Shield, Globe, TrendingUp, DollarSign, Package,
+  ChevronRight, ArrowRight, Download, Share, Zap, Target, Activity, FileText
 } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
-import { Bar, Doughnut, Line, Scatter } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { ForecastCard } from "@/components/ForecastCard";
 import {
-  supplierConcentrationData, countryExposureData, overseasTrendData, fxExposureData,
-  supplierRiskData, optimizationRecommendations, costComparisonData,
-  safetyStockData, prepaymentExposureData, demandScenarioImpact, obsolescenceData,
-  simulationDefaults, executiveSummary,
+  supplierRiskData, countryExposureData, overseasTrendData, fxExposureData,
+  optimizationRecommendations, costComparisonData, safetyStockData,
+  inventoryByCategory, channelRevenueData, warehouseUtilization,
+  demandScenarioImpact, simulationDefaults, executiveSummary,
 } from "@/data/procurement/procurementResultsData";
 
 /* ── helpers ── */
@@ -29,12 +28,10 @@ const riskBg = (r: string) =>
 const riskDot = (r: string) =>
   r === "Low" ? "bg-success" : r === "Medium" ? "bg-warning" : "bg-destructive";
 
-const fmt = (v: number, prefix = "₹", suffix = "") => `${prefix}${v.toLocaleString("en-IN")}${suffix}`;
-
 type TabId = "overview" | "supplier-risk" | "optimization" | "safety-stock" | "simulation";
 
 /* ════════════════════════════════════════════════════
-   TAB: Overview (Executive Summary + Risk Cards)
+   TAB: Overview
    ════════════════════════════════════════════════════ */
 const OverviewTab = () => {
   const [fxSlider, setFxSlider] = useState([5]);
@@ -79,8 +76,8 @@ const OverviewTab = () => {
         </CardContent>
       </Card>
 
-      {/* Risk Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      {/* Risk Summary Cards — 2x2 grid instead of 4-across */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Supplier Concentration */}
         <Card>
           <CardContent className="p-4 space-y-3">
@@ -89,16 +86,15 @@ const OverviewTab = () => {
               <Badge className={riskBg("Medium")} variant="secondary">Medium</Badge>
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">62%</p>
+              <p className="text-2xl font-bold text-foreground">76%</p>
               <p className="text-xs text-muted-foreground">of procurement from top 10 suppliers</p>
             </div>
-            <div className="text-xs text-muted-foreground">Top: <span className="font-medium text-foreground">Shenzhen Audio Tech</span> — 14%</div>
             <div className="space-y-1.5">
-              {supplierConcentrationData.slice(0, 5).map(s => (
+              {supplierRiskData.slice(0, 5).map(s => (
                 <div key={s.supplier} className="flex items-center gap-2">
                   <div className="flex-1 text-[11px] truncate">{s.supplier}</div>
                   <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
-                    <div className={`h-full rounded-full ${s.share > 10 ? "bg-destructive" : "bg-primary"}`} style={{ width: `${(s.share / 14) * 100}%` }} />
+                    <div className={`h-full rounded-full ${s.share > 10 ? "bg-destructive" : "bg-primary"}`} style={{ width: `${(s.share / 16) * 100}%` }} />
                   </div>
                   <div className="text-[11px] font-medium w-8 text-right">{s.share}%</div>
                 </div>
@@ -107,16 +103,16 @@ const OverviewTab = () => {
           </CardContent>
         </Card>
 
-        {/* China Exposure */}
+        {/* Country Exposure */}
         <Card>
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-destructive" /><span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">China Exposure</span></div>
+              <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-destructive" /><span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Country Exposure</span></div>
               <Badge className={riskBg("High")} variant="secondary">High</Badge>
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">90%</p>
-              <p className="text-xs text-muted-foreground">of overseas procurement (China + HK)</p>
+              <p className="text-2xl font-bold text-foreground">64%</p>
+              <p className="text-xs text-muted-foreground">of procurement from China + Hong Kong</p>
             </div>
             <div className="space-y-1">
               {countryExposureData.map(c => (
@@ -182,77 +178,53 @@ const OverviewTab = () => {
         </Card>
       </div>
 
-      {/* Prepayment + Obsolescence row */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Prepayment */}
+      {/* Inventory by Category + Warehouse */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Supplier Prepayment Exposure</CardTitle>
-              <div className="text-right">
-                <p className="text-sm font-bold text-foreground">₹1.3B <span className="text-xs font-normal text-muted-foreground">total prepaid</span></p>
-                <p className="text-xs text-destructive font-medium">₹420M at risk</p>
-              </div>
-            </div>
-          </CardHeader>
+          <CardHeader className="pb-3"><CardTitle className="text-base">Inventory by Category</CardTitle></CardHeader>
           <CardContent>
-            <div className="h-64">
-              <Scatter
+            <div className="h-52">
+              <Bar
                 data={{
-                  datasets: prepaymentExposureData.map((p, i) => ({
-                    label: p.supplier,
-                    data: [{ x: p.cancellationRisk, y: p.prepayment, r: p.demandVolatility * 0.8 }],
-                    backgroundColor: [hslVar("--primary", 0.6), hslVar("--destructive", 0.6), hslVar("--accent", 0.6), hslVar("--warning", 0.6), hslVar("--success", 0.6)][i],
-                  })),
+                  labels: inventoryByCategory.map(d => d.category),
+                  datasets: [
+                    { label: "On Hand", data: inventoryByCategory.map(d => d.totalOnHand), backgroundColor: hslVar("--primary", 0.7) },
+                    { label: "In Transit", data: inventoryByCategory.map(d => d.totalInTransit), backgroundColor: hslVar("--accent", 0.7) },
+                    { label: "Damaged", data: inventoryByCategory.map(d => d.totalDamaged), backgroundColor: hslVar("--destructive", 0.7) },
+                  ],
                 }}
                 options={buildChartOptions({
                   plugins: { legend: { position: "bottom" as const } },
-                  scales: {
-                    x: { title: { display: true, text: "Cancellation Risk (%)" }, beginAtZero: true },
-                    y: { title: { display: true, text: "Prepayment (₹M)" }, beginAtZero: true },
-                  },
+                  scales: { x: {}, y: { beginAtZero: true } },
                 })}
               />
             </div>
           </CardContent>
         </Card>
 
-        {/* Obsolescence */}
         <Card>
-          <CardHeader className="pb-3"><CardTitle className="text-base">Inventory Obsolescence Risk</CardTitle></CardHeader>
+          <CardHeader className="pb-3"><CardTitle className="text-base">Warehouse Utilization</CardTitle></CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div className="h-52">
-                <Bar
-                  data={{
-                    labels: obsolescenceData.map(d => d.category),
-                    datasets: [
-                      { label: "Low Risk", data: obsolescenceData.map(d => d.low), backgroundColor: hslVar("--success", 0.7) },
-                      { label: "Medium Risk", data: obsolescenceData.map(d => d.medium), backgroundColor: hslVar("--warning", 0.7) },
-                      { label: "High Risk", data: obsolescenceData.map(d => d.high), backgroundColor: hslVar("--destructive", 0.7) },
-                    ],
-                  }}
-                  options={buildChartOptions({
-                    plugins: { legend: { position: "bottom" as const } },
-                    scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: (v: number) => `${v}%` } } },
-                  })}
-                />
-              </div>
-              <div className="space-y-2">
-                {obsolescenceData.map(d => (
-                  <div key={d.category} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/20">
-                    <div className="flex-1">
-                      <p className="text-xs font-medium">{d.category}</p>
-                      <p className="text-[11px] text-muted-foreground">{d.totalUnits.toLocaleString("en-IN")} units</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex gap-0.5">
-                        <div className="h-4 rounded-l-sm bg-success" style={{ width: `${d.low * 0.8}px` }} />
-                        <div className="h-4 bg-warning" style={{ width: `${d.medium * 0.8}px` }} />
-                        <div className="h-4 rounded-r-sm bg-destructive" style={{ width: `${d.high * 0.8}px` }} />
-                      </div>
-                      <span className="text-[11px] font-medium text-destructive">{d.high}% high</span>
-                    </div>
+            <div className="space-y-4">
+              {warehouseUtilization.map(w => (
+                <div key={w.warehouse} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium">{w.warehouse}</span>
+                    <span className="text-muted-foreground">{w.totalOnHand.toLocaleString("en-IN")} / {w.capacity.toLocaleString("en-IN")} units — <span className="font-semibold text-foreground">{w.utilization}%</span></span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
+                    <div className={`h-full rounded-full transition-all ${w.utilization > 80 ? "bg-destructive" : w.utilization > 60 ? "bg-warning" : "bg-success"}`} style={{ width: `${w.utilization}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Channel Revenue Split</p>
+              <div className="grid grid-cols-5 gap-2">
+                {channelRevenueData.map(c => (
+                  <div key={c.channel} className="text-center p-2 rounded-lg bg-muted/30">
+                    <p className="text-sm font-bold text-foreground">{c.share}%</p>
+                    <p className="text-[10px] text-muted-foreground">{c.channel}</p>
                   </div>
                 ))}
               </div>
@@ -261,15 +233,13 @@ const OverviewTab = () => {
         </Card>
       </div>
 
-      {/* Demand Change Impact */}
+      {/* Demand Scenario */}
       <DemandChangeImpact />
     </div>
   );
 };
 
-/* ════════════════════════════════════════════════════
-   Demand Change Impact (used in Overview)
-   ════════════════════════════════════════════════════ */
+/* ── Demand Change Impact ── */
 const DemandChangeImpact = () => {
   const [scenario, setScenario] = useState(50);
   const label = scenario < 33 ? "-20%" : scenario > 66 ? "+20%" : "Base";
@@ -295,13 +265,13 @@ const DemandChangeImpact = () => {
             <div className="grid grid-cols-2 gap-3">
               <Card className="border-destructive/20">
                 <CardContent className="p-3 text-center">
-                  <p className="text-lg font-bold text-destructive">₹{data.excessInventory.toLocaleString("en-IN")}M</p>
+                  <p className="text-lg font-bold text-destructive">{data.excessInventory.toLocaleString("en-IN")} units</p>
                   <p className="text-[11px] text-muted-foreground">Excess inventory risk</p>
                 </CardContent>
               </Card>
               <Card className="border-warning/20">
                 <CardContent className="p-3 text-center">
-                  <p className="text-lg font-bold text-warning">₹{data.prepaymentExposure.toLocaleString("en-IN")}M</p>
+                  <p className="text-lg font-bold text-warning">{data.prepaymentExposure.toLocaleString("en-IN")} units</p>
                   <p className="text-[11px] text-muted-foreground">Prepayment exposure</p>
                 </CardContent>
               </Card>
@@ -309,8 +279,8 @@ const DemandChangeImpact = () => {
             {"stockoutRisk" in data && (
               <Card className="border-primary/20">
                 <CardContent className="p-3 text-center">
-                  <p className="text-lg font-bold text-primary">₹{(data as any).stockoutRisk.toLocaleString("en-IN")}M</p>
-                  <p className="text-[11px] text-muted-foreground">Potential stockout loss</p>
+                  <p className="text-lg font-bold text-primary">{(data as any).stockoutRisk.toLocaleString("en-IN")} units</p>
+                  <p className="text-[11px] text-muted-foreground">Potential stockout risk</p>
                 </CardContent>
               </Card>
             )}
@@ -320,9 +290,9 @@ const DemandChangeImpact = () => {
               data={{
                 labels: ["-20%", "Base", "+20%"],
                 datasets: [
-                  { label: "Excess Inventory (₹M)", data: [demandScenarioImpact.negative20.excessInventory, demandScenarioImpact.base.excessInventory, 0], backgroundColor: hslVar("--destructive", 0.6) },
-                  { label: "Prepayment Risk (₹M)", data: [demandScenarioImpact.negative20.prepaymentExposure, demandScenarioImpact.base.prepaymentExposure, 0], backgroundColor: hslVar("--warning", 0.6) },
-                  { label: "Stockout Risk (₹M)", data: [0, 0, demandScenarioImpact.positive20.stockoutRisk], backgroundColor: hslVar("--primary", 0.6) },
+                  { label: "Excess Inventory", data: [demandScenarioImpact.negative20.excessInventory, demandScenarioImpact.base.excessInventory, 0], backgroundColor: hslVar("--destructive", 0.6) },
+                  { label: "Prepayment Risk", data: [demandScenarioImpact.negative20.prepaymentExposure, demandScenarioImpact.base.prepaymentExposure, 0], backgroundColor: hslVar("--warning", 0.6) },
+                  { label: "Stockout Risk", data: [0, 0, demandScenarioImpact.positive20.stockoutRisk], backgroundColor: hslVar("--primary", 0.6) },
                 ],
               }}
               options={buildChartOptions({ plugins: { legend: { position: "bottom" as const } }, scales: { x: {}, y: { beginAtZero: true } } })}
@@ -373,6 +343,7 @@ const SupplierRiskTab = () => {
                     <th className="px-3 py-2.5 text-left font-semibold">Supplier</th>
                     <th className="px-3 py-2.5 text-left font-semibold">Country</th>
                     <th className="px-3 py-2.5 text-left font-semibold">Component</th>
+                    <th className="px-3 py-2.5 text-left font-semibold">Categories</th>
                     <th className="px-3 py-2.5 text-right font-semibold">Share</th>
                     <th className="px-3 py-2.5 text-right font-semibold">Lead Time</th>
                     <th className="px-3 py-2.5 text-center font-semibold">Financial</th>
@@ -387,6 +358,11 @@ const SupplierRiskTab = () => {
                       <td className="px-3 py-2.5 font-medium">{s.supplier}</td>
                       <td className="px-3 py-2.5">{s.country}</td>
                       <td className="px-3 py-2.5 text-muted-foreground">{s.component}</td>
+                      <td className="px-3 py-2.5">
+                        <div className="flex gap-1 flex-wrap">
+                          {s.categories.map(c => <Badge key={c} variant="outline" className="text-[10px]">{c}</Badge>)}
+                        </div>
+                      </td>
                       <td className="px-3 py-2.5 text-right font-medium">{s.share}%</td>
                       <td className="px-3 py-2.5 text-right">{s.leadTime}d</td>
                       {(["financialRisk", "capacityRisk", "complianceRisk", "overallRisk"] as const).map(k => (
@@ -412,7 +388,7 @@ const SupplierRiskTab = () => {
 };
 
 /* ════════════════════════════════════════════════════
-   TAB: Optimization (Sourcing + Local vs Overseas)
+   TAB: Optimization
    ════════════════════════════════════════════════════ */
 const OptimizationTab = () => {
   const ov = costComparisonData.overseas;
@@ -426,7 +402,6 @@ const OptimizationTab = () => {
 
   return (
     <div className="animate-fade-in space-y-6">
-      {/* Recommendations Table */}
       <Card>
         <CardHeader className="pb-3"><CardTitle className="text-base">Procurement Optimization Recommendations</CardTitle></CardHeader>
         <CardContent>
@@ -435,6 +410,7 @@ const OptimizationTab = () => {
               <thead className="bg-muted/40">
                 <tr className="border-b">
                   <th className="px-3 py-2.5 text-left font-semibold">Component</th>
+                  <th className="px-3 py-2.5 text-left font-semibold">SKUs Affected</th>
                   <th className="px-3 py-2.5 text-left font-semibold">Current Strategy</th>
                   <th className="px-3 py-2.5 text-left font-semibold">Recommended Strategy</th>
                   <th className="px-3 py-2.5 text-right font-semibold">Savings</th>
@@ -445,6 +421,11 @@ const OptimizationTab = () => {
                 {optimizationRecommendations.map((r, i) => (
                   <tr key={i} className="border-b hover:bg-muted/20 transition-colors">
                     <td className="px-3 py-3 font-medium">{r.component}</td>
+                    <td className="px-3 py-3">
+                      <div className="flex gap-1 flex-wrap">
+                        {r.skusAffected.map(s => <Badge key={s} variant="outline" className="text-[10px] font-mono">{s}</Badge>)}
+                      </div>
+                    </td>
                     <td className="px-3 py-3 text-muted-foreground">{r.currentStrategy}</td>
                     <td className="px-3 py-3">
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -463,7 +444,6 @@ const OptimizationTab = () => {
         </CardContent>
       </Card>
 
-      {/* Local vs Overseas */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
@@ -502,7 +482,7 @@ const OptimizationTab = () => {
               ))}
               <Card className="border-success/30 bg-success/5 mt-3">
                 <CardContent className="p-3">
-                  <p className="text-xs font-semibold text-success">💡 Local manufacturing of key components (ABS housings, cable assemblies) can reduce total landed cost by {costComparisonData.netSavings}.</p>
+                  <p className="text-xs font-semibold text-success">💡 Local manufacturing of ABS housings & cable assemblies can reduce total landed cost by {costComparisonData.netSavings}.</p>
                 </CardContent>
               </Card>
             </div>
@@ -521,17 +501,20 @@ const SafetyStockTab = () => (
     <Card>
       <CardHeader className="pb-3"><CardTitle className="text-base">Safety Stock Optimization</CardTitle></CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 border rounded-lg overflow-hidden">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2 border rounded-lg overflow-hidden">
             <table className="w-full text-xs">
               <thead className="bg-muted/40">
                 <tr className="border-b">
-                  <th className="px-3 py-2.5 text-left font-semibold">SKU / Product</th>
+                  <th className="px-3 py-2.5 text-left font-semibold">SKU</th>
+                  <th className="px-3 py-2.5 text-left font-semibold">Category</th>
                   <th className="px-3 py-2.5 text-left font-semibold">Warehouse</th>
                   <th className="px-3 py-2.5 text-right font-semibold">Current SS</th>
                   <th className="px-3 py-2.5 text-right font-semibold">Recommended</th>
                   <th className="px-3 py-2.5 text-center font-semibold">SL%</th>
                   <th className="px-3 py-2.5 text-center font-semibold">LT Var.</th>
+                  <th className="px-3 py-2.5 text-right font-semibold">Holding ₹/d</th>
+                  <th className="px-3 py-2.5 text-right font-semibold">Stockout ₹</th>
                 </tr>
               </thead>
               <tbody>
@@ -541,17 +524,20 @@ const SafetyStockTab = () => (
                       <div className="font-medium">{s.sku}</div>
                       <div className="text-[11px] text-muted-foreground">{s.product}</div>
                     </td>
+                    <td className="px-3 py-2.5"><Badge variant="outline" className="text-[10px]">{s.category}</Badge></td>
                     <td className="px-3 py-2.5">{s.warehouse}</td>
                     <td className="px-3 py-2.5 text-right">{s.currentSS.toLocaleString("en-IN")}</td>
                     <td className="px-3 py-2.5 text-right font-semibold text-primary">{s.recommendedSS.toLocaleString("en-IN")}</td>
                     <td className="px-3 py-2.5 text-center">{s.serviceLevel}%</td>
                     <td className="px-3 py-2.5 text-center"><Badge className={riskBg(s.leadTimeVariability === "High" ? "High" : s.leadTimeVariability === "Medium" ? "Medium" : "Low")} variant="secondary">{s.leadTimeVariability}</Badge></td>
+                    <td className="px-3 py-2.5 text-right font-mono">₹{s.holdingCost.toFixed(2)}</td>
+                    <td className="px-3 py-2.5 text-right font-mono">₹{s.stockoutCost.toFixed(0)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <div className="h-64">
+          <div className="h-80">
             <Bar
               data={{
                 labels: safetyStockData.map(s => s.sku),
@@ -655,7 +641,7 @@ const SimulationTab = () => {
 };
 
 /* ════════════════════════════════════════════════════
-   MAIN DASHBOARD — Demand Forecasting-style layout
+   MAIN DASHBOARD
    ════════════════════════════════════════════════════ */
 const ProcurementResultsDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
@@ -668,14 +654,9 @@ const ProcurementResultsDashboard = () => {
     "simulation": "Procurement Simulation",
   };
 
-  const totalSavings = optimizationRecommendations.reduce((sum, r) => {
-    const num = parseInt(r.savingsPotential.replace(/[^\d]/g, ""));
-    return sum + num;
-  }, 0);
-
   return (
     <div className="relative flex h-[calc(100vh-4rem)] w-full min-w-0 overflow-hidden bg-gradient-to-br from-background via-background to-muted/10">
-      {/* Left Sidebar — Clickable ForecastCards */}
+      {/* Left Sidebar */}
       <div className="w-[280px] shrink-0 h-full bg-card/80 backdrop-blur-sm border-r border-border/50 flex flex-col overflow-hidden shadow-lg">
         <div className="flex-none px-4 py-4 border-b border-border/50 bg-gradient-to-b from-card/90 to-card/70 sticky top-0 z-10">
           <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">Results</h2>
@@ -686,9 +667,8 @@ const ProcurementResultsDashboard = () => {
             <div className="flex justify-center">
               <ForecastCard
                 title="Risk Overview"
-                value="High"
-                subtitle={`90% China exposure • ₹${totalSavings.toLocaleString("en-IN")}M savings potential
-10 Suppliers • 5 Countries • FX ₹${fxExposureData.usdExposure}B`}
+                value="50 SKUs"
+                subtitle="Executive summary with supplier concentration, country exposure, FX risk & warehouse metrics"
                 icon={AlertTriangle}
                 isActive={activeTab === "overview"}
                 onClick={() => setActiveTab("overview")}
@@ -698,8 +678,8 @@ const ProcurementResultsDashboard = () => {
             <div className="flex justify-center">
               <ForecastCard
                 title="Supplier Risk"
-                value="10"
-                subtitle={`Supplier risk heatmap with financial, capacity & compliance scoring. Filter by country & tier.`}
+                value="10 Suppliers"
+                subtitle="Risk heatmap with financial, capacity & compliance scoring. Filter by country & tier."
                 icon={Shield}
                 isActive={activeTab === "supplier-risk"}
                 onClick={() => setActiveTab("supplier-risk")}
@@ -709,8 +689,8 @@ const ProcurementResultsDashboard = () => {
             <div className="flex justify-center">
               <ForecastCard
                 title="Sourcing Optimization"
-                value={`₹${totalSavings.toLocaleString("en-IN")}M`}
-                subtitle={`Diversification recommendations across ${optimizationRecommendations.length} components. Local vs overseas cost analysis.`}
+                value="5 Components"
+                subtitle="Diversification recommendations with SKU mapping. Local vs overseas cost analysis."
                 icon={Target}
                 isActive={activeTab === "optimization"}
                 onClick={() => setActiveTab("optimization")}
@@ -720,8 +700,8 @@ const ProcurementResultsDashboard = () => {
             <div className="flex justify-center">
               <ForecastCard
                 title="Safety Stock"
-                value={`${safetyStockData.length}`}
-                subtitle={`SKU-level safety stock recommendations based on lead time variability and service level targets.`}
+                value={`${safetyStockData.length} SKUs`}
+                subtitle="SKU-level safety stock recommendations based on holding cost, stockout cost & lead time variability."
                 icon={Package}
                 isActive={activeTab === "safety-stock"}
                 onClick={() => setActiveTab("safety-stock")}
@@ -732,7 +712,7 @@ const ProcurementResultsDashboard = () => {
               <ForecastCard
                 title="Simulation"
                 value="Interactive"
-                subtitle={`Adjust lead time, demand volatility, FX rate & supplier reliability to simulate procurement impact.`}
+                subtitle="Adjust lead time, demand volatility, FX rate & supplier reliability to simulate impact."
                 icon={Activity}
                 isActive={activeTab === "simulation"}
                 onClick={() => setActiveTab("simulation")}
@@ -742,9 +722,8 @@ const ProcurementResultsDashboard = () => {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        {/* Header Bar */}
         <div className="flex-none flex items-center justify-between px-6 py-3 border-b border-border/50 bg-card/95 backdrop-blur-xl sticky top-0 z-10 shadow-sm">
           <h1 className="text-xl font-bold tracking-tight text-foreground animate-fade-in">
             {tabTitle[activeTab]}
@@ -772,7 +751,6 @@ const ProcurementResultsDashboard = () => {
           </div>
         </div>
 
-        {/* Scrollable Content */}
         <div className="flex-1 min-w-0 flex flex-col overflow-hidden bg-gradient-to-br from-background via-background to-muted/5">
           <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-6">
             {activeTab === "overview" && <OverviewTab />}
