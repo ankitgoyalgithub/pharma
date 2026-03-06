@@ -224,10 +224,14 @@ export const CollaborativeForecastTable: React.FC = () => {
     open: boolean;
     rowId: string;
     week: string;
+    weekIndex: number;
     currentValue: number;
+    lastYear: number;
     plannerInput: string;
     reason: string;
-  }>({ open: false, rowId: "", week: "", currentValue: 0, plannerInput: "", reason: "" });
+    productName: string;
+    sku: string;
+  }>({ open: false, rowId: "", week: "", weekIndex: 0, currentValue: 0, lastYear: 0, plannerInput: "", reason: "", productName: "", sku: "" });
 
   const [approvalDialog, setApprovalDialog] = useState<{
     open: boolean;
