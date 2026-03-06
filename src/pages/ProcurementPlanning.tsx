@@ -30,6 +30,7 @@ import { buildChartOptions, hslVar } from "@/lib/chartTheme";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Tooltip as ChartTooltip, Legend as ChartLegend, Filler, Title } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import { Chart } from "react-google-charts";
+import ProcurementResultsDashboard from "@/components/procurement/ProcurementResultsDashboard";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, ChartTooltip, ChartLegend, Filler, Title);
 
