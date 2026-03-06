@@ -104,6 +104,12 @@ const generateWeeklyForecast = (baseValue: number, weekIndex: number) => {
   return Math.round(baseValue * seasonalFactors[weekIndex] * (0.9 + Math.random() * 0.2));
 };
 
+const generateLastYearValue = (currentForecast: number, weekIndex: number) => {
+  // Last year values are typically 10-25% lower (business growth), with slight variation
+  const growthFactors = [0.78, 0.80, 0.75, 0.82, 0.77, 0.79, 0.85, 0.81, 0.76, 0.83, 0.80, 0.78];
+  return Math.round(currentForecast * growthFactors[weekIndex] * (0.95 + Math.random() * 0.1));
+};
+
 const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   const baseValue = 500 + Math.floor(Math.random() * 1500);
   const nodeIndex = index % pharmaNodes.length;
