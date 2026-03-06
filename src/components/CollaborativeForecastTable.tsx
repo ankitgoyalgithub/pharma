@@ -463,19 +463,29 @@ export const CollaborativeForecastTable: React.FC = () => {
                 const weekData = r[weekKey] as any;
                 const hasEdit = weekData.plannerInput !== undefined;
                 const displayValue = hasEdit ? weekData.plannerInput : weekData.forecast;
+                const lyValue = weekData.lastYear;
+                const yoyChange = lyValue > 0 ? ((displayValue - lyValue) / lyValue * 100).toFixed(0) : null;
                 
                 return (
-                  <td key={`${r.id}-week-${i + 1}`} className="p-2 text-center border-l">
-                    <div className="space-y-1">
+                  <td key={`${r.id}-week-${i + 1}`} className="p-1.5 text-center border-l">
+                    <div className="space-y-0.5">
                       <div className={`text-sm font-medium ${hasEdit ? 'text-primary' : 'text-foreground'}`}>
                         {displayValue.toLocaleString()}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground flex items-center justify-center gap-1">
+                        <span>LY: {lyValue.toLocaleString()}</span>
+                        {yoyChange && (
+                          <span className={`font-medium ${Number(yoyChange) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                            ({Number(yoyChange) >= 0 ? '+' : ''}{yoyChange}%)
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center justify-center gap-1">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={() => handleEditClick(r.id, weekKey, weekData.forecast, weekData.plannerInput, weekData.reason)}
+                          className="h-5 w-5 p-0"
+                          onClick={() => handleEditClick(r.id, weekKey, i + 1, weekData.forecast, lyValue, r.productName, r.sku, weekData.plannerInput, weekData.reason)}
                         >
                           <Edit3 className="w-3 h-3" />
                         </Button>
@@ -483,7 +493,7 @@ export const CollaborativeForecastTable: React.FC = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-6 w-6 p-0 text-muted-foreground"
+                            className="h-5 w-5 p-0 text-muted-foreground"
                             title={weekData.reason || "No reason provided"}
                           >
                             <MessageSquare className="w-3 h-3" />
