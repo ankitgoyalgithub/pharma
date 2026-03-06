@@ -756,21 +756,57 @@ export const CollaborativeForecastTable: React.FC = () => {
 
       {/* Edit Dialog */}
       <Dialog open={editDialog.open} onOpenChange={(open) => setEditDialog(prev => ({ ...prev, open }))}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit Forecast Value</DialogTitle>
+            <DialogTitle>Edit Forecast — {editDialog.sku}</DialogTitle>
             <DialogDescription>
-              Modify the forecast for {editDialog.week} and provide a reason for the change.
+              {editDialog.productName} · Week {editDialog.weekIndex}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Last Year Context */}
+            <div className="bg-muted/30 rounded-lg p-3 space-y-2">
+              <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Historical Context (Last Year)</h4>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="space-y-0.5">
+                  <div className="text-[10px] text-muted-foreground">LY Same Week</div>
+                  <div className="text-sm font-semibold">{editDialog.lastYear.toLocaleString()}</div>
+                </div>
+                <div className="space-y-0.5">
+                  <div className="text-[10px] text-muted-foreground">LY Monthly Avg</div>
+                  <div className="text-sm font-semibold">{Math.round(editDialog.lastYear * 4.2).toLocaleString()}</div>
+                  <div className="text-[10px] text-muted-foreground">~4 weeks</div>
+                </div>
+                <div className="space-y-0.5">
+                  <div className="text-[10px] text-muted-foreground">YoY Growth</div>
+                  <div className={`text-sm font-semibold ${editDialog.lastYear > 0 && ((editDialog.currentValue - editDialog.lastYear) / editDialog.lastYear * 100) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                    {editDialog.lastYear > 0 ? `${((editDialog.currentValue - editDialog.lastYear) / editDialog.lastYear * 100).toFixed(1)}%` : '—'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-muted/20 rounded-lg p-3">
+                <div className="text-[10px] text-muted-foreground">AI Forecast (This Year)</div>
+                <div className="text-lg font-bold">{editDialog.currentValue.toLocaleString()}</div>
+              </div>
+              <div className="bg-muted/20 rounded-lg p-3">
+                <div className="text-[10px] text-muted-foreground">Forecast vs LY</div>
+                <div className="text-lg font-bold">
+                  {editDialog.lastYear > 0 ? `+${(editDialog.currentValue - editDialog.lastYear).toLocaleString()}` : '—'}
+                </div>
+                <div className="text-[10px] text-muted-foreground">units above LY</div>
+              </div>
+            </div>
+
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">
-                Original Forecast: {editDialog.currentValue.toLocaleString()}
+                Planner Override
               </label>
               <Input
                 type="number"
-                placeholder="Enter new forecast value"
+                placeholder="Enter adjusted forecast value"
                 value={editDialog.plannerInput}
                 onChange={(e) => setEditDialog(prev => ({ ...prev, plannerInput: e.target.value }))}
               />
