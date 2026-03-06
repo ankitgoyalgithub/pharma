@@ -290,14 +290,18 @@ export const CollaborativeForecastTable: React.FC = () => {
     }
   };
 
-  const handleEditClick = (rowId: string, week: string, currentValue: number, plannerInput?: number, reason?: string) => {
+  const handleEditClick = (rowId: string, week: string, weekIndex: number, currentValue: number, lastYear: number, productName: string, sku: string, plannerInput?: number, reason?: string) => {
     setEditDialog({
       open: true,
       rowId,
       week,
+      weekIndex,
       currentValue,
+      lastYear,
       plannerInput: plannerInput?.toString() || "",
-      reason: reason || ""
+      reason: reason || "",
+      productName,
+      sku
     });
   };
 
