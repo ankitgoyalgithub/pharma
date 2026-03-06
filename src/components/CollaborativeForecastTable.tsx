@@ -697,9 +697,9 @@ export const CollaborativeForecastTable: React.FC = () => {
                   <thead className="bg-muted/50 border-b">
                     <tr className="text-xs h-12">
                       {Array.from({ length: 12 }, (_, i) => (
-                        <th key={`week-${i + 1}`} className="text-center p-2 w-[100px] border-l">
+                        <th key={`week-${i + 1}`} className="text-center p-2 w-[110px] border-l">
                           <div className="text-xs font-medium">Week {i + 1}</div>
-                          <div className="text-xs text-muted-foreground">Forecast | Input</div>
+                          <div className="text-[10px] text-muted-foreground">Fcst | LY</div>
                         </th>
                       ))}
                     </tr>
