@@ -141,12 +141,14 @@ const sampleForecastData: ForecastRow[] = pharmaSKUs.map((sku, index) => {
   const adjustmentWeeks = [3, 5, 7, 9, 11];
   const adjustWeek = adjustmentWeeks[index % adjustmentWeeks.length];
   const weekKey = `week${adjustWeek}`;
-  const currentForecast = weeks[weekKey].forecast;
+  const currentWeekData = weeks[weekKey];
+  const currentForecast = currentWeekData.forecast;
   const adjustmentFactor = 1 + (Math.random() * 0.3 - 0.1);
   weeks[weekKey] = {
     forecast: currentForecast,
     plannerInput: Math.round(currentForecast * adjustmentFactor),
-    reason: boatReasons[index % boatReasons.length]
+    reason: boatReasons[index % boatReasons.length],
+    lastYear: currentWeekData.lastYear
   };
   
   const isApproved = Math.random() > 0.15;
