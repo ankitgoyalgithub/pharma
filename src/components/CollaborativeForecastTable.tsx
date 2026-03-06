@@ -330,7 +330,7 @@ export const CollaborativeForecastTable: React.FC = () => {
       return row;
     }));
 
-    setEditDialog({ open: false, rowId: "", week: "", currentValue: 0, plannerInput: "", reason: "" });
+    setEditDialog({ open: false, rowId: "", week: "", weekIndex: 0, currentValue: 0, lastYear: 0, plannerInput: "", reason: "", productName: "", sku: "" });
     toast.success("Forecast updated successfully");
   };
 
